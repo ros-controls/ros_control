@@ -10,4 +10,6 @@
   <url>http://ros.org/wiki/controller_interface</url>
 
   <build_depend>catkin</build_depend>
+  <build_depend>roscpp</build_depend>
+  <run_depend>roscpp</run_depend>
 </package>

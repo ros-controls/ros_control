@@ -32,15 +32,6 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 #pragma once
-/***************************************************/
-/*! \namespace controller
- \brief The controller namespace
-
- \class controller::Controller
- \brief A base level controller class.
-
- */
-/***************************************************/
 
 #include <ros/node_handle.h>
 
