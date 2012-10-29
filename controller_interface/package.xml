@@ -1,0 +1,13 @@
+<package>
+  <name>controller_interface</name>
+  <version>0.0.1</version>
+  <description>
+    Interface base class for controllers
+  </description>
+  <author>Wim Meeussen</author>
+  <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
+  <license>BSD</license>
+  <url>http://ros.org/wiki/controller_interface</url>
+
+  <build_depend>catkin</build_depend>
+</package>
