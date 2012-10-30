@@ -1,14 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(hardware_interface)
 
-find_package(catkin REQUIRED COMPONENTS genmsg)
-find_package(Boost REQUIRED COMPONENTS thread)
+include(/home/wim/stacks/groovy/catkin_easy/catkin_easy.cmake NO_POLICY_SCOPE)
+catkin_basic(INCLUDE include)
 
-catkin_package()
-
-
-
-# install the include folder
-install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)

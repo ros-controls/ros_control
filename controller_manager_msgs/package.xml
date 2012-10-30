@@ -11,4 +11,8 @@
 
   <build_depend>catkin</build_depend>
   <build_depend>genmsg</build_depend>
+  <build_depend>std_msgs</build_depend>
+
+  <run_depend>genmsg</run_depend>
+  <run_depend>std_msgs</run_depend>
 </package>
