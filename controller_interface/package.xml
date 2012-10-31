@@ -12,8 +12,14 @@
   <build_depend>catkin</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>hardware_interface</build_depend>
+  <build_depend>pluginlib</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>hardware_interface</run_depend>
+  <run_depend>pluginlib</run_depend>
+
+  <export>
+    <polygon_interface_package plugin="${prefix}/dummy_plugin.xml" />
+  </export>
 
 </package>

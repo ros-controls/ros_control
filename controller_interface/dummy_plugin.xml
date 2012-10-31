@@ -1,0 +1,7 @@
+<library path="lib/libdummy_controller">
+  <class name="controller_interface/DummyController" type="dummy_controller::DummyController" base_class_type="controller_interface::ControllerBase">
+  <description>
+    This is a dummy plugin
+  </description>
+  </class>
+</library>

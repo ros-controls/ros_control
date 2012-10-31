@@ -31,6 +31,9 @@
 
 
 #include "controller_interface/controller.h"
+#include <pluginlib/class_list_macros.h>
+
+PLUGINLIB_DECLARE_CLASS(controller_interface, DummyController, dummy_controller::DummyController, controller_interface::ControllerBase)
 
 
 namespace dummy_controller
