@@ -29,84 +29,55 @@
  * Author: Wim Meeussen
  */
 
+#ifndef HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
+#define HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 
-#ifndef CONTROLLER_INTERFACE_CONTROLLER_BASE_H
-#define CONTROLLER_INTERFACE_CONTROLLER_BASE_H
-
-#include <ros/node_handle.h>
-#include <hardware_interface/hardware_interface.h>
+#include "hardware_interface/joint_state_interface.h"
 
 
-namespace controller_interface
-{
+namespace hardware_interface{
 
-class ControllerBase
+
+class JointCommand
 {
 public:
-  ControllerBase(): state_(CONSTRUCTED){}
-  virtual ~ControllerBase(){}
+  JointCommand(const JointState& js, double& cmd)
+    : js_(js), cmd_(cmd)
+  {}
 
-  /// The starting method is called just before the first update from within the realtime thread.
-  virtual void starting(const ros::Time& time) {};
-
-  /// The update method is called periodically by the realtime thread when the controller is running
-  virtual void update(const ros::Time& time) = 0;
-
-  /// The stopping method is called by the realtime thread just after the last update call
-  virtual void stopping(const ros::Time& time) {};
-
-  /// Check if the controller is running
-  bool isRunning()
-  {
-    return (state_ == RUNNING);
-  }
-
-
-protected:
-  virtual bool initRequest(hardware_interface::HardwareInterface* hw, ros::NodeHandle &n)=0;
-
-  void updateRequest(const ros::Time& time)
-  {
-    if (state_ == RUNNING)
-      update(time);
-  }
-
-  bool startRequest(const ros::Time& time)
-  {
-    // start succeeds even if the controller was already started
-    if (state_ == RUNNING || state_ == INITIALIZED){
-      starting(time);
-      state_ = RUNNING;
-      return true;
-    }
-    else
-      return false;
-  }
-
-
-  bool stopRequest(const ros::Time& time)
-  {
-    // stop succeeds even if the controller was already stopped
-    if (state_ == RUNNING || state_ == INITIALIZED){
-      stopping(time);
-      state_ = INITIALIZED;
-      return true;
-    }
-    else
-      return false;
-  }
-
-  enum {CONSTRUCTED, INITIALIZED, RUNNING} state_;
-
-
+  double getPosition() const {return js_.getPosition();}
+  double getVelocity() const {return js_.getVelocity();}
+  double getEffort()   const {return js_.getEffort();}
+  double setCommand(double command) {cmd = command};
 
 private:
-  ControllerBase(const ControllerBase &c);
-  ControllerBase& operator =(const ControllerBase &c);
-
+  const JointState js_;
+  double& cmd_;
 };
 
-}
 
+
+class JointCommandInterface: public class JointStateInterface
+{
+public:
+  // get the joint to command
+  JointCommand& getJoint(const std::string& name)
+  {
+    return JointCommand(getJointState(name), getJointCommand(name));    
+  }
+
+
+protected:  
+  // Virtual function to give access to command for joint
+  virtual double& getJointCommand(const std::string& name) = 0;
+  
+};
+
+
+class JointEffortInterface: public class JointCommandInterface {};
+class JointPositionInterface: public class JointCommandInterface {};
+class JointVelocityInterface: public class JointCommandInterface {};
+
+}
 
 #endif

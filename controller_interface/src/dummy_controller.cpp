@@ -30,83 +30,49 @@
  */
 
 
-#ifndef CONTROLLER_INTERFACE_CONTROLLER_BASE_H
-#define CONTROLLER_INTERFACE_CONTROLLER_BASE_H
-
-#include <ros/node_handle.h>
-#include <hardware_interface/hardware_interface.h>
+#include "controller_interface/controller.h"
 
 
-namespace controller_interface
+namespace dummy_controller
 {
 
-class ControllerBase
+// this controller gets access to the JointStateInterface 
+class DummyController: public class controller_interface::Controller<hardware_interface::JointStateInterface>
 {
 public:
-  ControllerBase(): state_(CONSTRUCTED){}
-  virtual ~ControllerBase(){}
+  DummyController(){}
 
-  /// The starting method is called just before the first update from within the realtime thread.
-  virtual void starting(const ros::Time& time) {};
 
-  /// The update method is called periodically by the realtime thread when the controller is running
-  virtual void update(const ros::Time& time) = 0;
-
-  /// The stopping method is called by the realtime thread just after the last update call
-  virtual void stopping(const ros::Time& time) {};
-
-  /// Check if the controller is running
-  bool isRunning()
+  virtual bool init(hardware_interface::JointStateInterface* hw, ros::NodeHandle &n)
   {
-    return (state_ == RUNNING);
+    // get all joint states from the hardware interface
+    std::vector<std::string> join_names = hw->getJointNames();
+    for (unsigned i=0; i<join_names.size(); i++)
+      joint_state_.push_back(hw->getJointState(joint_names[i]));
   }
 
-
-protected:
-  virtual bool initRequest(hardware_interface::HardwareInterface* hw, ros::NodeHandle &n)=0;
-
-  void updateRequest(const ros::Time& time)
+  virtual void starting(const ros::Time& time) 
   {
-    if (state_ == RUNNING)
-      update(time);
+    ROS_INFO("Starting Dummy Controller");
   }
 
-  bool startRequest(const ros::Time& time)
+  virtual void update(const ros::Time& time) 
   {
-    // start succeeds even if the controller was already started
-    if (state_ == RUNNING || state_ == INITIALIZED){
-      starting(time);
-      state_ = RUNNING;
-      return true;
-    }
-    else
-      return false;
+    ROS_INFO("Update Dummy Controller");
+    for (unsigned i=0; i<join_state_.size(); i++)
+      ROS_INFO("JointState of joint %s: %f  %f   %f", 
+               joint_state_[i].getName(), joint_state_[i].getPosition(),
+               joint_state_[i].getVelocity(), joint_state_[i].getEffort());
   }
 
-
-  bool stopRequest(const ros::Time& time)
+  virtual void stopping(const ros::Time& time) 
   {
-    // stop succeeds even if the controller was already stopped
-    if (state_ == RUNNING || state_ == INITIALIZED){
-      stopping(time);
-      state_ = INITIALIZED;
-      return true;
-    }
-    else
-      return false;
+    ROS_INFO("Stopping Dummy Controller");
   }
-
-  enum {CONSTRUCTED, INITIALIZED, RUNNING} state_;
-
-
 
 private:
-  ControllerBase(const ControllerBase &c);
-  ControllerBase& operator =(const ControllerBase &c);
+  std::vector<hardware_interface::JointState> joint_state_;
 
 };
 
 }
-
-
-#endif

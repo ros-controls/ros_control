@@ -46,15 +46,6 @@ public:
   Controller<T>(): state_(CONSTRUCTED){}
   virtual ~Controller<T>(){}
 
-  /// The starting method is called just before the first update from within the realtime thread.
-  virtual void starting(const ros::Time& time) {};
-
-  /// The update method is called periodically by the realtime thread when the controller is running
-  virtual void update(const ros::Time& time) = 0;
-
-  /// The stopping method is called by the realtime thread just after the last update call
-  virtual void stopping(const ros::Time& time) {};
-
   /**
    * @brief The init function is called to initialize the controller from a non-realtime thread
    *
@@ -67,9 +58,11 @@ public:
    * @return True if initialization was successful and the controller
    * is ready to be started.
    */
-  virtual bool init(T* hw, ros::NodeHandle &n)
+  virtual bool init(T* hw, ros::NodeHandle &n) = 0;
 
 
+
+protected:
   virtual bool initRequest(hardware_interface::HardwareInterface* hw, ros::NodeHandle &n)
   {
     if (state_ != CONSTRUCTED)

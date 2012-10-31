@@ -29,84 +29,56 @@
  * Author: Wim Meeussen
  */
 
+#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
+#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 
-#ifndef CONTROLLER_INTERFACE_CONTROLLER_BASE_H
-#define CONTROLLER_INTERFACE_CONTROLLER_BASE_H
-
-#include <ros/node_handle.h>
-#include <hardware_interface/hardware_interface.h>
+#include "hardware_interface/hardware_interface.h"
 
 
-namespace controller_interface
-{
+namespace hardware_interface{
 
-class ControllerBase
+class JointState
 {
 public:
-  ControllerBase(): state_(CONSTRUCTED){}
-  virtual ~ControllerBase(){}
+  JointState(const std::string name, double& pos, double& vel, double& eff)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff)
+  {}
 
-  /// The starting method is called just before the first update from within the realtime thread.
-  virtual void starting(const ros::Time& time) {};
-
-  /// The update method is called periodically by the realtime thread when the controller is running
-  virtual void update(const ros::Time& time) = 0;
-
-  /// The stopping method is called by the realtime thread just after the last update call
-  virtual void stopping(const ros::Time& time) {};
-
-  /// Check if the controller is running
-  bool isRunning()
-  {
-    return (state_ == RUNNING);
-  }
-
-
-protected:
-  virtual bool initRequest(hardware_interface::HardwareInterface* hw, ros::NodeHandle &n)=0;
-
-  void updateRequest(const ros::Time& time)
-  {
-    if (state_ == RUNNING)
-      update(time);
-  }
-
-  bool startRequest(const ros::Time& time)
-  {
-    // start succeeds even if the controller was already started
-    if (state_ == RUNNING || state_ == INITIALIZED){
-      starting(time);
-      state_ = RUNNING;
-      return true;
-    }
-    else
-      return false;
-  }
-
-
-  bool stopRequest(const ros::Time& time)
-  {
-    // stop succeeds even if the controller was already stopped
-    if (state_ == RUNNING || state_ == INITIALIZED){
-      stopping(time);
-      state_ = INITIALIZED;
-      return true;
-    }
-    else
-      return false;
-  }
-
-  enum {CONSTRUCTED, INITIALIZED, RUNNING} state_;
-
+  double getName() const {return name_;}
+  double getPosition() const {return pos_;}
+  double getVelocity() const {return vel_;}
+  double getEffort()   const {return eff_;}
 
 
 private:
-  ControllerBase(const ControllerBase &c);
-  ControllerBase& operator =(const ControllerBase &c);
+  std::string name_;
+  double& pos_;
+  double& vel_;
+  double& eff_;
+};
+
+
+
+class JointStateInterface: public class HardwareInterface
+{
+public:
+  const JointState getJointState(const std::string& name) const
+  {
+    return JointState(name, 
+                      getJointPosition(name),
+                      getJointVelocity(name),
+                      getJointEffort(name));
+  }
+
+  virtual const std::vector<std::string>& getJointNames() const = 0;
+
+protected:
+  virtual double& getJointPosition(const std::string& name) = 0;
+  virtual double& getJointVelocity(const std::string& name) = 0;
+  virtual double& getJointEffort(const std::string& name) = 0;
 
 };
 
 }
-
 
 #endif
