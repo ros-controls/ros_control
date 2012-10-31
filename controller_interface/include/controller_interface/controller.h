@@ -29,21 +29,24 @@
  * Author: Wim Meeussen
  */
 
-#ifndef CONTROLLER_INTERFACE_CONTROLLER_BASE_H
-#define CONTROLLER_INTERFACE_CONTROLLER_BASE_H
+#ifndef CONTROLLER_INTERFACE_CONTROLLER_H
+#define CONTROLLER_INTERFACE_CONTROLLER_H
 
 
 #include <controller_interface/controller_base.h>
+#include <hardware_interface/hardware_interface.h>
+#include <ros/ros.h>
+
 
 namespace controller_interface
 {
 
 
-Template <class T>
-class Controller<T>
+template <class T>
+class Controller: public ControllerBase
 {
 public:
-  Controller<T>(): state_(CONSTRUCTED){}
+  Controller()  {state_ = CONSTRUCTED;}
   virtual ~Controller<T>(){}
 
   /**
@@ -65,20 +68,35 @@ public:
 protected:
   virtual bool initRequest(hardware_interface::HardwareInterface* hw, ros::NodeHandle &n)
   {
-    if (state_ != CONSTRUCTED)
+    // check if construction finished cleanly
+    if (state_ != CONSTRUCTED){
+      ROS_ERROR("Cannot initialize this controller because it failed to be constructed");
       return false;
-    else
-    {
-      T* hw_t = dynamic_cast<T>(hw);
-
-      // initialize
-      if (!hw_t || !init_untyped(hw, n))
-        return false;
-
-      // success
-      state_ = INITIALIZED;
-      return true;
     }
+
+    // check if we can cast to type T
+    std::vector<std::string> available_types = hw->getRegisteredTypes();
+    available_types.push_back(typeid(*hw).name());
+    bool correct_type = false;
+    for (unsigned i=0; i<available_types.size(); i++)
+      if (typeid(T).name() == available_types[i])
+        correct_type = true;
+    
+    if (!correct_type){
+      ROS_ERROR("This controller requires a hardware interface of type %s", typeid(T).name());
+      return false;
+    }
+    
+    // cast the hw, and initialize the controller
+    T* hw_t = static_cast<T*>(hw);
+    if (!init(hw_t, n)){
+      ROS_ERROR("Failed to initialize the controller");
+      return false;
+    }
+    
+    // success
+    state_ = INITIALIZED;
+    return true;
   }
 
 
@@ -89,3 +107,5 @@ private:
 };
 
 }
+
+#endif

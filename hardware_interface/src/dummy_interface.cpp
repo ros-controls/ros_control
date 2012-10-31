@@ -37,24 +37,29 @@ namespace hardware_interface_dummy
 {
 
 
-class DummyJointCommand: public JointEffortInterface
+class DummyJointCommand: public hardware_interface::JointEffortInterface
 {
   DummyJointCommand()
   {
-    joint_position_.push_back(1);
-    joint_velocity_.push_back(2);
-    joint_effort_.push_back(3);
-    joint_name_.push_back("hiDOF_joint1");
+    joint_position_.resize(2);
+    joint_velocity_.resize(2);
+    joint_effort_.resize(2);
+    joint_name_.resize(2);
 
-    joint_position_.push_back(4);
-    joint_velocity_.push_back(5);
-    joint_effort_.push_back(6);
-    joint_name_.push_back("hiDOF_joint2");
+    joint_name_[0] = "hiDOF_joint1";
+    joint_position_[0] = 1.0;
+    joint_velocity_[0] = 0.0;
+    joint_effort_[0] = 0.1;
+
+    joint_name_[1] = "hiDOF_joint2";
+    joint_position_[1] = 1.0;
+    joint_velocity_[1] = 0.0;
+    joint_effort_[1] = 0.1;
   }
 
 
 
-  virtual std::vector<std::string>& getJointNames() const
+  virtual const std::vector<std::string>& getJointNames() const
   {
     return joint_name_;
   }
@@ -66,41 +71,37 @@ class DummyJointCommand: public JointEffortInterface
       if (joint_name_[i] == name)
         return joint_command_[i];
 
-    throw HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
-    return 0;
+    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
   }
 
   
-  virtual double& getJointPosition(const std::string& name)
+  virtual const double& getJointPosition(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
         return joint_position_[i];
 
-    throw HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
-    return 0;
+    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
   }
 
 
-  virtual double& getJointVelocity(const std::string& name)
+  virtual const double& getJointVelocity(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
         return joint_velocity_[i];
 
-    throw HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
-    return 0;
+    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
   }
 
 
-  virtual double& getJointEffort(const std::string& name)
+  virtual const double& getJointEffort(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
         return joint_effort_[i];
 
-    throw HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
-    return 0;
+    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
   }
 
 

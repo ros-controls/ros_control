@@ -30,47 +30,48 @@
  */
 
 
-#include "controller_interface/controller.h"
+#include <controller_interface/controller.h>
+#include <hardware_interface/joint_state_interface.h>
 #include <pluginlib/class_list_macros.h>
 
-PLUGINLIB_DECLARE_CLASS(controller_interface, DummyController, dummy_controller::DummyController, controller_interface::ControllerBase)
 
 
-namespace dummy_controller
+
+namespace joint_state_controller
 {
 
 // this controller gets access to the JointStateInterface 
-class DummyController: public class controller_interface::Controller<hardware_interface::JointStateInterface>
+class JointStateController: public controller_interface::Controller<hardware_interface::JointStateInterface>
 {
 public:
-  DummyController(){}
+  JointStateController(){}
 
 
   virtual bool init(hardware_interface::JointStateInterface* hw, ros::NodeHandle &n)
   {
     // get all joint states from the hardware interface
-    std::vector<std::string> join_names = hw->getJointNames();
-    for (unsigned i=0; i<join_names.size(); i++)
+    const std::vector<std::string>& joint_names = hw->getJointNames();
+    for (unsigned i=0; i<joint_names.size(); i++)
       joint_state_.push_back(hw->getJointState(joint_names[i]));
   }
 
   virtual void starting(const ros::Time& time) 
   {
-    ROS_INFO("Starting Dummy Controller");
+    ROS_INFO("Starting JointState Controller");
   }
 
   virtual void update(const ros::Time& time) 
   {
-    ROS_INFO("Update Dummy Controller");
-    for (unsigned i=0; i<join_state_.size(); i++)
+    ROS_INFO("Update JointState Controller");
+    for (unsigned i=0; i<joint_state_.size(); i++)
       ROS_INFO("JointState of joint %s: %f  %f   %f", 
-               joint_state_[i].getName(), joint_state_[i].getPosition(),
+               joint_state_[i].getName().c_str(), joint_state_[i].getPosition(),
                joint_state_[i].getVelocity(), joint_state_[i].getEffort());
   }
 
   virtual void stopping(const ros::Time& time) 
   {
-    ROS_INFO("Stopping Dummy Controller");
+    ROS_INFO("Stopping JointState Controller");
   }
 
 private:
@@ -79,3 +80,6 @@ private:
 };
 
 }
+
+
+PLUGINLIB_DECLARE_CLASS(controller_interface, JointStateController, joint_state_controller::JointStateController, controller_interface::ControllerBase)

@@ -42,26 +42,26 @@ class JointCommand
 {
 public:
   JointCommand(const JointState& js, double& cmd)
-    : js_(js), cmd_(cmd)
+    : js_(js), cmd_(&cmd)
   {}
 
   double getPosition() const {return js_.getPosition();}
   double getVelocity() const {return js_.getVelocity();}
   double getEffort()   const {return js_.getEffort();}
-  double setCommand(double command) {cmd = command};
+  double setCommand(double command) {*cmd_ = command;};
 
 private:
   const JointState js_;
-  double& cmd_;
+  double* cmd_;
 };
 
 
 
-class JointCommandInterface: public class JointStateInterface
+class JointCommandInterface: public JointStateInterface
 {
 public:
   // get the joint to command
-  JointCommand& getJoint(const std::string& name)
+  JointCommand getJoint(const std::string& name)
   {
     return JointCommand(getJointState(name), getJointCommand(name));    
   }
@@ -74,9 +74,25 @@ protected:
 };
 
 
-class JointEffortInterface: public class JointCommandInterface {};
-class JointPositionInterface: public class JointCommandInterface {};
-class JointVelocityInterface: public class JointCommandInterface {};
+
+class JointEffortInterface: public JointCommandInterface 
+{
+protected:
+  JointEffortInterface() {registerType(typeid(JointEffortInterface).name());}  
+};
+
+
+class JointPositionInterface: public JointCommandInterface 
+{
+protected:
+  JointPositionInterface() {registerType(typeid(JointPositionInterface).name());}  
+};
+
+class JointVelocityInterface: public JointCommandInterface 
+{
+protected:
+  JointVelocityInterface() {registerType(typeid(JointVelocityInterface).name());}  
+};
 
 }
 

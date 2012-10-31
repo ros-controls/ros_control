@@ -33,6 +33,8 @@
 #define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 
 #include "hardware_interface/hardware_interface.h"
+#include <string>
+#include <vector>
 
 
 namespace hardware_interface{
@@ -40,26 +42,26 @@ namespace hardware_interface{
 class JointState
 {
 public:
-  JointState(const std::string name, double& pos, double& vel, double& eff)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff)
+  JointState(const std::string& name, const double& pos, const double& vel, const double& eff)
+    : name_(name), pos_(&pos), vel_(&vel), eff_(&eff)
   {}
 
-  double getName() const {return name_;}
-  double getPosition() const {return pos_;}
-  double getVelocity() const {return vel_;}
-  double getEffort()   const {return eff_;}
+  std::string getName() const {return name_;}
+  double getPosition() const {return *pos_;}
+  double getVelocity() const {return *vel_;}
+  double getEffort()   const {return *eff_;}
 
 
 private:
   std::string name_;
-  double& pos_;
-  double& vel_;
-  double& eff_;
+  const double* pos_;
+  const double* vel_;
+  const double* eff_;
 };
 
 
 
-class JointStateInterface: public class HardwareInterface
+class JointStateInterface: public HardwareInterface
 {
 public:
   const JointState getJointState(const std::string& name) const
@@ -73,10 +75,11 @@ public:
   virtual const std::vector<std::string>& getJointNames() const = 0;
 
 protected:
-  virtual double& getJointPosition(const std::string& name) = 0;
-  virtual double& getJointVelocity(const std::string& name) = 0;
-  virtual double& getJointEffort(const std::string& name) = 0;
+  virtual const double& getJointPosition(const std::string& name) const = 0;
+  virtual const double& getJointVelocity(const std::string& name) const = 0;
+  virtual const double& getJointEffort(const std::string& name) const = 0;
 
+  JointStateInterface() {registerType(typeid(JointStateInterface).name());}
 };
 
 }

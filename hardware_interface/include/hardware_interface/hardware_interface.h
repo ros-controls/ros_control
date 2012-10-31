@@ -34,28 +34,45 @@
 #define HARDWARE_INTERFACE_HARDWARE_INTERFACE_H
 
 #include <exception>
+#include <string>
+#include <vector>
+#include <typeinfo>
+
 
 namespace hardware_interface{
 
 class HardwareInterface
 {
+public:
+  std::vector<std::string> getRegisteredTypes() {return types_;}
+  void registerType(std::string type) { types_.push_back(type); }
 
-}
+private:
+  std::vector<std::string> types_;
+};
 
 
-class HardwareInterfaceException: public exception
+
+
+
+
+
+class HardwareInterfaceException: public std::exception
 {
 public:
-  HardwareInterfaceException(const std::string& message)
-    : msg(message){}
+  HardwareInterfaceException(const std::string& message) 
+    : msg(message) {};
+
+  virtual ~HardwareInterfaceException() throw() {};
 
   virtual const char* what() const throw()
   {
-    return msg;
+    return msg.c_str();
   }
+
+
 private:
   std::string msg;
-
 };
 }
 

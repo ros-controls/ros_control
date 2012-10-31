@@ -51,7 +51,6 @@
 #include <controller_manager_msgs/UnloadController.h>
 #include <controller_manager_msgs/SwitchController.h>
 #include <controller_manager_msgs/ControllersStatistics.h>
-#include <sensor_msgs/JointState.h>
 #include <boost/thread/condition.hpp>
 
 

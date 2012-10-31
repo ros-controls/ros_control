@@ -62,7 +62,7 @@ public:
   }
 
 
-protected:
+
   virtual bool initRequest(hardware_interface::HardwareInterface* hw, ros::NodeHandle &n)=0;
 
   void updateRequest(const ros::Time& time)
