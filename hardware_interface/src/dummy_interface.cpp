@@ -30,42 +30,43 @@
  */
 
 
-#include "hardware_interface/joint_command_interface.h"
+#include "hardware_interface/dummy_interface.h"
 
 
-namespace hardware_interface_dummy
+namespace hardware_interface
 {
 
 
-class DummyJointCommand: public hardware_interface::JointEffortInterface
-{
-  DummyJointCommand()
+  DummyHardware::DummyHardware()
   {
     joint_position_.resize(2);
     joint_velocity_.resize(2);
     joint_effort_.resize(2);
+    joint_command_.resize(2);
     joint_name_.resize(2);
 
     joint_name_[0] = "hiDOF_joint1";
     joint_position_[0] = 1.0;
     joint_velocity_[0] = 0.0;
     joint_effort_[0] = 0.1;
+    joint_command_[0] = 0.0;
 
     joint_name_[1] = "hiDOF_joint2";
     joint_position_[1] = 1.0;
     joint_velocity_[1] = 0.0;
     joint_effort_[1] = 0.1;
+    joint_command_[1] = 0.0;
   }
 
 
 
-  virtual const std::vector<std::string>& getJointNames() const
+  const std::vector<std::string>& DummyHardware::getJointNames() const
   {
     return joint_name_;
   }
 
 
-  virtual double& getJointCommand(const std::string& name)
+  double& DummyHardware::getJointCommand(const std::string& name)
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
@@ -75,7 +76,7 @@ class DummyJointCommand: public hardware_interface::JointEffortInterface
   }
 
   
-  virtual const double& getJointPosition(const std::string& name) const
+  const double& DummyHardware::getJointPosition(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
@@ -85,7 +86,7 @@ class DummyJointCommand: public hardware_interface::JointEffortInterface
   }
 
 
-  virtual const double& getJointVelocity(const std::string& name) const
+  const double& DummyHardware::getJointVelocity(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
@@ -95,7 +96,7 @@ class DummyJointCommand: public hardware_interface::JointEffortInterface
   }
 
 
-  virtual const double& getJointEffort(const std::string& name) const
+  const double& DummyHardware::getJointEffort(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
@@ -105,27 +106,18 @@ class DummyJointCommand: public hardware_interface::JointEffortInterface
   }
 
 
-  void read()
+  void DummyHardware::read()
   {
     for (unsigned i=0; i<joint_position_.size(); i++)
     {
       joint_effort_[i] = joint_command_[i];
       joint_velocity_[i] += joint_effort_[i]*0.001;
       joint_position_[i] += 0.01;
-      joint_position_[i] += 0.01;
     }
   }
 
-  void write()
+  void DummyHardware::write()
   {
   }
 
-
-private:
-  std::vector<double> joint_command_;
-  std::vector<double> joint_position_;
-  std::vector<double> joint_velocity_;
-  std::vector<double> joint_effort_;
-  std::vector<std::string> joint_name_;
-};
 }

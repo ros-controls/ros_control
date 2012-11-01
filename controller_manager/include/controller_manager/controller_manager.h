@@ -67,7 +67,6 @@ public:
   void update(const ros::Time& time, bool reset_controllers=false);
 
   // Non real-time functions
-  bool init();
   bool loadController(const std::string& name);
   bool unloadController(const std::string &name);
   bool switchController(const std::vector<std::string>& start_controllers,

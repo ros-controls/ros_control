@@ -5,3 +5,6 @@ catkin_basic(INCLUDE include LIBRARIES controller_manager)
 
 add_library(controller_manager SHARED src/controller_manager.cpp)
 target_link_libraries(controller_manager ${Boost_LIBRARIES} ${catkin_LIBRARIES})
+
+add_executable(dummy src/dummy.cpp)
+target_link_libraries(dummy controller_manager ${Boost_LIBRARIES} ${catkin_LIBRARIES})

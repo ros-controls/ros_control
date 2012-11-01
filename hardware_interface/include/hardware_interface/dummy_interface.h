@@ -30,56 +30,40 @@
  */
 
 
-#include <controller_interface/controller.h>
-#include <hardware_interface/joint_state_interface.h>
-#include <pluginlib/class_list_macros.h>
+
+#ifndef HARDWARE_INTERFACE_DUMMY_INTERFACE_H
+#define HARDWARE_INTERFACE_DUMMY_INTERFACE_H
 
 
+#include "hardware_interface/joint_command_interface.h"
 
 
-namespace joint_state_controller
+namespace hardware_interface
 {
 
-// this controller gets access to the JointStateInterface 
-class JointStateController: public controller_interface::Controller<hardware_interface::JointStateInterface>
+
+class DummyHardware: public hardware_interface::JointEffortInterface
 {
 public:
-  JointStateController(){}
+  DummyHardware();
 
+  virtual const std::vector<std::string>& getJointNames() const;
+  virtual double& getJointCommand(const std::string& name);
+  virtual const double& getJointPosition(const std::string& name) const;
+  virtual const double& getJointVelocity(const std::string& name) const;
+  virtual const double& getJointEffort(const std::string& name) const;
 
-  virtual bool init(hardware_interface::JointStateInterface* hw, ros::NodeHandle &n)
-  {
-    // get all joint states from the hardware interface
-    const std::vector<std::string>& joint_names = hw->getJointNames();
-    for (unsigned i=0; i<joint_names.size(); i++)
-      joint_state_.push_back(hw->getJointState(joint_names[i]));
-  }
-
-  virtual void starting(const ros::Time& time) 
-  {
-    ROS_INFO("Starting JointState Controller");
-  }
-
-  virtual void update(const ros::Time& time) 
-  {
-    ROS_INFO("Update JointState Controller");
-    for (unsigned i=0; i<joint_state_.size(); i++)
-      ROS_INFO("JointState of joint %s: %f  %f   %f", 
-               joint_state_[i].getName().c_str(), joint_state_[i].getPosition(),
-               joint_state_[i].getVelocity(), joint_state_[i].getEffort());
-  }
-
-  virtual void stopping(const ros::Time& time) 
-  {
-    ROS_INFO("Stopping JointState Controller");
-  }
+  void read();
+  void write();
 
 private:
-  std::vector<hardware_interface::JointState> joint_state_;
-
+  std::vector<double> joint_command_;
+  std::vector<double> joint_position_;
+  std::vector<double> joint_velocity_;
+  std::vector<double> joint_effort_;
+  std::vector<std::string> joint_name_;
 };
-
 }
 
 
-PLUGINLIB_DECLARE_CLASS(joint_state_controller, JointStateController, joint_state_controller::JointStateController, controller_interface::ControllerBase)
+#endif

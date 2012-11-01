@@ -50,13 +50,6 @@ ControllerManager::ControllerManager(hardware_interface::HardwareInterface *hw, 
   used_by_realtime_(-1),
   pub_controller_stats_(nh, "controller_statistics", 1),
   last_published_controller_stats_(ros::Time::now())
-{}
-
-ControllerManager::~ControllerManager()
-{}
-
-
-bool ControllerManager::init()
 {
   // pre-allocate for realtime publishing
   pub_controller_stats_.msg_.controller.resize(0);
@@ -76,10 +69,11 @@ bool ControllerManager::init()
   srv_unload_controller_ = cm_node_.advertiseService("unload_controller", &ControllerManager::unloadControllerSrv, this);
   srv_switch_controller_ = cm_node_.advertiseService("switch_controller", &ControllerManager::switchControllerSrv, this);
   srv_reload_libraries_ = cm_node_.advertiseService("reload_controller_libraries", &ControllerManager::reloadControllerLibrariesSrv, this);
-
-  return true;
 }
 
+
+ControllerManager::~ControllerManager()
+{}
 
 
 
@@ -458,13 +452,16 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
 
 void ControllerManager::publishControllerStatistics()
 {
+  ROS_INFO("Publish controller statistics");
   ros::Time now = ros::Time::now();
   if (now > last_published_controller_stats_ + publish_period_controller_stats_)
   {
     if (pub_controller_stats_.trylock())
     {
-      while (last_published_controller_stats_ + publish_period_controller_stats_ < now)
-        last_published_controller_stats_ = last_published_controller_stats_ + publish_period_controller_stats_;
+      while (last_published_controller_stats_ + publish_period_controller_stats_ < now){
+        last_published_controller_stats_ += publish_period_controller_stats_;
+        ROS_INFO("Last pub %f, period %f, now %f", last_published_controller_stats_.toSec(), publish_period_controller_stats_.toSec(), now.toSec());
+      }
 
 
       // controller state

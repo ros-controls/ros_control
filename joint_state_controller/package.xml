@@ -21,7 +21,7 @@
   <run_depend>controller_interface</run_depend>
 
   <export>
-    <polygon_interface_package plugin="${prefix}/joint_state_plugin.xml" />
+    <controller_interface plugin="${prefix}/joint_state_plugin.xml" />
   </export>
 
 </package>
