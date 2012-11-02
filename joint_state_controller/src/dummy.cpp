@@ -1,5 +1,5 @@
-///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2012, hiDOF INC.
+////////////////////////////////////////////////////////////////////////////
+// Copyright (C) 2012, hiDOF, INC>
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -8,7 +8,7 @@
 //   * Redistributions in binary form must reproduce the above copyright
 //     notice, this list of conditions and the following disclaimer in the
 //     documentation and/or other materials provided with the distribution.
-//   * Neither the name of Stanford University nor the names of its
+//   * Neither the name of Willow Garage, Inc. nor the names of its
 //     contributors may be used to endorse or promote products derived from
 //     this software without specific prior written permission.
 //
@@ -24,53 +24,37 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
-
 /*
  * Author: Wim Meeussen
  */
 
 
 #include "joint_state_controller/joint_state_controller.h"
+#include <hardware_interface/dummy_interface.h>
 
 
 
-namespace joint_state_controller
+int main(int argc, char** argv)
 {
+  ros::init(argc, argv, "dummy_controller");
+  ros::NodeHandle nh;
+  ros::AsyncSpinner spinner(4);
+  spinner.start();
 
-  bool JointStateController::init(hardware_interface::JointStateInterface* hw, ros::NodeHandle &n)
-  {
-    // get all joint states from the hardware interface
-    const std::vector<std::string>& joint_names = hw->getJointNames();
-    for (unsigned i=0; i<joint_names.size(); i++)
-      ROS_INFO("Got joint %s", joint_names[i].c_str());
+  // create hardware interface
+  hardware_interface::HardwareInterface* hw = new hardware_interface::DummyHardware();
+
+  // create controller
+  controller_interface::ControllerBase* c = new joint_state_controller::JointStateController();
 
 
-    for (unsigned i=0; i<joint_names.size(); i++)
-      joint_state_.push_back(hw->getJointState(joint_names[i]));
+  // initialize controller
+  c->initRequest(hw, nh);
+  
+  c->startRequest(ros::Time::now());
+  c->updateRequest(ros::Time::now());
 
-    return true;
-  }
-
-  void JointStateController::starting(const ros::Time& time) 
-  {
-    ROS_INFO("Starting JointState Controller");
-  }
-
-  void JointStateController::update(const ros::Time& time) 
-  {
-    ROS_INFO("Update JointState Controller");
-    for (unsigned i=0; i<joint_state_.size(); i++)
-      ROS_INFO("JointState of joint %s: %f  %f   %f", 
-               joint_state_[i].getName().c_str(), joint_state_[i].getPosition(),
-               joint_state_[i].getVelocity(), joint_state_[i].getEffort());
-  }
-
-  void JointStateController::stopping(const ros::Time& time) 
-  {
-    ROS_INFO("Stopping JointState Controller");
-  }
-
+  //  delete c;
+  //  delete hw;
+  return 0;
 }
-
-
-PLUGINLIB_DECLARE_CLASS(joint_state_controller, JointStateController, joint_state_controller::JointStateController, controller_interface::ControllerBase)

@@ -76,11 +76,14 @@ protected:
 
     // check if we can cast to type T
     std::vector<std::string> available_types = hw->getRegisteredTypes();
+
+
     available_types.push_back(typeid(*hw).name());
     bool correct_type = false;
     for (unsigned i=0; i<available_types.size(); i++)
       if (typeid(T).name() == available_types[i])
         correct_type = true;
+
     
     if (!correct_type){
       ROS_ERROR("This controller requires a hardware interface of type %s", typeid(T).name());

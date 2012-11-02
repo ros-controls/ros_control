@@ -14,8 +14,13 @@
   <build_depend>controller_manager_msgs</build_depend>
   <build_depend>hardware_interface</build_depend>
   <build_depend>realtime_utils</build_depend>
+  <build_depend>pluginlib</build_depend>
+  <build_depend>class_loader</build_depend>
 
   <run_depend>controller_manager_msgs</run_depend>
   <run_depend>controller_interface</run_depend>
   <run_depend>hardware_interface</run_depend>
+  <run_depend>realtime_utils</run_depend>
+  <run_depend>pluginlib</run_depend>
+  <run_depend>class_loader</run_depend>
 </package>

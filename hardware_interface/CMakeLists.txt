@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 
-include(../catkin_basic.cmake NO_POLICY_SCOPE)
+find_package(catkin_basic REQUIRED)
 catkin_basic(INCLUDE include LIBRARIES dummy_hardware_interface)
 
 add_library(dummy_hardware_interface SHARED src/dummy_interface.cpp)

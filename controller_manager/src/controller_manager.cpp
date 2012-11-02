@@ -220,17 +220,19 @@ bool ControllerManager::loadController(const std::string& name)
       ROS_ERROR("Could not load class %s: %s", type.c_str(), ex.what());
     }
   }
+  else
+  {
+    ROS_ERROR("Could not load controller '%s' because the type was not specified. Did you load the controller configuration on the parameter server?", name.c_str());
+    to.clear();
+    return false;
+  }
 
   // checks if controller was constructed
   if (!c)
   {
+    ROS_ERROR("Could not load controller '%s' because controller type '%s' does not exist.",  name.c_str(), type.c_str());
+    ROS_ERROR("Use 'rosservice call controller_manager/list_controller_types' to get the available types");
     to.clear();
-    if (type == "")
-      ROS_ERROR("Could not load controller '%s' because the type was not specified. Did you load the controller configuration on the parameter server?",
-              name.c_str());
-    else
-      ROS_ERROR("Could not load controller '%s' because controller type '%s' does not exist",
-                name.c_str(), type.c_str());
     return false;
   }
 
@@ -452,17 +454,13 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
 
 void ControllerManager::publishControllerStatistics()
 {
-  ROS_INFO("Publish controller statistics");
   ros::Time now = ros::Time::now();
   if (now > last_published_controller_stats_ + publish_period_controller_stats_)
   {
     if (pub_controller_stats_.trylock())
     {
-      while (last_published_controller_stats_ + publish_period_controller_stats_ < now){
+      while (last_published_controller_stats_ + publish_period_controller_stats_ < now)
         last_published_controller_stats_ += publish_period_controller_stats_;
-        ROS_INFO("Last pub %f, period %f, now %f", last_published_controller_stats_.toSec(), publish_period_controller_stats_.toSec(), now.toSec());
-      }
-
 
       // controller state
       std::vector<ControllerSpec> &controllers = controllers_lists_[used_by_realtime_];

@@ -30,47 +30,30 @@
  */
 
 
-#include "joint_state_controller/joint_state_controller.h"
+#include <controller_interface/controller.h>
+#include <hardware_interface/joint_state_interface.h>
+#include <pluginlib/class_list_macros.h>
+
 
 
 
 namespace joint_state_controller
 {
 
-  bool JointStateController::init(hardware_interface::JointStateInterface* hw, ros::NodeHandle &n)
-  {
-    // get all joint states from the hardware interface
-    const std::vector<std::string>& joint_names = hw->getJointNames();
-    for (unsigned i=0; i<joint_names.size(); i++)
-      ROS_INFO("Got joint %s", joint_names[i].c_str());
+// this controller gets access to the JointStateInterface 
+class JointStateController: public controller_interface::Controller<hardware_interface::JointStateInterface>
+{
+public:
+  JointStateController(){}
 
+  virtual bool init(hardware_interface::JointStateInterface* hw, ros::NodeHandle &n);
+  virtual void starting(const ros::Time& time);
+  virtual void update(const ros::Time& time);
+  virtual void stopping(const ros::Time& time);
 
-    for (unsigned i=0; i<joint_names.size(); i++)
-      joint_state_.push_back(hw->getJointState(joint_names[i]));
+private:
+  std::vector<hardware_interface::JointState> joint_state_;
 
-    return true;
-  }
-
-  void JointStateController::starting(const ros::Time& time) 
-  {
-    ROS_INFO("Starting JointState Controller");
-  }
-
-  void JointStateController::update(const ros::Time& time) 
-  {
-    ROS_INFO("Update JointState Controller");
-    for (unsigned i=0; i<joint_state_.size(); i++)
-      ROS_INFO("JointState of joint %s: %f  %f   %f", 
-               joint_state_[i].getName().c_str(), joint_state_[i].getPosition(),
-               joint_state_[i].getVelocity(), joint_state_[i].getEffort());
-  }
-
-  void JointStateController::stopping(const ros::Time& time) 
-  {
-    ROS_INFO("Stopping JointState Controller");
-  }
+};
 
 }
-
-
-PLUGINLIB_DECLARE_CLASS(joint_state_controller, JointStateController, joint_state_controller::JointStateController, controller_interface::ControllerBase)
