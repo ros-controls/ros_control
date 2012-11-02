@@ -76,7 +76,7 @@ namespace hardware_interface
   }
 
   
-  const double& DummyHardware::getJointPosition(const std::string& name) const
+  const double& DummyHardware::getPosition(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
@@ -86,7 +86,7 @@ namespace hardware_interface
   }
 
 
-  const double& DummyHardware::getJointVelocity(const std::string& name) const
+  const double& DummyHardware::getVelocity(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
@@ -96,7 +96,7 @@ namespace hardware_interface
   }
 
 
-  const double& DummyHardware::getJointEffort(const std::string& name) const
+  const double& DummyHardware::getEffort(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)

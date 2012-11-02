@@ -49,9 +49,9 @@ public:
 
   virtual const std::vector<std::string>& getJointNames() const;
   virtual double& getEffortCommand(const std::string& name);
-  virtual const double& getJointPosition(const std::string& name) const;
-  virtual const double& getJointVelocity(const std::string& name) const;
-  virtual const double& getJointEffort(const std::string& name) const;
+  virtual const double& getPosition(const std::string& name) const;
+  virtual const double& getVelocity(const std::string& name) const;
+  virtual const double& getEffort(const std::string& name) const;
 
   void read();
   void write();

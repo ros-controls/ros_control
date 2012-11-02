@@ -67,17 +67,17 @@ public:
   JointState getJointState(const std::string& name) const
   {
     return JointState(name, 
-                      getJointPosition(name),
-                      getJointVelocity(name),
-                      getJointEffort(name));
+                      getPosition(name),
+                      getVelocity(name),
+                      getEffort(name));
   }
 
   virtual const std::vector<std::string>& getJointNames() const = 0;
 
 protected:
-  virtual const double& getJointPosition(const std::string& name) const = 0;
-  virtual const double& getJointVelocity(const std::string& name) const = 0;
-  virtual const double& getJointEffort(const std::string& name) const = 0;
+  virtual const double& getPosition(const std::string& name) const = 0;
+  virtual const double& getVelocity(const std::string& name) const = 0;
+  virtual const double& getEffort(const std::string& name) const = 0;
 
   JointStateInterface() {registerType(typeid(JointStateInterface).name());}
 };
