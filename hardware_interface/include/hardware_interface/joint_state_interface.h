@@ -64,7 +64,7 @@ private:
 class JointStateInterface: public HardwareInterface
 {
 public:
-  const JointState getJointState(const std::string& name) const
+  JointState getJointState(const std::string& name) const
   {
     return JointState(name, 
                       getJointPosition(name),

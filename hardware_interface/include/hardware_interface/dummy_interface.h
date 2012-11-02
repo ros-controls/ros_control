@@ -42,13 +42,13 @@ namespace hardware_interface
 {
 
 
-class DummyHardware: public hardware_interface::JointEffortInterface
+class DummyHardware: public hardware_interface::JointEffortCommandInterface
 {
 public:
   DummyHardware();
 
   virtual const std::vector<std::string>& getJointNames() const;
-  virtual double& getJointCommand(const std::string& name);
+  virtual double& getEffortCommand(const std::string& name);
   virtual const double& getJointPosition(const std::string& name) const;
   virtual const double& getJointVelocity(const std::string& name) const;
   virtual const double& getJointEffort(const std::string& name) const;

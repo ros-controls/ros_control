@@ -66,7 +66,7 @@ namespace hardware_interface
   }
 
 
-  double& DummyHardware::getJointCommand(const std::string& name)
+  double& DummyHardware::getEffortCommand(const std::string& name)
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
