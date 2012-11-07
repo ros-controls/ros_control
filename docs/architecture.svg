@@ -104,18 +104,18 @@
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="378.30019"
-     inkscape:cy="629.60667"
+     inkscape:cx="192.94305"
+     inkscape:cy="629.96381"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1591"
-     inkscape:window-height="1013"
-     inkscape:window-x="203"
-     inkscape:window-y="0"
+     inkscape:window-width="1215"
+     inkscape:window-height="936"
+     inkscape:window-x="406"
+     inkscape:window-y="95"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
@@ -141,21 +141,30 @@
        x="103.41809"
        y="276.82498"
        rx="10"
-       ry="10" />
+       ry="10"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:#ffffff;stroke:#000000;stroke-width:0.99999994000000003;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1"
        id="rect3755"
        width="125.764"
        height="22.72843"
        x="119.3949"
-       y="346.9552" />
+       y="346.9552"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="127.4558"
        y="361.66296"
        id="text3757"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan3759"
          x="127.4558"
@@ -167,7 +176,10 @@
        x="97.44796"
        y="267.14819"
        id="text3757-6"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan3759-2"
          x="97.44796"
@@ -179,7 +191,10 @@
        x="123.74456"
        y="298.52982"
        id="text3757-6-4"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan3759-2-2"
          x="123.74456"
@@ -203,14 +218,20 @@
        x="130.56671"
        y="522.66956"
        rx="5"
-       ry="5" />
+       ry="5"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="154.24216"
        y="517.09906"
        id="text3757-2-4"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan3759-1-2"
          x="154.24216"
@@ -222,7 +243,10 @@
        x="140.65309"
        y="548.28619"
        id="text3757-6-4-4-9"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          x="140.65309"
          y="548.28619"
@@ -233,13 +257,19 @@
        d="m 230.57143,534.45371 c 16.65558,-36.33344 23.87991,-107.28311 0,-154.7775"
        id="path3935"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutL)"
        d="m 148.23126,376.50504 c -16.65558,36.33344 -23.87991,107.28311 0,154.77749"
        id="path3935-9"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:none"
        id="rect4405"
@@ -248,14 +278,20 @@
        x="88.428574"
        y="397.31677"
        rx="5.0000005"
-       ry="5" />
+       ry="5"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="99.87178"
        y="408.81638"
        id="text3757-2"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan3759-1"
          x="99.87178"
@@ -266,7 +302,10 @@
        d="m 122.85714,438.79075 c -57.067833,0 -65.022478,-131.42857 -10.71428,-131.42857"
        id="path4785"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:#ffa99c;fill-opacity:1;stroke:#000000;stroke-width:0.99999987999999995;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect2985-5"
@@ -275,14 +314,20 @@
        x="116.50757"
        y="412.71854"
        rx="5.0000005"
-       ry="5" />
+       ry="5"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="128.85886"
        y="427.62094"
        id="text3757-6-4-4"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan3759-2-2-9"
          x="128.85886"
@@ -306,14 +351,20 @@
        x="217.71428"
        y="428.43359"
        rx="5.0000005"
-       ry="5" />
+       ry="5"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="201.04506"
        y="443.00531"
        id="text3757-2-5"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan3759-1-7"
          x="201.04506"
@@ -325,7 +376,10 @@
        x="139.41476"
        y="565.26385"
        id="text3757-6-4-4-9-5"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          x="139.41476"
          y="565.26385"
@@ -336,12 +390,18 @@
        d="m 273.60954,563.38029 c 48.04631,-23.46933 77.90508,-267.7734 -56.42857,-267.7734"
        id="path3935-0"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutL)"
        d="m 115.14229,295.7612 c -103.95036,0 -78.603804,265.63054 13.57142,265.63054"
        id="path3935-0-2"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>
