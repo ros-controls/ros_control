@@ -1,14 +1,12 @@
 <package>
   <description>
-    Hardware Interaface base class.
+    Messages and services for the controller manager.
   </description>
   <author>Wim Meeussen</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>https://bitbucket.org/hidof/controller-manager/wiki/</url>
 
-  <export>
-    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lhardware_interface" />
-  </export>
+  <depend package="std_msgs"/>
 
 </package>

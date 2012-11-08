@@ -1,0 +1,17 @@
+<package>
+  <description>
+        The controller manager.
+  </description>
+  <author>Wim Meeussen</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/hidof/controller-manager/wiki/</url>
+
+  <depend package="controller_interface"/>
+  <depend package="controller_manager_msgs"/>
+  <depend package="hardware_interface"/>
+  <depend package="realtime_utils"/>
+  <depend package="pluginlib"/>
+  <!-- depend package="class_loader"/ -->
+
+</package>

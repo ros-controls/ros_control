@@ -1,14 +1,18 @@
 <package>
   <description>
-    Hardware Interaface base class.
+    Interface base class for controllers
   </description>
   <author>Wim Meeussen</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>https://bitbucket.org/hidof/controller-manager/wiki/</url>
 
+  <depend package="roscpp"/>
+  <depend package="hardware_interface"/>
+  <depend package="pluginlib"/>
+
   <export>
-    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lhardware_interface" />
+    <cpp cflags="-I${prefix}/include" />
   </export>
 
 </package>

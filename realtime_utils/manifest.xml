@@ -1,14 +1,17 @@
 <package>
   <description>
-    Hardware Interaface base class.
+    Utilities for realtime systems
   </description>
   <author>Wim Meeussen</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>https://bitbucket.org/hidof/controller-manager/wiki/</url>
 
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+
   <export>
-    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lhardware_interface" />
+    <cpp cflags="-I${prefix}/include" />
   </export>
 
 </package>
