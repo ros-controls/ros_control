@@ -49,7 +49,7 @@ public:
   void setEffortCommand(double command) {*cmd_ = command;};
 
 private:
-  const JointState js_;
+  JointState js_;
   double* cmd_;
 };
 
@@ -90,7 +90,7 @@ public:
   void setVelocityCommand(double command) {*cmd_ = command;};
 
 private:
-  const JointState js_;
+  JointState js_;
   double* cmd_;
 };
 
@@ -132,7 +132,7 @@ public:
   void setPositionCommand(double command) {*cmd_ = command;};
 
 private:
-  const JointState js_;
+  JointState js_;
   double* cmd_;
 };
 

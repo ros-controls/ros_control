@@ -25,45 +25,34 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/*
- * Author: Wim Meeussen
- */
+#ifndef CONTROLLER_MANAGER_TESTS_EFFORT_TEST_CONTROLLER_H
+#define CONTROLLER_MANAGER_TESTS_EFFORT_TEST_CONTROLLER_H
 
 
-
-#ifndef HARDWARE_INTERFACE_DUMMY_INTERFACE_H
-#define HARDWARE_INTERFACE_DUMMY_INTERFACE_H
-
-
-#include "hardware_interface/joint_command_interface.h"
+#include <controller_interface/controller.h>
+#include <hardware_interface/joint_command_interface.h>
+#include <pluginlib/class_list_macros.h>
 
 
-namespace hardware_interface
+namespace controller_manager_tests
 {
 
 
-class DummyHardware: public hardware_interface::JointEffortCommandInterface
+class EffortTestController: public controller_interface::Controller<hardware_interface::JointEffortCommandInterface>
 {
 public:
-  DummyHardware();
+  EffortTestController(){}
 
-  virtual const std::vector<std::string>& getJointNames() const;
-  virtual double& getEffortCommand(const std::string& name);
-  virtual const double& getPosition(const std::string& name) const;
-  virtual const double& getVelocity(const std::string& name) const;
-  virtual const double& getEffort(const std::string& name) const;
-
-  void read();
-  void write();
+  bool init(hardware_interface::JointEffortCommandInterface* hw, ros::NodeHandle &n);
+  void starting(const ros::Time& time);
+  void update(const ros::Time& time);
+  void stopping(const ros::Time& time);
 
 private:
-  std::vector<double> joint_command_;
-  std::vector<double> joint_position_;
-  std::vector<double> joint_velocity_;
-  std::vector<double> joint_effort_;
-  std::vector<std::string> joint_name_;
-};
-}
+  std::vector<hardware_interface::JointEffortCommand> joint_effort_commands_;
 
+};
+
+}
 
 #endif

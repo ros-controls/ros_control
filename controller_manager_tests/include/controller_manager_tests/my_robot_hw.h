@@ -29,59 +29,40 @@
  * Author: Wim Meeussen
  */
 
-#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 
-#include "hardware_interface/hardware_interface.h"
-#include <string>
-#include <vector>
+#ifndef CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
+#define CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
 
+#include "hardware_interface/joint_command_interface.h"
 
-namespace hardware_interface{
+namespace hardware_interface
+{
 
-class JointState
+class MyRobotHW: public hardware_interface::JointEffortCommandInterface, public hardware_interface::JointVelocityCommandInterface
 {
 public:
-  JointState(const std::string& name, const double& pos, const double& vel, const double& eff)
-    : name_(name), pos_(&pos), vel_(&vel), eff_(&eff)
-  {}
+  MyRobotHW();
 
-  std::string getName() const {return name_;}
-  double getPosition() const {return *pos_;}
-  double getVelocity() const {return *vel_;}
-  double getEffort()   const {return *eff_;}
+  const std::vector<std::string>& getJointNames() const;
+  double& getEffortCommand(const std::string& name);
+  double& getVelocityCommand(const std::string& name);
+  const double& getPosition(const std::string& name) const;
+  const double& getVelocity(const std::string& name) const;
+  const double& getEffort(const std::string& name) const;
 
-
-private:
-  std::string name_;
-  const double* pos_;
-  const double* vel_;
-  const double* eff_;
-};
-
-
-
-class JointStateInterface: public HardwareInterface
-{
-public:
-  JointState getJointState(const std::string& name) const
-  {
-    return JointState(name,
-                      getPosition(name),
-                      getVelocity(name),
-                      getEffort(name));
-  }
-
-  virtual const std::vector<std::string>& getJointNames() const = 0;
+  void read();
+  void write();
 
 protected:
-  virtual const double& getPosition(const std::string& name) const = 0;
-  virtual const double& getVelocity(const std::string& name) const = 0;
-  virtual const double& getEffort(const std::string& name) const = 0;
 
-  JointStateInterface() {registerType(typeid(JointStateInterface).name());}
+private:
+  std::vector<double> joint_command_;
+  std::vector<double> joint_position_;
+  std::vector<double> joint_velocity_;
+  std::vector<double> joint_effort_;
+  std::vector<std::string> joint_name_;
 };
-
 }
+
 
 #endif
