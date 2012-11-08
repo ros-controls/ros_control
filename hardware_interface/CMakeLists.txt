@@ -1,8 +1,14 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.4.6)
+include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
-find_package(catkin_basic REQUIRED)
-catkin_basic(INCLUDE include LIBRARIES dummy_hardware_interface)
+# Set the build type.  Options are:
+#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
+#  Debug          : w/ debug symbols, w/o optimization
+#  Release        : w/o debug symbols, w/ optimization
+#  RelWithDebInfo : w/ debug symbols, w/ optimization
+#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
+#set(ROS_BUILD_TYPE RelWithDebInfo)
 
-add_library(dummy_hardware_interface SHARED src/dummy_interface.cpp)
-target_link_libraries(dummy_hardware_interface ${Boost_LIBRARIES} ${catkin_LIBRARIES})
+rosbuild_init()
 
+rosbuild_add_library(${PROJECT_NAME} src/dummy_interface.cpp)
