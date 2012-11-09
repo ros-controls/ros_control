@@ -16,5 +16,5 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 rosbuild_add_library(${PROJECT_NAME} src/joint_state_controller.cpp)
 
-rosbuild_add_executable(dummy_controller src/dummy.cpp)
-target_link_libraries(dummy_controller ${PROJECT_NAME})
+#rosbuild_add_executable(dummy_controller src/dummy.cpp)
+#target_link_libraries(dummy_controller ${PROJECT_NAME})

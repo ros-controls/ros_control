@@ -1,4 +1,4 @@
-<library path="libcontroller_manager_tests">
+<library path="lib/libcontroller_manager_tests">
   <class name="controller_manager_tests/EffortTestController" type="controller_manager_tests::EffortTestController" base_class_type="controller_interface::ControllerBase">
   <description>
     The effort test controller expects a JointEffortCommandInterface type of hardware interface.

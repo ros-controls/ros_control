@@ -35,11 +35,21 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "DummyApp");
 
+  ros::AsyncSpinner spinner(1);
+  spinner.start();
+
   MyRobotHW hw;
 
   ros::NodeHandle nh;
   controller_manager::ControllerManager cm(&hw, nh);
 
-  ros::spin();
+  while (ros::ok())
+  {
+    ROS_INFO("loop");
+    hw.read();
+    cm.update(ros::Time::now());
+    hw.write();
+    ros::Duration(1.0).sleep();
+  }
 }
 

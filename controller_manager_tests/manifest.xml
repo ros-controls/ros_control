@@ -8,6 +8,7 @@
   <url>http://ros.org/wiki/controller_manager_tests</url>
 
   <depend package="controller_manager"/>
+  <depend package="controller_interface"/>
 
   <export>
     <controller_interface plugin="${prefix}/test_controllers_plugin.xml" />
