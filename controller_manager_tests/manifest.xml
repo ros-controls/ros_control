@@ -9,6 +9,10 @@
 
   <depend package="controller_manager"/>
 
+  <export>
+    <controller_interface plugin="${prefix}/test_controllers_plugin.xml" />
+  </export>
+
 </package>
 
 

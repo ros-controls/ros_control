@@ -61,7 +61,7 @@ private:
 
 
 
-class JointStateInterface: public HardwareInterface
+class JointStateInterface: virtual public HardwareInterface
 {
 public:
   JointState getJointState(const std::string& name) const

@@ -25,45 +25,21 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/*
- * Author: Wim Meeussen
- */
+#include <ros/ros.h>
+#include <controller_manager/controller_manager.h>
+#include <controller_manager_tests/my_robot_hw.h>
 
+using namespace controller_manager_tests;
 
-#ifndef CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
-#define CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
-
-#include "hardware_interface/joint_command_interface.h"
-
-namespace controller_manager_tests
+int main(int argc, char** argv)
 {
+  ros::init(argc, argv, "DummyApp");
 
-class MyRobotHW: public hardware_interface::JointEffortCommandInterface, public hardware_interface::JointVelocityCommandInterface
-{
-public:
-  MyRobotHW();
+  MyRobotHW hw;
 
-  const std::vector<std::string>& getJointNames() const;
-  double& getEffortCommand(const std::string& name);
-  double& getVelocityCommand(const std::string& name);
-  const double& getPosition(const std::string& name) const;
-  const double& getVelocity(const std::string& name) const;
-  const double& getEffort(const std::string& name) const;
+  ros::NodeHandle nh;
+  controller_manager::ControllerManager cm(&hw, nh);
 
-  void read();
-  void write();
-
-protected:
-
-private:
-  std::vector<double> joint_effort_command_;
-  std::vector<double> joint_velocity_command_;
-  std::vector<double> joint_position_;
-  std::vector<double> joint_velocity_;
-  std::vector<double> joint_effort_;
-  std::vector<std::string> joint_name_;
-};
+  ros::spin();
 }
 
-
-#endif

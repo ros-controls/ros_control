@@ -11,4 +11,4 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 rosbuild_init()
 
-rosbuild_add_library(${PROJECT_NAME} src/dummy_interface.cpp)
+#rosbuild_add_library(${PROJECT_NAME} src/dummy_interface.cpp)

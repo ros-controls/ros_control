@@ -54,7 +54,7 @@ private:
 };
 
 
-class JointEffortCommandInterface: public JointStateInterface
+class JointEffortCommandInterface: virtual public JointStateInterface
 {
 public:
   JointEffortCommandInterface()
@@ -95,7 +95,7 @@ private:
 };
 
 
-class JointVelocityCommandInterface: public JointStateInterface
+class JointVelocityCommandInterface: virtual public JointStateInterface
 {
 public:
   JointVelocityCommandInterface()
@@ -137,7 +137,7 @@ private:
 };
 
 
-class JointPositionCommandInterface: public JointStateInterface
+class JointPositionCommandInterface: virtual public JointStateInterface
 {
 public:
   JointPositionCommandInterface()

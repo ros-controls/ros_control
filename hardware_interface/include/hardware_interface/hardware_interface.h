@@ -46,7 +46,7 @@ class HardwareInterface
 public:
   std::vector<std::string> getRegisteredTypes() {return types_;}
   void registerType(std::string type) { types_.push_back(type); }
-
+  virtual ~HardwareInterface() { };
 private:
   std::vector<std::string> types_;
 };
@@ -60,7 +60,7 @@ private:
 class HardwareInterfaceException: public std::exception
 {
 public:
-  HardwareInterfaceException(const std::string& message) 
+  HardwareInterfaceException(const std::string& message)
     : msg(message) {};
 
   virtual ~HardwareInterfaceException() throw() {};

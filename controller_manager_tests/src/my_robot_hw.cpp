@@ -32,7 +32,7 @@
 
 #include <controller_manager_tests/my_robot_hw.h>
 
-namespace hardware_interface
+namespace controller_manager_tests
 {
 
   MyRobotHW::MyRobotHW()
@@ -40,20 +40,23 @@ namespace hardware_interface
     joint_position_.resize(2);
     joint_velocity_.resize(2);
     joint_effort_.resize(2);
-    joint_command_.resize(2);
+    joint_effort_command_.resize(2);
+    joint_velocity_command_.resize(2);
     joint_name_.resize(2);
 
     joint_name_[0] = "hiDOF_joint1";
     joint_position_[0] = 1.0;
     joint_velocity_[0] = 0.0;
     joint_effort_[0] = 0.1;
-    joint_command_[0] = 0.0;
+    joint_effort_command_[0] = 0.0;
+    joint_velocity_command_[0] = 0.0;
 
     joint_name_[1] = "hiDOF_joint2";
     joint_position_[1] = 1.0;
     joint_velocity_[1] = 0.0;
     joint_effort_[1] = 0.1;
-    joint_command_[1] = 0.0;
+    joint_effort_command_[1] = 0.0;
+    joint_velocity_command_[1] = 0.0;
   }
 
 
@@ -68,11 +71,19 @@ namespace hardware_interface
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
-        return joint_command_[i];
+        return joint_effort_command_[i];
 
     throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
   }
 
+  double& MyRobotHW::getVelocityCommand(const std::string& name)
+  {
+    for (unsigned i=0; i<joint_name_.size(); i++)
+      if (joint_name_[i] == name)
+        return joint_velocity_command_[i];
+
+    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
+  }
 
   const double& MyRobotHW::getPosition(const std::string& name) const
   {

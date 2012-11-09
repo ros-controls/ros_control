@@ -84,19 +84,19 @@ protected:
       if (typeid(T).name() == available_types[i])
         correct_type = true;
 
-    
+
     if (!correct_type){
       ROS_ERROR("This controller requires a hardware interface of type %s", typeid(T).name());
       return false;
     }
-    
+
     // cast the hw, and initialize the controller
-    T* hw_t = static_cast<T*>(hw);
+    T* hw_t = dynamic_cast<T*>(hw);
     if (!init(hw_t, n)){
       ROS_ERROR("Failed to initialize the controller");
       return false;
     }
-    
+
     // success
     state_ = INITIALIZED;
     return true;

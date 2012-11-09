@@ -14,4 +14,8 @@
   <depend package="pluginlib"/>
   <!-- depend package="class_loader"/ -->
 
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lcontroller_manager" />
+  </export>
+
 </package>

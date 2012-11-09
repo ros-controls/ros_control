@@ -27,5 +27,6 @@ rosbuild_add_library(${PROJECT_NAME} src/my_robot_hw.cpp
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
-#rosbuild_add_executable(example examples/example.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
+
+rosbuild_add_executable(dummy_app src/dummy_app.cpp)
+target_link_libraries(dummy_app ${PROJECT_NAME})
