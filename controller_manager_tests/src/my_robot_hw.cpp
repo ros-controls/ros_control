@@ -67,49 +67,49 @@ namespace controller_manager_tests
   }
 
 
-  double& MyRobotHW::getEffortCommand(const std::string& name)
+  double* MyRobotHW::getEffortCommand(const std::string& name)
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
-        return joint_effort_command_[i];
+        return &joint_effort_command_[i];
 
     throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
   }
 
-  double& MyRobotHW::getVelocityCommand(const std::string& name)
+  double* MyRobotHW::getVelocityCommand(const std::string& name)
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
-        return joint_velocity_command_[i];
+        return &joint_velocity_command_[i];
 
     throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
   }
 
-  const double& MyRobotHW::getPosition(const std::string& name) const
+  const double* MyRobotHW::getPosition(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
-        return joint_position_[i];
-
-    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
-  }
-
-
-  const double& MyRobotHW::getVelocity(const std::string& name) const
-  {
-    for (unsigned i=0; i<joint_name_.size(); i++)
-      if (joint_name_[i] == name)
-        return joint_velocity_[i];
+        return &joint_position_[i];
 
     throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
   }
 
 
-  const double& MyRobotHW::getEffort(const std::string& name) const
+  const double* MyRobotHW::getVelocity(const std::string& name) const
   {
     for (unsigned i=0; i<joint_name_.size(); i++)
       if (joint_name_[i] == name)
-        return joint_effort_[i];
+        return &joint_velocity_[i];
+
+    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
+  }
+
+
+  const double* MyRobotHW::getEffort(const std::string& name) const
+  {
+    for (unsigned i=0; i<joint_name_.size(); i++)
+      if (joint_name_[i] == name)
+        return &joint_effort_[i];
 
     throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
   }

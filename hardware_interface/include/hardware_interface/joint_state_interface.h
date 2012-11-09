@@ -42,8 +42,8 @@ namespace hardware_interface{
 class JointState
 {
 public:
-  JointState(const std::string& name, const double& pos, const double& vel, const double& eff)
-    : name_(name), pos_(&pos), vel_(&vel), eff_(&eff)
+  JointState(const std::string& name, const double* pos, const double* vel, const double* eff)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff)
   {}
 
   std::string getName() const {return name_;}
@@ -75,9 +75,9 @@ public:
   virtual const std::vector<std::string>& getJointNames() const = 0;
 
 protected:
-  virtual const double& getPosition(const std::string& name) const = 0;
-  virtual const double& getVelocity(const std::string& name) const = 0;
-  virtual const double& getEffort(const std::string& name) const = 0;
+  virtual const double* getPosition(const std::string& name) const = 0;
+  virtual const double* getVelocity(const std::string& name) const = 0;
+  virtual const double* getEffort(const std::string& name) const = 0;
 
   JointStateInterface() {registerType(typeid(JointStateInterface).name());}
 };

@@ -45,11 +45,11 @@ public:
   MyRobotHW();
 
   const std::vector<std::string>& getJointNames() const;
-  double& getEffortCommand(const std::string& name);
-  double& getVelocityCommand(const std::string& name);
-  const double& getPosition(const std::string& name) const;
-  const double& getVelocity(const std::string& name) const;
-  const double& getEffort(const std::string& name) const;
+  double* getEffortCommand(const std::string& name);
+  double* getVelocityCommand(const std::string& name);
+  const double* getPosition(const std::string& name) const;
+  const double* getVelocity(const std::string& name) const;
+  const double* getEffort(const std::string& name) const;
 
   void read();
   void write();

@@ -41,8 +41,8 @@ namespace hardware_interface{
 class JointEffortCommand
 {
 public:
-  JointEffortCommand(const JointState& js, double& cmd)
-    : js_(js), cmd_(&cmd)
+  JointEffortCommand(const JointState& js, double* cmd)
+    : js_(js), cmd_(cmd)
   {}
 
   const JointState& getJointState() const {return js_;}
@@ -70,7 +70,7 @@ public:
 
 protected:
   // Virtual function to give access to command for joint
-  virtual double& getEffortCommand(const std::string& name) = 0;
+  virtual double* getEffortCommand(const std::string& name) = 0;
 };
 
 
@@ -82,8 +82,8 @@ protected:
 class JointVelocityCommand
 {
 public:
-  JointVelocityCommand(const JointState& js, double& cmd)
-    : js_(js), cmd_(&cmd)
+  JointVelocityCommand(const JointState& js, double* cmd)
+    : js_(js), cmd_(cmd)
   {}
 
   const JointState& getJointState() const {return js_;}
@@ -111,7 +111,7 @@ public:
 
 protected:
   // Virtual function to give access to command for joint
-  virtual double& getVelocityCommand(const std::string& name) = 0;
+  virtual double* getVelocityCommand(const std::string& name) = 0;
 };
 
 
@@ -124,8 +124,8 @@ protected:
 class JointPositionCommand
 {
 public:
-  JointPositionCommand(const JointState& js, double& cmd)
-    : js_(js), cmd_(&cmd)
+  JointPositionCommand(const JointState& js, double* cmd)
+    : js_(js), cmd_(cmd)
   {}
 
   const JointState& getJointState() const {return js_;}
@@ -153,7 +153,7 @@ public:
 
 protected:
   // Virtual function to give access to command for joint
-  virtual double& getPositionCommand(const std::string& name) = 0;
+  virtual double* getPositionCommand(const std::string& name) = 0;
 };
 
 
