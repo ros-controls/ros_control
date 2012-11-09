@@ -8,7 +8,7 @@
 //   * Redistributions in binary form must reproduce the above copyright
 //     notice, this list of conditions and the following disclaimer in the
 //     documentation and/or other materials provided with the distribution.
-//   * Neither the name of Stanford University nor the names of its
+//   * Neither the name of hiDOF, Inc. nor the names of its
 //     contributors may be used to endorse or promote products derived from
 //     this software without specific prior written permission.
 //
@@ -40,7 +40,7 @@
 namespace joint_state_controller
 {
 
-// this controller gets access to the JointStateInterface 
+// this controller gets access to the JointStateInterface
 class JointStateController: public controller_interface::Controller<hardware_interface::JointStateInterface>
 {
 public:

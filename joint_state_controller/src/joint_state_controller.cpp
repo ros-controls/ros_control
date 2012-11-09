@@ -8,7 +8,7 @@
 //   * Redistributions in binary form must reproduce the above copyright
 //     notice, this list of conditions and the following disclaimer in the
 //     documentation and/or other materials provided with the distribution.
-//   * Neither the name of Stanford University nor the names of its
+//   * Neither the name of hiDOF Inc nor the names of its
 //     contributors may be used to endorse or promote products derived from
 //     this software without specific prior written permission.
 //
@@ -51,21 +51,21 @@ namespace joint_state_controller
     return true;
   }
 
-  void JointStateController::starting(const ros::Time& time) 
+  void JointStateController::starting(const ros::Time& time)
   {
     ROS_INFO("Starting JointState Controller");
   }
 
-  void JointStateController::update(const ros::Time& time) 
+  void JointStateController::update(const ros::Time& time)
   {
     ROS_INFO("Update JointState Controller");
     for (unsigned i=0; i<joint_state_.size(); i++)
-      ROS_INFO("JointState of joint %s: %f  %f   %f", 
+      ROS_INFO("JointState of joint %s: %f  %f   %f",
                joint_state_[i].getName().c_str(), joint_state_[i].getPosition(),
                joint_state_[i].getVelocity(), joint_state_[i].getEffort());
   }
 
-  void JointStateController::stopping(const ros::Time& time) 
+  void JointStateController::stopping(const ros::Time& time)
   {
     ROS_INFO("Stopping JointState Controller");
   }
