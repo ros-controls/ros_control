@@ -1,0 +1,19 @@
+<package>
+  <description>
+    Controller to publish joint state
+  </description>
+  <author>Wim Meeussen</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/hidof/controller-manager/wiki/</url>
+
+  <depend package="roscpp"/>
+  <depend package="hardware_interface"/>
+  <depend package="pluginlib"/>
+  <depend package="controller_interface"/>
+
+  <export>
+    <controller_interface plugin="${prefix}/joint_state_plugin.xml" />
+  </export>
+
+</package>

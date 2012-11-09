@@ -1,0 +1,10 @@
+syntax: regexp
+.*/build/.*
+.*\.so
+~$
+msg_gen/
+srv_gen/
+src/.*/msg/
+src/.*/srv/
+controller_manager_msgs/src/controller_manager_msgs/__init__.py
+bin/

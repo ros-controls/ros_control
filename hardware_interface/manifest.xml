@@ -1,0 +1,14 @@
+<package>
+  <description>
+    Hardware Interaface base class.
+  </description>
+  <author>Wim Meeussen</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/hidof/controller-manager/wiki/</url>
+
+  <export>
+    <cpp cflags="-I${prefix}/include" />
+  </export>
+
+</package>

@@ -1,0 +1,12 @@
+<package>
+  <description>
+    Messages and services for the controller manager.
+  </description>
+  <author>Wim Meeussen</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/hidof/controller-manager/wiki/</url>
+
+  <depend package="std_msgs"/>
+
+</package>

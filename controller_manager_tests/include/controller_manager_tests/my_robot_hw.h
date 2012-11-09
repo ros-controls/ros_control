@@ -30,34 +30,34 @@
  */
 
 
-
-#ifndef HARDWARE_INTERFACE_DUMMY_INTERFACE_H
-#define HARDWARE_INTERFACE_DUMMY_INTERFACE_H
-
+#ifndef CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
+#define CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
 
 #include "hardware_interface/joint_command_interface.h"
 
-
-namespace hardware_interface
+namespace controller_manager_tests
 {
 
-
-class DummyHardware: public hardware_interface::JointEffortCommandInterface
+class MyRobotHW: public hardware_interface::JointEffortCommandInterface, public hardware_interface::JointVelocityCommandInterface
 {
 public:
-  DummyHardware();
+  MyRobotHW();
 
-  virtual const std::vector<std::string>& getJointNames() const;
-  virtual double& getEffortCommand(const std::string& name);
-  virtual const double& getPosition(const std::string& name) const;
-  virtual const double& getVelocity(const std::string& name) const;
-  virtual const double& getEffort(const std::string& name) const;
+  const std::vector<std::string>& getJointNames() const;
+  double& getEffortCommand(const std::string& name);
+  double& getVelocityCommand(const std::string& name);
+  const double& getPosition(const std::string& name) const;
+  const double& getVelocity(const std::string& name) const;
+  const double& getEffort(const std::string& name) const;
 
   void read();
   void write();
 
+protected:
+
 private:
-  std::vector<double> joint_command_;
+  std::vector<double> joint_effort_command_;
+  std::vector<double> joint_velocity_command_;
   std::vector<double> joint_position_;
   std::vector<double> joint_velocity_;
   std::vector<double> joint_effort_;

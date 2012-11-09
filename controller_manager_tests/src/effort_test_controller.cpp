@@ -25,63 +25,41 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/*
- * Author: Wim Meeussen
- */
 
-#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
+#include <controller_manager_tests/effort_test_controller.h>
 
-#include "hardware_interface/hardware_interface.h"
-#include <string>
-#include <vector>
+using namespace controller_manager_tests;
 
-
-namespace hardware_interface{
-
-class JointState
+bool EffortTestController::init(hardware_interface::JointEffortCommandInterface* hw, ros::NodeHandle &n)
 {
-public:
-  JointState(const std::string& name, const double& pos, const double& vel, const double& eff)
-    : name_(name), pos_(&pos), vel_(&vel), eff_(&eff)
-  {}
-
-  std::string getName() const {return name_;}
-  double getPosition() const {return *pos_;}
-  double getVelocity() const {return *vel_;}
-  double getEffort()   const {return *eff_;}
+  // get all joint states from the hardware interface
+  const std::vector<std::string>& joint_names = hw->getJointNames();
+  for (unsigned i=0; i<joint_names.size(); i++)
+    ROS_INFO("Got joint %s", joint_names[i].c_str());
 
 
-private:
-  std::string name_;
-  const double* pos_;
-  const double* vel_;
-  const double* eff_;
-};
+  for (unsigned i=0; i<joint_names.size(); i++)
+    joint_effort_commands_.push_back(hw->getJointEffortCommand(joint_names[i]));
 
-
-
-class JointStateInterface: virtual public HardwareInterface
-{
-public:
-  JointState getJointState(const std::string& name) const
-  {
-    return JointState(name,
-                      getPosition(name),
-                      getVelocity(name),
-                      getEffort(name));
-  }
-
-  virtual const std::vector<std::string>& getJointNames() const = 0;
-
-protected:
-  virtual const double& getPosition(const std::string& name) const = 0;
-  virtual const double& getVelocity(const std::string& name) const = 0;
-  virtual const double& getEffort(const std::string& name) const = 0;
-
-  JointStateInterface() {registerType(typeid(JointStateInterface).name());}
-};
-
+  return true;
 }
 
-#endif
+void EffortTestController::starting(const ros::Time& time)
+{
+  ROS_INFO("Starting JointState Controller");
+}
+
+void EffortTestController::update(const ros::Time& time)
+{
+  for (unsigned int i=0; i < joint_effort_commands_.size(); i++)
+  {
+
+  }
+}
+
+void EffortTestController::stopping(const ros::Time& time)
+{
+  ROS_INFO("Stopping JointState Controller");
+}
+
+PLUGINLIB_DECLARE_CLASS(controller_manager_tests, EffortTestController, controller_manager_tests::EffortTestController, controller_interface::ControllerBase)

@@ -25,63 +25,21 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/*
- * Author: Wim Meeussen
- */
+#include <ros/ros.h>
+#include <controller_manager/controller_manager.h>
+#include <controller_manager_tests/my_robot_hw.h>
 
-#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
+using namespace controller_manager_tests;
 
-#include "hardware_interface/hardware_interface.h"
-#include <string>
-#include <vector>
-
-
-namespace hardware_interface{
-
-class JointState
+int main(int argc, char** argv)
 {
-public:
-  JointState(const std::string& name, const double& pos, const double& vel, const double& eff)
-    : name_(name), pos_(&pos), vel_(&vel), eff_(&eff)
-  {}
+  ros::init(argc, argv, "DummyApp");
 
-  std::string getName() const {return name_;}
-  double getPosition() const {return *pos_;}
-  double getVelocity() const {return *vel_;}
-  double getEffort()   const {return *eff_;}
+  MyRobotHW hw;
 
+  ros::NodeHandle nh;
+  controller_manager::ControllerManager cm(&hw, nh);
 
-private:
-  std::string name_;
-  const double* pos_;
-  const double* vel_;
-  const double* eff_;
-};
-
-
-
-class JointStateInterface: virtual public HardwareInterface
-{
-public:
-  JointState getJointState(const std::string& name) const
-  {
-    return JointState(name,
-                      getPosition(name),
-                      getVelocity(name),
-                      getEffort(name));
-  }
-
-  virtual const std::vector<std::string>& getJointNames() const = 0;
-
-protected:
-  virtual const double& getPosition(const std::string& name) const = 0;
-  virtual const double& getVelocity(const std::string& name) const = 0;
-  virtual const double& getEffort(const std::string& name) const = 0;
-
-  JointStateInterface() {registerType(typeid(JointStateInterface).name());}
-};
-
+  ros::spin();
 }
 
-#endif

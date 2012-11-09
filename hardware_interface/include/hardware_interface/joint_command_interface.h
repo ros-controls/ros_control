@@ -46,21 +46,21 @@ public:
   {}
 
   const JointState& getJointState() const {return js_;}
-  double setEffortCommand(double command) {*cmd_ = command;};
+  void setEffortCommand(double command) {*cmd_ = command;};
 
 private:
-  const JointState js_;
+  JointState js_;
   double* cmd_;
 };
 
 
-class JointEffortCommandInterface: public JointStateInterface
+class JointEffortCommandInterface: virtual public JointStateInterface
 {
 public:
-  JointEffortCommandInterface() 
+  JointEffortCommandInterface()
   {
     registerType(typeid(JointEffortCommandInterface).name());
-  }  
+  }
 
   // get the joint to command
   JointEffortCommand getJointEffortCommand(const std::string& name)
@@ -68,7 +68,7 @@ public:
     return JointEffortCommand(getJointState(name), getEffortCommand(name));
   }
 
-protected:  
+protected:
   // Virtual function to give access to command for joint
   virtual double& getEffortCommand(const std::string& name) = 0;
 };
@@ -87,21 +87,21 @@ public:
   {}
 
   const JointState& getJointState() const {return js_;}
-  double setVelocityCommand(double command) {*cmd_ = command;};
+  void setVelocityCommand(double command) {*cmd_ = command;};
 
 private:
-  const JointState js_;
+  JointState js_;
   double* cmd_;
 };
 
 
-class JointVelocityCommandInterface: public JointStateInterface
+class JointVelocityCommandInterface: virtual public JointStateInterface
 {
 public:
-  JointVelocityCommandInterface() 
+  JointVelocityCommandInterface()
   {
     registerType(typeid(JointVelocityCommandInterface).name());
-  }  
+  }
 
   // get the joint to command
   JointVelocityCommand getJointVelocityCommand(const std::string& name)
@@ -109,7 +109,7 @@ public:
     return JointVelocityCommand(getJointState(name), getVelocityCommand(name));
   }
 
-protected:  
+protected:
   // Virtual function to give access to command for joint
   virtual double& getVelocityCommand(const std::string& name) = 0;
 };
@@ -129,21 +129,21 @@ public:
   {}
 
   const JointState& getJointState() const {return js_;}
-  double setPositionCommand(double command) {*cmd_ = command;};
+  void setPositionCommand(double command) {*cmd_ = command;};
 
 private:
-  const JointState js_;
+  JointState js_;
   double* cmd_;
 };
 
 
-class JointPositionCommandInterface: public JointStateInterface
+class JointPositionCommandInterface: virtual public JointStateInterface
 {
 public:
-  JointPositionCommandInterface() 
+  JointPositionCommandInterface()
   {
     registerType(typeid(JointPositionCommandInterface).name());
-  }  
+  }
 
   // get the joint to command
   JointPositionCommand getJointPositionCommand(const std::string& name)
@@ -151,7 +151,7 @@ public:
     return JointPositionCommand(getJointState(name), getPositionCommand(name));
   }
 
-protected:  
+protected:
   // Virtual function to give access to command for joint
   virtual double& getPositionCommand(const std::string& name) = 0;
 };
