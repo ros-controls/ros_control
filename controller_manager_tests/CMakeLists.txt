@@ -22,11 +22,17 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
-rosbuild_add_library(${PROJECT_NAME} src/my_robot_hw.cpp
-                                     src/effort_test_controller.cpp)
+rosbuild_add_library(${PROJECT_NAME} src/my_robot_hw.cpp              include/controller_manager_tests/my_robot_hw.h
+                                     src/effort_test_controller.cpp   include/controller_manager_tests/effort_test_controller.h
+                    )
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 
 rosbuild_add_executable(dummy_app src/dummy_app.cpp)
 target_link_libraries(dummy_app ${PROJECT_NAME})
+
+rosbuild_add_executable(cm_test test/cm_test.cpp)
+rosbuild_add_gtest_build_flags(cm_test)
+
+rosbuild_add_rostest(test/cm_test.test)
