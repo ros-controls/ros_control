@@ -2,6 +2,8 @@
   <rosparam>
     my_controller:
       type: controller_manager_tests/EffortTestController
+    dummy_controller:
+      type: controller_manager_tests/MyDummyController
   </rosparam>
 
   <node pkg="controller_manager_tests" type="dummy_app" name="dummy_app" />

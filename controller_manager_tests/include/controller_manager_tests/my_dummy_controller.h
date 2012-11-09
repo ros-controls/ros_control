@@ -25,55 +25,40 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-//! /author Vijay Pradeep
+//! \author Vijay Pradeep
 
-#include <ros/ros.h>
-#include <gtest/gtest.h>
+#ifndef CONTROLLER_MANAGER_TESTS_MY_DUMMY_CONTROLLER_H
+#define CONTROLLER_MANAGER_TESTS_MY_DUMMY_CONTROLLER_H
 
-#include <controller_manager_msgs/LoadController.h>
+#include <controller_interface/controller.h>
+#include <hardware_interface/hardware_interface.h>
+#include <pluginlib/class_list_macros.h>
 
-using namespace controller_manager_msgs;
-
-TEST(CMTests, spawnTestGood)
+namespace controller_manager_tests
 {
-  ros::NodeHandle nh;
-  ros::ServiceClient client = nh.serviceClient<LoadController>("/controller_manager/load_controller");
-  LoadController srv;
-  srv.request.name = "my_controller";
-  bool call_success = client.call(srv);
-  EXPECT_TRUE(call_success);
-  EXPECT_TRUE(srv.response.ok);
+
+class MyDummyInterface : virtual public hardware_interface::HardwareInterface
+{
+public:
+  MyDummyInterface()
+  {
+    registerType(typeid(MyDummyInterface).name());
+  }
+};
+
+class MyDummyController : public controller_interface::Controller<MyDummyInterface>
+{
+public:
+  MyDummyController() { }
+
+  bool init(MyDummyInterface* hw, ros::NodeHandle &n) { return true; }
+  void starting(const ros::Time& time) { }
+  void update(const ros::Time& time) { }
+  void stopping(const ros::Time& time) { }
+};
+
 }
 
-TEST(CMTests, spawnTestUnknown)
-{
-  ros::NodeHandle nh;
-  ros::ServiceClient client = nh.serviceClient<LoadController>("/controller_manager/load_controller");
-  LoadController srv;
-  srv.request.name = "nonexistient_controller";
-  bool call_success = client.call(srv);
-  EXPECT_TRUE(call_success);
-  EXPECT_FALSE(srv.response.ok);
-}
+#endif
 
-TEST(CMTests, spawnTestMismatch)
-{
-  ros::NodeHandle nh;
-  ros::ServiceClient client = nh.serviceClient<LoadController>("/controller_manager/load_controller");
-  LoadController srv;
-  srv.request.name = "dummy_controller";
-  bool call_success = client.call(srv);
-  EXPECT_TRUE(call_success);
-  EXPECT_FALSE(srv.response.ok);
-}
 
-int main(int argc, char** argv)
-{
-  testing::InitGoogleTest(&argc, argv);
-  ros::init(argc, argv, "ControllerManagerTestNode");
-
-  ros::AsyncSpinner spinner(1);
-  spinner.start();
-
-  return RUN_ALL_TESTS();
-}

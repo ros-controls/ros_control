@@ -25,55 +25,11 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-//! /author Vijay Pradeep
+//! \author Vijay Pradeep
 
-#include <ros/ros.h>
-#include <gtest/gtest.h>
+#include <controller_manager_tests/my_dummy_controller.h>
 
-#include <controller_manager_msgs/LoadController.h>
+using namespace controller_manager_tests;
 
-using namespace controller_manager_msgs;
+PLUGINLIB_DECLARE_CLASS(controller_manager_tests, MyDummyController, controller_manager_tests::MyDummyController, controller_interface::ControllerBase)
 
-TEST(CMTests, spawnTestGood)
-{
-  ros::NodeHandle nh;
-  ros::ServiceClient client = nh.serviceClient<LoadController>("/controller_manager/load_controller");
-  LoadController srv;
-  srv.request.name = "my_controller";
-  bool call_success = client.call(srv);
-  EXPECT_TRUE(call_success);
-  EXPECT_TRUE(srv.response.ok);
-}
-
-TEST(CMTests, spawnTestUnknown)
-{
-  ros::NodeHandle nh;
-  ros::ServiceClient client = nh.serviceClient<LoadController>("/controller_manager/load_controller");
-  LoadController srv;
-  srv.request.name = "nonexistient_controller";
-  bool call_success = client.call(srv);
-  EXPECT_TRUE(call_success);
-  EXPECT_FALSE(srv.response.ok);
-}
-
-TEST(CMTests, spawnTestMismatch)
-{
-  ros::NodeHandle nh;
-  ros::ServiceClient client = nh.serviceClient<LoadController>("/controller_manager/load_controller");
-  LoadController srv;
-  srv.request.name = "dummy_controller";
-  bool call_success = client.call(srv);
-  EXPECT_TRUE(call_success);
-  EXPECT_FALSE(srv.response.ok);
-}
-
-int main(int argc, char** argv)
-{
-  testing::InitGoogleTest(&argc, argv);
-  ros::init(argc, argv, "ControllerManagerTestNode");
-
-  ros::AsyncSpinner spinner(1);
-  spinner.start();
-
-  return RUN_ALL_TESTS();
-}

@@ -33,7 +33,8 @@
 #ifndef CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
 #define CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
 
-#include "hardware_interface/joint_command_interface.h"
+#include <hardware_interface/joint_command_interface.h>
+#include <controller_manager_tests/my_dummy_controller.h>
 
 namespace controller_manager_tests
 {
