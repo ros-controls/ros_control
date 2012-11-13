@@ -29,8 +29,8 @@
  * Author: Wim Meeussen
  */
 
-#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
+#ifndef HARDWARE_INTERFACE_JOINT_MEASUREMENT_INTERFACE_H
+#define HARDWARE_INTERFACE_JOINT_MEASUREMENT_INTERFACE_H
 
 #include "hardware_interface/hardware_interface.h"
 #include <string>
@@ -39,10 +39,10 @@
 
 namespace hardware_interface{
 
-class JointState
+class JointMeasurement
 {
 public:
-  JointState(const std::string& name, const double* pos, const double* vel, const double* eff)
+  JointMeasurement(const std::string& name, const double* pos, const double* vel, const double* eff)
     : name_(name), pos_(pos), vel_(vel), eff_(eff)
   {}
 
@@ -61,15 +61,15 @@ private:
 
 
 
-class JointStateInterface: virtual public HardwareInterface
+class JointMeasurementInterface: virtual public HardwareInterface
 {
 public:
-  JointState getJointState(const std::string& name) const
+  JointMeasurement getJointMeasurement(const std::string& name) const
   {
-    return JointState(name,
-                      getPosition(name),
-                      getVelocity(name),
-                      getEffort(name));
+    return JointMeasurement(name,
+                            getPosition(name),
+                            getVelocity(name),
+                            getEffort(name));
   }
 
   virtual const std::vector<std::string>& getJointNames() const = 0;
@@ -79,7 +79,7 @@ protected:
   virtual const double* getVelocity(const std::string& name) const = 0;
   virtual const double* getEffort(const std::string& name) const = 0;
 
-  JointStateInterface() {registerType(typeid(JointStateInterface).name());}
+  JointMeasurementInterface() {registerType(typeid(JointMeasurementInterface).name());}
 };
 
 }

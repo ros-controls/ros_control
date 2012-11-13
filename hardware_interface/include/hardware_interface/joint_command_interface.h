@@ -32,7 +32,7 @@
 #ifndef HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 #define HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 
-#include "hardware_interface/joint_state_interface.h"
+#include "hardware_interface/joint_measurement_interface.h"
 
 
 namespace hardware_interface{
@@ -41,20 +41,20 @@ namespace hardware_interface{
 class JointEffortCommand
 {
 public:
-  JointEffortCommand(const JointState& js, double* cmd)
+  JointEffortCommand(const JointMeasurement& js, double* cmd)
     : js_(js), cmd_(cmd)
   {}
 
-  const JointState& getJointState() const {return js_;}
+  const JointMeasurement& getJointMeasurement() const {return js_;}
   void setEffortCommand(double command) {*cmd_ = command;};
 
 private:
-  JointState js_;
+  JointMeasurement js_;
   double* cmd_;
 };
 
 
-class JointEffortCommandInterface: virtual public JointStateInterface
+class JointEffortCommandInterface: virtual public JointMeasurementInterface
 {
 public:
   JointEffortCommandInterface()
@@ -65,7 +65,7 @@ public:
   // get the joint to command
   JointEffortCommand getJointEffortCommand(const std::string& name)
   {
-    return JointEffortCommand(getJointState(name), getEffortCommand(name));
+    return JointEffortCommand(getJointMeasurement(name), getEffortCommand(name));
   }
 
 protected:
@@ -82,20 +82,20 @@ protected:
 class JointVelocityCommand
 {
 public:
-  JointVelocityCommand(const JointState& js, double* cmd)
+  JointVelocityCommand(const JointMeasurement& js, double* cmd)
     : js_(js), cmd_(cmd)
   {}
 
-  const JointState& getJointState() const {return js_;}
+  const JointMeasurement& getJointMeasurement() const {return js_;}
   void setVelocityCommand(double command) {*cmd_ = command;};
 
 private:
-  JointState js_;
+  JointMeasurement js_;
   double* cmd_;
 };
 
 
-class JointVelocityCommandInterface: virtual public JointStateInterface
+class JointVelocityCommandInterface: virtual public JointMeasurementInterface
 {
 public:
   JointVelocityCommandInterface()
@@ -106,7 +106,7 @@ public:
   // get the joint to command
   JointVelocityCommand getJointVelocityCommand(const std::string& name)
   {
-    return JointVelocityCommand(getJointState(name), getVelocityCommand(name));
+    return JointVelocityCommand(getJointMeasurement(name), getVelocityCommand(name));
   }
 
 protected:
@@ -124,20 +124,20 @@ protected:
 class JointPositionCommand
 {
 public:
-  JointPositionCommand(const JointState& js, double* cmd)
+  JointPositionCommand(const JointMeasurement& js, double* cmd)
     : js_(js), cmd_(cmd)
   {}
 
-  const JointState& getJointState() const {return js_;}
+  const JointMeasurement& getJointMeasurement() const {return js_;}
   void setPositionCommand(double command) {*cmd_ = command;};
 
 private:
-  JointState js_;
+  JointMeasurement js_;
   double* cmd_;
 };
 
 
-class JointPositionCommandInterface: virtual public JointStateInterface
+class JointPositionCommandInterface: virtual public JointMeasurementInterface
 {
 public:
   JointPositionCommandInterface()
@@ -148,7 +148,7 @@ public:
   // get the joint to command
   JointPositionCommand getJointPositionCommand(const std::string& name)
   {
-    return JointPositionCommand(getJointState(name), getPositionCommand(name));
+    return JointPositionCommand(getJointMeasurement(name), getPositionCommand(name));
   }
 
 protected:
