@@ -51,17 +51,29 @@ ControllerManager::ControllerManager(hardware_interface::HardwareInterface *hw, 
   pub_controller_stats_(nh, "controller_statistics", 1),
   last_published_controller_stats_(ros::Time::now())
 {
+  printf("  *** ControllerManager(): A ***\n");
+
   // pre-allocate for realtime publishing
   pub_controller_stats_.msg_.controller.resize(0);
+
+  printf("  *** ControllerManager(): B ***\n");
 
   // get the publish rate for controller state
   double publish_rate_controller_stats;
   cm_node_.param("controller_statistics_publish_rate", publish_rate_controller_stats, 1.0);
+
+  printf("  *** ControllerManager(): C ***\n");
+
   publish_period_controller_stats_ = ros::Duration(1.0/fmax(0.000001, publish_rate_controller_stats));
+
+  printf("  *** ControllerManager(): D ***\n");
 
   // create controller loader
   controller_loader_.reset(new pluginlib::ClassLoader<controller_interface::ControllerBase>("controller_interface",
                                                                                             "controller_interface::ControllerBase"));
+
+  printf("  *** ControllerManager(): E ***\n");
+
   // Advertise services (this should be the last thing we do in init)
   srv_list_controllers_ = cm_node_.advertiseService("list_controllers", &ControllerManager::listControllersSrv, this);
   srv_list_controller_types_ = cm_node_.advertiseService("list_controller_types", &ControllerManager::listControllerTypesSrv, this);
@@ -69,6 +81,8 @@ ControllerManager::ControllerManager(hardware_interface::HardwareInterface *hw, 
   srv_unload_controller_ = cm_node_.advertiseService("unload_controller", &ControllerManager::unloadControllerSrv, this);
   srv_switch_controller_ = cm_node_.advertiseService("switch_controller", &ControllerManager::switchControllerSrv, this);
   srv_reload_libraries_ = cm_node_.advertiseService("reload_controller_libraries", &ControllerManager::reloadControllerLibrariesSrv, this);
+
+  printf("  *** ControllerManager(): Done ***\n");
 }
 
 
@@ -464,6 +478,7 @@ void ControllerManager::publishControllerStatistics()
 
       // controller state
       std::vector<ControllerSpec> &controllers = controllers_lists_[used_by_realtime_];
+      assert(pub_controller_stats_.msg_.controller.size() == controllers.size());
       for (unsigned int i = 0; i < controllers.size(); ++i)
       {
         controller_manager_msgs::ControllerStatistics *out = &pub_controller_stats_.msg_.controller[i];
