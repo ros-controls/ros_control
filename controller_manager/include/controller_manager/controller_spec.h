@@ -47,6 +47,9 @@
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
 
+namespace controller_manager
+{
+
 typedef boost::accumulators::accumulator_set<
   double, boost::accumulators::stats<boost::accumulators::tag::max,
                                      boost::accumulators::tag::mean,
@@ -71,6 +74,8 @@ struct ControllerSpec {
   ControllerSpec(const ControllerSpec &spec)
     : name(spec.name), c(spec.c), stats(spec.stats) {}
 };
+
+}
 
 #endif
 
