@@ -30,6 +30,7 @@
 
 #include <vector>
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 namespace controller_interface
 {
@@ -43,11 +44,11 @@ class ControllerLoaderInterface
 {
 public:
   ControllerLoaderInterface(const std::string& name) : name_(name) { }
-  virtual controller_interface::ControllerBase* createInstance(const std::string& lookup_name) = 0;
+  virtual boost::shared_ptr<controller_interface::ControllerBase> createInstance(const std::string& lookup_name) = 0;
   virtual std::vector<std::string> getDeclaredClasses() = 0;
   virtual void reload() = 0;
   const std::string& getName() { return name_; }
-
+  virtual ~ControllerLoaderInterface() { }
 private:
   const std::string name_;
 

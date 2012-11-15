@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2012, hiDOF, INC
+// Copyright (C) 2012, hiDOF, INC & Willow Garage, Inc
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -8,7 +8,7 @@
 //   * Redistributions in binary form must reproduce the above copyright
 //     notice, this list of conditions and the following disclaimer in the
 //     documentation and/or other materials provided with the distribution.
-//   * Neither the name of hiDOF, Inc. nor the names of its
+//   * Neither the name of hiDOF, Inc., Willow Garage, Inc., nor the names of its
 //     contributors may be used to endorse or promote products derived from
 //     this software without specific prior written permission.
 //
@@ -52,7 +52,12 @@
 #include <controller_manager_msgs/SwitchController.h>
 #include <controller_manager_msgs/ControllersStatistics.h>
 #include <boost/thread/condition.hpp>
+#include <controller_manager/controller_loader_interface.h>
 
+//namespace pr2_controller_interface
+//{
+//class Controller;
+//}
 
 namespace controller_manager{
 
@@ -84,7 +89,9 @@ private:
   hardware_interface::HardwareInterface* hw_;
 
   ros::NodeHandle controller_node_, cm_node_;
-  boost::shared_ptr<pluginlib::ClassLoader<controller_interface::ControllerBase> > controller_loader_;
+
+  typedef boost::shared_ptr<ControllerLoaderInterface> LoaderPtr;
+  std::list<LoaderPtr> controller_loaders_;
 
   // for controller switching
   std::vector<controller_interface::ControllerBase*> start_request_, stop_request_;

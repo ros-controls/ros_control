@@ -11,4 +11,6 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 rosbuild_init()
 
-rosbuild_add_library(${PROJECT_NAME} src/controller_manager.cpp include/controller_manager/controller_manager.h)
+rosbuild_add_library(${PROJECT_NAME} src/controller_manager.cpp include/controller_manager/controller_manager.h
+                                     include/controller_manager/controller_loader_interface.h
+                                     include/controller_manager/controller_loader.h)

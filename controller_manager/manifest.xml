@@ -12,6 +12,8 @@
   <depend package="hardware_interface"/>
   <depend package="realtime_utils"/>
   <depend package="pluginlib"/>
+  <depend package="pr2_controller_interface"/>
+
   <!-- depend package="class_loader"/ -->
 
   <export>

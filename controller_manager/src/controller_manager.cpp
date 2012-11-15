@@ -34,7 +34,7 @@
 #include <boost/thread/condition.hpp>
 #include <sstream>
 #include <ros/console.h>
-
+#include <controller_manager/controller_loader.h>
 
 namespace controller_manager{
 
@@ -51,28 +51,19 @@ ControllerManager::ControllerManager(hardware_interface::HardwareInterface *hw, 
   pub_controller_stats_(nh, "controller_statistics", 1),
   last_published_controller_stats_(ros::Time::now())
 {
-  printf("  *** ControllerManager(): A ***\n");
-
   // pre-allocate for realtime publishing
   pub_controller_stats_.msg_.controller.resize(0);
-
-  printf("  *** ControllerManager(): B ***\n");
 
   // get the publish rate for controller state
   double publish_rate_controller_stats;
   cm_node_.param("controller_statistics_publish_rate", publish_rate_controller_stats, 1.0);
 
-  printf("  *** ControllerManager(): C ***\n");
-
   publish_period_controller_stats_ = ros::Duration(1.0/fmax(0.000001, publish_rate_controller_stats));
 
-  printf("  *** ControllerManager(): D ***\n");
-
   // create controller loader
-  controller_loader_.reset(new pluginlib::ClassLoader<controller_interface::ControllerBase>("controller_interface",
-                                                                                            "controller_interface::ControllerBase"));
 
-  printf("  *** ControllerManager(): E ***\n");
+  controller_loaders_.push_back( LoaderPtr(new ControllerLoader<controller_interface::ControllerBase>("controller_interface",
+                                                                                                      "controller_interface::ControllerBase") ) );
 
   // Advertise services (this should be the last thing we do in init)
   srv_list_controllers_ = cm_node_.advertiseService("list_controllers", &ControllerManager::listControllersSrv, this);
@@ -81,8 +72,6 @@ ControllerManager::ControllerManager(hardware_interface::HardwareInterface *hw, 
   srv_unload_controller_ = cm_node_.advertiseService("unload_controller", &ControllerManager::unloadControllerSrv, this);
   srv_switch_controller_ = cm_node_.advertiseService("switch_controller", &ControllerManager::switchControllerSrv, this);
   srv_reload_libraries_ = cm_node_.advertiseService("reload_controller_libraries", &ControllerManager::reloadControllerLibrariesSrv, this);
-
-  printf("  *** ControllerManager(): Done ***\n");
 }
 
 
@@ -226,8 +215,15 @@ bool ControllerManager::loadController(const std::string& name)
   if (c_node.getParam("type", type))
   {
     ROS_DEBUG("Constructing controller '%s' of type '%s'", name.c_str(), type.c_str());
-    try {
-      c = controller_loader_->createInstance(type);
+    try
+    {
+      // Trying loading the controller using all of our controller loaders. Exit once we've found the first valid loaded controller
+      std::list<LoaderPtr>::iterator it = controller_loaders_.begin();
+      while (!c && it != controller_loaders_.end())
+      {
+        c = (*it)->createInstance(type);
+        ++it;
+      }
     }
     catch (const std::runtime_error &ex)
     {
@@ -539,10 +535,13 @@ bool ControllerManager::reloadControllerLibrariesSrv(
   }
   assert(controllers.empty());
 
-  // create new controller loader
-  controller_loader_.reset(new pluginlib::ClassLoader<controller_interface::ControllerBase>("controller_interface",
-                                                                                            "controller_interface::Controller"));
-  ROS_INFO("Controller manager: reloaded controller libraries");
+  // Force a reload on all the PluginLoaders (internally, this recreates the plugin loaders)
+  for(std::list<LoaderPtr>::iterator it = controller_loaders_.begin(); it != controller_loaders_.end(); ++it)
+  {
+    (*it)->reload();
+    ROS_INFO("Controller manager: reloaded controller libraries for %s", (*it)->getName().c_str());
+  }
+
   resp.ok = true;
 
   ROS_DEBUG("reload libraries service finished");
@@ -562,7 +561,15 @@ bool ControllerManager::listControllerTypesSrv(
   boost::mutex::scoped_lock guard(services_lock_);
   ROS_DEBUG("list types service locked");
 
-  resp.types = controller_loader_->getDeclaredClasses();
+  for(std::list<LoaderPtr>::iterator it = controller_loaders_.begin(); it != controller_loaders_.end(); ++it)
+  {
+    std::vector<std::string> cur_types = (*it)->getDeclaredClasses();
+    for(size_t i=0; i < cur_types.size(); i++)
+    {
+      resp.types.push_back(cur_types[i]);
+      resp.base_classes.push_back((*it)->getName());
+    }
+  }
 
   ROS_DEBUG("list types service finished");
   return true;
