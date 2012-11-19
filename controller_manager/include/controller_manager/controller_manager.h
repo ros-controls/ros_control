@@ -81,6 +81,7 @@ public:
   // controllers_lock_ must be locked before calling
   virtual controller_interface::ControllerBase* getControllerByName(const std::string& name);
 
+  void registerControllerLoader(boost::shared_ptr<ControllerLoaderInterface> controller_loader);
 
 private:
   void getControllerNames(std::vector<std::string> &v);

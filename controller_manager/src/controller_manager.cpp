@@ -221,7 +221,12 @@ bool ControllerManager::loadController(const std::string& name)
       std::list<LoaderPtr>::iterator it = controller_loaders_.begin();
       while (!c && it != controller_loaders_.end())
       {
-        c = (*it)->createInstance(type);
+        std::vector<std::string> cur_types = (*it)->getDeclaredClasses();
+        for(size_t i=0; i < cur_types.size(); i++){
+          if (type == cur_types[i]){
+            c = (*it)->createInstance(type);
+          }
+        }
         ++it;
       }
     }
@@ -656,6 +661,11 @@ bool ControllerManager::switchControllerSrv(
 
   ROS_DEBUG("switching service finished");
   return true;
+}
+
+void ControllerManager::registerControllerLoader(boost::shared_ptr<ControllerLoaderInterface> controller_loader)
+{
+  controller_loaders_.push_back(controller_loader);
 }
 
 }
