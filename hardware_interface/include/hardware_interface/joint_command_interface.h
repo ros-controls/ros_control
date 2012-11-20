@@ -65,7 +65,10 @@ public:
   // get the joint to command
   JointEffortCommand getJointEffortCommand(const std::string& name)
   {
-    return JointEffortCommand(getJointMeasurement(name), getEffortCommand(name));
+    double* cmd = getEffortCommand(name);
+    if (!cmd)
+      throw HardwareInterfaceException("Failed to construct JointEffortCommand for joint [" + name + "]");
+    return JointEffortCommand(getJointMeasurement(name), cmd);
   }
 
 protected:
@@ -106,7 +109,10 @@ public:
   // get the joint to command
   JointVelocityCommand getJointVelocityCommand(const std::string& name)
   {
-    return JointVelocityCommand(getJointMeasurement(name), getVelocityCommand(name));
+    double* cmd = getVelocityCommand(name);
+    if (!cmd)
+      throw HardwareInterfaceException("Failed to construct JointVelocityCommand for joint [" + name + "]");
+    return JointVelocityCommand(getJointMeasurement(name), cmd);
   }
 
 protected:
@@ -148,7 +154,10 @@ public:
   // get the joint to command
   JointPositionCommand getJointPositionCommand(const std::string& name)
   {
-    return JointPositionCommand(getJointMeasurement(name), getPositionCommand(name));
+    double* cmd = getPositionCommand(name);
+    if (!cmd)
+      throw HardwareInterfaceException("Failed to construct JointPositionCommand for joint [" + name + "]");
+    return JointPositionCommand(getJointMeasurement(name), cmd);
   }
 
 protected:

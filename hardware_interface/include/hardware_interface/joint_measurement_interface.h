@@ -36,7 +36,6 @@
 #include <string>
 #include <vector>
 
-
 namespace hardware_interface{
 
 class JointMeasurement
@@ -66,13 +65,17 @@ class JointMeasurementInterface: virtual public HardwareInterface
 public:
   JointMeasurement getJointMeasurement(const std::string& name) const
   {
-    return JointMeasurement(name,
-                            getPosition(name),
-                            getVelocity(name),
-                            getEffort(name));
+    const double* pos = getPosition(name);
+    const double* vel = getVelocity(name);
+    const double* eff = getEffort(name);
+
+    if (!pos || !vel || !eff)
+      throw HardwareInterfaceException( "Failed to construct JointMeasurement for joint [" + name + "]");
+
+    return JointMeasurement(name, pos, vel, eff);
   }
 
-  virtual const std::vector<std::string>& getJointNames() const = 0;
+  virtual std::vector<std::string> getJointNames() const = 0;
 
 protected:
   virtual const double* getPosition(const std::string& name) const = 0;
