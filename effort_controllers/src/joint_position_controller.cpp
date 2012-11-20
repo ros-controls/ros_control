@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2008, Willow Garage, Inc.
+ *  Copyright (c) 2008, Willow Garage, Inc. & hiDOF, Inc.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  *     copyright notice, this list of conditions and the following
  *     disclaimer in the documentation and/or other materials provided
  *     with the distribution.
- *   * Neither the name of the Willow Garage nor the names of its
+ *   * Neither the name of the Willow Garage, hiDOF, nor the names of its
  *     contributors may be used to endorse or promote products derived
  *     from this software without specific prior written permission.
  *
@@ -32,18 +32,19 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include "robot_mechanism_controllers/joint_position_controller.h"
-#include "angles/angles.h"
-#include "pluginlib/class_list_macros.h"
+#include <effort_controllers/joint_position_controller.h>
+#include <angles/angles.h>
+#include <pluginlib/class_list_macros.h>
 
-PLUGINLIB_DECLARE_CLASS(robot_mechanism_controllers, JointPositionController, controller::JointPositionController, pr2_controller_interface::Controller)
+PLUGINLIB_DECLARE_CLASS(effort_controllers, JointPositionController, effort_controllers::JointPositionController, controller_interface::ControllerBase)
 
 using namespace std;
 
-namespace controller {
+namespace effort_controllers
+{
 
 JointPositionController::JointPositionController()
-: joint_state_(NULL), command_(0),
+: joint_command_handle_(), command_(0),
   loop_count_(0),  initialized_(false), robot_(NULL), last_time_(0)
 {
 }
@@ -53,14 +54,20 @@ JointPositionController::~JointPositionController()
   sub_command_.shutdown();
 }
 
-bool JointPositionController::init(pr2_mechanism_model::RobotState *robot, const std::string &joint_name,
+bool JointPositionController::init(hardware_interface::JointEffortCommandInterface *robot, const std::string &joint_name,
 				   const control_toolbox::Pid &pid)
 {
   assert(robot);
-  robot_ = robot;
-  last_time_ = robot->getTime();
 
-  joint_state_ = robot_->getJointState(joint_name);
+  try
+  {
+    joint_command_handle_ = robot->getJointEffortCommand(joint_name);
+  }
+  catch(std::exception &e)
+  {
+    ROS_ERROR("JointPosition control ")
+  }
+
   if (!joint_state_)
   {
     ROS_ERROR("JointPositionController could not find joint named \"%s\"\n",
@@ -78,7 +85,7 @@ bool JointPositionController::init(pr2_mechanism_model::RobotState *robot, const
   return true;
 }
 
-bool JointPositionController::init(pr2_mechanism_model::RobotState *robot, ros::NodeHandle &n)
+bool JointPositionController::init(hardware_interface::JointEffortCommandInterface *robot, ros::NodeHandle &n)
 {
   assert(robot);
   node_ = n;
@@ -130,21 +137,26 @@ void JointPositionController::getCommand(double & cmd)
   cmd = command_;
 }
 
-void JointPositionController::update()
+void JointPositionController::starting(const ros::Time& time)
+{
+  //  last_time_ = time;
+}
+
+void JointPositionController::update(const ros::Time& time)
 {
   if (!joint_state_->calibrated_)
     return;
 
   assert(robot_ != NULL);
   double error(0);
-  ros::Time time = robot_->getTime();
   assert(joint_state_->joint_);
-  dt_= time - last_time_;
+  ros::Duration dt = time - last_time_;
 
   if (!initialized_)
   {
     initialized_ = true;
     command_ = joint_state_->position_;
+    dt = ros::Duration(0,0);
   }
 
   if(joint_state_->joint_->type == urdf::Joint::REVOLUTE)

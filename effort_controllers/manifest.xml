@@ -11,7 +11,7 @@
 
   <depend package="controller_interface"/>
   <depend package="control_toolbox" />
-  <depend package="realtime_utils" />
+  <depend package="realtime_tools" />
   <depend package="pr2_controllers_msgs" />
 
   <export>

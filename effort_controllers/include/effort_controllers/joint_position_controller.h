@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2008, Willow Garage, Inc.
+ *  Copyright (c) 2008, Willow Garage, Inc. & hiDOF, Inc.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  *     copyright notice, this list of conditions and the following
  *     disclaimer in the documentation and/or other materials provided
  *     with the distribution.
- *   * Neither the name of the Willow Garage nor the names of its
+ *   * Neither the name of the Willow Garage, hiDOF, nor the names of its
  *     contributors may be used to endorse or promote products derived
  *     from this software without specific prior written permission.
  *
@@ -36,7 +36,7 @@
 #define JOINT_POSITION_CONTROLLER_H
 
 /**
-   @class pr2_controller_interface::JointPositionController
+   @class effort_controller::JointPositionController
    @brief Joint Position Controller
 
    This class controls positon using a pid loop.
@@ -60,27 +60,29 @@
 
 #include <ros/node_handle.h>
 
-#include <pr2_controller_interface/controller.h>
+#include <controller_interface/controller.h>
+#include <hardware_interface/joint_command_interface.h>
 #include <control_toolbox/pid.h>
-#include "control_toolbox/pid_gains_setter.h"
+#include <control_toolbox/pid_gains_setter.h>
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread/condition.hpp>
 #include <realtime_tools/realtime_publisher.h>
 #include <std_msgs/Float64.h>
 #include <pr2_controllers_msgs/JointControllerState.h>
 
-namespace controller
+namespace effort_controllers
 {
 
-class JointPositionController : public pr2_controller_interface::Controller
+class JointPositionController : public controller_interface::Controller<hardware_interface::JointEffortCommandInterface>
 {
 public:
 
   JointPositionController();
   ~JointPositionController();
 
-  bool init(pr2_mechanism_model::RobotState *robot, const std::string &joint_name,const control_toolbox::Pid &pid);
-  bool init(pr2_mechanism_model::RobotState *robot, ros::NodeHandle &n);
+  bool init(hardware_interface::JointEffortCommandInterface *robot, const std::string &joint_name,const control_toolbox::Pid &pid);
+  bool init(hardware_interface::JointEffortCommandInterface *robot, ros::NodeHandle &n);
+
 
   /*!
    * \brief Give set position of the joint for next update: revolute (angle) and prismatic (position)
@@ -99,23 +101,23 @@ public:
     pid_controller_.reset();
   }
 
+  virtual void starting(const ros::Time& time);
+
   /*!
    * \brief Issues commands to the joint. Should be called at regular intervals
    */
-  virtual void update();
+  virtual void update(const ros::Time& time);
 
   void getGains(double &p, double &i, double &d, double &i_max, double &i_min);
   void setGains(const double &p, const double &i, const double &d, const double &i_max, const double &i_min);
 
   std::string getJointName();
-  pr2_mechanism_model::JointState *joint_state_;        /**< Joint we're controlling. */
-  ros::Duration dt_;
+  hardware_interface::JointEffortCommand joint_command_handle_;        /**< Joint we're controlling. */
   double command_;                            /**< Last commanded position. */
 
 private:
   int loop_count_;
   bool initialized_;
-  pr2_mechanism_model::RobotState *robot_;              /**< Pointer to robot structure. */
   control_toolbox::Pid pid_controller_;       /**< Internal PID controller. */
   ros::Time last_time_;                          /**< Last time stamp of update. */
 
