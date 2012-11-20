@@ -61,7 +61,7 @@ namespace controller_manager_tests
 
 
 
-  const std::vector<std::string>& MyRobotHW::getJointNames() const
+  std::vector<std::string> MyRobotHW::getJointNames() const
   {
     return joint_name_;
   }

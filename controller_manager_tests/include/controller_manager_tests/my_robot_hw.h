@@ -44,7 +44,7 @@ class MyRobotHW: public hardware_interface::JointEffortCommandInterface, public 
 public:
   MyRobotHW();
 
-  const std::vector<std::string>& getJointNames() const;
+  std::vector<std::string> getJointNames() const;
   double* getEffortCommand(const std::string& name);
   double* getVelocityCommand(const std::string& name);
   const double* getPosition(const std::string& name) const;
