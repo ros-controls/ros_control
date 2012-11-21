@@ -39,7 +39,7 @@
 namespace controller_manager_tests
 {
 
-class MyRobotHW: public hardware_interface::JointEffortCommandInterface, public hardware_interface::JointVelocityCommandInterface
+class MyRobotHW: public hardware_interface::EffortJointInterface, public hardware_interface::VelocityJointInterface
 {
 public:
   MyRobotHW();

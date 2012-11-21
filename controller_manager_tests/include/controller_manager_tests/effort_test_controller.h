@@ -38,18 +38,18 @@ namespace controller_manager_tests
 {
 
 
-class EffortTestController: public controller_interface::Controller<hardware_interface::JointEffortCommandInterface>
+class EffortTestController: public controller_interface::Controller<hardware_interface::EffortJointInterface>
 {
 public:
   EffortTestController(){}
 
-  bool init(hardware_interface::JointEffortCommandInterface* hw, ros::NodeHandle &n);
+  bool init(hardware_interface::EffortJointInterface* hw, ros::NodeHandle &n);
   void starting(const ros::Time& time);
   void update(const ros::Time& time);
   void stopping(const ros::Time& time);
 
 private:
-  std::vector<hardware_interface::JointEffortCommand> joint_effort_commands_;
+  std::vector<hardware_interface::EffortJointHandle> joint_effort_commands_;
 
 };
 

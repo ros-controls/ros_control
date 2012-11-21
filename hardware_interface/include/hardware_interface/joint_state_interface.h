@@ -29,8 +29,8 @@
  * Author: Wim Meeussen
  */
 
-#ifndef HARDWARE_INTERFACE_JOINT_MEASUREMENT_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_MEASUREMENT_INTERFACE_H
+#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
+#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 
 #include "hardware_interface/hardware_interface.h"
 #include <string>
@@ -38,10 +38,10 @@
 
 namespace hardware_interface{
 
-class JointMeasurement
+class JointStateHandle
 {
 public:
-  JointMeasurement(const std::string& name, const double* pos, const double* vel, const double* eff)
+  JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
     : name_(name), pos_(pos), vel_(vel), eff_(eff)
   {}
 
@@ -60,19 +60,19 @@ private:
 
 
 
-class JointMeasurementInterface: virtual public HardwareInterface
+class JointStateInterface: virtual public HardwareInterface
 {
 public:
-  JointMeasurement getJointMeasurement(const std::string& name) const
+  JointStateHandle getJointStateHandle(const std::string& name) const
   {
     const double* pos = getPosition(name);
     const double* vel = getVelocity(name);
     const double* eff = getEffort(name);
 
     if (!pos || !vel || !eff)
-      throw HardwareInterfaceException( "Failed to construct JointMeasurement for joint [" + name + "]");
+      throw HardwareInterfaceException( "Failed to construct JointStateHandle for joint [" + name + "]");
 
-    return JointMeasurement(name, pos, vel, eff);
+    return JointStateHandle(name, pos, vel, eff);
   }
 
   virtual std::vector<std::string> getJointNames() const = 0;
@@ -82,7 +82,7 @@ protected:
   virtual const double* getVelocity(const std::string& name) const = 0;
   virtual const double* getEffort(const std::string& name) const = 0;
 
-  JointMeasurementInterface() {registerType(typeid(JointMeasurementInterface).name());}
+  JointStateInterface() {registerType(typeid(JointStateInterface).name());}
 };
 
 }

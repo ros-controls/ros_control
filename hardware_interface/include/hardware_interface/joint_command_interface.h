@@ -32,43 +32,40 @@
 #ifndef HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 #define HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 
-#include "hardware_interface/joint_measurement_interface.h"
+#include "hardware_interface/joint_state_interface.h"
 
 
 namespace hardware_interface{
 
 
-class JointEffortCommand
+class EffortJointHandle : public JointStateHandle
 {
 public:
-  JointEffortCommand(const JointMeasurement& js, double* cmd)
-    : js_(js), cmd_(cmd)
+  EffortJointHandle(const JointStateHandle& js, double* cmd)
+    : JointStateHandle(js), cmd_(cmd)
   {}
-
-  const JointMeasurement& getJointMeasurement() const {return js_;}
   void setEffortCommand(double command) {*cmd_ = command;};
 
 private:
-  JointMeasurement js_;
   double* cmd_;
 };
 
 
-class JointEffortCommandInterface: virtual public JointMeasurementInterface
+class EffortJointInterface: virtual public JointStateInterface
 {
 public:
-  JointEffortCommandInterface()
+  EffortJointInterface()
   {
-    registerType(typeid(JointEffortCommandInterface).name());
+    registerType(typeid(EffortJointInterface).name());
   }
 
   // get the joint to command
-  JointEffortCommand getJointEffortCommand(const std::string& name)
+  EffortJointHandle getEffortJointHandle(const std::string& name)
   {
     double* cmd = getEffortCommand(name);
     if (!cmd)
       throw HardwareInterfaceException("Failed to construct JointEffortCommand for joint [" + name + "]");
-    return JointEffortCommand(getJointMeasurement(name), cmd);
+    return EffortJointHandle(getJointStateHandle(name), cmd);
   }
 
 protected:
@@ -82,37 +79,35 @@ protected:
 
 
 
-class JointVelocityCommand
+class VelocityJointHandle : public JointStateHandle
 {
 public:
-  JointVelocityCommand(const JointMeasurement& js, double* cmd)
-    : js_(js), cmd_(cmd)
+  VelocityJointHandle(const JointStateHandle& js, double* cmd)
+    : JointStateHandle(js), cmd_(cmd)
   {}
 
-  const JointMeasurement& getJointMeasurement() const {return js_;}
   void setVelocityCommand(double command) {*cmd_ = command;};
 
 private:
-  JointMeasurement js_;
   double* cmd_;
 };
 
 
-class JointVelocityCommandInterface: virtual public JointMeasurementInterface
+class VelocityJointInterface: virtual public JointStateInterface
 {
 public:
-  JointVelocityCommandInterface()
+  VelocityJointInterface()
   {
-    registerType(typeid(JointVelocityCommandInterface).name());
+    registerType(typeid(VelocityJointInterface).name());
   }
 
   // get the joint to command
-  JointVelocityCommand getJointVelocityCommand(const std::string& name)
+  VelocityJointHandle getVelocityJointHandle(const std::string& name)
   {
     double* cmd = getVelocityCommand(name);
     if (!cmd)
       throw HardwareInterfaceException("Failed to construct JointVelocityCommand for joint [" + name + "]");
-    return JointVelocityCommand(getJointMeasurement(name), cmd);
+    return VelocityJointHandle(getJointStateHandle(name), cmd);
   }
 
 protected:
@@ -127,37 +122,35 @@ protected:
 
 
 
-class JointPositionCommand
+class PositionJointHandle : public JointStateHandle
 {
 public:
-  JointPositionCommand(const JointMeasurement& js, double* cmd)
-    : js_(js), cmd_(cmd)
+  PositionJointHandle(const JointStateHandle& js, double* cmd)
+    : JointStateHandle(js), cmd_(cmd)
   {}
 
-  const JointMeasurement& getJointMeasurement() const {return js_;}
   void setPositionCommand(double command) {*cmd_ = command;};
 
 private:
-  JointMeasurement js_;
   double* cmd_;
 };
 
 
-class JointPositionCommandInterface: virtual public JointMeasurementInterface
+class PositionJointInterface: virtual public JointStateInterface
 {
 public:
-  JointPositionCommandInterface()
+  PositionJointInterface()
   {
-    registerType(typeid(JointPositionCommandInterface).name());
+    registerType(typeid(PositionJointInterface).name());
   }
 
   // get the joint to command
-  JointPositionCommand getJointPositionCommand(const std::string& name)
+  PositionJointHandle getPositionJointHandle(const std::string& name)
   {
     double* cmd = getPositionCommand(name);
     if (!cmd)
       throw HardwareInterfaceException("Failed to construct JointPositionCommand for joint [" + name + "]");
-    return JointPositionCommand(getJointMeasurement(name), cmd);
+    return PositionJointHandle(getJointStateHandle(name), cmd);
   }
 
 protected:
