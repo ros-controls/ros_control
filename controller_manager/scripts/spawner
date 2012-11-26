@@ -64,7 +64,7 @@ def shutdown():
             unload_controller(name)
             rospy.logout("Succeeded in unloading %s" % name)
     except rospy.ServiceException:
-        rospy.logwarn("Spawner couldn't reach pr2_controller_manager to take down controllers.")
+        rospy.logwarn("Spawner couldn't reach controller_manager to take down controllers.")
 
 # At this moment, I am absolutely livid about Python's lack of
 # reasonable scoping mechanisms.  This variable had to be declared

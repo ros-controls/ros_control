@@ -54,10 +54,6 @@
 #include <boost/thread/condition.hpp>
 #include <controller_manager/controller_loader_interface.h>
 
-//namespace pr2_controller_interface
-//{
-//class Controller;
-//}
 
 namespace controller_manager{
 

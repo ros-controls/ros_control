@@ -52,7 +52,7 @@ public:
   virtual void stopping(const ros::Time& time);
 
 private:
-  std::vector<hardware_interface::JointState> joint_state_;
+  std::vector<hardware_interface::JointStateHandle> joint_state_;
 
 };
 

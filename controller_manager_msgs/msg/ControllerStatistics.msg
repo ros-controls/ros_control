@@ -1,5 +1,5 @@
 # This message contains the state of one realtime controller
-# that was spawned in pr2_mechanism_control
+# that was spawned in the controller manager
 
 # the name of the controller
 string name
@@ -17,7 +17,7 @@ bool running
 # the maximum time the update loop of the controller ever needed to complete
 duration max_time
 
-# the average time the update loop of the controller needs to complete. 
+# the average time the update loop of the controller needs to complete.
 # the average is computed in a sliding time window.
 duration mean_time
 
