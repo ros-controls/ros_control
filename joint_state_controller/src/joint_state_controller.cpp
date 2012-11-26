@@ -46,7 +46,7 @@ namespace joint_state_controller
 
 
     for (unsigned i=0; i<joint_names.size(); i++)
-      joint_state_.push_back(hw->getJointState(joint_names[i]));
+      joint_state_.push_back(hw->getJointStateHandle(joint_names[i]));
 
     return true;
   }
