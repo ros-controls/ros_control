@@ -46,6 +46,7 @@
 #include <boost/accumulators/statistics/max.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
+#include <hardware_interface/resource.h>
 
 namespace controller_manager
 {
@@ -69,6 +70,7 @@ struct ControllerSpec {
   std::string type;
   boost::shared_ptr<controller_interface::ControllerBase> c;
   boost::shared_ptr<Statistics> stats;
+  std::set<hardware_interface::Resource> resources;
 
   ControllerSpec() : stats(new Statistics) {}
   ControllerSpec(const ControllerSpec &spec)

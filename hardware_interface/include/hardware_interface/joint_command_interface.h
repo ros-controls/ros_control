@@ -32,8 +32,8 @@
 #ifndef HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 #define HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 
-#include "hardware_interface/joint_state_interface.h"
-
+#include <hardware_interface/joint_state_interface.h>
+#include <hardware_interface/resource.h>
 
 namespace hardware_interface{
 
@@ -62,6 +62,7 @@ public:
   // get the joint to command
   EffortJointHandle getEffortJointHandle(const std::string& name)
   {
+    claim(Resource("Joint", name));
     double* cmd = getEffortCommand(name);
     if (!cmd)
       throw HardwareInterfaceException("Failed to construct JointEffortCommand for joint [" + name + "]");
@@ -104,6 +105,7 @@ public:
   // get the joint to command
   VelocityJointHandle getVelocityJointHandle(const std::string& name)
   {
+    claim(Resource("Joint", name));
     double* cmd = getVelocityCommand(name);
     if (!cmd)
       throw HardwareInterfaceException("Failed to construct JointVelocityCommand for joint [" + name + "]");
@@ -147,6 +149,7 @@ public:
   // get the joint to command
   PositionJointHandle getPositionJointHandle(const std::string& name)
   {
+    claim(Resource("Joint", name));
     double* cmd = getPositionCommand(name);
     if (!cmd)
       throw HardwareInterfaceException("Failed to construct JointPositionCommand for joint [" + name + "]");

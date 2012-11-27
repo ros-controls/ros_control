@@ -1,0 +1,2 @@
+string type
+string name

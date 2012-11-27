@@ -253,6 +253,7 @@ bool ControllerManager::loadController(const std::string& name)
 
   // Initializes the controller
   ROS_DEBUG("Initializing controller '%s'", name.c_str());
+  hw_->clearClaims();
   bool initialized;
   try{
     initialized = c->initRequest(hw_, c_node);
@@ -278,6 +279,8 @@ bool ControllerManager::loadController(const std::string& name)
   to[to.size()-1].type = type;
   to[to.size()-1].name = name;
   to[to.size()-1].c = c;
+  to[to.size()-1].resources = hw_->getClaims();
+  hw_->clearClaims();
 
   // Resize controller state vector
   pub_controller_stats_.lock();
@@ -599,6 +602,7 @@ bool ControllerManager::listControllersSrv(
   resp.name.resize(controllers.size());
   resp.type.resize(controllers.size());
   resp.state.resize(controllers.size());
+  resp.resources.resize(controllers.size());
 
   for (size_t i = 0; i < controllers.size(); ++i)
   {
@@ -609,6 +613,14 @@ bool ControllerManager::listControllersSrv(
       resp.state[i] = "running";
     else
       resp.state[i] = "stopped";
+    resp.resources[i].resources.reserve(controllers[i].resources.size());
+    for( std::set<hardware_interface::Resource>::iterator it = controllers[i].resources.begin(); it != controllers[i].resources.end(); ++it)
+    {
+      controller_manager_msgs::Resource resource;
+      resource.name = (*it).name;
+      resource.type = (*it).type;
+      resp.resources[i].resources.push_back(resource);
+    }
   }
 
   ROS_DEBUG("list controller service finished");

@@ -37,30 +37,9 @@
 #include <string>
 #include <vector>
 #include <typeinfo>
-#include <set>
+#include <hardware_interface/resource.h>
 
 namespace hardware_interface{
-
-struct Resource
-{
-  std::string type;
-  std::string name;
-
-  Resource(std::string type, std::string name) : type(type), name(name) { }
-
-  bool operator==(const Resource& rhs) const
-  {
-    return (type == rhs.type) && (name == rhs.name);
-  }
-
-  bool operator<(const Resource& rhs) const
-  {
-    if(type == rhs.type)
-      return name < rhs.name;
-    return type < rhs.type;
-  }
-};
-
 
 class HardwareInterface
 {
