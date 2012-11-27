@@ -72,7 +72,7 @@ struct ControllerSpec {
 
   ControllerSpec() : stats(new Statistics) {}
   ControllerSpec(const ControllerSpec &spec)
-    : name(spec.name), c(spec.c), stats(spec.stats) {}
+    : name(spec.name), type(spec.type), c(spec.c), stats(spec.stats) {}
 };
 
 }
