@@ -34,6 +34,7 @@
 
 
 #include <controller_interface/controller_base.h>
+#include <hardware_interface/robot_hw.h>
 #include <hardware_interface/hardware_interface.h>
 #include <ros/ros.h>
 
@@ -66,7 +67,7 @@ public:
 
 
 protected:
-  virtual bool initRequest(hardware_interface::HardwareInterface* hw, ros::NodeHandle &n)
+  virtual bool initRequest(hardware_interface::RobotHW* robot_hw, ros::NodeHandle &n)
   {
     // check if construction finished cleanly
     if (state_ != CONSTRUCTED){
@@ -74,25 +75,24 @@ protected:
       return false;
     }
 
-    // check if we can cast to type T
-    std::vector<std::string> available_types = hw->getRegisteredTypes();
-
-
-    available_types.push_back(typeid(*hw).name());
-    bool correct_type = false;
-    for (unsigned i=0; i<available_types.size(); i++)
-      if (typeid(T).name() == available_types[i])
-        correct_type = true;
-
-
-    if (!correct_type){
-      ROS_ERROR("This controller requires a hardware interface of type %s", typeid(T).name());
+    hardware_interface::HardwareInterface* hw_base = robot_hw->get<T>();
+    if (!hw_base)
+    {
+      ROS_ERROR("This controller requires a hardware interface of type %s."
+                " Make sure this is registered in the hardware_interface::RobotHW class.", typeid(T).name());
       return false;
     }
 
     // cast the hw, and initialize the controller
-    T* hw_t = dynamic_cast<T*>(hw);
-    if (!init(hw_t, n)){
+    T* hw_t = dynamic_cast<T*>(hw_base);
+    if (!hw_t)
+    {
+      ROS_ERROR("Failed on dynamic_cast<T>(hw) for T = [%s]. This should never happen", typeid(T).name());
+      return false;
+    }
+
+    if (!init(hw_t, n))
+    {
       ROS_ERROR("Failed to initialize the controller");
       return false;
     }

@@ -39,8 +39,8 @@
 namespace controller_manager{
 
 
-ControllerManager::ControllerManager(hardware_interface::HardwareInterface *hw, const ros::NodeHandle& nh) :
-  hw_(hw),
+ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, const ros::NodeHandle& nh) :
+  robot_hw_(robot_hw),
   controller_node_(nh),
   cm_node_(nh, "controller_manager"),
   start_request_(0),
@@ -255,7 +255,7 @@ bool ControllerManager::loadController(const std::string& name)
   ROS_DEBUG("Initializing controller '%s'", name.c_str());
   bool initialized;
   try{
-    initialized = c->initRequest(hw_, c_node);
+    initialized = c->initRequest(robot_hw_, c_node);
   }
   catch(std::exception &e){
     ROS_ERROR("Exception thrown while initializing controller %s.\n%s", name.c_str(), e.what());

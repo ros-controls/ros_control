@@ -37,12 +37,12 @@
 namespace controller_manager_tests
 {
 
-class MyDummyInterface : virtual public hardware_interface::HardwareInterface
+class MyDummyInterface : public hardware_interface::HardwareInterface
 {
 public:
   MyDummyInterface()
   {
-    registerType(typeid(MyDummyInterface).name());
+
   }
 };
 

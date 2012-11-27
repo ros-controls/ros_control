@@ -44,17 +44,8 @@ namespace hardware_interface{
 class HardwareInterface
 {
 public:
-  std::vector<std::string> getRegisteredTypes() {return types_;}
-  void registerType(std::string type) { types_.push_back(type); }
   virtual ~HardwareInterface() { };
-private:
-  std::vector<std::string> types_;
 };
-
-
-
-
-
 
 
 class HardwareInterfaceException: public std::exception

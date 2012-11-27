@@ -40,7 +40,7 @@
 #include <vector>
 #include <ros/ros.h>
 #include <tinyxml.h>
-#include <hardware_interface/hardware_interface.h>
+#include <hardware_interface/robot_hw.h>
 #include <realtime_utils/realtime_publisher.h>
 #include <ros/node_handle.h>
 #include <pluginlib/class_loader.h>
@@ -60,7 +60,7 @@ namespace controller_manager{
 class ControllerManager{
 
 public:
-  ControllerManager(hardware_interface::HardwareInterface *hw,
+  ControllerManager(hardware_interface::RobotHW *robot_hw,
                    const ros::NodeHandle& nh=ros::NodeHandle());
   virtual ~ControllerManager();
 
@@ -83,7 +83,7 @@ private:
   void getControllerNames(std::vector<std::string> &v);
   void getControllerSchedule(std::vector<size_t> &schedule);
 
-  hardware_interface::HardwareInterface* hw_;
+  hardware_interface::RobotHW* robot_hw_;
 
   ros::NodeHandle controller_node_, cm_node_;
 

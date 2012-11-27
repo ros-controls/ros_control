@@ -35,93 +35,51 @@
 namespace controller_manager_tests
 {
 
-  MyRobotHW::MyRobotHW()
-  {
-    joint_position_.resize(2);
-    joint_velocity_.resize(2);
-    joint_effort_.resize(2);
-    joint_effort_command_.resize(2);
-    joint_velocity_command_.resize(2);
-    joint_name_.resize(2);
+MyRobotHW::MyRobotHW()
+{
+  joint_position_.resize(2);
+  joint_velocity_.resize(2);
+  joint_effort_.resize(2);
+  joint_effort_command_.resize(2);
+  joint_velocity_command_.resize(2);
+  joint_name_.resize(2);
 
-    joint_name_[0] = "hiDOF_joint1";
-    joint_position_[0] = 1.0;
-    joint_velocity_[0] = 0.0;
-    joint_effort_[0] = 0.1;
-    joint_effort_command_[0] = 0.0;
-    joint_velocity_command_[0] = 0.0;
+  joint_name_[0] = "hiDOF_joint1";
+  joint_position_[0] = 1.0;
+  joint_velocity_[0] = 0.0;
+  joint_effort_[0] = 0.1;
+  joint_effort_command_[0] = 0.0;
+  joint_velocity_command_[0] = 0.0;
 
-    joint_name_[1] = "hiDOF_joint2";
-    joint_position_[1] = 1.0;
-    joint_velocity_[1] = 0.0;
-    joint_effort_[1] = 0.1;
-    joint_effort_command_[1] = 0.0;
-    joint_velocity_command_[1] = 0.0;
-  }
+  joint_name_[1] = "hiDOF_joint2";
+  joint_position_[1] = 1.0;
+  joint_velocity_[1] = 0.0;
+  joint_effort_[1] = 0.1;
+  joint_effort_command_[1] = 0.0;
+  joint_velocity_command_[1] = 0.0;
 
+  js_interface_.registerJoint(joint_name_[0], &joint_position_[0], &joint_velocity_[0], &joint_effort_[0]);
+  js_interface_.registerJoint(joint_name_[1], &joint_position_[1], &joint_velocity_[1], &joint_effort_[1]);
 
+  ej_interface_.registerJoint(js_interface_.getJointStateHandle(joint_name_[0]), &joint_effort_command_[0]);
+  ej_interface_.registerJoint(js_interface_.getJointStateHandle(joint_name_[1]), &joint_effort_command_[1]);
 
-  std::vector<std::string> MyRobotHW::getJointNames() const
-  {
-    return joint_name_;
-  }
+  vj_interface_.registerJoint(js_interface_.getJointStateHandle(joint_name_[0]), &joint_velocity_command_[0]);
+  vj_interface_.registerJoint(js_interface_.getJointStateHandle(joint_name_[1]), &joint_velocity_command_[1]);
 
-
-  double* MyRobotHW::getEffortCommand(const std::string& name)
-  {
-    for (unsigned i=0; i<joint_name_.size(); i++)
-      if (joint_name_[i] == name)
-        return &joint_effort_command_[i];
-
-    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
-  }
-
-  double* MyRobotHW::getVelocityCommand(const std::string& name)
-  {
-    for (unsigned i=0; i<joint_name_.size(); i++)
-      if (joint_name_[i] == name)
-        return &joint_velocity_command_[i];
-
-    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
-  }
-
-  const double* MyRobotHW::getPosition(const std::string& name) const
-  {
-    for (unsigned i=0; i<joint_name_.size(); i++)
-      if (joint_name_[i] == name)
-        return &joint_position_[i];
-
-    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
-  }
+  registerInterface(&js_interface_);
+  registerInterface(&ej_interface_);
+  registerInterface(&vj_interface_);
+}
 
 
-  const double* MyRobotHW::getVelocity(const std::string& name) const
-  {
-    for (unsigned i=0; i<joint_name_.size(); i++)
-      if (joint_name_[i] == name)
-        return &joint_velocity_[i];
+void MyRobotHW::read()
+{
 
-    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
-  }
+}
 
-
-  const double* MyRobotHW::getEffort(const std::string& name) const
-  {
-    for (unsigned i=0; i<joint_name_.size(); i++)
-      if (joint_name_[i] == name)
-        return &joint_effort_[i];
-
-    throw hardware_interface::HardwareInterfaceException("Could not find joint "+name+" in Dummy hardware interface");
-  }
-
-
-  void MyRobotHW::read()
-  {
-
-  }
-
-  void MyRobotHW::write()
-  {
-  }
+void MyRobotHW::write()
+{
+}
 
 }

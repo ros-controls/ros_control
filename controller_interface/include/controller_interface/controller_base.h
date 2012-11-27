@@ -34,7 +34,7 @@
 #define CONTROLLER_INTERFACE_CONTROLLER_BASE_H
 
 #include <ros/node_handle.h>
-#include <hardware_interface/hardware_interface.h>
+#include <hardware_interface/robot_hw.h>
 
 
 namespace controller_interface
@@ -63,7 +63,7 @@ public:
 
 
 
-  virtual bool initRequest(hardware_interface::HardwareInterface* hw, ros::NodeHandle &n)=0;
+  virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle &n)=0;
 
   void updateRequest(const ros::Time& time)
   {

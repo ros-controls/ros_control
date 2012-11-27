@@ -25,71 +25,44 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/*
- * Author: Wim Meeussen
- */
+#ifndef HARDWARE_INTERFACE_ROBOT_HW_H
+#define HARDWARE_INTERFACE_ROBOT_HW_H
 
-#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
-
-#include <hardware_interface/hardware_interface.h>
-#include <string>
 #include <map>
-#include <utility>  // for std::make_pair
+#include <hardware_interface/hardware_interface.h>
 
-namespace hardware_interface{
+namespace hardware_interface
+{
 
-class JointStateHandle
+class RobotHW
 {
 public:
-  JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff)
-  {}
-
-  std::string getName() const {return name_;}
-  double getPosition() const {return *pos_;}
-  double getVelocity() const {return *vel_;}
-  double getEffort()   const {return *eff_;}
-
-
-private:
-  std::string name_;
-  const double* pos_;
-  const double* vel_;
-  const double* eff_;
-};
-
-
-
-class JointStateInterface: public HardwareInterface
-{
-public:
-  void registerJoint(const std::string& name, double* pos, double* vel, double* eff)
+  RobotHW()
   {
-    JointStateHandle handle(name, pos, vel, eff);
-    HandleMap::iterator it = handle_map_.find(name);
-    if (it == handle_map_.end())
-      handle_map_.insert(std::make_pair(name, handle));
-    else
-      it->second = handle;
+
   }
 
-  JointStateHandle getJointStateHandle(const std::string& name) const
+  template<class T>
+  void registerInterface(T* hw)
   {
-    HandleMap::const_iterator it = handle_map_.find(name);
+    interfaces_[typeid(T).name()] = hw;
+  }
 
-    if (it == handle_map_.end())
-      throw HardwareInterfaceException("Could not find joint [" + name + "] in JointStateInterface");
-
+  template<class T>
+  HardwareInterface* get()
+  {
+    InterfaceMap::iterator it = interfaces_.find(typeid(T).name());
+    if (it == interfaces_.end())
+      return NULL;
     return it->second;
   }
 
 private:
-  typedef std::map<std::string, JointStateHandle> HandleMap;
-  HandleMap handle_map_;
-
+  typedef std::map<std::string, HardwareInterface*> InterfaceMap;
+  InterfaceMap interfaces_;
 };
 
 }
 
 #endif
+
