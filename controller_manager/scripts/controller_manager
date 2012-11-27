@@ -1,0 +1,72 @@
+#! /usr/bin/env python
+# Provides quick access to the services exposed by controller_manager_msgs
+
+import roslib, time
+roslib.load_manifest('controller_manager')
+
+import rospy, sys
+from controller_manager import controller_manager_interface
+
+
+class Tracker:
+    def __init__(self, topic, Msg):
+        self.sub = rospy.Subscriber(topic, Msg, self.callback)
+        self.msg = None #Msg()
+
+    def callback(self, msg):
+        self.msg = msg
+
+def print_usage(exit_code = 0):
+    print '''Commands:
+    load <name>          - Load the controller named <name>
+    unload <name>        - Unload the controller named <name>
+    start <name>         - Start the controller named <name>
+    stop <name>          - Stop the controller named <name>
+    spawn <name>         - Load and start the controller named <name>
+    kill <name>          - Stop and unload the controller named <name>
+    list                 - List active controllers
+    list-types           - List controller Types
+    reload-libraries     - Reloads all plugin controller libraries'''
+
+    sys.exit(exit_code)
+
+
+if __name__ == '__main__':
+    args = rospy.myargv()
+    if len(args) < 2:
+        print_usage()
+    if args[1] == 'lt' or args[1] == 'list-types':
+        controller_manager_interface.list_controller_types()
+    elif args[1] == 'lc' or args[1] == 'list':
+        controller_manager_interface.list_controllers()
+    elif args[1] == 'reload-libraries':
+        print "ARGS", args, args[2:]
+        if '--restore' in args[2:]:
+            print "RE1"
+            controller_manager_interface.reload_libraries(True, restore = True)
+        else:
+            controller_manager_interface.reload_libraries(True)
+    elif args[1] == 'load':
+        for c in args[2:]:
+            controller_manager_interface.load_controller(c)
+    elif args[1] == 'unload':
+        for c in args[2:]:
+            controller_manager_interface.unload_controller(c)
+    elif args[1] == 'start':
+        for c in args[2:]:
+            controller_manager_interface.start_controller(c)
+    elif args[1] == 'stop':
+        for c in args[2:]:
+            controller_manager_interface.stop_controller(c)
+    elif args[1] == 'sp' or args[1] == 'spawn':
+        for c in args[2:]:
+            controller_manager_interface.load_controller(c)
+        for c in args[2:]:
+            controller_manager_interface.start_controller(c)
+    elif args[1] == 'kl' or args[1] == 'kill':
+        for c in args[2:]:
+            controller_manager_interface.stop_controller(c)
+        for c in args[2:]:
+            controller_manager_interface.unload_controller(c)
+    else:
+        print_usage(1)
