@@ -78,6 +78,7 @@ public:
     if (it == handle_map_.end())
       throw HardwareInterfaceException("Could not find joint [" + name + "] in EffortJointInterface");
 
+    HardwareInterface::claim(name);
     return it->second;
   }
 

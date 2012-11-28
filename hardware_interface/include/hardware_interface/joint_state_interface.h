@@ -35,6 +35,7 @@
 #include <hardware_interface/hardware_interface.h>
 #include <string>
 #include <map>
+#include <vector>
 #include <utility>  // for std::make_pair
 
 namespace hardware_interface{

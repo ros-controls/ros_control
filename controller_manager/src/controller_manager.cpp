@@ -115,7 +115,7 @@ controller_interface::ControllerBase* ControllerManager::getControllerByName(con
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
-    if (controllers[i].name == name)
+    if (controllers[i].info.name == name)
       return controllers[i].c.get();
   }
   return NULL;
@@ -127,7 +127,7 @@ void ControllerManager::getControllerNames(std::vector<std::string> &names)
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
-    names.push_back(controllers[i].name);
+    names.push_back(controllers[i].info.name);
   }
 }
 
@@ -158,7 +158,7 @@ bool ControllerManager::loadController(const std::string& name)
   // Checks that we're not duplicating controllers
   for (size_t j = 0; j < to.size(); ++j)
   {
-    if (to[j].name == name)
+    if (to[j].info.name == name)
     {
       to.clear();
       ROS_ERROR("A controller named '%s' was already loaded inside the controller manager", name.c_str());
@@ -223,8 +223,9 @@ bool ControllerManager::loadController(const std::string& name)
   // Initializes the controller
   ROS_DEBUG("Initializing controller '%s'", name.c_str());
   bool initialized;
+  std::set<std::string> claimed_resources; // Gets populated during initRequest call
   try{
-    initialized = c->initRequest(robot_hw_, c_node);
+    initialized = c->initRequest(robot_hw_, c_node, claimed_resources);
   }
   catch(std::exception &e){
     ROS_ERROR("Exception thrown while initializing controller %s.\n%s", name.c_str(), e.what());
@@ -244,9 +245,10 @@ bool ControllerManager::loadController(const std::string& name)
 
   // Adds the controller to the new list
   to.resize(to.size() + 1);
-  to[to.size()-1].type = type;
-  to[to.size()-1].hardware_interface = c->getHardwareInterfaceType();
-  to[to.size()-1].name = name;
+  to[to.size()-1].info.type = type;
+  to[to.size()-1].info.hardware_interface = c->getHardwareInterfaceType();
+  to[to.size()-1].info.name = name;
+  to[to.size()-1].info.resources = claimed_resources;
   to[to.size()-1].c = c;
 
   // Destroys the old controllers list when the realtime thread is finished with it.
@@ -289,7 +291,7 @@ bool ControllerManager::unloadController(const std::string &name)
   bool removed = false;
   for (size_t i = 0; i < from.size(); ++i)
   {
-    if (from[i].name == name){
+    if (from[i].info.name == name){
       if (from[i].c->isRunning()){
         to.clear();
         ROS_ERROR("Could not unload controller with name %s because it is still running",
@@ -520,9 +522,14 @@ bool ControllerManager::listControllersSrv(
   for (size_t i = 0; i < controllers.size(); ++i)
   {
     controller_manager_msgs::ControllerState& cs = resp.controller[i];
-    cs.name = controllers[i].name;
-    cs.type = controllers[i].type;
-    cs.hardware_interface = controllers[i].hardware_interface;
+    cs.name               = controllers[i].info.name;
+    cs.type               = controllers[i].info.type;
+    cs.hardware_interface = controllers[i].info.hardware_interface;
+    cs.resources.clear();
+    cs.resources.reserve(controllers[i].info.resources.size());
+    for (std::set<std::string>::iterator it = controllers[i].info.resources.begin(); it != controllers[i].info.resources.end(); it++)
+      cs.resources.push_back(*it);
+
     if (controllers[i].c->isRunning())
       cs.state = "running";
     else

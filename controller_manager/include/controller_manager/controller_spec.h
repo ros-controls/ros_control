@@ -39,19 +39,15 @@
 #include <string>
 #include <vector>
 #include <controller_interface/controller_base.h>
-#include <boost/circular_buffer.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics/stats.hpp>
-#include <boost/accumulators/statistics/max.hpp>
-#include <boost/accumulators/statistics/mean.hpp>
-#include <boost/accumulators/statistics/variance.hpp>
+#include <boost/shared_ptr.hpp>
+#include <controller_manager/controller_info.h>
 
 namespace controller_manager
 {
 
-struct ControllerSpec {
-  std::string name, type, hardware_interface;
+struct ControllerSpec
+{
+  ControllerInfo info;
   boost::shared_ptr<controller_interface::ControllerBase> c;
 };
 

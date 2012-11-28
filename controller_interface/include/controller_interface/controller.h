@@ -67,7 +67,7 @@ public:
 
 
 protected:
-  virtual bool initRequest(hardware_interface::RobotHW* robot_hw, ros::NodeHandle &n)
+  virtual bool initRequest(hardware_interface::RobotHW* robot_hw, ros::NodeHandle &n, std::set<std::string>& claimed_resources)
   {
     // check if construction finished cleanly
     if (state_ != CONSTRUCTED){
@@ -91,11 +91,14 @@ protected:
       return false;
     }
 
+    hw_t->clearClaims();
     if (!init(hw_t, n))
     {
       ROS_ERROR("Failed to initialize the controller");
       return false;
     }
+    claimed_resources = hw_t->getClaims();
+    hw_t->clearClaims();
 
     // success
     state_ = INITIALIZED;

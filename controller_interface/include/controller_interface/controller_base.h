@@ -63,7 +63,7 @@ public:
 
 
 
-  virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle &n)=0;
+  virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle &n, std::set<std::string>& claimed_resources)=0;
 
   void updateRequest(const ros::Time& time)
   {
