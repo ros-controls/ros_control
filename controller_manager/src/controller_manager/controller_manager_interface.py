@@ -53,11 +53,12 @@ def list_controllers():
     rospy.wait_for_service('controller_manager/list_controllers')
     s = rospy.ServiceProxy('controller_manager/list_controllers', ListControllers)
     resp = s.call(ListControllersRequest())
-    if len(resp.controllers) == 0:
+    if len(resp.controller) == 0:
         print "No controllers are loaded in mechanism control"
     else:
-        for c, s in zip(resp.controllers, resp.state):
-            print c, "(",s,")"
+        for c in resp.controller:
+            print '%s - %s ( %s )'%(c.name, c.hardware_interface, c.state)
+
 
 def load_controller(name):
     rospy.wait_for_service('controller_manager/load_controller')
