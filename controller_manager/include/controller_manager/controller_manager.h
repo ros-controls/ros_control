@@ -50,7 +50,6 @@
 #include <controller_manager_msgs/LoadController.h>
 #include <controller_manager_msgs/UnloadController.h>
 #include <controller_manager_msgs/SwitchController.h>
-#include <controller_manager_msgs/ControllersStatistics.h>
 #include <boost/thread/condition.hpp>
 #include <controller_manager/controller_loader_interface.h>
 
@@ -100,16 +99,6 @@ private:
   std::vector<ControllerSpec> controllers_lists_[2];
   int current_controllers_list_, used_by_realtime_;
 
-  // for controller statistics
-  Statistics pre_update_stats_;
-  Statistics update_stats_;
-  Statistics post_update_stats_;
-
-  // for publishing constroller state
-  void publishControllerStatistics();
-  realtime_utils::RealtimePublisher<controller_manager_msgs::ControllersStatistics> pub_controller_stats_;
-  ros::Duration publish_period_controller_stats_;
-  ros::Time last_published_controller_stats_;
 
   // services to work with controllers
   bool listControllerTypesSrv(controller_manager_msgs::ListControllerTypes::Request &req,

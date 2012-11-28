@@ -102,6 +102,10 @@ protected:
     return true;
   }
 
+  virtual std::string getHardwareInterfaceType() const
+  {
+    return typeid(T).name();
+  }
 
 private:
   Controller<T>(const Controller<T> &c);

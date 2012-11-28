@@ -35,6 +35,7 @@
 #include <sstream>
 #include <ros/console.h>
 #include <controller_manager/controller_loader.h>
+#include <controller_manager_msgs/ControllerState.h>
 
 namespace controller_manager{
 
@@ -47,21 +48,9 @@ ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, cons
   stop_request_(0),
   please_switch_(false),
   current_controllers_list_(0),
-  used_by_realtime_(-1),
-  pub_controller_stats_(nh, "controller_statistics", 1),
-  last_published_controller_stats_(ros::Time::now())
+  used_by_realtime_(-1)
 {
-  // pre-allocate for realtime publishing
-  pub_controller_stats_.msg_.controller.resize(0);
-
-  // get the publish rate for controller state
-  double publish_rate_controller_stats;
-  cm_node_.param("controller_statistics_publish_rate", publish_rate_controller_stats, 1.0);
-
-  publish_period_controller_stats_ = ros::Duration(1.0/fmax(0.000001, publish_rate_controller_stats));
-
   // create controller loader
-
   controller_loaders_.push_back( LoaderPtr(new ControllerLoader<controller_interface::ControllerBase>("controller_interface",
                                                                                                       "controller_interface::ControllerBase") ) );
 
@@ -84,8 +73,6 @@ ControllerManager::~ControllerManager()
 // Must be realtime safe.
 void ControllerManager::update(const ros::Time& time, bool reset_controllers)
 {
-  ros::Time start = ros::Time::now();
-
   used_by_realtime_ = current_controllers_list_;
   std::vector<ControllerSpec> &controllers = controllers_lists_[used_by_realtime_];
 
@@ -100,27 +87,9 @@ void ControllerManager::update(const ros::Time& time, bool reset_controllers)
   }
 
 
- // Update all controllers in scheduling order
-  ros::Time start_update = ros::Time::now();
-  pre_update_stats_.acc((start_update - start).toSec());
-  for (size_t i=0; i<controllers.size(); i++){
-    ros::Time start = ros::Time::now();
+ // Update all controllers
+  for (size_t i=0; i<controllers.size(); i++)
     controllers[i].c->updateRequest(time);
-    ros::Time end = ros::Time::now();
-    controllers[i].stats->acc((end - start).toSec());
-    if (end - start > ros::Duration(0.001)){
-      controllers[i].stats->num_control_loop_overruns++;
-      controllers[i].stats->time_last_control_loop_overrun = end;
-    }
-  }
-  ros::Time end_update = ros::Time::now();
-  update_stats_.acc((end_update - start_update).toSec());
-
-  ros::Time end = ros::Time::now();
-  post_update_stats_.acc((end - end_update).toSec());
-
-  // publish state
-  publishControllerStatistics();
 
   // there are controllers to start/stop
   if (please_switch_)
@@ -276,16 +245,9 @@ bool ControllerManager::loadController(const std::string& name)
   // Adds the controller to the new list
   to.resize(to.size() + 1);
   to[to.size()-1].type = type;
+  to[to.size()-1].hardware_interface = c->getHardwareInterfaceType();
   to[to.size()-1].name = name;
   to[to.size()-1].c = c;
-
-  // Resize controller state vector
-  pub_controller_stats_.lock();
-  pub_controller_stats_.msg_.controller.resize(to.size());
-  for (size_t i=0; i<to.size(); i++){
-    pub_controller_stats_.msg_.controller[i].name = to[i].name;
-    pub_controller_stats_.msg_.controller[i].type = to[i].type;
-  }
 
   // Destroys the old controllers list when the realtime thread is finished with it.
   int former_current_controllers_list_ = current_controllers_list_;
@@ -296,7 +258,6 @@ bool ControllerManager::loadController(const std::string& name)
     usleep(200);
   }
   from.clear();
-  pub_controller_stats_.unlock();
 
   ROS_DEBUG("Successfully load controller '%s'", name.c_str());
   return true;
@@ -350,15 +311,6 @@ bool ControllerManager::unloadController(const std::string &name)
     return false;
   }
 
-  // Resize controller state vector
-  ROS_DEBUG("Resizing controller state vector");
-  pub_controller_stats_.lock();
-  pub_controller_stats_.msg_.controller.resize(to.size());
-  for (size_t i=0; i<to.size(); i++){
-    pub_controller_stats_.msg_.controller[i].name = to[i].name;
-    pub_controller_stats_.msg_.controller[i].type = to[i].type;
-  }
-
   // Destroys the old controllers list when the realtime thread is finished with it.
   ROS_DEBUG("Realtime switches over to new controller list");
   int former_current_controllers_list_ = current_controllers_list_;
@@ -371,7 +323,6 @@ bool ControllerManager::unloadController(const std::string &name)
   ROS_DEBUG("Destruct controller");
   from.clear();
   ROS_DEBUG("Destruct controller finished");
-  pub_controller_stats_.unlock();
 
   ROS_DEBUG("Successfully unloaded controller '%s'", name.c_str());
   return true;
@@ -466,38 +417,6 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
 }
 
 
-
-void ControllerManager::publishControllerStatistics()
-{
-  ros::Time now = ros::Time::now();
-  if (now > last_published_controller_stats_ + publish_period_controller_stats_)
-  {
-    if (pub_controller_stats_.trylock())
-    {
-      while (last_published_controller_stats_ + publish_period_controller_stats_ < now)
-        last_published_controller_stats_ += publish_period_controller_stats_;
-
-      // controller state
-      std::vector<ControllerSpec> &controllers = controllers_lists_[used_by_realtime_];
-      assert(pub_controller_stats_.msg_.controller.size() == controllers.size());
-      for (unsigned int i = 0; i < controllers.size(); ++i)
-      {
-        controller_manager_msgs::ControllerStatistics *out = &pub_controller_stats_.msg_.controller[i];
-        out->timestamp = now;
-        out->running = controllers[i].c->isRunning();
-        out->max_time = ros::Duration(boost::accumulators::max(controllers[i].stats->acc));
-        out->mean_time = ros::Duration(boost::accumulators::mean(controllers[i].stats->acc));
-        out->variance_time = ros::Duration(std::sqrt(boost::accumulators::variance(controllers[i].stats->acc)));
-        out->num_control_loop_overruns = controllers[i].stats->num_control_loop_overruns;
-        out->time_last_control_loop_overrun = controllers[i].stats->time_last_control_loop_overrun;
-      }
-
-      pub_controller_stats_.msg_.header.stamp = ros::Time::now();
-
-      pub_controller_stats_.unlockAndPublish();
-    }
-  }
-}
 
 
 
@@ -596,19 +515,18 @@ bool ControllerManager::listControllersSrv(
   // lock controllers to get all names/types/states
   boost::mutex::scoped_lock controller_guard(controllers_lock_);
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
-  resp.name.resize(controllers.size());
-  resp.type.resize(controllers.size());
-  resp.state.resize(controllers.size());
+  resp.controller.resize(controllers.size());
 
   for (size_t i = 0; i < controllers.size(); ++i)
   {
-    // add controller state
-    resp.name[i] = controllers[i].name;
-    resp.type[i] = controllers[i].type;
+    controller_manager_msgs::ControllerState& cs = resp.controller[i];
+    cs.name = controllers[i].name;
+    cs.type = controllers[i].type;
+    cs.hardware_interface = controllers[i].hardware_interface;
     if (controllers[i].c->isRunning())
-      resp.state[i] = "running";
+      cs.state = "running";
     else
-      resp.state[i] = "stopped";
+      cs.state = "stopped";
   }
 
   ROS_DEBUG("list controller service finished");

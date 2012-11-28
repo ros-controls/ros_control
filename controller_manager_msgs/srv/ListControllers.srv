@@ -1,7 +1,5 @@
-# The ListControllers service returns a list of controller names/states/types of the 
+# The ListControllers service returns a list of controller names/states/types of the
 # controllers that are loaded inside the controller_manager.
 
 ---
-string[] name
-string[] state
-string[] type
+ControllerState[] controller

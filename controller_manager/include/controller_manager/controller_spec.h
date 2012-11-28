@@ -50,29 +50,9 @@
 namespace controller_manager
 {
 
-typedef boost::accumulators::accumulator_set<
-  double, boost::accumulators::stats<boost::accumulators::tag::max,
-                                     boost::accumulators::tag::mean,
-                                     boost::accumulators::tag::variance> > TimeStatistics;
-
-struct Statistics {
-  TimeStatistics acc;
-  ros::Time time_last_control_loop_overrun;
-  unsigned int num_control_loop_overruns;
-  double max;
-  boost::circular_buffer<double> max1;
-Statistics() : num_control_loop_overruns(0), max(0), max1(60) {}
-};
-
 struct ControllerSpec {
-  std::string name;
-  std::string type;
+  std::string name, type, hardware_interface;
   boost::shared_ptr<controller_interface::ControllerBase> c;
-  boost::shared_ptr<Statistics> stats;
-
-  ControllerSpec() : stats(new Statistics) {}
-  ControllerSpec(const ControllerSpec &spec)
-    : name(spec.name), type(spec.type), c(spec.c), stats(spec.stats) {}
 };
 
 }

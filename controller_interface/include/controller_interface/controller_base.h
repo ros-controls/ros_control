@@ -96,6 +96,9 @@ public:
       return false;
   }
 
+
+  virtual std::string getHardwareInterfaceType() const = 0;
+
   enum {CONSTRUCTED, INITIALIZED, RUNNING} state_;
 
 
