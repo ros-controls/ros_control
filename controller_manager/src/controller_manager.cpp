@@ -403,6 +403,39 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   }
   ROS_DEBUG("Start request vector has size %i", (int)start_request_.size());
 
+  // Do the resource management checking
+  std::list<hardware_interface::ControllerInfo> info_list;
+  std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
+  for (size_t i = 0; i < controllers.size(); ++i)
+  {
+    bool in_stop_list  = false;
+
+    for(size_t j = 0; j < stop_request_.size(); j++)
+      in_stop_list = in_stop_list || (stop_request_[j] == controllers[i].c.get());
+
+    bool in_start_list = false;
+    for(size_t j = 0; j < start_request_.size(); j++)
+      in_start_list = in_start_list || (start_request_[j] == controllers[i].c.get());
+
+    bool add_to_list = controllers[i].c->isRunning();
+    if (in_stop_list)
+      add_to_list = false;
+    if (in_start_list)
+      add_to_list = true;
+
+    if (add_to_list)
+      info_list.push_back(controllers[i].info);
+  }
+
+  bool in_conflict = robot_hw_->checkForConflict(info_list);
+  if (in_conflict)
+  {
+    ROS_ERROR("Could not switch controllers, due to resource conflict");
+    stop_request_.clear();
+    start_request_.clear();
+    return false;
+  }
+
   // start the atomic controller switching
   switch_strictness_ = strictness;
   please_switch_ = true;

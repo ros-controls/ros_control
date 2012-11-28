@@ -40,14 +40,14 @@
 #include <vector>
 #include <controller_interface/controller_base.h>
 #include <boost/shared_ptr.hpp>
-#include <controller_manager/controller_info.h>
+#include <hardware_interface/controller_info.h>
 
 namespace controller_manager
 {
 
 struct ControllerSpec
 {
-  ControllerInfo info;
+  hardware_interface::ControllerInfo info;
   boost::shared_ptr<controller_interface::ControllerBase> c;
 };
 

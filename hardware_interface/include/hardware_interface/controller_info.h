@@ -26,13 +26,13 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
-#ifndef CONTROLLER_MANAGER_CONTROLLER_INFO_H
-#define CONTROLLER_MANAGER_CONTROLLER_INFO_H
+#ifndef HARDWARE_INTERFACE_CONTROLLER_INFO_H
+#define HARDWARE_INTERFACE_CONTROLLER_INFO_H
 
 #include <set>
 #include <string>
 
-namespace controller_manager
+namespace hardware_interface
 {
 
 struct ControllerInfo
