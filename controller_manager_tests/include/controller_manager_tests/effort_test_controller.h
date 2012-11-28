@@ -49,7 +49,7 @@ public:
   void stopping(const ros::Time& time);
 
 private:
-  std::vector<hardware_interface::EffortJointHandle> joint_effort_commands_;
+  std::vector<hardware_interface::JointHandle> joint_effort_commands_;
 
 };
 

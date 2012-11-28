@@ -60,10 +60,20 @@ private:
 };
 
 
-
 class JointStateInterface: public HardwareInterface
 {
 public:
+  std::vector<std::string> getJointNames() const
+  {
+    std::vector<std::string> out;
+    out.reserve(handle_map_.size());
+    for( HandleMap::const_iterator it = handle_map_.begin(); it != handle_map_.end(); ++it)
+    {
+      out.push_back(it->first);
+    }
+    return out;
+  }
+
   void registerJoint(const std::string& name, double* pos, double* vel, double* eff)
   {
     JointStateHandle handle(name, pos, vel, eff);

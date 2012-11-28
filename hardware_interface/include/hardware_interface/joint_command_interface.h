@@ -31,28 +31,39 @@
 #include <hardware_interface/joint_state_interface.h>
 
 
-namespace hardware_interface{
+namespace hardware_interface
+{
 
-
-class EffortJointHandle : public JointStateHandle
+class JointHandle : public JointStateHandle
 {
 public:
-  EffortJointHandle(const JointStateHandle& js, double* cmd)
+  JointHandle(const JointStateHandle& js, double* cmd)
     : JointStateHandle(js), cmd_(cmd)
   {}
-  void setEffortCommand(double command) {*cmd_ = command;};
+  void setCommand(double command) {*cmd_ = command;};
 
 private:
   double* cmd_;
 };
 
 
-class EffortJointInterface : public HardwareInterface
+class JointCommandInterface : public hardware_interface::HardwareInterface
 {
 public:
+  std::vector<std::string> getJointNames() const
+  {
+    std::vector<std::string> out;
+    out.reserve(handle_map_.size());
+    for( HandleMap::const_iterator it = handle_map_.begin(); it != handle_map_.end(); ++it)
+    {
+      out.push_back(it->first);
+    }
+    return out;
+  }
+
   void registerJoint(const JointStateHandle& js, double* cmd)
   {
-    EffortJointHandle handle(js, cmd);
+    JointHandle handle(js, cmd);
     HandleMap::iterator it = handle_map_.find(js.getName());
     if (it == handle_map_.end())
       handle_map_.insert(std::make_pair(js.getName(), handle));
@@ -60,8 +71,7 @@ public:
       it->second = handle;
   }
 
-  // get the joint to command
-  EffortJointHandle getEffortJointHandle(const std::string& name)
+  JointHandle getJointHandle(const std::string& name)
   {
     HandleMap::const_iterator it = handle_map_.find(name);
 
@@ -72,111 +82,24 @@ public:
   }
 
 protected:
-  typedef std::map<std::string, EffortJointHandle> HandleMap;
-  HandleMap handle_map_;
-
-};
-
-
-
-
-
-
-
-class VelocityJointHandle : public JointStateHandle
-{
-public:
-  VelocityJointHandle(const JointStateHandle& js, double* cmd)
-    : JointStateHandle(js), cmd_(cmd)
-  {}
-
-  void setVelocityCommand(double command) {*cmd_ = command;};
-
-private:
-  double* cmd_;
-};
-
-
-class VelocityJointInterface: public HardwareInterface
-{
-public:
-  void registerJoint(const JointStateHandle& js, double* cmd)
-  {
-    VelocityJointHandle handle(js, cmd);
-    HandleMap::iterator it = handle_map_.find(js.getName());
-    if (it == handle_map_.end())
-      handle_map_.insert(std::make_pair(js.getName(), handle));
-    else
-      it->second = handle;
-  }
-
-  // get the joint to command
-  VelocityJointHandle getVelocityJointHandle(const std::string& name)
-  {
-    HandleMap::const_iterator it = handle_map_.find(name);
-
-    if (it == handle_map_.end())
-      throw HardwareInterfaceException("Could not find joint [" + name + "] in VelocityJointInterface");
-
-    return it->second;
-  }
-
-protected:
-  typedef std::map<std::string, VelocityJointHandle> HandleMap;
+  typedef std::map<std::string, JointHandle> HandleMap;
   HandleMap handle_map_;
 };
 
-
-
-
-
-
-
-
-class PositionJointHandle : public JointStateHandle
+class EffortJointInterface : public JointCommandInterface
 {
-public:
-  PositionJointHandle(const JointStateHandle& js, double* cmd)
-    : JointStateHandle(js), cmd_(cmd)
-  {}
 
-  void setPositionCommand(double command) {*cmd_ = command;};
-
-private:
-  double* cmd_;
 };
 
-
-class PositionJointInterface: public HardwareInterface
+class VelocityJointInterface : public JointCommandInterface
 {
-public:
-  void registerJoint(const std::string& name, const JointStateHandle& js, double* cmd)
-  {
-    PositionJointHandle handle(js, cmd);
-    HandleMap::iterator it = handle_map_.find(js.getName());
-    if (it == handle_map_.end())
-      handle_map_.insert(std::make_pair(js.getName(), handle));
-    else
-      it->second = handle;
-  }
 
-  // get the joint to command
-  PositionJointHandle getPositionJointHandle(const std::string& name)
-  {
-    HandleMap::const_iterator it = handle_map_.find(name);
-
-    if (it == handle_map_.end())
-      throw HardwareInterfaceException("Could not find joint [" + name + "] in PositionJointInterface");
-
-    return it->second;
-  }
-
-protected:
-  typedef std::map<std::string, PositionJointHandle> HandleMap;
-  HandleMap handle_map_;
 };
 
+class PositionJointInterface : public JointCommandInterface
+{
 
+};
 
 
 }
