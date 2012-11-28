@@ -237,6 +237,90 @@
          style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
          transform="scale(0.4,0.4)" />
     </marker>
+    <marker
+       inkscape:stockid="TriangleInM"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleInM-20"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4733-5"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(-0.4,-0.4)" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutM"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleOutM-2"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4086-0"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(0.4,0.4)" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleInM"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleInM-3"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4733-7"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(-0.4,-0.4)" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutM"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleOutM-80"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4086-1"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(0.4,0.4)" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleInM"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleInM-6"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4733-9"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(-0.4,-0.4)" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutM"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleOutM-0"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4086-62"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(0.4,0.4)" />
+    </marker>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -246,8 +330,8 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="428.55685"
-     inkscape:cy="314.91821"
+     inkscape:cx="526.63454"
+     inkscape:cy="865.49981"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -965,5 +1049,245 @@
        inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface_2.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="283.33786"
+       y="37.050274"
+       id="text3757-6-10-6"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3759-2-76-8"
+         x="283.33786"
+         y="37.050274"
+         style="font-size:12px">MyRobotHW</tspan></text>
+    <rect
+       style="fill:#d2d2d2;fill-opacity:1;stroke:#000000;stroke-width:0.99999976;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2985-4"
+       width="181.22957"
+       height="172.59761"
+       x="287.27148"
+       y="43.878956"
+       rx="10"
+       ry="10"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.99999994;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3755-5-58-2"
+       width="139.98288"
+       height="22.72843"
+       x="307.06168"
+       y="67.287804"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="321.64392"
+       y="82.009407"
+       id="text3757-27-1-9"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3759-3-1-9"
+         x="321.64392"
+         y="82.009407"
+         style="font-size:12px">JointEffortInterface</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.99999994;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3755-5-58-2-7"
+       width="139.98288"
+       height="22.72843"
+       x="307.06168"
+       y="122.78365"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="314.0033"
+       y="137.4584"
+       id="text3757-27-1-9-2"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3759-3-1-9-7"
+         x="314.0033"
+         y="137.4584"
+         style="font-size:12px">JointVelocityInterface</tspan></text>
+    <rect
+       style="fill:#d2d2d2;fill-opacity:1;stroke:#000000;stroke-width:0.99999976;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2985-5-7-2-7-6"
+       width="115.31221"
+       height="46.430084"
+       x="525.91534"
+       y="110.93282"
+       rx="5"
+       ry="5"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="584.39764"
+       y="137.4584"
+       id="text3757-2-4-8-7-9"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         x="584.39764"
+         y="137.4584"
+         style="font-size:12px;text-align:center;text-anchor:middle"
+         id="tspan4318-5">Driving Controller</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#TriangleInM);marker-end:url(#TriangleOutM)"
+       d="m 517.18694,134.14785 -57.54409,0"
+       id="path4347-0-7"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:#d2d2d2;fill-opacity:1;stroke:#000000;stroke-width:0.99999976;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2985-5-7-2-7-6-4"
+       width="115.31221"
+       height="46.430084"
+       x="525.91534"
+       y="54.147137"
+       rx="5"
+       ry="5"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="584.39764"
+       y="74.3358"
+       id="text3757-2-4-8-7-9-2"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         x="584.39764"
+         y="74.3358"
+         style="font-size:12px;text-align:center;text-anchor:middle"
+         id="tspan4262-0-4-2">Joint Position</tspan><tspan
+         sodipodi:role="line"
+         x="584.39764"
+         y="89.3358"
+         style="font-size:12px;text-align:center;text-anchor:middle"
+         id="tspan4318-5-5">Controller</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#TriangleInM);marker-end:url(#TriangleOutM)"
+       d="m 517.18694,77.362181 -59.24272,0"
+       id="path4347-0-7-4"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:#d2d2d2;fill-opacity:1;stroke:#000000;stroke-width:0.99999976;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2985-5-7-2-7-6-5"
+       width="115.31221"
+       height="46.430084"
+       x="525.91534"
+       y="167.71857"
+       rx="5"
+       ry="5"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="584.39764"
+       y="187.90724"
+       id="text3757-2-4-8-7-9-0"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller-manager/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         x="584.39764"
+         y="187.90724"
+         style="font-size:12px;text-align:center;text-anchor:middle"
+         id="tspan4318-5-6" /></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#TriangleInM);marker-end:url(#TriangleOutM)"
+       d="m 517.18694,190.93361 -39.59793,0"
+       id="path4347-0-7-6"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="318.8588"
+       y="168.04955"
+       id="text3757-6-4-6"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3759-2-2-2"
+         x="318.8588"
+         y="168.04955"
+         style="font-size:10px">double jointPos[]</tspan><tspan
+         sodipodi:role="line"
+         x="318.8588"
+         y="180.54955"
+         style="font-size:10px"
+         id="tspan3842-2">double jointVel[]</tspan><tspan
+         sodipodi:role="line"
+         x="318.8588"
+         y="193.04955"
+         style="font-size:10px"
+         id="tspan3844-7">double jointEff[]</tspan><tspan
+         sodipodi:role="line"
+         x="318.8588"
+         y="205.54955"
+         style="font-size:10px"
+         id="tspan3524">double jointCmd[]</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="583.36053"
+       y="187.90724"
+       id="text3757-2-4-8-1"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/vijay/willow/controller/ros_control/docs/hw_interface_2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         x="583.36053"
+         y="187.90724"
+         style="font-size:12px;text-align:center;text-anchor:middle"
+         id="tspan4264-6">Robot Specific</tspan><tspan
+         sodipodi:role="line"
+         x="583.36053"
+         y="202.90724"
+         style="font-size:12px;text-align:center;text-anchor:middle"
+         id="tspan4262-7">Controller</tspan></text>
   </g>
 </svg>
