@@ -29,15 +29,15 @@
 
 // Author: Stuart Glaser
 
-#ifndef REALTIME_UTILS_REALTIME_BOX_H__
-#define REALTIME_UTILS_REALTIME_BOX_H__
+#ifndef REALTIME_BOX_H__
+#define REALTIME_BOX_H__
 
 #include <string>
 #include <ros/node_handle.h>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/thread.hpp>
 
-namespace realtime_utils {
+namespace realtime_tools {
 
 /*!
 

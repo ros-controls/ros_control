@@ -35,8 +35,8 @@
  *
  * Author: Stuart Glaser
  */
-#ifndef REALTIME_UTILS_REALTIME_PUBLISHER_H
-#define REALTIME_UTILS_REALTIME_PUBLISHER_H
+#ifndef REALTIME_PUBLISHER_H
+#define REALTIME_PUBLISHER_H
 
 #include <string>
 #include <ros/node_handle.h>
@@ -45,7 +45,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/thread/condition.hpp>
 
-namespace realtime_utils {
+namespace realtime_tools {
 
 template <class Msg>
 class RealtimePublisher : boost::noncopyable

@@ -43,6 +43,7 @@ namespace hardware_interface{
 class JointStateHandle
 {
 public:
+  JointStateHandle() {};
   JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
     : name_(name), pos_(pos), vel_(vel), eff_(eff)
   {}

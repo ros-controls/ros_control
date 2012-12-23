@@ -37,6 +37,7 @@ namespace hardware_interface
 class JointHandle : public JointStateHandle
 {
 public:
+  JointHandle() {};
   JointHandle(const JointStateHandle& js, double* cmd)
     : JointStateHandle(js), cmd_(cmd)
   {}
