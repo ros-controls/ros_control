@@ -33,9 +33,9 @@
 #include <controller_interface/controller.h>
 #include <hardware_interface/joint_state_interface.h>
 #include <pluginlib/class_list_macros.h>
-
-
-
+#include <sensor_msgs/JointState.h>
+#include <realtime_tools/realtime_publisher.h>
+#include <boost/shared_ptr.hpp>
 
 namespace joint_state_controller
 {
@@ -53,7 +53,9 @@ public:
 
 private:
   std::vector<hardware_interface::JointStateHandle> joint_state_;
-
+  boost::shared_ptr<realtime_tools::RealtimePublisher<sensor_msgs::JointState> > realtime_pub_;
+  ros::Time last_publish_time_;
+  double publish_rate_;
 };
 
 }
