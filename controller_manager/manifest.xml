@@ -10,7 +10,7 @@
   <depend package="controller_interface"/>
   <depend package="controller_manager_msgs"/>
   <depend package="hardware_interface"/>
-  <depend package="realtime_utils"/>
+  <depend package="realtime_tools"/>
   <depend package="pluginlib"/>
 
   <!-- depend package="class_loader"/ -->
