@@ -73,6 +73,11 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "ControllerManagerTestNode");
 
   ros::AsyncSpinner spinner(1);
+
+  // wait for services
+  ROS_INFO("Waiting for service");
+  ros::service::waitForService("/controller_manager/load_controller");
+  ROS_INFO("Start tests");
   spinner.start();
 
   return RUN_ALL_TESTS();
