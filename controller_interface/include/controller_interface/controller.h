@@ -75,30 +75,24 @@ protected:
       return false;
     }
 
-    hardware_interface::HardwareInterface* hw_base = robot_hw->get<T>();
-    if (!hw_base)
+    // get a pointer to the hardware interface
+    T* hw = robot_hw->get<T>();
+    if (!hw)
     {
       ROS_ERROR("This controller requires a hardware interface of type %s."
                 " Make sure this is registered in the hardware_interface::RobotHW class.", typeid(T).name());
       return false;
     }
 
-    // cast the hw, and initialize the controller
-    T* hw_t = dynamic_cast<T*>(hw_base);
-    if (!hw_t)
-    {
-      ROS_ERROR("Failed on dynamic_cast<T>(hw) for T = [%s]. This should never happen", typeid(T).name());
-      return false;
-    }
-
-    hw_t->clearClaims();
-    if (!init(hw_t, n))
+    // return which resources are claimed by this controller
+    hw->clearClaims();
+    if (!init(hw, n))
     {
       ROS_ERROR("Failed to initialize the controller");
       return false;
     }
-    claimed_resources = hw_t->getClaims();
-    hw_t->clearClaims();
+    claimed_resources = hw->getClaims();
+    hw->clearClaims();
 
     // success
     state_ = INITIALIZED;

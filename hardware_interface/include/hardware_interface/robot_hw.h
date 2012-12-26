@@ -45,10 +45,11 @@ public:
   }
 
   // ****** Resource Management Check ******
+
+  // Check (in non-realtime) if the given set of controllers is allowed to run simultaneously
+  // This default implementation simply checks if any two controllers use the same resource
   virtual bool checkForConflict(const std::list<ControllerInfo>& info) const
   {
-    // See if any two controllers use the same resource
-
     // Figure out which resources have multiple users
     typedef std::map<std::string, std::list<ControllerInfo> > ResourceMap;
     ResourceMap resource_map;
@@ -73,19 +74,30 @@ public:
   }
 
   // ****** Hardware Interface registration and getter ******
+
+  // register hardware interface
   template<class T>
   void registerInterface(T* hw)
   {
     interfaces_[typeid(T).name()] = hw;
   }
 
+
+  // get hardware interface
   template<class T>
-  HardwareInterface* get()
+  T* get()
   {
     InterfaceMap::iterator it = interfaces_.find(typeid(T).name());
     if (it == interfaces_.end())
       return NULL;
-    return it->second;
+
+    T* hw = dynamic_cast<T*>(it->second);
+    if (!hw)
+    {
+      ROS_ERROR("Failed on dynamic_cast<T>(hw) for T = [%s]. This should never happen", typeid(T).name());
+      return NULL;
+    }
+    return hw;
   }
 
 private:
