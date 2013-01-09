@@ -35,6 +35,7 @@
 
 #include "controller_manager/controller_spec.h"
 #include <pthread.h>
+#include <cstdio>
 #include <map>
 #include <string>
 #include <vector>
