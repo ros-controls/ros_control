@@ -54,7 +54,7 @@ class RealtimePublisher : boost::noncopyable
 public:
   /// The msg_ variable contains the data that will get published on the ROS topic.
   Msg msg_;
-
+  
   /**  \brief Constructor for the realtime publisher
    *
    * \param node the nodehandle that specifies the namespace (or prefix) that is used to advertise the ROS topic
@@ -94,8 +94,6 @@ public:
   void stop()
   {
     keep_running_ = false;
-    boost::unique_lock<boost::mutex> lock(msg_mutex_);
-    updated_cond_.notify_one();  // So the publishing loop can exit
   }
 
   /**  \brief Try to get the data lock from realtime
@@ -119,7 +117,9 @@ public:
       }
     }
     else
+    {
       return false;
+    }
   }
 
   /**  \brief Unlock the msg_ variable
@@ -132,7 +132,6 @@ public:
   {
     turn_ = NON_REALTIME;
     msg_mutex_.unlock();
-    updated_cond_.notify_one();
   }
 
   /**  \brief Get the data lock form non-realtime
@@ -169,22 +168,22 @@ private:
   {
     is_running_ = true;
     turn_ = REALTIME;
+
     while (keep_running_)
     {
       Msg outgoing;
-      // Locks msg_ and copies it
-      {
-        boost::unique_lock<boost::mutex> lock(msg_mutex_);
-        while (turn_ != NON_REALTIME)
-        {
-          if (!keep_running_)
-            break;
-          updated_cond_.wait(lock);
-        }
 
-        outgoing = msg_;
-        turn_ = REALTIME;
+      // Locks msg_ and copies it
+      lock();
+      while (turn_ != NON_REALTIME && keep_running_)
+      {
+	unlock();
+	usleep(500);
+	lock();
       }
+      outgoing = msg_;
+      turn_ = REALTIME;
+      unlock();
 
       // Sends the outgoing message
       if (keep_running_)
@@ -202,7 +201,6 @@ private:
   boost::thread thread_;
 
   boost::mutex msg_mutex_;  // Protects msg_
-  boost::condition_variable updated_cond_;
 
   enum {REALTIME, NON_REALTIME};
   int turn_;  // Who's turn is it to use msg_?
