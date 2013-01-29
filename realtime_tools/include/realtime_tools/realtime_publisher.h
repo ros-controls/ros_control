@@ -142,7 +142,9 @@ public:
    */
   void lock()
   {
-    msg_mutex_.lock();
+    // never actually block on the lock
+    while (!msg_mutex_.try_lock())
+      usleep(200);
   }
 
   /**  \brief Unlocks the data without publishing anything
