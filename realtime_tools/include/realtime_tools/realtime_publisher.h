@@ -94,6 +94,9 @@ public:
   void stop()
   {
     keep_running_ = false;
+#ifdef NON_POLLING
+    updated_cond_.notify_one();  // So the publishing loop can exit
+#endif
   }
 
   /**  \brief Try to get the data lock from realtime
@@ -132,6 +135,9 @@ public:
   {
     turn_ = NON_REALTIME;
     msg_mutex_.unlock();
+#ifdef NON_POLLING
+    updated_cond_.notify_one();
+#endif
   }
 
   /**  \brief Get the data lock form non-realtime
@@ -142,9 +148,13 @@ public:
    */
   void lock()
   {
+#ifdef NON_POLLING
+    msg_mutex_.lock();
+#else
     // never actually block on the lock
     while (!msg_mutex_.try_lock())
       usleep(200);
+#endif
   }
 
   /**  \brief Unlocks the data without publishing anything
@@ -179,12 +189,17 @@ private:
       lock();
       while (turn_ != NON_REALTIME && keep_running_)
       {
+#ifdef NON_POLLING
+	updated_cond_.wait(lock);
+#else
 	unlock();
 	usleep(500);
 	lock();
+#endif
       }
       outgoing = msg_;
       turn_ = REALTIME;
+
       unlock();
 
       // Sends the outgoing message
@@ -203,6 +218,10 @@ private:
   boost::thread thread_;
 
   boost::mutex msg_mutex_;  // Protects msg_
+
+#ifdef NON_POLLING
+  boost::condition_variable updated_cond_;
+#endif
 
   enum {REALTIME, NON_REALTIME};
   int turn_;  // Who's turn is it to use msg_?
