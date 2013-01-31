@@ -65,7 +65,7 @@ public:
   virtual ~ControllerManager();
 
   // Real-time functions
-  void update(const ros::Time& time, bool reset_controllers=false);
+  void update(const ros::Time& time, const ros::Duration& period, bool reset_controllers=false);
 
   // Non real-time functions
   bool loadController(const std::string& name);

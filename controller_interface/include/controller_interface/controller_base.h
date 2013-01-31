@@ -50,7 +50,7 @@ public:
   virtual void starting(const ros::Time& time) {};
 
   /// The update method is called periodically by the realtime thread when the controller is running
-  virtual void update(const ros::Time& time) = 0;
+  virtual void update(const ros::Time& time, const ros::Duration& period) = 0;
 
   /// The stopping method is called by the realtime thread just after the last update call
   virtual void stopping(const ros::Time& time) {};
@@ -65,10 +65,10 @@ public:
 
   virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle &n, std::set<std::string>& claimed_resources)=0;
 
-  void updateRequest(const ros::Time& time)
+  void updateRequest(const ros::Time& time, const ros::Duration& period)
   {
     if (state_ == RUNNING)
-      update(time);
+      update(time, period);
   }
 
   bool startRequest(const ros::Time& time)
