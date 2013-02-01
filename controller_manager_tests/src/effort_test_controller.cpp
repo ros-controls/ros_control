@@ -51,7 +51,7 @@ void EffortTestController::starting(const ros::Time& time)
   ROS_INFO("Starting JointState Controller");
 }
 
-void EffortTestController::update(const ros::Time& time)
+void EffortTestController::update(const ros::Time& time, const ros::Duration& period)
 {
   for (unsigned int i=0; i < joint_effort_commands_.size(); i++)
   {

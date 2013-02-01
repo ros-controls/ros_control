@@ -71,7 +71,7 @@ ControllerManager::~ControllerManager()
 
 
 // Must be realtime safe.
-void ControllerManager::update(const ros::Time& time, bool reset_controllers)
+void ControllerManager::update(const ros::Time& time, const ros::Duration& period, bool reset_controllers)
 {
   used_by_realtime_ = current_controllers_list_;
   std::vector<ControllerSpec> &controllers = controllers_lists_[used_by_realtime_];
@@ -89,7 +89,7 @@ void ControllerManager::update(const ros::Time& time, bool reset_controllers)
 
  // Update all controllers
   for (size_t i=0; i<controllers.size(); i++)
-    controllers[i].c->updateRequest(time);
+    controllers[i].c->updateRequest(time, period);
 
   // there are controllers to start/stop
   if (please_switch_)

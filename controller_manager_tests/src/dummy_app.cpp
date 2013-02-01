@@ -43,13 +43,14 @@ int main(int argc, char** argv)
   ros::NodeHandle nh;
   controller_manager::ControllerManager cm(&hw, nh);
 
+  ros::Duration period(1.0);
   while (ros::ok())
   {
     ROS_INFO("loop");
     hw.read();
-    cm.update(ros::Time::now());
+    cm.update(ros::Time::now(), period);
     hw.write();
-    ros::Duration(1.0).sleep();
+    period.sleep();
   }
 }
 

@@ -45,7 +45,7 @@ public:
 
   bool init(hardware_interface::EffortJointInterface* hw, ros::NodeHandle &n);
   void starting(const ros::Time& time);
-  void update(const ros::Time& time);
+  void update(const ros::Time& time, const ros::Duration& period);
   void stopping(const ros::Time& time);
 
 private:
