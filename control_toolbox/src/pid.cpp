@@ -39,28 +39,19 @@
 
 namespace control_toolbox {
 
-Pid::Pid(double P, double I, double D, double I1, double I2) :
-  p_gain_(P), i_gain_(I), d_gain_(D), i_max_(I1), i_min_(I2)
+Pid::Pid(double p, double i, double d, double i_max, double i_min) :
+  p_gain_(p), i_gain_(i), d_gain_(d), i_max_(i_max), i_min_(i_min)
 {
-  p_error_last_ = 0.0;
-  p_error_ = 0.0;
-  d_error_ = 0.0;
-  i_error_ = 0.0;
-  cmd_ = 0.0;
+  this->reset();
 }
 
 Pid::~Pid()
 {
 }
 
-void Pid::initPid(double P, double I, double D, double I1, double I2)
+void Pid::initPid(double p, double i, double d, double i_max, double i_min)
 {
-  p_gain_ = P;
-  i_gain_ = I;
-  d_gain_ = D;
-  i_max_ = I1;
-  i_min_ = I2;
-
+  this->setGains(p,i,d,i_max,i_min);
   reset();
 }
 
@@ -82,13 +73,13 @@ void Pid::getGains(double &p, double &i, double &d, double &i_max, double &i_min
   i_min = i_min_;
 }
 
-void Pid::setGains(double P, double I, double D, double I1, double I2)
+void Pid::setGains(double p, double i, double d, double i_max, double i_min)
 {
-  p_gain_ = P;
-  i_gain_ = I;
-  d_gain_ = D;
-  i_max_ = I1;
-  i_min_ = I2;
+  p_gain_ = p;
+  i_gain_ = i;
+  d_gain_ = d;
+  i_max_ = i_max;
+  i_min_ = i_min;
 }
 
 bool Pid::initParam(const std::string& prefix)
