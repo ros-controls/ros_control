@@ -136,8 +136,7 @@ bool Pid::init(const ros::NodeHandle &node)
   return true;
 }
 
-
-double Pid::updatePid(double error, ros::Duration dt)
+double Pid::setError(double error, ros::Duration dt)
 {
   double p_term, d_term, i_term;
   p_error_ = error; //this is pError = pState-pTarget
@@ -167,20 +166,24 @@ double Pid::updatePid(double error, ros::Duration dt)
   }
 
   // Calculate the derivative error
-  if (dt.toSec() != 0)
+  if (dt.toSec() > 0.0)
   {
     d_error_ = (p_error_ - p_error_last_) / dt.toSec();
     p_error_last_ = p_error_;
   }
   // Calculate derivative contribution to command
   d_term = d_gain_ * d_error_;
-  cmd_ = -p_term - i_term - d_term;
+  cmd_ = p_term + i_term + d_term;
 
   return cmd_;
 }
 
+double Pid::updatePid(double error, ros::Duration dt)
+{
+  return this->setError(-1.0*error, dt);
+}
 
-double Pid::updatePid(double error, double error_dot, ros::Duration dt)
+double Pid::setError(double error, double error_dot, ros::Duration dt)
 {
   double p_term, d_term, i_term;
   p_error_ = error; //this is pError = pState-pTarget
@@ -213,9 +216,14 @@ double Pid::updatePid(double error, double error_dot, ros::Duration dt)
 
   // Calculate derivative contribution to command
   d_term = d_gain_ * d_error_;
-  cmd_ = -p_term - i_term - d_term;
+  cmd_ = p_term + i_term + d_term;
 
   return cmd_;
+}
+
+double Pid::updatePid(double error, double error_dot, ros::Duration dt)
+{
+  return this->setError(-1.0*error, -1.0*error_dot, dt);
 }
 
 

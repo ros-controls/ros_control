@@ -125,14 +125,6 @@ public:
   ~Pid();
 
   /*!
-   * \brief Update the Pid loop with nonuniform time step size.
-   *
-   * \param p_error  Error since last call (p_state-p_target)
-   * \param dt Change in time since last call
-   */
-  double updatePid(double p_error, ros::Duration dt);
-
-  /*!
    * \brief Initialize PID-gains and integral term limits:[iMax:iMin]-[I1:I2]
    *
    * \param P  The proportional gain.
@@ -201,14 +193,51 @@ public:
   void getGains(double &p, double &i, double &d, double &i_max, double &i_min);
 
   /*!
+   * \brief Set the PID error and compute the PID command with nonuniform
+   * time step size. 
+   *
+   * \param p_error  Error since last call (p_state-p_target)
+   * \param dt Change in time since last call
+   *
+   * \returns PID command
+   */
+  double setError(double p_error, ros::Duration dt);
+
+  /*!
+   * \brief Set the PID error and compute the PID command with nonuniform
+   * time step size. This also allows the user to pass in a precomputed
+   * derivative error. 
+   *
+   * \param error Error since last call (target-state)
+   * \param error_dot d(Error)/dt since last call
+   * \param dt Change in time since last call
+   *
+   * \returns PID command
+   */
+  double setError(double error, double error_dot, ros::Duration dt);
+
+  /*!
+   * \brief Update the Pid loop with nonuniform time step size. NOTE: this
+   * function is equivalent to calling \ref setError with negated error
+   * arguments.
+   *
+   * \param p_error  Error since last call (p_state-p_target)
+   * \param dt Change in time since last call
+   */
+  ROS_DEPRECATED double updatePid(double p_error, ros::Duration dt);
+
+  /*!
    * \brief Update the Pid loop with nonuniform time step size. This update call 
-   * allows the user to pass in a precomputed derivative error. 
+   * allows the user to pass in a precomputed derivative error. NOTE: this
+   * function is equivalent to calling \ref setError with negated error
+   * arguments.
    *
    * \param error  Error since last call (p_state-p_target)
    * \param error_dot d(Error)/dt since last call
    * \param dt Change in time since last call
    */
-  double updatePid(double error, double error_dot, ros::Duration dt);
+  ROS_DEPRECATED double updatePid(double error, double error_dot, ros::Duration dt);
+
 
   Pid &operator =(const Pid& p)
   {
