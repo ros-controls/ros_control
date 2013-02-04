@@ -109,15 +109,15 @@ public:
 
   /*!
    * \brief Constructor, zeros out Pid values when created and
-   * initialize Pid-gains and integral term limits:[iMax:iMin]-[I1:I2].
+   * initialize Pid-gains and integral term limits.
    *
-   * \param P  The proportional gain.
-   * \param I  The integral gain.
-   * \param D  The derivative gain.
-   * \param I1 The integral upper limit.
-   * \param I2 The integral lower limit.
+   * \param p  The proportional gain.
+   * \param i  The integral gain.
+   * \param d  The derivative gain.
+   * \param i_max The integral upper limit.
+   * \param i_min The integral lower limit.
    */
-  Pid(double P = 0.0, double I = 0.0, double D = 0.0, double I1 = 0.0, double I2 = -0.0);
+  Pid(double p = 0.0, double i = 0.0, double d = 0.0, double i_max = 0.0, double i_min = -0.0);
 
   /*!
    * \brief Destructor of Pid class.
@@ -127,13 +127,13 @@ public:
   /*!
    * \brief Initialize PID-gains and integral term limits:[iMax:iMin]-[I1:I2]
    *
-   * \param P  The proportional gain.
-   * \param I  The integral gain.
-   * \param D  The derivative gain.
-   * \param I1 The integral upper limit.
-   * \param I2 The integral lower limit.
+   * \param p  The proportional gain.
+   * \param i  The integral gain.
+   * \param d  The derivative gain.
+   * \param i_max The integral upper limit.
+   * \param i_min The integral lower limit.
    */
-  void initPid(double P, double I, double D, double I1, double I2);
+  void initPid(double p, double i, double d, double i_max, double i_min);
   
   /*!                                                                                                   
    * \brief Initialize PID with the parameters in a namespace                               
@@ -174,13 +174,13 @@ public:
 
   /*!
    * \brief Set PID gains for the controller.
-   * \param P  The proportional gain.
-   * \param I  The integral gain.
-   * \param D  The derivative gain.
-   * \param i_max
-   * \param i_min
+   * \param p  The proportional gain.
+   * \param i  The integral gain.
+   * \param d  The derivative gain.
+   * \param i_max The integral upper limit.
+   * \param i_min The integral lower limit.
    */
-  void setGains(double P, double I, double D, double i_max, double i_min);
+  void setGains(double p, double i, double d, double i_max, double i_min);
 
   /*!
    * \brief Get PID gains for the controller.
