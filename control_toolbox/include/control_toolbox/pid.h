@@ -221,6 +221,10 @@ public:
    * function is equivalent to calling \ref setError with negated error
    * arguments.
    *
+   * \deprecated This function assumes <tt> p_error = (state - target) </tt> which is an
+   * unconventional definition of the error. Please use \ref setError instead,
+   * which assumes <tt> error = (target - state) </tt>.
+   *
    * \param p_error  Error since last call (p_state-p_target)
    * \param dt Change in time since last call
    */
@@ -231,6 +235,10 @@ public:
    * allows the user to pass in a precomputed derivative error. NOTE: this
    * function is equivalent to calling \ref setError with negated error
    * arguments.
+   *
+   * \deprecated This function assumes <tt> p_error = (state - target) </tt> which is an
+   * unconventional definition of the error. Please use \ref setError instead,
+   * which assumes <tt> error = (target - state) </tt>.
    *
    * \param error  Error since last call (p_state-p_target)
    * \param error_dot d(Error)/dt since last call
