@@ -193,15 +193,16 @@ public:
   void getGains(double &p, double &i, double &d, double &i_max, double &i_min);
 
   /*!
-   * \brief Set the PID error and compute the PID command with nonuniform
-   * time step size. 
+   * \brief Set the PID error and compute the PID command with nonuniform time
+   * step size. The derivative error is computed from the change in the error
+   * and the timestep \c dt.
    *
-   * \param p_error  Error since last call (error = target - state)
+   * \param error  Error since last call (error = target - state)
    * \param dt Change in time since last call
    *
    * \returns PID command
    */
-  double setError(double p_error, ros::Duration dt);
+  double setError(double error, ros::Duration dt);
 
   /*!
    * \brief Set the PID error and compute the PID command with nonuniform
