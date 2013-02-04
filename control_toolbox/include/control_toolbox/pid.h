@@ -196,7 +196,7 @@ public:
    * \brief Set the PID error and compute the PID command with nonuniform
    * time step size. 
    *
-   * \param p_error  Error since last call (p_state-p_target)
+   * \param p_error  Error since last call (error = target - state)
    * \param dt Change in time since last call
    *
    * \returns PID command
@@ -208,7 +208,7 @@ public:
    * time step size. This also allows the user to pass in a precomputed
    * derivative error. 
    *
-   * \param error Error since last call (target-state)
+   * \param error Error since last call (error = target - state)
    * \param error_dot d(Error)/dt since last call
    * \param dt Change in time since last call
    *
