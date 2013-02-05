@@ -74,10 +74,12 @@ public:
                         const std::vector<std::string>& stop_controllers,
                         const int strictness);
 
-  // controllers_lock_ must be locked before calling
-  virtual controller_interface::ControllerBase* getControllerByName(const std::string& name);
-
+  controller_interface::ControllerBase* getControllerByName(const std::string& name);
   void registerControllerLoader(boost::shared_ptr<ControllerLoaderInterface> controller_loader);
+
+protected:
+  // controllers_lock_ must be locked before calling
+  virtual controller_interface::ControllerBase* getControllerByNameImpl(const std::string& name);
 
 private:
   void getControllerNames(std::vector<std::string> &v);
@@ -118,6 +120,12 @@ private:
   ros::ServiceServer srv_list_controllers_, srv_list_controller_types_, srv_load_controller_;
   ros::ServiceServer srv_unload_controller_, srv_switch_controller_, srv_reload_libraries_;
 };
+
+inline controller_interface::ControllerBase* ControllerManager::getControllerByName(const std::string& name)
+{
+  boost::mutex::scoped_lock guard(controllers_lock_);
+  return getControllerByNameImpl(name);
+}
 
 }
 #endif
