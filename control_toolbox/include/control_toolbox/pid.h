@@ -60,9 +60,8 @@ namespace control_toolbox {
     where: <br>
     <UL TYPE="none">
     <LI>  \f$ p_{term}  = p_{gain} * p_{error} \f$
-    <LI>  \f$ i_{term}  = i_{gain} * i_{error} \f$
+    <LI>  \f$ i_{term}  = i_{term} + \int{i_{gain} * p_{error} * dt} \f$
     <LI>  \f$ d_{term}  = d_{gain} * d_{error} \f$
-    <LI>  \f$ i_{error} = i_{error} + p_{error} * dt \f$
     <LI>  \f$ d_{error} = (p_{error} - p_{error last}) / dt \f$
     </UL>
 
@@ -79,7 +78,7 @@ namespace control_toolbox {
 
     @param i Integral gain
 
-    @param i_clamp Min/max bounds for the integral windup, the clamp is applied to the \f$i_{term}\f$ and not the \f$i_{error}\f$
+    @param i_clamp Min/max bounds for the integral windup, the clamp is applied to the \f$i_{term}\f$
 
     @section Usage
 
@@ -221,7 +220,7 @@ public:
     i_max_ = p.i_max_;
     i_min_ = p.i_min_;
 
-    p_error_last_ = p_error_ = i_error_ = d_error_ = cmd_ = 0.0;
+    p_error_last_ = p_error_ = i_term_ = d_error_ = cmd_ = 0.0;
     return *this;
   }
 
@@ -229,7 +228,7 @@ private:
   double p_error_last_; /**< _Save position state for derivative state calculation. */
   double p_error_; /**< Position error. */
   double d_error_; /**< Derivative error. */
-  double i_error_; /**< Integator error. */
+  double i_term_;  /**< Integral term. */
   double p_gain_;  /**< Proportional gain. */
   double i_gain_;  /**< Integral gain. */
   double d_gain_;  /**< Derivative gain. */
