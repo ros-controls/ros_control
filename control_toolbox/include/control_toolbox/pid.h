@@ -218,9 +218,7 @@ public:
   double setError(double error, double error_dot, ros::Duration dt);
 
   /*!
-   * \brief Update the Pid loop with nonuniform time step size. NOTE: this
-   * function is equivalent to calling \ref setError with a negated return
-   * value.
+   * \brief Update the Pid loop with nonuniform time step size.  
    *
    * \deprecated This function assumes <tt> p_error = (state - target) </tt>
    * which is an unconventional definition of the error. Please use \ref
@@ -235,9 +233,7 @@ public:
 
   /*!
    * \brief Update the Pid loop with nonuniform time step size. This update
-   * call allows the user to pass in a precomputed derivative error. NOTE: this
-   * function is equivalent to calling \ref setError with a negated return
-   * value.
+   * call allows the user to pass in a precomputed derivative error.  
    *
    * \deprecated This function assumes <tt> p_error = (state - target) </tt>
    * which is an unconventional definition of the error. Please use \ref
