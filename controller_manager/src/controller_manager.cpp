@@ -104,8 +104,6 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
       if (!start_request_[i]->startRequest(time))
         ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
 
-    start_request_.clear();
-    stop_request_.clear();
     please_switch_ = false;
   }
 }
@@ -447,6 +445,9 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
       return false;
     usleep(100);
   }
+  start_request_.clear();
+  stop_request_.clear();
+
   ROS_DEBUG("Successfully switched controllers");
   return true;
 }
