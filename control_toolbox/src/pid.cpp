@@ -171,7 +171,44 @@ double Pid::setError(double error, ros::Duration dt)
 
 double Pid::updatePid(double error, ros::Duration dt)
 {
-  return -1.0*(this->setError(error, dt));
+  double p_term, d_term, i_term;
+  p_error_ = error; //this is pError = pState-pTarget
+
+  if (dt == ros::Duration(0.0) || std::isnan(error) || std::isinf(error))
+    return 0.0;
+
+  // Calculate proportional contribution to command
+  p_term = p_gain_ * p_error_;
+
+  // Calculate the integral error
+  i_error_ = i_error_ + dt.toSec() * p_error_;
+
+  //Calculate integral contribution to command
+  i_term = i_gain_ * i_error_;
+
+  // Limit i_term so that the limit is meaningful in the output
+  if (i_term > i_max_)
+  {
+    i_term = i_max_;
+    i_error_=i_term/i_gain_;
+  }
+  else if (i_term < i_min_)
+  {
+    i_term = i_min_;
+    i_error_=i_term/i_gain_;
+  }
+
+  // Calculate the derivative error
+  if (dt.toSec() > 0.0)
+  {
+    d_error_ = (p_error_ - p_error_last_) / dt.toSec();
+    p_error_last_ = p_error_;
+  }
+  // Calculate derivative contribution to command
+  d_term = d_gain_ * d_error_;
+  cmd_ = - p_term - i_term - d_term;
+
+  return cmd_;
 }
 
 double Pid::setError(double error, double error_dot, ros::Duration dt)
@@ -214,7 +251,39 @@ double Pid::setError(double error, double error_dot, ros::Duration dt)
 
 double Pid::updatePid(double error, double error_dot, ros::Duration dt)
 {
-  return -1.0*(this->setError(error, error_dot, dt));
+  double p_term, d_term, i_term;
+  p_error_ = error; //this is pError = pState-pTarget
+  d_error_ = error_dot;
+
+  if (dt == ros::Duration(0.0) || std::isnan(error) || std::isinf(error) || std::isnan(error_dot) || std::isinf(error_dot))
+    return 0.0;
+
+  // Calculate proportional contribution to command
+  p_term = p_gain_ * p_error_;
+
+  // Calculate the integral error
+  i_error_ = i_error_ + dt.toSec() * p_error_;
+
+  //Calculate integral contribution to command
+  i_term = i_gain_ * i_error_;
+
+  // Limit i_term so that the limit is meaningful in the output
+  if (i_term > i_max_)
+  {
+    i_term = i_max_;
+    i_error_=i_term/i_gain_;
+  }
+  else if (i_term < i_min_)
+  {
+    i_term = i_min_;
+    i_error_=i_term/i_gain_;
+  }
+
+  // Calculate derivative contribution to command
+  d_term = d_gain_ * d_error_;
+  cmd_ = - p_term - i_term - d_term;
+
+  return cmd_;
 }
 
 
