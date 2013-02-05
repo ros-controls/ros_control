@@ -171,7 +171,7 @@ double Pid::setError(double error, ros::Duration dt)
 
 double Pid::updatePid(double error, ros::Duration dt)
 {
-  return this->setError(-1.0*error, dt);
+  return -1.0*(this->setError(error, dt));
 }
 
 double Pid::setError(double error, double error_dot, ros::Duration dt)
@@ -214,7 +214,7 @@ double Pid::setError(double error, double error_dot, ros::Duration dt)
 
 double Pid::updatePid(double error, double error_dot, ros::Duration dt)
 {
-  return this->setError(-1.0*error, -1.0*error_dot, dt);
+  return -1.0*(this->setError(error, error_dot, dt));
 }
 
 
