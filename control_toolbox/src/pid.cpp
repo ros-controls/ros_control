@@ -183,7 +183,6 @@ double Pid::setError(double error, double error_dot, ros::Duration dt)
 
   // Calculate derivative contribution to command
   d_term = d_gain_ * d_error_;
-  cmd_ = -p_term - i_term_ - d_term;
   cmd_ = p_term + i_term_ + d_term;
 
   return cmd_;
