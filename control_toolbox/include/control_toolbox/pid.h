@@ -219,12 +219,14 @@ public:
 
   /*!
    * \brief Update the Pid loop with nonuniform time step size. NOTE: this
-   * function is equivalent to calling \ref setError with negated error
-   * arguments.
+   * function is equivalent to calling \ref setError with a negated return
+   * value.
    *
-   * \deprecated This function assumes <tt> p_error = (state - target) </tt> which is an
-   * unconventional definition of the error. Please use \ref setError instead,
-   * which assumes <tt> error = (target - state) </tt>.
+   * \deprecated This function assumes <tt> p_error = (state - target) </tt>
+   * which is an unconventional definition of the error. Please use \ref
+   * setError instead, which assumes <tt> error = (target - state) </tt>. Note
+   * that calls to \ref setError should not be mixed with calls to \ref
+   * updatePid.
    *
    * \param p_error  Error since last call (p_state-p_target)
    * \param dt Change in time since last call
@@ -232,14 +234,16 @@ public:
   ROS_DEPRECATED double updatePid(double p_error, ros::Duration dt);
 
   /*!
-   * \brief Update the Pid loop with nonuniform time step size. This update call 
-   * allows the user to pass in a precomputed derivative error. NOTE: this
-   * function is equivalent to calling \ref setError with negated error
-   * arguments.
+   * \brief Update the Pid loop with nonuniform time step size. This update
+   * call allows the user to pass in a precomputed derivative error. NOTE: this
+   * function is equivalent to calling \ref setError with a negated return
+   * value.
    *
-   * \deprecated This function assumes <tt> p_error = (state - target) </tt> which is an
-   * unconventional definition of the error. Please use \ref setError instead,
-   * which assumes <tt> error = (target - state) </tt>.
+   * \deprecated This function assumes <tt> p_error = (state - target) </tt>
+   * which is an unconventional definition of the error. Please use \ref
+   * setError instead, which assumes <tt> error = (target - state) </tt>. Note
+   * that calls to \ref setError should not be mixed with calls to \ref
+   * updatePid.
    *
    * \param error  Error since last call (p_state-p_target)
    * \param error_dot d(Error)/dt since last call
