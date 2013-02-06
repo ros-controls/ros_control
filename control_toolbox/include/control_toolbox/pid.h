@@ -202,7 +202,7 @@ public:
    *
    * \returns PID command
    */
-  double setError(double error, ros::Duration dt);
+  double computeCommand(double error, ros::Duration dt);
 
   /*!
    * \brief Set the PID error and compute the PID command with nonuniform
@@ -215,7 +215,7 @@ public:
    *
    * \returns PID command
    */
-  double setError(double error, double error_dot, ros::Duration dt);
+  double computeCommand(double error, double error_dot, ros::Duration dt);
 
   /*!
    * \brief Update the Pid loop with nonuniform time step size.  
