@@ -127,7 +127,7 @@ bool Pid::init(const ros::NodeHandle &node)
   return true;
 }
 
-double Pid::setError(double error, ros::Duration dt)
+double Pid::computeCommand(double error, ros::Duration dt)
 {
   double p_term, d_term, i_term;
   p_error_ = error; //this is pError = pState-pTarget
@@ -211,7 +211,7 @@ double Pid::updatePid(double error, ros::Duration dt)
   return cmd_;
 }
 
-double Pid::setError(double error, double error_dot, ros::Duration dt)
+double Pid::computeCommand(double error, double error_dot, ros::Duration dt)
 {
   double p_term, d_term, i_term;
   p_error_ = error; //this is pError = pState-pTarget
