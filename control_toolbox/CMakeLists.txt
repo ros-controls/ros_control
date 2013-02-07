@@ -15,3 +15,7 @@ rosbuild_add_library(control_toolbox
 target_link_libraries(control_toolbox tinyxml)
  
 # rosbuild_add_executable(test_linear test/linear.cpp)
+
+# Tests
+rosbuild_add_gtest(test/pid_tests test/pid_tests.cpp) 
+target_link_libraries(test/pid_tests control_toolbox)

@@ -110,7 +110,7 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
   }
 }
 
-controller_interface::ControllerBase* ControllerManager::getControllerByName(const std::string& name)
+controller_interface::ControllerBase* ControllerManager::getControllerByNameImpl(const std::string& name)
 {
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
@@ -357,7 +357,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   // list all controllers to stop
   for (unsigned int i=0; i<stop_controllers.size(); i++)
   {
-    ct = getControllerByName(stop_controllers[i]);
+    ct = getControllerByNameImpl(stop_controllers[i]);
     if (ct == NULL){
       if (strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
         ROS_ERROR("Could not stop controller with name %s because no controller with this name exists",
@@ -381,7 +381,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   // list all controllers to start
   for (unsigned int i=0; i<start_controllers.size(); i++)
   {
-    ct = getControllerByName(start_controllers[i]);
+    ct = getControllerByNameImpl(start_controllers[i]);
     if (ct == NULL){
       if (strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
         ROS_ERROR("Could not start controller with name %s because no controller with this name exists",
