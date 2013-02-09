@@ -84,19 +84,8 @@ void Pid::setGains(double p, double i, double d, double i_max, double i_min)
 
 bool Pid::initParam(const std::string& prefix)
 {
-  ros::NodeHandle node(prefix);
-
-  if (!node.getParam("p", p_gain_)) {
-    ROS_ERROR("No p gain specified for pid.  Prefix: %s", prefix.c_str());
-    return false;
-  }
-  node.param("i", i_gain_, 0.0) ;
-  node.param("d", d_gain_, 0.0) ;
-  node.param("i_clamp", i_max_, 0.0) ;
-  i_min_ = -i_max_;
-
-  reset();
-  return true;
+  ros::NodeHandle nh(prefix);
+  return this->init(nh);
 }
 
 bool Pid::initXml(TiXmlElement *config)
@@ -104,8 +93,10 @@ bool Pid::initXml(TiXmlElement *config)
   p_gain_ = config->Attribute("p") ? atof(config->Attribute("p")) : 0.0;
   i_gain_ = config->Attribute("i") ? atof(config->Attribute("i")) : 0.0;
   d_gain_ = config->Attribute("d") ? atof(config->Attribute("d")) : 0.0;
-  i_max_ = config->Attribute("iClamp") ? atof(config->Attribute("iClamp")) : 0.0;
-  i_min_ = -i_max_;
+  double i_clamp;
+  i_clamp = config->Attribute("iClamp") ? atof(config->Attribute("iClamp")) : 0.0;
+  i_max_ = std::abs(i_clamp);
+  i_min_ = -std::abs(i_clamp);
 
   reset();
   return true;
@@ -120,8 +111,11 @@ bool Pid::init(const ros::NodeHandle &node)
   }
   n.param("i", i_gain_, 0.0);
   n.param("d", d_gain_, 0.0);
-  n.param("i_clamp", i_max_, 0.0);
-  i_min_ = -i_max_;
+
+  double i_clamp;
+  n.param("i_clamp", i_clamp, 0.0);
+  i_max_ = std::abs(i_clamp);
+  i_min_ = -std::abs(i_clamp);
 
   reset();
   return true;
