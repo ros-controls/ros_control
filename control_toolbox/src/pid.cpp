@@ -60,7 +60,7 @@ void Pid::reset()
   p_error_last_ = 0.0;
   p_error_ = 0.0;
   d_error_ = 0.0;
-  i_error_ = 0.0;
+  i_term_  = 0.0;
   cmd_ = 0.0;
 }
 
@@ -127,9 +127,9 @@ bool Pid::init(const ros::NodeHandle &node)
   return true;
 }
 
-double Pid::setError(double error, ros::Duration dt)
+double Pid::computeCommand(double error, ros::Duration dt)
 {
-  double p_term, d_term, i_term;
+  double p_term, d_term;
   p_error_ = error; //this is pError = pState-pTarget
 
   if (dt == ros::Duration(0.0) || std::isnan(error) || std::isinf(error))
@@ -138,23 +138,11 @@ double Pid::setError(double error, ros::Duration dt)
   // Calculate proportional contribution to command
   p_term = p_gain_ * p_error_;
 
-  // Calculate the integral error
-  i_error_ = i_error_ + dt.toSec() * p_error_;
-
   //Calculate integral contribution to command
-  i_term = i_gain_ * i_error_;
+  i_term_ = i_term_ + i_gain_ * dt.toSec() * p_error_;
 
-  // Limit i_term so that the limit is meaningful in the output
-  if (i_term > i_max_)
-  {
-    i_term = i_max_;
-    i_error_=i_term/i_gain_;
-  }
-  else if (i_term < i_min_)
-  {
-    i_term = i_min_;
-    i_error_=i_term/i_gain_;
-  }
+  // Limit i_term_ so that the limit is meaningful in the output
+  i_term_ = std::max( i_min_, std::min( i_term_, i_max_) );
 
   // Calculate the derivative error
   if (dt.toSec() > 0.0)
@@ -164,14 +152,14 @@ double Pid::setError(double error, ros::Duration dt)
   }
   // Calculate derivative contribution to command
   d_term = d_gain_ * d_error_;
-  cmd_ = p_term + i_term + d_term;
+  cmd_ = p_term + i_term_ + d_term;
 
   return cmd_;
 }
 
 double Pid::updatePid(double error, ros::Duration dt)
 {
-  double p_term, d_term, i_term;
+  double p_term, d_term;
   p_error_ = error; //this is pError = pState-pTarget
 
   if (dt == ros::Duration(0.0) || std::isnan(error) || std::isinf(error))
@@ -180,23 +168,11 @@ double Pid::updatePid(double error, ros::Duration dt)
   // Calculate proportional contribution to command
   p_term = p_gain_ * p_error_;
 
-  // Calculate the integral error
-  i_error_ = i_error_ + dt.toSec() * p_error_;
-
   //Calculate integral contribution to command
-  i_term = i_gain_ * i_error_;
+  i_term_ = i_term_ + i_gain_ * dt.toSec() * p_error_;
 
-  // Limit i_term so that the limit is meaningful in the output
-  if (i_term > i_max_)
-  {
-    i_term = i_max_;
-    i_error_=i_term/i_gain_;
-  }
-  else if (i_term < i_min_)
-  {
-    i_term = i_min_;
-    i_error_=i_term/i_gain_;
-  }
+  // Limit i_term_ so that the limit is meaningful in the output
+  i_term_ = std::max( i_min_, std::min( i_term_, i_max_) );
 
   // Calculate the derivative error
   if (dt.toSec() > 0.0)
@@ -206,14 +182,14 @@ double Pid::updatePid(double error, ros::Duration dt)
   }
   // Calculate derivative contribution to command
   d_term = d_gain_ * d_error_;
-  cmd_ = - p_term - i_term - d_term;
+  cmd_ = - p_term - i_term_ - d_term;
 
   return cmd_;
 }
 
-double Pid::setError(double error, double error_dot, ros::Duration dt)
+double Pid::computeCommand(double error, double error_dot, ros::Duration dt)
 {
-  double p_term, d_term, i_term;
+  double p_term, d_term;
   p_error_ = error; //this is pError = pState-pTarget
   d_error_ = error_dot;
 
@@ -224,64 +200,41 @@ double Pid::setError(double error, double error_dot, ros::Duration dt)
   // Calculate proportional contribution to command
   p_term = p_gain_ * p_error_;
 
-  // Calculate the integral error
-  i_error_ = i_error_ + dt.toSec() * p_error_;
-
   //Calculate integral contribution to command
-  i_term = i_gain_ * i_error_;
+  i_term_ = i_term_ + i_gain_ * dt.toSec() * p_error_;
 
-  // Limit i_term so that the limit is meaningful in the output
-  if (i_term > i_max_)
-  {
-    i_term = i_max_;
-    i_error_=i_term/i_gain_;
-  }
-  else if (i_term < i_min_)
-  {
-    i_term = i_min_;
-    i_error_=i_term/i_gain_;
-  }
+  // Limit i_term_ so that the limit is meaningful in the output
+  i_term_ = std::max( i_min_, std::min( i_term_, i_max_) );
 
   // Calculate derivative contribution to command
   d_term = d_gain_ * d_error_;
-  cmd_ = p_term + i_term + d_term;
+  cmd_ = p_term + i_term_ + d_term;
 
   return cmd_;
 }
 
 double Pid::updatePid(double error, double error_dot, ros::Duration dt)
 {
-  double p_term, d_term, i_term;
+  double p_term, d_term;
   p_error_ = error; //this is pError = pState-pTarget
   d_error_ = error_dot;
 
   if (dt == ros::Duration(0.0) || std::isnan(error) || std::isinf(error) || std::isnan(error_dot) || std::isinf(error_dot))
     return 0.0;
 
+
   // Calculate proportional contribution to command
   p_term = p_gain_ * p_error_;
 
-  // Calculate the integral error
-  i_error_ = i_error_ + dt.toSec() * p_error_;
-
   //Calculate integral contribution to command
-  i_term = i_gain_ * i_error_;
+  i_term_ = i_term_ + i_gain_ * dt.toSec() * p_error_;
 
-  // Limit i_term so that the limit is meaningful in the output
-  if (i_term > i_max_)
-  {
-    i_term = i_max_;
-    i_error_=i_term/i_gain_;
-  }
-  else if (i_term < i_min_)
-  {
-    i_term = i_min_;
-    i_error_=i_term/i_gain_;
-  }
+  // Limit i_term_ so that the limit is meaningful in the output
+  i_term_ = std::max( i_min_, std::min( i_term_, i_max_) );
 
   // Calculate derivative contribution to command
   d_term = d_gain_ * d_error_;
-  cmd_ = - p_term - i_term - d_term;
+  cmd_ = - p_term - i_term_ - d_term;
 
   return cmd_;
 }
@@ -301,7 +254,7 @@ double Pid::getCurrentCmd()
 void Pid::getCurrentPIDErrors(double *pe, double *ie, double *de)
 {
   *pe = p_error_;
-  *ie = i_error_;
+  *ie = i_gain_ ? i_term_/i_gain_ : 0.0;
   *de = d_error_;
 }
 
