@@ -29,6 +29,7 @@
 #define HARDWARE_INTERFACE_ROBOT_HW_H
 
 #include <map>
+#include <typeinfo>
 #include <hardware_interface/hardware_interface.h>
 #include <hardware_interface/controller_info.h>
 #include <ros/ros.h>
