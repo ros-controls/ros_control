@@ -110,6 +110,9 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
 
 controller_interface::ControllerBase* ControllerManager::getControllerByNameImpl(const std::string& name)
 {
+  // Lock recursive mutex in this context
+  boost::mutex::scoped_lock guard(controllers_lock_);
+
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
