@@ -45,6 +45,12 @@
 namespace controller_manager
 {
 
+/** \brief Controller Specification
+ *
+ * This struct contains both a pointer to a given controller, \ref c, as well
+ * as information about the controller, \ref info.
+ *
+ */
 struct ControllerSpec
 {
   hardware_interface::ControllerInfo info;

@@ -37,6 +37,19 @@
 namespace hardware_interface
 {
 
+/** \brief Robot Hardware Interface and Resource Manager
+ *
+ * This class provides a standardized interface to a set of robot hardware
+ * interfaces to the controller manager. It performs resource conflict checking
+ * for a given set of controllers and maintains a map of hardware interfaces.
+ * It is meant to be used as a base class for abstracting custom robot
+ * hardware.
+ *
+ * The hardware interface map (\ref interfaces_) is a 1-to-1 map between
+ * the nams of interface types derived from \ref HardwareInterface  and
+ * instances of those interface types. 
+ *
+ */
 class RobotHW
 {
 public:
@@ -45,10 +58,15 @@ public:
 
   }
 
-  // ****** Resource Management Check ******
+  /** @name Resource Management
+   * @{ */
 
-  // Check (in non-realtime) if the given set of controllers is allowed to run simultaneously
-  // This default implementation simply checks if any two controllers use the same resource
+  /** Check (in non-realtime) if the given set of controllers is allowed
+   * to run simultaneously.
+   *
+   * This default implementation simply checks if any two controllers use the
+   * same resource.
+   */
   virtual bool checkForConflict(const std::list<ControllerInfo>& info) const
   {
     // Figure out which resources have multiple users
@@ -74,9 +92,19 @@ public:
     return in_conflict;
   }
 
-  // ****** Hardware Interface registration and getter ******
+  /* @} */
 
-  // register hardware interface
+  /** @name Hardware Interface Management
+   * @{ */
+
+  /**
+   * \brief Register a hardware interface.
+   *
+   * This associates the name of the type of interface to be registered with
+   * the given pointer. 
+   *
+   * \param hw A pointer to a hardware interface
+   */
   template<class T>
   void registerInterface(T* hw)
   {
@@ -84,7 +112,15 @@ public:
   }
 
 
-  // get hardware interface
+  /**
+   * \brief Get a hardware interface.
+   *
+   * Since \ref RobotHW only stores one interface per type, this returns a
+   * pointer to the requested interface type. If the interface type is not
+   * registered, it will return \c NULL.
+   *
+   * \return A pointer to a hardware interface or \c NULL
+   */
   template<class T>
   T* get()
   {
@@ -100,6 +136,8 @@ public:
     }
     return hw;
   }
+
+  /* @} */
 
 private:
   typedef std::map<std::string, HardwareInterface*> InterfaceMap;

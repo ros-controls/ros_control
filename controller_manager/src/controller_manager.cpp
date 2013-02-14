@@ -338,7 +338,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     ROS_FATAL("The switch controller stop and start list are not empty that the beginning of the swithcontroller call. This should not happen.");
 
   if (strictness == 0){
-    ROS_WARN("Controller Manager: To switch controllers you need to specify a strictness level of STRICT or BEST_EFFORT. Defaulting to BEST_EFFORT.");
+    ROS_WARN("Controller Manager: To switch controllers you need to specify a strictness level of controller_manager_msgs::SwitchController::STRICT or ::BEST_EFFORT. Defaulting to ::BEST_EFFORT.");
     strictness = controller_manager_msgs::SwitchController::Request::BEST_EFFORT;
   }
 

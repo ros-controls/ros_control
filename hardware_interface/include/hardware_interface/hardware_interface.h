@@ -41,6 +41,9 @@
 
 namespace hardware_interface{
 
+/** \brief Abstract Hardware Interface
+ *
+ */
 class HardwareInterface
 {
 public:
@@ -56,6 +59,7 @@ private:
 };
 
 
+/// An exception related to a \ref HardwareInterface
 class HardwareInterfaceException: public std::exception
 {
 public:

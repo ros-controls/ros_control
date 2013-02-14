@@ -35,6 +35,13 @@
 namespace controller_manager
 {
 
+/** \brief Pluginlib-Based Controller Loader
+ *
+ * This default controller loader uses pluginlib to load and then instantiate
+ * controller libraries.
+ *
+ */
+
 template <class T>
 class ControllerLoader : public ControllerLoaderInterface
 {
