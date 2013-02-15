@@ -40,37 +40,71 @@
 namespace controller_interface
 {
 
+/** \brief Abstract %Controller Interface
+ *
+ *
+ *
+ */
+
 class ControllerBase
 {
 public:
   ControllerBase(): state_(CONSTRUCTED){}
   virtual ~ControllerBase(){}
 
-  /// The starting method is called just before the first update from within the realtime thread.
+  /** \brief This is called from within the realtime thread just before the
+   * first call to \ref update
+   *
+   * \param time The current time
+   */
   virtual void starting(const ros::Time& time) {};
 
-  /// The update method is called periodically by the realtime thread when the controller is running
+  /** \brief This is called periodically by the realtime thread when the controller is running
+   *
+   * \param time The current time
+   * \param period The time passed since the last call to \ref update
+   */
   virtual void update(const ros::Time& time, const ros::Duration& period) = 0;
 
-  /// The stopping method is called by the realtime thread just after the last update call
+  /** \brief This is called from within the realtime thread just after the last
+   * update call before the controller is stopped
+   *
+   * \param time The current time
+   */
   virtual void stopping(const ros::Time& time) {};
 
-  /// Check if the controller is running
+  /** \brief Check if the controller is running
+   * \returns true if the controller is running
+   */
   bool isRunning()
   {
     return (state_ == RUNNING);
   }
 
+  /** \brief Request that the controller be initialized
+   *
+   * \param hw The hardware interface to the robot.
+   *
+   * \param n A NodeHandle in the namespace from which the controller
+   * should read its configuration, and where it should set up its ROS
+   * interfaces.
+   *
+   * \param[out] claimed_resources The resources claimed by this controller.
+   *
+   * \returns True if initialization was successful and the controller
+   * is ready to be started.
+   */
+  virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle &n,
+                           std::set<std::string>& claimed_resources)=0;
 
-
-  virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle &n, std::set<std::string>& claimed_resources)=0;
-
+  /// Calls \ref update only if this controller is running. 
   void updateRequest(const ros::Time& time, const ros::Duration& period)
   {
     if (state_ == RUNNING)
       update(time, period);
   }
 
+  /// Calls \ref starting only if this controller is initialized or already running
   bool startRequest(const ros::Time& time)
   {
     // start succeeds even if the controller was already started
@@ -83,7 +117,7 @@ public:
       return false;
   }
 
-
+  /// Calls \ref stopping only if this controller is initialized or already running
   bool stopRequest(const ros::Time& time)
   {
     // stop succeeds even if the controller was already stopped
@@ -96,11 +130,11 @@ public:
       return false;
   }
 
-
+  /// Get the name of this controller's hardware interface type
   virtual std::string getHardwareInterfaceType() const = 0;
 
+  /// The current execution state of the controller
   enum {CONSTRUCTED, INITIALIZED, RUNNING} state_;
-
 
 
 private:

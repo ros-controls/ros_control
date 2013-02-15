@@ -1,0 +1,5 @@
+- builder: doxygen
+  name: C++ API
+  output_dir: c++
+  file_patters: '*.c *.cpp *.h *.cc *.hh *.dox'
+  excludes: 'msg_gen'

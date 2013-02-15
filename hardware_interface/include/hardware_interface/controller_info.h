@@ -35,6 +35,11 @@
 namespace hardware_interface
 {
 
+/** \brief Controller Information
+ *
+ * This struct contains information about a given controller.
+ *
+ */
 struct ControllerInfo
 {
   std::string name, type, hardware_interface;

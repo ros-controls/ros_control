@@ -41,21 +41,34 @@
 
 namespace hardware_interface{
 
+/** \brief Abstract Hardware Interface
+ *
+ */
 class HardwareInterface
 {
 public:
   virtual ~HardwareInterface() { };
 
-  // Resource management
+  /** \name Resource management
+   *\{**/
+
+  /// Claim a resource by name
   virtual void claim(std::string resource) { claims_.insert(resource); }
+
+  /// Clear the resources this interface is claiming
   void clearClaims()                       { claims_.clear(); }
+
+  /// Get the list of resources this interface is currently claiming
   std::set<std::string> getClaims() const  { return claims_; }
+
+  /*\}*/
 
 private:
   std::set<std::string> claims_;
 };
 
 
+/// An exception related to a \ref HardwareInterface
 class HardwareInterfaceException: public std::exception
 {
 public:

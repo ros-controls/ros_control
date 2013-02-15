@@ -70,17 +70,17 @@ namespace control_toolbox {
     <LI>  \f$ p_{error}  = p_{state} - p_{target} \f$.
     </UL>
 
-    @section ROS ROS interface
+    \section ROS ROS interface
 
-    @param p Proportional gain
+    \param p Proportional gain
 
-    @param d Derivative gain
+    \param d Derivative gain
 
-    @param i Integral gain
+    \param i Integral gain
 
-    @param i_clamp Min/max bounds for the integral windup, the clamp is applied to the \f$i_{term}\f$
+    \param i_clamp Min/max bounds for the integral windup, the clamp is applied to the \f$i_{term}\f$
 
-    @section Usage
+    \section Usage
 
     To use the Pid class, you should first call some version of init()
     (in non-realtime) and then call updatePid() at every update step.

@@ -34,6 +34,8 @@
 namespace hardware_interface
 {
 
+/** \brief A handle used to read and command a single joint
+ */
 class JointHandle : public JointStateHandle
 {
 public:
@@ -48,9 +50,19 @@ private:
 };
 
 
+/** \brief Hardware interface to support commanding an array of joints
+ *
+ * This \ref HardwareInterface supports commanding the output of an array of
+ * named joints. Note that these commands can have any semantic meaning as long
+ * as they each can be represented by a single double, they are not necessarily
+ * effort commands. To specify a meaning to this command, see the derived
+ * classes like \ref EffortJointInterface etc.
+ *
+ */
 class JointCommandInterface : public hardware_interface::HardwareInterface
 {
 public:
+  /// Get the vector of joint names registered to this interface.
   std::vector<std::string> getJointNames() const
   {
     std::vector<std::string> out;
@@ -62,6 +74,11 @@ public:
     return out;
   }
 
+  /** \brief Register a new joint with this interface.
+   *
+   * \param name The name of the new joint
+   * \param cmd A pointer to the storage for this joint's output command
+   */
   void registerJoint(const JointStateHandle& js, double* cmd)
   {
     JointHandle handle(js, cmd);
@@ -72,6 +89,17 @@ public:
       it->second = handle;
   }
 
+  /** \brief Get a \ref JointHandle for accessing a joint's state and setting
+   * its output command.
+   *
+   * When a \ref JointHandle is acquired, this interface will claim the joint
+   * as a resource.
+   *
+   * \param name The name of the joint
+   *
+   * \returns A \ref JointHandle corresponding to the joint identified by \c name
+   *
+   */
   JointHandle getJointHandle(const std::string& name)
   {
     HandleMap::const_iterator it = handle_map_.find(name);
@@ -88,16 +116,19 @@ protected:
   HandleMap handle_map_;
 };
 
+/// \ref JointCommandInterface for commanding effort-based joints
 class EffortJointInterface : public JointCommandInterface
 {
 
 };
 
+/// \ref JointCommandInterface for commanding velocity-based joints
 class VelocityJointInterface : public JointCommandInterface
 {
 
 };
 
+/// \ref JointCommandInterface for commanding position-based joints
 class PositionJointInterface : public JointCommandInterface
 {
 
