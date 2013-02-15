@@ -78,8 +78,8 @@ public:
                    const ros::NodeHandle& nh=ros::NodeHandle());
   virtual ~ControllerManager();
 
-  /** @name Real-Time Safe Functions
-   *@{*/
+  /** \name Real-Time Safe Functions
+   *\{*/
   /** \brief Update all active controllers.
    *
    * When controllers are started or stopped (or switched), those calls are
@@ -91,10 +91,10 @@ public:
    * controllers before updating
    */
   void update(const ros::Time& time, const ros::Duration& period, bool reset_controllers=false);
-  /*@}*/
+  /*\}*/
 
-  /** @name Non Real-Time Safe Functions
-   *@{*/
+  /** \name Non Real-Time Safe Functions
+   *\{*/
 
   /** \brief Load a new controller by name.
    *
@@ -158,7 +158,7 @@ public:
    * 
    */
   void registerControllerLoader(boost::shared_ptr<ControllerLoaderInterface> controller_loader);
-  /*@}*/
+  /*\}*/
 
 protected:
   // controllers_lock_ must be locked before calling
@@ -175,28 +175,28 @@ private:
   typedef boost::shared_ptr<ControllerLoaderInterface> LoaderPtr;
   std::list<LoaderPtr> controller_loaders_;
 
-  /** @name Controller Switching
-   *@{*/
+  /** \name Controller Switching
+   *\{*/
   std::vector<controller_interface::ControllerBase*> start_request_, stop_request_;
   bool please_switch_;
   int switch_strictness_;
-  /*@}*/
+  /*\}*/
 
-  /** @name Controllers List
+  /** \name Controllers List
    * The controllers list is double-buffered to avoid needing to lock the
    * real-time thread when switching controllers in the non-real-time thread.
-   *@{*/
+   *\{*/
   boost::mutex controllers_lock_;
   std::vector<ControllerSpec> controllers_lists_[2];
   /// The index of the current controllers list
   int current_controllers_list_;
   /// The index of the controllers list being used in the real-time thread.
   int used_by_realtime_;
-  /*@}*/
+  /*\}*/
 
 
-  /** @name ROS Service API
-   *@{*/
+  /** \name ROS Service API
+   *\{*/
   bool listControllerTypesSrv(controller_manager_msgs::ListControllerTypes::Request &req,
                               controller_manager_msgs::ListControllerTypes::Response &resp);
   bool listControllersSrv(controller_manager_msgs::ListControllers::Request &req,
@@ -212,7 +212,7 @@ private:
   boost::mutex services_lock_;
   ros::ServiceServer srv_list_controllers_, srv_list_controller_types_, srv_load_controller_;
   ros::ServiceServer srv_unload_controller_, srv_switch_controller_, srv_reload_libraries_;
-  /*@}*/
+  /*\}*/
 };
 
 inline controller_interface::ControllerBase* ControllerManager::getControllerByName(const std::string& name)

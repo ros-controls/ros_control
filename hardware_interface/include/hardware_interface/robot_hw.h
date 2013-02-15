@@ -58,8 +58,8 @@ public:
 
   }
 
-  /** @name Resource Management
-   * @{ */
+  /** \name Resource Management
+   *\{*/
 
   /** Check (in non-realtime) if the given set of controllers is allowed
    * to run simultaneously.
@@ -92,10 +92,10 @@ public:
     return in_conflict;
   }
 
-  /* @} */
+  /*\}*/
 
-  /** @name Hardware Interface Management
-   * @{ */
+  /** \name Hardware Interface Management
+   *\{*/
 
   /**
    * \brief Register a hardware interface.
@@ -137,7 +137,7 @@ public:
     return hw;
   }
 
-  /* @} */
+  /*\}*/
 
 private:
   typedef std::map<std::string, HardwareInterface*> InterfaceMap;
