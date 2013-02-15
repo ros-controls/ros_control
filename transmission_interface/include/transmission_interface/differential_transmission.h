@@ -40,9 +40,31 @@
 namespace transmission_interface
 {
 
+/**
+ * \brief Implementation of a differential transmission.
+ *
+ * The following figure illustrates the transmission and the expressions that govern it.
+ *
+ * TODO: Insert figure
+ *
+ * - The transmission couples two actuators to two joints.
+ * - The transmission ratio, or reduction can take any real value \e except zero. In particular:
+ *     - If its absolute value is greater than one, it's a velocity reducer, while if its absolute value lies in
+ *       \f$ (0, 1) \f$ it's a velocity amplifier.
+ *     - Negative values represent a direction flip, ie. actuator and joint move in opposite directions.
+ *
+ * \note: This implementation currently assumes a specific layout for the actuators and joint axes which is common in
+ * robotic mechanisms.
+ */
 class DifferentialTransmission : public Transmission
 {
 public:
+  /**
+   * \param actuator_reduction Reduction ratio of actuators.
+   * \param joint_reduction    Reduction ratio of joints.
+   * \param joint_offset       Joint position offset used in the position mappings.
+   * \pre Nonzero actuator and joint reduction values.
+   */
   DifferentialTransmission(const std::vector<double>& actuator_reduction,
                            const std::vector<double>& joint_reduction,
                            const std::vector<double>& joint_offset = std::vector<double>(2, 0.0));

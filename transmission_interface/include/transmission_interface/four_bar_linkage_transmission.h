@@ -41,9 +41,30 @@
 namespace transmission_interface
 {
 
+  /**
+ * \brief Implementation of a four-bar-linkage transmission.
+ *
+ * The following figure illustrates the transmission and the expressions that govern it.
+ * Note that although the name makes specific reference to the four-bar-linkage, there are other mechanical layouts that
+ * yield the same behavior.
+ *
+ * TODO: Insert figure, depicting two alternative mechanical layouts.
+ *
+ * - The transmission couples two actuators to two joints.
+ * - The transmission ratio, or reduction can take any real value \e except zero. In particular:
+ *     - If its absolute value is greater than one, it's a velocity reducer, while if its absolute value lies in
+ *       \f$ (0, 1) \f$ it's a velocity amplifier.
+ *     - Negative values represent a direction flip, ie. actuator and joint move in opposite directions.
+ *
+ */
 class FourBarLinkageTransmission : public Transmission
 {
 public:
+  /**
+   * \param actuator_reduction Reduction ratio of actuators.
+   * \param joint_offset       Joint position offset used in the position mappings.
+   * \pre Nonzero actuator reduction values.
+   */
   FourBarLinkageTransmission(const std::vector<double>& actuator_reduction,
                              const std::vector<double>& joint_offset = std::vector<double>(2, 0.0));
 

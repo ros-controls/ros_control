@@ -40,11 +40,29 @@
 namespace transmission_interface
 {
 
+/**
+ * \brief Implementation of a simple reducer transmission.
+ *
+ * The following figure illustrates the transmission and the expressions that govern it.
+ *
+ * TODO: Insert figure
+ *
+ * - The transmission couples one actuator to one joint.
+ * - The transmission ratio, or reduction can take any real value \e except zero. In particular:
+ *     - If its absolute value is greater than one, it's a velocity reducer, while if its absolute value lies in
+ *       \f$ (0, 1) \f$ it's a velocity amplifier.
+ *     - Negative values represent a direction flip, ie. actuator and joint move in opposite directions.
+ */
 class SimpleTransmission : public Transmission
 {
 public:
+  /**
+   * \param reduction Reduction ratio.
+   * \param joint_offset Joint position offset used in the position mappings.
+   * \pre Nonzero reduction value.
+   */
   SimpleTransmission(const double reduction,
-                     const double offset = 0.0);
+                     const double joint_offset = 0.0);
 
   virtual ~SimpleTransmission() {}
 
@@ -71,15 +89,15 @@ public:
 
 protected:
   double reduction_;
-  double offset_;
+  double joint_offset_;
   std::vector<double*> joint_pos_vec_; ///< Workspace vector used to modify otherwise const parameters.
 };
 
 inline SimpleTransmission::SimpleTransmission(const double reduction,
-                                              const double offset)
+                                              const double joint_offset)
   : Transmission(),
     reduction_(reduction),
-    offset_(offset),
+    joint_offset_(joint_offset),
     joint_pos_vec_(std::vector<double*>(1))
 {
   if (0.0 == reduction_)
@@ -107,7 +125,7 @@ inline void SimpleTransmission::actuatorToJointPosition(const std::vector<double
 {
   assert(1 == actuator_pos.size() && 1 == joint_pos.size());
   actuatorToJointVelocity(actuator_pos, joint_pos); // Apply flow map...
-  *joint_pos[0] += offset_;                         // ...and add integration constant
+  *joint_pos[0] += joint_offset_;                   // ...and add integration constant
 }
 
 inline void SimpleTransmission::jointToActuatorEffort(const std::vector<double*> joint_eff,
@@ -128,7 +146,7 @@ inline void SimpleTransmission::jointToActuatorPosition(const std::vector<double
                                                               std::vector<double*> actuator_pos)
 {
   assert(1 == actuator_pos.size() && 1 == joint_pos.size());
-  double joint_pos_with_offset = *joint_pos[0] - offset_;
+  double joint_pos_with_offset = *joint_pos[0] - joint_offset_;
   joint_pos_vec_[0] = &joint_pos_with_offset;            // Remove integration constant in workspace vector...
   jointToActuatorVelocity(joint_pos_vec_, actuator_pos); // ...and apply flow map to _workspace_ vector
 }
