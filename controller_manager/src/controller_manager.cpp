@@ -87,7 +87,7 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
   }
 
 
- // Update all controllers
+  // Update all controllers
   for (size_t i=0; i<controllers.size(); i++)
     controllers[i].c->updateRequest(time, period);
 
