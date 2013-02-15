@@ -182,11 +182,16 @@ private:
   int switch_strictness_;
   /*@}*/
 
-  /** @name Controller Lists
+  /** @name Controllers List
+   * The controllers list is double-buffered to avoid needing to lock the
+   * real-time thread when switching controllers in the non-real-time thread.
    *@{*/
   boost::mutex controllers_lock_;
   std::vector<ControllerSpec> controllers_lists_[2];
-  int current_controllers_list_, used_by_realtime_;
+  /// The index of the current controllers list
+  int current_controllers_list_;
+  /// The index of the controllers list being used in the real-time thread.
+  int used_by_realtime_;
   /*@}*/
 
 
