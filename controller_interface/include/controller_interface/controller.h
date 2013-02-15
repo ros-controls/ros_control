@@ -42,7 +42,12 @@
 namespace controller_interface
 {
 
-
+/** \brief %Controller with a specific hardware interface
+ *
+ * \tparam T The hardware interface type used by this controller. This enforces
+ * semantic compatibility between the controller and the hardware it's meant to
+ * control.
+ */
 template <class T>
 class Controller: public ControllerBase
 {
@@ -50,24 +55,32 @@ public:
   Controller()  {state_ = CONSTRUCTED;}
   virtual ~Controller<T>(){}
 
-  /**
-   * @brief The init function is called to initialize the controller from a non-realtime thread
+  /** \brief The init function is called to initialize the controller from a
+   * non-realtime thread with a pointer to the hardware interface, itself,
+   * instead of a pointer to a RobotHW.
    *
-   * @param robot The hardware interface to the robot
+   * \param hw The specific hardware interface used by this controller. 
    *
-   * @param n A NodeHandle in the namespace from which the controller
+   * \param n A NodeHandle in the namespace from which the controller
    * should read its configuration, and where it should set up its ROS
    * interface.
    *
-   * @return True if initialization was successful and the controller
+   * \returns True if initialization was successful and the controller
    * is ready to be started.
    */
   virtual bool init(T* hw, ros::NodeHandle &n) = 0;
 
 
-
 protected:
-  virtual bool initRequest(hardware_interface::RobotHW* robot_hw, ros::NodeHandle &n, std::set<std::string>& claimed_resources)
+  /** \brief Initialize the controller from a RobotHW pointer
+   *
+   * This calls \ref init with the hardware interface for this controller if it
+   * can extract the correct interface from \c robot_hw.
+   *
+   */
+  virtual bool initRequest(hardware_interface::RobotHW* robot_hw,
+                           ros::NodeHandle &n,
+                           std::set<std::string> &claimed_resources)
   {
     // check if construction finished cleanly
     if (state_ != CONSTRUCTED){

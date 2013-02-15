@@ -87,7 +87,7 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
   }
 
 
- // Update all controllers
+  // Update all controllers
   for (size_t i=0; i<controllers.size(); i++)
     controllers[i].c->updateRequest(time, period);
 
@@ -338,7 +338,9 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     ROS_FATAL("The switch controller stop and start list are not empty that the beginning of the swithcontroller call. This should not happen.");
 
   if (strictness == 0){
-    ROS_WARN("Controller Manager: To switch controllers you need to specify a strictness level of STRICT or BEST_EFFORT. Defaulting to BEST_EFFORT.");
+    ROS_WARN("Controller Manager: To switch controllers you need to specify a strictness level of controller_manager_msgs::SwitchController::STRICT (%d) or ::BEST_EFFORT (%d). Defaulting to ::BEST_EFFORT.",
+             controller_manager_msgs::SwitchController::Request::STRICT,
+             controller_manager_msgs::SwitchController::Request::BEST_EFFORT);
     strictness = controller_manager_msgs::SwitchController::Request::BEST_EFFORT;
   }
 

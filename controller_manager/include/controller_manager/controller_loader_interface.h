@@ -40,6 +40,12 @@ class ControllerBase;
 namespace controller_manager
 {
 
+/** \brief Abstract Controller Loader Interface
+ *
+ * This interface can be used to load and instantiate controllers from sources
+ * other than the pluginlib-based \ref ControllerLoader.
+ *
+ */
 class ControllerLoaderInterface
 {
 public:
