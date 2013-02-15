@@ -40,6 +40,8 @@ namespace controller_manager
  * This default controller loader uses pluginlib to load and then instantiate
  * controller libraries.
  *
+ * \tparam T The base class of the controller types to be loaded
+ *
  */
 
 template <class T>

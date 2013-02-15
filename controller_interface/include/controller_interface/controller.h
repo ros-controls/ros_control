@@ -44,10 +44,10 @@ namespace controller_interface
 
 /** \brief %Controller with a specific hardware interface
  *
- * This class is templated by a given type of HardwareInterface
- *
+ * \tparam T The hardware interface type used by this controller. This enforces
+ * semantic compatibility between the controller and the hardware it's meant to
+ * control.
  */
-
 template <class T>
 class Controller: public ControllerBase
 {

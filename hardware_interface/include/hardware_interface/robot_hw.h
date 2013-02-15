@@ -103,6 +103,7 @@ public:
    * This associates the name of the type of interface to be registered with
    * the given pointer. 
    *
+   * \tparam T The hardware interface type
    * \param hw A pointer to a hardware interface
    */
   template<class T>
@@ -119,6 +120,7 @@ public:
    * pointer to the requested interface type. If the interface type is not
    * registered, it will return \c NULL.
    *
+   * \tparam T The hardware interface type
    * \return A pointer to a hardware interface or \c NULL
    */
   template<class T>
