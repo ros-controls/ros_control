@@ -1,0 +1,16 @@
+<package>
+  <description>
+    Transmission Interaface.
+  </description>
+  <author>Adolfo Rodriguez Tsouroukdissian</author>
+  <license>Modified BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url></url>
+
+  <depend package="hardware_interface" />
+
+  <export>
+    <cpp cflags="-I${prefix}/include" />
+  </export>
+
+</package>
