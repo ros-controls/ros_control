@@ -90,9 +90,14 @@ public:
   }
 
   /** \brief Get a \ref JointHandle for accessing a joint's state and setting
-   * its output command
+   * its output command.
+   *
+   * When a \ref JointHandle is acquired, this interface will claim the joint
+   * as a resource.
    *
    * \param name The name of the joint
+   *
+   * \returns A \ref JointHandle corresponding to the joint identified by \c name
    *
    */
   JointHandle getJointHandle(const std::string& name)
