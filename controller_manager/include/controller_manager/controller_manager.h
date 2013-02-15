@@ -57,25 +57,108 @@
 
 namespace controller_manager{
 
+/** \brief ROS Controller Manager and Runner
+ *
+ * This class advertises a ROS interface for loading, unloading, starting, and
+ * stopping ros_control-based controllers. It also serializes execution of all
+ * running controllers in \ref update.
+ *
+ */
+
 class ControllerManager{
 
 public:
+  /** \brief Constructor
+   *
+   * \param robot_hw A pointer to a robot hardware interface
+   * \param nh The ros::NodeHandle in whose namespace all ROS interfaces should
+   * operate.
+   */
   ControllerManager(hardware_interface::RobotHW *robot_hw,
                    const ros::NodeHandle& nh=ros::NodeHandle());
   virtual ~ControllerManager();
 
-  // Real-time functions
+  /** \name Real-Time Safe Functions
+   *\{*/
+  /** \brief Update all active controllers.
+   *
+   * When controllers are started or stopped (or switched), those calls are
+   * made in this function.
+   *
+   * \param time The current time
+   * \param period The change in time since the last call to \ref update
+   * \param reset_controllers If \c true, stop and start all running
+   * controllers before updating
+   */
   void update(const ros::Time& time, const ros::Duration& period, bool reset_controllers=false);
+  /*\}*/
 
-  // Non real-time functions
+  /** \name Non Real-Time Safe Functions
+   *\{*/
+
+  /** \brief Load a new controller by name.
+   *
+   * This dynamically loads a controller called \c name and initializes the
+   * newly
+   * loaded controller. 
+   *
+   * It determines the controller type by accessing the ROS parameter "type" in
+   * the namespace given by \c name relative to the namespace of \ref
+   * controller_node_. It then initializes the controller with the
+   * hardware_interface::RobotHW pointer \ref robot_hw_, the ros::NodeHandle
+   * describing this namespace, and a reference to a std::set to retrieve the
+   * resources needed by this controller.
+   *
+   * A controller cannot be loaded while already loaded. To re-load a
+   * controller, first \ref unloadController and then \ref loadController.
+   *
+   * \param name The name of the controller as well as the ROS namespace under
+   * which the controller should be loaded
+   *
+   * \returns True on success
+   * \returns False on failure 
+   */
   bool loadController(const std::string& name);
+
+  /** \brief Unload a controller by name
+   *
+   * \param name The name of the controller to unload. (The same as the one used in \ref loadController )
+   *
+   */
   bool unloadController(const std::string &name);
+  
+  /** \brief Switch multiple controllers simultaneously.
+   *
+   * \param start_controllers A vector of controller names to be started
+   * \param stop_controllers A vector of controller names to be stopped
+   * \param strictness How important it is that the requested controllers are
+   * started and stopped.  The levels are defined in the
+   * controller_manager_msgs/SwitchControllers service as either \c BEST_EFFORT
+   * or \c STRICT.  \c BEST_EFFORT means that \ref switchController can still
+   * succeed if a non-existant controller is requested to be stopped or started.
+   */
   bool switchController(const std::vector<std::string>& start_controllers,
                         const std::vector<std::string>& stop_controllers,
                         const int strictness);
 
+  /// Get a controller by name.
   controller_interface::ControllerBase* getControllerByName(const std::string& name);
+
+  /** \brief Register a controller loader.
+   *
+   * By default, the pluginlib-based \ref ControllerLoader is registered on
+   * construction of this class. To load controllers through alternate means,
+   * register alternate controller loaders here. Note, however, that when
+   * controllers are loaded by \ref loadController the controller loaders are
+   * queried in the order that they were registered. This means that if a
+   * controller CAN be loaded by the pluginlib-based \ref ControllerLoader,
+   * then it WILL, regardless of which other loaders are registered.
+   *
+   * \param controller_loader A pointer to the loader to be registered
+   * 
+   */
   void registerControllerLoader(boost::shared_ptr<ControllerLoaderInterface> controller_loader);
+  /*\}*/
 
 protected:
   // controllers_lock_ must be locked before calling
@@ -92,18 +175,28 @@ private:
   typedef boost::shared_ptr<ControllerLoaderInterface> LoaderPtr;
   std::list<LoaderPtr> controller_loaders_;
 
-  // for controller switching
+  /** \name Controller Switching
+   *\{*/
   std::vector<controller_interface::ControllerBase*> start_request_, stop_request_;
   bool please_switch_;
   int switch_strictness_;
+  /*\}*/
 
-  // controller lists
+  /** \name Controllers List
+   * The controllers list is double-buffered to avoid needing to lock the
+   * real-time thread when switching controllers in the non-real-time thread.
+   *\{*/
   boost::mutex controllers_lock_;
   std::vector<ControllerSpec> controllers_lists_[2];
-  int current_controllers_list_, used_by_realtime_;
+  /// The index of the current controllers list
+  int current_controllers_list_;
+  /// The index of the controllers list being used in the real-time thread.
+  int used_by_realtime_;
+  /*\}*/
 
 
-  // services to work with controllers
+  /** \name ROS Service API
+   *\{*/
   bool listControllerTypesSrv(controller_manager_msgs::ListControllerTypes::Request &req,
                               controller_manager_msgs::ListControllerTypes::Response &resp);
   bool listControllersSrv(controller_manager_msgs::ListControllers::Request &req,
@@ -119,6 +212,7 @@ private:
   boost::mutex services_lock_;
   ros::ServiceServer srv_list_controllers_, srv_list_controller_types_, srv_load_controller_;
   ros::ServiceServer srv_unload_controller_, srv_switch_controller_, srv_reload_libraries_;
+  /*\}*/
 };
 
 inline controller_interface::ControllerBase* ControllerManager::getControllerByName(const std::string& name)

@@ -40,6 +40,7 @@
 
 namespace hardware_interface{
 
+/// A handle used to read the state of a single joint
 class JointStateHandle
 {
 public:
@@ -53,7 +54,6 @@ public:
   double getVelocity() const {return *vel_;}
   double getEffort()   const {return *eff_;}
 
-
 private:
   std::string name_;
   const double* pos_;
@@ -62,9 +62,17 @@ private:
 };
 
 
+/** \brief Hardware interface to support reading the state of an array of joints
+ * 
+ * This \ref HardwareInterface supports reading the state of an array of named
+ * joints, each of which has some position, velocity, and effort (force or
+ * torque).
+ *
+ */
 class JointStateInterface: public HardwareInterface
 {
 public:
+  /// Get the vector of joint names registered to this interface.
   std::vector<std::string> getJointNames() const
   {
     std::vector<std::string> out;
@@ -76,6 +84,14 @@ public:
     return out;
   }
 
+  /** \brief Register a new joint with this interface.
+   *
+   * \param name The name of the new joint
+   * \param pos A pointer to the storage for this joint's position 
+   * \param vel A pointer to the storage for this joint's velocity
+   * \param eff A pointer to the storage for this joint's effort (force or torque)
+   *
+   */
   void registerJoint(const std::string& name, double* pos, double* vel, double* eff)
   {
     JointStateHandle handle(name, pos, vel, eff);
@@ -86,6 +102,11 @@ public:
       it->second = handle;
   }
 
+  /** \brief Get a \ref JointStateHandle for accessing a joint's state
+   *
+   * \param name The name of the joint
+   *
+   */
   JointStateHandle getJointStateHandle(const std::string& name) const
   {
     HandleMap::const_iterator it = handle_map_.find(name);
