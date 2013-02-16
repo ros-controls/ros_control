@@ -108,8 +108,11 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
   }
 }
 
-controller_interface::ControllerBase* ControllerManager::getControllerByNameImpl(const std::string& name)
+controller_interface::ControllerBase* ControllerManager::getControllerByName(const std::string& name)
 {
+  // Lock recursive mutex in this context
+  boost::recursive_mutex::scoped_lock guard(controllers_lock_);
+
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
@@ -121,7 +124,7 @@ controller_interface::ControllerBase* ControllerManager::getControllerByNameImpl
 
 void ControllerManager::getControllerNames(std::vector<std::string> &names)
 {
-  boost::mutex::scoped_lock guard(controllers_lock_);
+  boost::recursive_mutex::scoped_lock guard(controllers_lock_);
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
@@ -135,7 +138,7 @@ bool ControllerManager::loadController(const std::string& name)
   ROS_DEBUG("Will load controller '%s'", name.c_str());
 
   // lock controllers
-  boost::mutex::scoped_lock guard(controllers_lock_);
+  boost::recursive_mutex::scoped_lock guard(controllers_lock_);
 
   // get reference to controller list
   int free_controllers_list = (current_controllers_list_ + 1) % 2;
@@ -271,7 +274,7 @@ bool ControllerManager::unloadController(const std::string &name)
   ROS_DEBUG("Will unload controller '%s'", name.c_str());
 
   // lock the controllers
-  boost::mutex::scoped_lock guard(controllers_lock_);
+  boost::recursive_mutex::scoped_lock guard(controllers_lock_);
 
   // get reference to controller list
   int free_controllers_list = (current_controllers_list_ + 1) % 2;
@@ -351,13 +354,13 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     ROS_DEBUG(" - stopping controller %s", stop_controllers[i].c_str());
 
   // lock controllers
-  boost::mutex::scoped_lock guard(controllers_lock_);
+  boost::recursive_mutex::scoped_lock guard(controllers_lock_);
 
   controller_interface::ControllerBase* ct;
   // list all controllers to stop
   for (unsigned int i=0; i<stop_controllers.size(); i++)
   {
-    ct = getControllerByNameImpl(stop_controllers[i]);
+    ct = getControllerByName(stop_controllers[i]);
     if (ct == NULL){
       if (strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
         ROS_ERROR("Could not stop controller with name %s because no controller with this name exists",
@@ -381,7 +384,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   // list all controllers to start
   for (unsigned int i=0; i<start_controllers.size(); i++)
   {
-    ct = getControllerByNameImpl(start_controllers[i]);
+    ct = getControllerByName(start_controllers[i]);
     if (ct == NULL){
       if (strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
         ROS_ERROR("Could not start controller with name %s because no controller with this name exists",
@@ -551,7 +554,7 @@ bool ControllerManager::listControllersSrv(
   ROS_DEBUG("list controller service locked");
 
   // lock controllers to get all names/types/states
-  boost::mutex::scoped_lock controller_guard(controllers_lock_);
+  boost::recursive_mutex::scoped_lock controller_guard(controllers_lock_);
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
   resp.controller.resize(controllers.size());
 
