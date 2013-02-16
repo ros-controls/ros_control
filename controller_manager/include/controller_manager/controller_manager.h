@@ -141,8 +141,12 @@ public:
                         const std::vector<std::string>& stop_controllers,
                         const int strictness);
 
-  /// Get a controller by name.
-  controller_interface::ControllerBase* getControllerByName(const std::string& name);
+  /** \brief Get a controller by name.
+   *
+   * \param name The name of a controller 
+   * \returns An up-casted pointer to the controller identified by \c name 
+   */
+  virtual controller_interface::ControllerBase* getControllerByName(const std::string& name);
 
   /** \brief Register a controller loader.
    *
@@ -160,9 +164,6 @@ public:
   void registerControllerLoader(boost::shared_ptr<ControllerLoaderInterface> controller_loader);
   /*\}*/
 
-protected:
-  // controllers_lock_ must be locked before calling
-  virtual controller_interface::ControllerBase* getControllerByNameImpl(const std::string& name);
 
 private:
   void getControllerNames(std::vector<std::string> &v);
@@ -186,7 +187,9 @@ private:
    * The controllers list is double-buffered to avoid needing to lock the
    * real-time thread when switching controllers in the non-real-time thread.
    *\{*/
-  boost::mutex controllers_lock_;
+  /// Mutex protecting the current controllers list
+  boost::recursive_mutex controllers_lock_;
+  /// Double-buffered controllers list
   std::vector<ControllerSpec> controllers_lists_[2];
   /// The index of the current controllers list
   int current_controllers_list_;
@@ -214,12 +217,6 @@ private:
   ros::ServiceServer srv_unload_controller_, srv_switch_controller_, srv_reload_libraries_;
   /*\}*/
 };
-
-inline controller_interface::ControllerBase* ControllerManager::getControllerByName(const std::string& name)
-{
-  boost::mutex::scoped_lock guard(controllers_lock_);
-  return getControllerByNameImpl(name);
-}
 
 }
 #endif
