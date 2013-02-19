@@ -43,15 +43,52 @@ namespace transmission_interface
 /**
  * \brief Implementation of a simple reducer transmission.
  *
- * The following figure illustrates the transmission and the expressions that govern it.
+ * This transmission relates <b>one actuator</b> and <b>one joint</b> through a reductor (or amplifier).
+ * Timing belts and gears are examples of this transmission type, and are illustrated below.
+ * \image html simple_transmission.png
  *
- * TODO: Insert figure
+ * <CENTER>
+ * <table>
+ * <tr><th></th><th><CENTER>Effort</CENTER></th><th><CENTER>Velocity</CENTER></th><th><CENTER>Position</CENTER></th></tr>
+ * <tr><td>
+ * <b> Actuator to joint </b>
+ * </td>
+ * <td>
+ * \f[ \tau_j = n \tau_a \f]
+ * </td>
+ * <td>
+ * \f[ \dot{x}_j = \dot{x}_a / n \f]
+ * </td>
+ * <td>
+ * \f[ x_j = x_a / n + x_{off} \f]
+ * </td>
+ * </tr>
+ * <tr><td>
+ * <b> Joint to actuator </b>
+ * </td>
+ * <td>
+ * \f[ \tau_a = \tau_j / n\f]
+ * </td>
+ * <td>
+ * \f[ \dot{x}_a = n \dot{x}_j \f]
+ * </td>
+ * <td>
+ * \f[ x_a = n (x_j - x_{off}) \f]
+ * </td></tr></table>
+ * </CENTER>
  *
- * - The transmission couples one actuator to one joint.
- * - The transmission ratio, or reduction can take any real value \e except zero. In particular:
- *     - If its absolute value is greater than one, it's a velocity reducer, while if its absolute value lies in
- *       \f$ (0, 1) \f$ it's a velocity amplifier.
- *     - Negative values represent a direction flip, ie. actuator and joint move in opposite directions.
+ * where:
+ * - \f$ x \f$, \f$ \dot{x} \f$ and \f$ \tau \f$ are position, velocity and effort variables, respectively.
+ * - Subindices \f$ _a \f$ and \f$ _j \f$ are used to represent actuator-space and joint-space variables, respectively.
+ * - \f$ x_{off}\f$ represents the offset between motor and joint zeros, expressed in joint position coordinates.
+ * - \f$ n \f$ is the transmission ratio, and can be computed as the ratio between the output and input pulley
+ *   radii for the timing belt; or the ratio between output and input teeth for the gear system.
+ *   The transmission ratio can take any real value \e except zero. In particular:
+ *     - If its absolute value is greater than one, it's a velocity reducer / effort amplifier, while if its absolute
+ *       value lies in \f$ (0, 1) \f$ it's a velocity amplifier / effort reducer.
+ *     - Negative values represent a direction flip, ie. actuator and joint move in opposite directions. For example,
+ *       in timing belts actuator and joint move in the same direction, while in single-stage gear systems actuator and
+ *       joint move in opposite directions.
  */
 class SimpleTransmission : public Transmission
 {
