@@ -113,8 +113,8 @@ public:
    * \param p  The proportional gain.
    * \param i  The integral gain.
    * \param d  The derivative gain.
-   * \param i_max The integral upper limit.
-   * \param i_min The integral lower limit.
+   * \param i_max The max integral windup.
+   * \param i_min The min integral windup.
    */
   Pid(double p = 0.0, double i = 0.0, double d = 0.0, double i_max = 0.0, double i_min = -0.0);
 
@@ -129,22 +129,22 @@ public:
    * \param p  The proportional gain.
    * \param i  The integral gain.
    * \param d  The derivative gain.
-   * \param i_max The integral upper limit.
-   * \param i_min The integral lower limit.
+   * \param i_max The max integral windup.
+   * \param i_min The min integral windup.
    */
   void initPid(double p, double i, double d, double i_max, double i_min);
   
   /*!                                                                                                   
    * \brief Initialize PID with the parameters in a namespace                               
    *                                                            
-   * \param n  The namespace prefix.
+   * \param prefix The namespace prefix.
    */
   bool initParam(const std::string& prefix);
   bool initXml(TiXmlElement *config);
   /*!                                                                                                      
    * \brief Initialize PID with the parameters in a NodeHandle namespace
    *                                                         
-   * \param n  The NodeHandle.                                                                       
+   * \param n The NodeHandle which should be used to query parameters.                                                                       
    */
   bool init(const ros::NodeHandle &n);
 
@@ -176,8 +176,8 @@ public:
    * \param p  The proportional gain.
    * \param i  The integral gain.
    * \param d  The derivative gain.
-   * \param i_max The integral upper limit.
-   * \param i_min The integral lower limit.
+   * \param i_max The max integral windup.
+   * \param i_min The min integral windup.
    */
   void setGains(double p, double i, double d, double i_max, double i_min);
 
@@ -187,7 +187,7 @@ public:
    * \param i  The integral gain.
    * \param d  The derivative gain.
    * \param i_max The max integral windup.
-   * \param i_mim The min integral windup.
+   * \param i_min The min integral windup.
    */
   void getGains(double &p, double &i, double &d, double &i_max, double &i_min);
 
@@ -221,8 +221,8 @@ public:
    *
    * \deprecated This function assumes <tt> p_error = (state - target) </tt>
    * which is an unconventional definition of the error. Please use \ref
-   * setError instead, which assumes <tt> error = (target - state) </tt>. Note
-   * that calls to \ref setError should not be mixed with calls to \ref
+   * computeCommand instead, which assumes <tt> error = (target - state) </tt>. Note
+   * that calls to \ref computeCommand should not be mixed with calls to \ref
    * updatePid.
    *
    * \param p_error  Error since last call (p_state-p_target)
@@ -236,8 +236,8 @@ public:
    *
    * \deprecated This function assumes <tt> p_error = (state - target) </tt>
    * which is an unconventional definition of the error. Please use \ref
-   * setError instead, which assumes <tt> error = (target - state) </tt>. Note
-   * that calls to \ref setError should not be mixed with calls to \ref
+   * computeCommand instead, which assumes <tt> error = (target - state) </tt>. Note
+   * that calls to \ref computeCommand should not be mixed with calls to \ref
    * updatePid.
    *
    * \param error  Error since last call (p_state-p_target)
