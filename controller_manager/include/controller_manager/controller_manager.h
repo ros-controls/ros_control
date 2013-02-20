@@ -52,6 +52,7 @@
 #include <controller_manager_msgs/UnloadController.h>
 #include <controller_manager_msgs/SwitchController.h>
 #include <boost/thread/condition.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 #include <controller_manager/controller_loader_interface.h>
 
 
