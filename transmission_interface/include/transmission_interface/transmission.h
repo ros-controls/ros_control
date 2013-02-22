@@ -50,6 +50,9 @@ namespace transmission_interface
  * positon. Position is not a power variable, but the mappings can be implemented using the velocity map plus an
  * integration constant representing the offset between actuator and joint zeros.
  *
+ * \par Credit
+ * This interface was inspired by similar existing implemenations by PAL Robotics, S.L. and Willow Garage Inc.
+ *
  * \note Implementations of this interface must take care of realtime-safety if the code is to be run in realtime
  * contexts, as is often the case in robot control.
  */
