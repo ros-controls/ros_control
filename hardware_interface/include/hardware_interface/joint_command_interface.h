@@ -105,7 +105,7 @@ public:
     HandleMap::const_iterator it = handle_map_.find(name);
 
     if (it == handle_map_.end())
-      throw HardwareInterfaceException("Could not find joint [" + name + "] in EffortJointInterface");
+      throw HardwareInterfaceException("Could not find joint [" + name + "] in JointCommandInterface");
 
     HardwareInterface::claim(name);
     return it->second;
