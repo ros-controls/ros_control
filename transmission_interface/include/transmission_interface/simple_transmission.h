@@ -101,30 +101,28 @@ public:
   SimpleTransmission(const double reduction,
                      const double joint_offset = 0.0);
 
-  virtual ~SimpleTransmission() {}
+  void actuatorToJointEffort(const std::vector<double*> actuator_eff,
+                                   std::vector<double*> joint_eff);
 
-  virtual void actuatorToJointEffort(const std::vector<double*> actuator_eff,
-                                           std::vector<double*> joint_eff);
+  void actuatorToJointVelocity(const std::vector<double*> actuator_vel,
+                                     std::vector<double*> joint_vel);
 
-  virtual void actuatorToJointVelocity(const std::vector<double*> actuator_vel,
-                                             std::vector<double*> joint_vel);
+  void actuatorToJointPosition(const std::vector<double*> actuator_pos,
+                                     std::vector<double*> joint_pos);
 
-  virtual void actuatorToJointPosition(const std::vector<double*> actuator_pos,
-                                             std::vector<double*> joint_pos);
+  void jointToActuatorEffort(const std::vector<double*> joint_eff,
+                                   std::vector<double*> actuator_eff);
 
-  virtual void jointToActuatorEffort(const std::vector<double*> joint_eff,
-                                           std::vector<double*> actuator_eff);
+  void jointToActuatorVelocity(const std::vector<double*> joint_vel,
+                                     std::vector<double*> actuator_vel);
 
-  virtual void jointToActuatorVelocity(const std::vector<double*> joint_vel,
-                                             std::vector<double*> actuator_vel);
+  void jointToActuatorPosition(const std::vector<double*> joint_pos,
+                                     std::vector<double*> actuator_pos);
 
-  virtual void jointToActuatorPosition(const std::vector<double*> joint_pos,
-                                             std::vector<double*> actuator_pos);
+  std::size_t numActuators() const {return 1;}
+  std::size_t numJoints()    const {return 1;}
 
-  virtual std::size_t numActuators() const {return 1;}
-  virtual std::size_t numJoints()    const {return 1;}
-
-protected:
+private:
   double reduction_;
   double joint_offset_;
   std::vector<double*> joint_pos_vec_; ///< Workspace vector used to modify otherwise const parameters.

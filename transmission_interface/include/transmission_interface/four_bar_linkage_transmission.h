@@ -123,28 +123,26 @@ public:
   FourBarLinkageTransmission(const std::vector<double>& actuator_reduction,
                              const std::vector<double>& joint_offset = std::vector<double>(2, 0.0));
 
-  virtual ~FourBarLinkageTransmission() {}
+  void actuatorToJointEffort(const std::vector<double*> actuator_eff,
+                                   std::vector<double*> joint_eff);
 
-  virtual void actuatorToJointEffort(const std::vector<double*> actuator_eff,
-                                           std::vector<double*> joint_eff);
+  void actuatorToJointVelocity(const std::vector<double*> actuator_vel,
+                                     std::vector<double*> joint_vel);
 
-  virtual void actuatorToJointVelocity(const std::vector<double*> actuator_vel,
-                                             std::vector<double*> joint_vel);
+  void actuatorToJointPosition(const std::vector<double*> actuator_pos,
+                                     std::vector<double*> joint_pos);
 
-  virtual void actuatorToJointPosition(const std::vector<double*> actuator_pos,
-                                             std::vector<double*> joint_pos);
+  void jointToActuatorEffort(const std::vector<double*> joint_eff,
+                                   std::vector<double*> actuator_eff);
 
-  virtual void jointToActuatorEffort(const std::vector<double*> joint_eff,
-                                           std::vector<double*> actuator_eff);
+  void jointToActuatorVelocity(const std::vector<double*> joint_vel,
+                                     std::vector<double*> actuator_vel);
 
-  virtual void jointToActuatorVelocity(const std::vector<double*> joint_vel,
-                                             std::vector<double*> actuator_vel);
+  void jointToActuatorPosition(const std::vector<double*> joint_pos,
+                                     std::vector<double*> actuator_pos);
 
-  virtual void jointToActuatorPosition(const std::vector<double*> joint_pos,
-                                             std::vector<double*> actuator_pos);
-
-  virtual std::size_t numActuators() const {return 2;}
-  virtual std::size_t numJoints()    const {return 2;}
+  std::size_t numActuators() const {return 2;}
+  std::size_t numJoints()    const {return 2;}
 
 protected:
   std::vector<double>  actuator_reduction_;
