@@ -14,3 +14,6 @@ rosbuild_init()
 rosbuild_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
 rosbuild_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
 rosbuild_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
+rosbuild_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
+
+
