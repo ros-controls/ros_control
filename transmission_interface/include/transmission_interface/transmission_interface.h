@@ -50,9 +50,6 @@ public:
   /** \return Transmission name. */
   std::string getName() const {return name_;}
 
-  /** \brief Propagate a single map of the stored transmission. */
-  virtual void propagate() = 0; // TODO: Remove and let derived classes provide the method without inheritance
-
 protected:
   std::string name_;
   Transmission* transmission_;
