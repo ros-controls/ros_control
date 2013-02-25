@@ -11,9 +11,18 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 rosbuild_init()
 
+#set the default path for built executables to the "bin" directory
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+#set the default path for built libraries to the "lib" directory
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+
 rosbuild_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
 rosbuild_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
 rosbuild_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
 rosbuild_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
 
-
+# TODO: why is it explicitly needed???, without it linker fails.
+target_link_libraries(simple_transmission_test           pthread)
+target_link_libraries(differential_transmission_test     pthread)
+target_link_libraries(four_bar_linkage_transmission_test pthread)
+target_link_libraries(transmission_interface_test        pthread)
