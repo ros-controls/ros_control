@@ -118,4 +118,5 @@ private:
 ```
 ### TODO ###
 
-Make the current implenentation more general so it can accomodate underactuated transmissions.
+- Make the current implenentation more general so it can accomodate underactuated transmissions.
+- Read transmission configuration from configuration files.
