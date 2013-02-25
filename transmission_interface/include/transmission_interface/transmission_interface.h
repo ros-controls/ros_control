@@ -128,8 +128,11 @@ public:
                                 const std::vector<double*>& joint_data)
     : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
 
+  /** \name Real-Time Safe Functions
+   *\{*/
   /** \brief Propagate actuator positions to joint positions for the stored transmission. */
   void propagate() {transmission_->actuatorToJointPosition(actuator_data_, joint_data_);}
+  /*\}*/
 };
 
 
@@ -144,8 +147,11 @@ public:
                                 const std::vector<double*>& joint_data)
     : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
 
+  /** \name Real-Time Safe Functions
+   *\{*/
   /** \brief Propagate actuator velocities to joint velocities for the stored transmission. */
   void propagate() {transmission_->actuatorToJointVelocity(actuator_data_, joint_data_);}
+  /*\}*/
 };
 
 
@@ -160,8 +166,11 @@ public:
                               const std::vector<double*>& joint_data)
     : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
 
+  /** \name Real-Time Safe Functions
+   *\{*/
   /** \brief Propagate actuator efforts to joint efforts for the stored transmission. */
   void propagate() {transmission_->actuatorToJointEffort(actuator_data_, joint_data_);}
+  /*\}*/
 };
 
 
@@ -176,8 +185,11 @@ public:
                                 const std::vector<double*>& joint_data)
     : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
 
+  /** \name Real-Time Safe Functions
+   *\{*/
   /** \brief Propagate joint positions to actuator positions for the stored transmission. */
   void propagate() {transmission_->jointToActuatorPosition(joint_data_, actuator_data_);}
+  /*\}*/
 };
 
 
@@ -192,8 +204,11 @@ public:
                                 const std::vector<double*>& joint_data)
     : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
 
+  /** \name Real-Time Safe Functions
+   *\{*/
   /** \brief Propagate joint velocities to actuator velocities for the stored transmission. */
   void propagate() {transmission_->jointToActuatorVelocity(joint_data_, actuator_data_);}
+  /*\}*/
 };
 
 
@@ -208,8 +223,11 @@ public:
                                 const std::vector<double*>& joint_data)
     : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
 
+  /** \name Real-Time Safe Functions
+   *\{*/
   /** \brief Propagate joint efforts to actuator efforts for the stored transmission. */
   void propagate() {transmission_->jointToActuatorEffort(joint_data_, actuator_data_);}
+  /*\}*/
 };
 
 /**
@@ -226,6 +244,8 @@ template <class HandleType>
 class TransmissionInterface
 {
 public:
+  /** \name Non Real-Time Safe Functions
+   *\{*/
   /** \brief Register a new transmission to this interface. */
   void registerTransmission(const std::string&          name,
                             Transmission*               transmission,
@@ -269,7 +289,10 @@ public:
     }
     return it->second;
   }
+  /*\}*/
 
+  /** \name Real-Time Safe Functions
+   *\{*/
   /** \brief Propagate the transmission maps of all managed handles. */
   void propagate()
   {
@@ -278,6 +301,7 @@ public:
       it->second.propagate();
     }
   }
+  /*\}*/
 private:
   typedef std::map<std::string, HandleType> HandleMap;
   HandleMap handle_map_;
