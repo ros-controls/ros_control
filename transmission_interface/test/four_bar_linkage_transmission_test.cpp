@@ -90,7 +90,7 @@ TEST(PreconditionsTest, AssertionTriggering)
   vector<double*> j_data_bad(1, &j_val1);
 
   // Transmission instance
-  FourBarLinkageTransmission trans = FourBarLinkageTransmission(vector<double>(2, 1.0));
+  FourBarLinkageTransmission trans(vector<double>(2, 1.0));
 
   // Wrong parameter sizes should trigger an assertion
   EXPECT_DEATH(trans.actuatorToJointEffort(a_data_bad,  j_data_bad),  ".*");
@@ -119,6 +119,14 @@ TEST(PreconditionsTest, AssertionTriggering)
 }
 #endif // NDEBUG
 
+TEST(PreconditionsTest, AccessorValidation)
+{
+  FourBarLinkageTransmission trans(vector<double>(2, 1.0),
+                                  vector<double>(2, 1.0));
+
+  EXPECT_EQ(2, trans.numActuators());
+  EXPECT_EQ(2, trans.numJoints());
+}
 
 class TransmissionSetup : public ::testing::Test
 {

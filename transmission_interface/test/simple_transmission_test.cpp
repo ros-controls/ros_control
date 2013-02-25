@@ -99,6 +99,13 @@ TEST(PreconditionsTest, AssertionTriggering)
 }
 #endif // NDEBUG
 
+TEST(PreconditionsTest, AccessorValidation)
+{
+  SimpleTransmission trans(1.0, 1.0);
+
+  EXPECT_EQ(1, trans.numActuators());
+  EXPECT_EQ(1, trans.numJoints());
+}
 
 class TransmissionSetup
 {
