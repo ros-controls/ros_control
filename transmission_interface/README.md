@@ -1,40 +1,45 @@
-== Transmission Interface ==
+## Transmission Interface ##
 
-=== Overview ===
+### Overview ###
 
 This is an early draft of a mechanical transmission interface. Its objective is to allow to easily configue and
 apply maps between joint and actuator space variables.
 
 The design has expressly been made as simple and minimal as possible.
 
-*Important note* The current implementation is limited to _fully actuated_ transmission mechanisms.
+**Important note** The current implementation is limited to *fully actuated* transmission mechanisms.
 An example of what this implies is that joint velocities can be computed directly from actuator velocities
 (and vice-versa). In underactuated systems this is in general not the case, hence not only actuator velocities but
 also actuator efforts might be required to compute joint velocities.
 
-=== Structure ===
+### Structure ###
 
 There are three main elements in the transmission interface:
-
-  - The *Transmission* class defines an abstract interface for mapping position, velocity and effort variables
+*
+  - The **Transmission** class defines an abstract interface for mapping position, velocity and effort variables
     between actuator and joint space. Derived classes implement specific transmission types. The following types
     are already implemented:
       - SimpleTransmission
       - DifferentialTransmission
       - FourBarLinkageTransmission
 
-  - The **Handle* classes implement the map of a single variable (position, velocity, effort) in one direction
-    (joint->actuator or actuator->joint) for a single *Transmission* instance. Note that a single transmission
+  - The **\*Handle** classes implement the map of a single variable (position, velocity, effort) in one direction
+    (joint->actuator or actuator->joint) for a single **Transmission** instance. Note that a single transmission
     might affect multiple joints and actuators.
 
-  - The *Interface* classes keep track of a list of multiple *Handle*s of the same type. Useful for transforming
+  - The **\*Interface** classes keep track of a list of multiple **Handle**s of the same type. Useful for transforming
     all robot actuator positions from actuator to joint space, for example.
 
+### Documentation and tests ###
+- The Doxygen documentation of the abovementioned classes is fairly complete. In particular, the doc for the
+  **Transmission**-derived classes make extensive use of images, HTML and Latex to describe the implemented maps.
 
-=== Example ===
+- All code is unit tested with high coverage, so heavy refactoring without breaking stuff is possible.
+
+### Example ###
 
 This is a very simple example of a robot with two actuators and two joints. Each actuator is coupled to a single
-joint through a reducer. Only the transmission_interface is shown (ie. there is no hardware_interface).
+joint through a reducer. Only the transmission\_interface is shown (ie. there is no hardware\_interface).
 
 ```c++
 #include <vector>
@@ -53,7 +58,8 @@ public:
   {
     typedef vector<double*> Vec; // for brevity
 
-    // connect and register the transmission interface
+    // Connect and register the transmission interface
+    // Params: Transmission name, transmission instance, actuator data vector, joint data vector
     act_to_jnt_pos.registerTransmission("tr1", &trans1, Vec(1, &a_pos[0]), Vec(1, &j_pos[0]));
     act_to_jnt_vel.registerTransmission("tr1", &trans1, Vec(1, &a_vel[0]), Vec(1, &j_vel[0]));
     act_to_jnt_eff.registerTransmission("tr1", &trans1, Vec(1, &a_eff[0]), Vec(1, &j_eff[0]));
@@ -67,18 +73,22 @@ public:
 
   void read()
   {
+    // Read actuator state from hardware
+    // ...
+
+    // Propagate current actuator state to joints
     act_to_jnt_pos.propagate();
     act_to_jnt_vel.propagate();
     act_to_jnt_eff.propagate();
-
-    // Use joint state
   }
 
   void write()
   {
+    // Porpagate joint commands to actuators
     jnt_to_act_pos.propagate();
 
     // Send actuator command to hardware
+    // ...
   }
 
 private:
@@ -106,4 +116,7 @@ private:
 };
 
 ```
+### TODO ###
 
+- Make the current implenentation more general so it can accomodate underactuated transmissions.
+- Read transmission configuration from configuration files.
