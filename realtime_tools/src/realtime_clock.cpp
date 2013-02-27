@@ -46,7 +46,8 @@ namespace realtime_tools
     :lock_misses_(0), 
      system_time_(ros::Time()), 
      last_realtime_time_(ros::Time()),
-   running_(true)
+     running_(true),
+     initialized_(false)
   {
     // thread for time loop
     thread_ = boost::thread(boost::bind(&RealtimeClock::loop, this));
@@ -73,8 +74,13 @@ namespace realtime_tools
 	if (last_realtime_time_ != ros::Time())
 	  period_offset = ros::Duration((realtime_time - last_realtime_time_).toSec()/2.0);
 
-	// TODO: add better estimator
-	clock_offset_ = system_time_ + period_offset - realtime_time;
+	if (!initialized_)
+        {
+	  clock_offset_ = system_time_ + period_offset - realtime_time;
+	  initialized_ = true;
+	}
+	else
+	  clock_offset_ = clock_offset_*0.9999 + (system_time_ + period_offset - realtime_time)*0.0001;
       }
       system_time_ = ros::Time();
       lock_misses_ = 0;
@@ -83,7 +89,6 @@ namespace realtime_tools
 	
     else
       lock_misses_++;
-
 
     last_realtime_time_ = realtime_time;
 

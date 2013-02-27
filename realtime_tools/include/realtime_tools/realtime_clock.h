@@ -64,7 +64,7 @@ class RealtimeClock
   ros::Duration clock_offset_;
 
   ros::Time last_realtime_time_;
-  bool running_;
+  bool running_, initialized_;
   boost::mutex mutex_;
   boost::thread thread_;
 
