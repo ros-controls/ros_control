@@ -3,3 +3,5 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 rosbuild_init()
 #rosbuild_genmsg()
 rosbuild_add_boost_directories()
+
+rosbuild_add_library(${PROJECT_NAME} src/realtime_clock.cpp)
