@@ -101,39 +101,79 @@ public:
   SimpleTransmission(const double reduction,
                      const double joint_offset = 0.0);
 
-  void actuatorToJointEffort(const std::vector<double*> actuator_eff,
-                                   std::vector<double*> joint_eff);
+  /**
+   * \brief Transform \e effort variables from actuator to joint space.
+   * \param[in]  act_data Actuator-space variables.
+   * \param[out] jnt_data Joint-space variables.
+   * \pre Actuator and joint effort vectors must have size 1 and point to valid data.
+   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
+   */
+  void actuatorToJointEffort(const ActuatorData& act_data,
+                                   JointData&    jnt_data);
 
-  void actuatorToJointVelocity(const std::vector<double*> actuator_vel,
-                                     std::vector<double*> joint_vel);
+  /**
+   * \brief Transform \e velocity variables from actuator to joint space.
+   * \param[in]  act_data Actuator-space variables.
+   * \param[out] jnt_data Joint-space variables.
+   * \pre Actuator and joint velocity vectors must have size 1 and point to valid data.
+   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
+   */
+  void actuatorToJointVelocity(const ActuatorData& act_data,
+                                     JointData&    jnt_data);
 
-  void actuatorToJointPosition(const std::vector<double*> actuator_pos,
-                                     std::vector<double*> joint_pos);
+  /**
+   * \brief Transform \e position variables from actuator to joint space.
+   * \param[in]  act_data Actuator-space variables.
+   * \param[out] jnt_data Joint-space variables.
+   * \pre Actuator and joint position vectors must have size 1 and point to valid data.
+   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
+   */
+  void actuatorToJointPosition(const ActuatorData& act_data,
+                                     JointData&    jnt_data);
 
-  void jointToActuatorEffort(const std::vector<double*> joint_eff,
-                                   std::vector<double*> actuator_eff);
+  /**
+   * \brief Transform \e effort variables from joint to actuator space.
+   * \param[in]  jnt_data Joint-space variables.
+   * \param[out] act_data Actuator-space variables.
+   * \pre Actuator and joint effort vectors must have size 1 and point to valid data.
+   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
+   */
+  void jointToActuatorEffort(const JointData&    jnt_data,
+                                   ActuatorData& act_data);
 
-  void jointToActuatorVelocity(const std::vector<double*> joint_vel,
-                                     std::vector<double*> actuator_vel);
+  /**
+   * \brief Transform \e velocity variables from joint to actuator space.
+   * \param[in]  jnt_data Joint-space variables.
+   * \param[out] act_data Actuator-space variables.
+   * \pre Actuator and joint velocity vectors must have size 1 and point to valid data.
+   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
+   */
+  void jointToActuatorVelocity(const JointData&    jnt_data,
+                                     ActuatorData& act_data);
 
-  void jointToActuatorPosition(const std::vector<double*> joint_pos,
-                                     std::vector<double*> actuator_pos);
+  /**
+   * \brief Transform \e position variables from joint to actuator space.
+   * \param[in]  jnt_data Joint-space variables.
+   * \param[out] act_data Actuator-space variables.
+   * \pre Actuator and joint position vectors must have size 1 and point to valid data.
+   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
+   */
+  void jointToActuatorPosition(const JointData&    jnt_data,
+                                     ActuatorData& act_data);
 
   std::size_t numActuators() const {return 1;}
   std::size_t numJoints()    const {return 1;}
 
 private:
   double reduction_;
-  double joint_offset_;
-  std::vector<double*> joint_pos_vec_; ///< Workspace vector used to modify otherwise const parameters.
+  double jnt_offset_;
 };
 
 inline SimpleTransmission::SimpleTransmission(const double reduction,
                                               const double joint_offset)
   : Transmission(),
     reduction_(reduction),
-    joint_offset_(joint_offset),
-    joint_pos_vec_(std::vector<double*>(1))
+    jnt_offset_(joint_offset)
 {
   if (0.0 == reduction_)
   {
@@ -141,49 +181,58 @@ inline SimpleTransmission::SimpleTransmission(const double reduction,
   }
 }
 
-inline void SimpleTransmission::actuatorToJointEffort(const std::vector<double*> actuator_eff,
-                                                            std::vector<double*> joint_eff)
+inline void SimpleTransmission::actuatorToJointEffort(const ActuatorData& act_data,
+                                                            JointData&    jnt_data)
 {
-  assert(1 == actuator_eff.size() && 1 == joint_eff.size());
-  *joint_eff[0] = *actuator_eff[0] * reduction_;
+  assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
+  assert(act_data.effort[0] && jnt_data.effort[0]);
+
+  *jnt_data.effort[0] = *act_data.effort[0] * reduction_;
 }
 
-inline void SimpleTransmission::actuatorToJointVelocity(const std::vector<double*> actuator_vel,
-                                                              std::vector<double*> joint_vel)
+inline void SimpleTransmission::actuatorToJointVelocity(const ActuatorData& act_data,
+                                                              JointData&    jnt_data)
 {
-  assert(1 == actuator_vel.size() && 1 == joint_vel.size());
-  *joint_vel[0] = *actuator_vel[0] / reduction_;
+  assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
+  assert(act_data.velocity[0] && jnt_data.velocity[0]);
+
+  *jnt_data.velocity[0] = *act_data.velocity[0] / reduction_;
 }
 
-inline void SimpleTransmission::actuatorToJointPosition(const std::vector<double*> actuator_pos,
-                                                              std::vector<double*> joint_pos)
+inline void SimpleTransmission::actuatorToJointPosition(const ActuatorData& act_data,
+                                                              JointData&    jnt_data)
 {
-  assert(1 == actuator_pos.size() && 1 == joint_pos.size());
-  actuatorToJointVelocity(actuator_pos, joint_pos); // Apply flow map...
-  *joint_pos[0] += joint_offset_;                   // ...and add integration constant
+  assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
+  assert(act_data.position[0] && jnt_data.position[0]);
+
+  *jnt_data.position[0] = *act_data.position[0] / reduction_ + jnt_offset_;
 }
 
-inline void SimpleTransmission::jointToActuatorEffort(const std::vector<double*> joint_eff,
-                                                            std::vector<double*> actuator_eff)
+inline void SimpleTransmission::jointToActuatorEffort(const JointData&    jnt_data,
+                                                            ActuatorData& act_data)
 {
-  assert(1 == actuator_eff.size() && 1 == joint_eff.size());
-  *actuator_eff[0] = *joint_eff[0] / reduction_;
+  assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
+  assert(act_data.effort[0] && jnt_data.effort[0]);
+
+  *act_data.effort[0] = *jnt_data.effort[0] / reduction_;
 }
 
-inline void SimpleTransmission::jointToActuatorVelocity(const std::vector<double*> joint_vel,
-                                                              std::vector<double*> actuator_vel)
+inline void SimpleTransmission::jointToActuatorVelocity(const JointData&    jnt_data,
+                                                              ActuatorData& act_data)
 {
-  assert(1 == actuator_vel.size() && 1 == joint_vel.size());
-  *actuator_vel[0] = *joint_vel[0] * reduction_;
+  assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
+  assert(act_data.velocity[0] && jnt_data.velocity[0]);
+
+  *act_data.velocity[0] = *jnt_data.velocity[0] * reduction_;
 }
 
-inline void SimpleTransmission::jointToActuatorPosition(const std::vector<double*> joint_pos,
-                                                              std::vector<double*> actuator_pos)
+inline void SimpleTransmission::jointToActuatorPosition(const JointData&    jnt_data,
+                                                              ActuatorData& act_data)
 {
-  assert(1 == actuator_pos.size() && 1 == joint_pos.size());
-  double joint_pos_with_offset = *joint_pos[0] - joint_offset_;
-  joint_pos_vec_[0] = &joint_pos_with_offset;            // Remove integration constant in workspace vector...
-  jointToActuatorVelocity(joint_pos_vec_, actuator_pos); // ...and apply flow map to _workspace_ vector
+  assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
+  assert(act_data.position[0] && jnt_data.position[0]);
+
+  *act_data.position[0] = (*jnt_data.position[0] - jnt_offset_) * reduction_;
 }
 
 } // transmission_interface
