@@ -11,7 +11,7 @@ it becomes easier to support arbitrary hardware drivers to software control.
 
 \section codeapi Code API
 
-There are three main entities involved in setting up a transmission_interface:
+There are three main elements involved in setting up a transmission_interface:
   - The \ref transmission_interface::Transmission "Transmission" class defines an abstract interface for mapping
   position, velocity and effort variables between actuator and joint space.
   Derived classes implement specific transmission types, such as
