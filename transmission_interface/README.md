@@ -34,9 +34,46 @@ There are three main elements involved in setting up a transmission_interface:
   set up to transform position variables from actuator to joint space for an arm with a four-bar-linkage in the
   shoulder, a differential in the wrist, and simple reducers elsewhere.
 
-### Example ###
+### TODO ###
 
-The following is an example of a robot with three actuators and three joints:
+- Read transmission configuration from configuration files.
+
+### Examples ###
+The first example is minimal, and shows how to propagate the position of a single actuator to joint space through
+a reducer.
+
+```c++
+#include <transmission_interface/simple_transmission.h>
+#include <transmission_interface/transmission_interface.h>
+
+int main(int argc, char** argv)
+{
+  using namespace transmission_interface;
+
+  // Raw data
+  double a_pos;
+  double j_pos;
+
+  // Transmission
+  SimpleTransmission trans(10.0); // 10x reducer
+
+  // Wrap raw data
+  ActuatorData a_data;
+  a_data.position.push_back(&a_pos);
+
+  JointData j_data;
+  j_data.position.push_back(&j_pos);
+
+  // Transmission interface
+  ActuatorToJointPositionInterface act_to_jnt_pos;
+  act_to_jnt_pos.registerTransmission("trans", &trans, a_data, j_data);
+
+  // Propagate actuator position to joint space
+  act_to_jnt_pos.propagate();
+}
+```
+
+The second example is a bit more complicated, and represents a robot with three actuators and three joints:
   - The first actuator/joint are coupled through a reducer.
   - The last two actuators/joints are coupled through a differential.
 
@@ -155,6 +192,3 @@ private:
 };
 
 ```
-### TODO ###
-
-- Read transmission configuration from configuration files.
