@@ -41,6 +41,7 @@
 
 #include <boost/thread/mutex.hpp>
 #include <boost/thread.hpp>
+#include <ros/ros.h>
 
 namespace realtime_tools
 {
@@ -48,96 +49,22 @@ namespace realtime_tools
 class RealtimeClock
 {
  public:
-  RealtimeClock()
-    :lock_misses_(0), 
-    system_time_(ros::Time()), 
-    last_realtime_time_(ros::Time()),
-    running_(true)
-  {
-    // thread for time loop
-    thread_ = boost::thread(boost::bind(&RealtimeClock::loop, this));
-  }
+  RealtimeClock();
+  ~RealtimeClock();
 
-
-  ~RealtimeClock()
-  {
-    running_ = false;
-    thread_.join();
-  }
-
-
-
-  ros::Time getSystemTime(const ros::Time& realtime_time)
-  {
-    if (mutex_.try_lock())
-    {
-      // update time offset when we have a new system time measurement in the last cycle
-      if (lock_misses_ == 0 && system_time_ != ros::Time())
-      {
-	// get additional offset caused by period of realtime loop
-	ros::Duration period_offset;
-	if (last_realtime_time_ != ros::Time())
-	  period_offset = ros::Duration((realtime_time - last_realtime_time_).toSec()/2.0);
-
-	// TODO: add better estimator
-	clock_offset_ = system_time_ + period_offset - realtime_time;
-      }
-      system_time_ = ros::Time();
-      lock_misses_ = 0;
-      mutex_.unlock();
-    }
-	
-    else
-      lock_misses_++;
-
-
-    last_realtime_time_ = realtime_time;
-
-    // return time
-    return realtime_time + clock_offset_;
-  }
-
-
-
-  void loop()
-  {
-    ros::Rate r(750);
-    while (running_)
-    {
-      // get lock
-      lock();
-
-      // store system time
-      system_time_ = ros::Time::now();
-      
-      // warning, using non-locked 'lock_misses_', but it's just for debugging
-      if (lock_misses_ > 100)
-	ROS_WARN_THROTTLE(1.0, "Time estimator has trouble transferring data between non-RT and RT");
-
-      // release lock
-      mutex_.unlock();
-      r.sleep();
-    }
-  }
+  ros::Time getSystemTime(const ros::Time& realtime_time);
+  void loop();
 
 
  private:
-  void lock()
-  {
-#ifdef NON_POLLING
-    mutex_.lock();
-#else
-    while (!mutex_.try_lock())
-      usleep(500);
-#endif
-  }
+  void lock();
 
   unsigned int lock_misses_;
   ros::Time system_time_;
   ros::Duration clock_offset_;
 
   ros::Time last_realtime_time_;
-  bool running_;
+  bool running_, initialized_;
   boost::mutex mutex_;
   boost::thread thread_;
 
