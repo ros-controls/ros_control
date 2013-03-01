@@ -5,7 +5,7 @@
   <author>Adolfo Rodriguez Tsouroukdissian</author>
   <license>Modified BSD</license>
   <review status="unreviewed" notes=""/>
-  <url></url>
+  <url>https://github.com/willowgarage/ros_control/wiki</url>
 
   <export>
     <cpp cflags="-I${prefix}/include" />
