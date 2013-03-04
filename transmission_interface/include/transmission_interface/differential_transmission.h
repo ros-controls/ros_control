@@ -111,6 +111,8 @@ namespace transmission_interface
  *
  * \note This implementation currently assumes a specific layout for location of the actuators and joint axes which is
  * common in robotic mechanisms. Please file an enhancement ticket if your use case does not adhere to this layout.
+ *
+ * \ingroup transmission_types
  */
 class DifferentialTransmission : public Transmission
 {
