@@ -38,6 +38,10 @@ namespace transmission_interface
 {
 
 /**
+ * @defgroup transmission_types Transmission types
+ */
+
+/**
  * \brief Contains pointers to raw data representing the position, velocity and acceleration of a transmission's
  * actuators.
  */

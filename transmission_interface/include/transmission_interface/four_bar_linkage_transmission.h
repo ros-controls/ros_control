@@ -111,6 +111,8 @@ namespace transmission_interface
  *     - Negative values represent a direction flip, ie. input and output move in opposite directions.
  *     - <b>Important:</b> Use transmission ratio signs to match this class' convention of positive actuator/joint
  *       directions with a given mechanical design, as they will in general not match.
+ *
+ * \ingroup transmission_types
  */
 class FourBarLinkageTransmission : public Transmission
 {

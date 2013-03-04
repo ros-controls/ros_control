@@ -89,6 +89,8 @@ namespace transmission_interface
  *     - Negative values represent a direction flip, ie. actuator and joint move in opposite directions. For example,
  *       in timing belts actuator and joint move in the same direction, while in single-stage gear systems actuator and
  *       joint move in opposite directions.
+ *
+ * \ingroup transmission_types
  */
 class SimpleTransmission : public Transmission
 {
