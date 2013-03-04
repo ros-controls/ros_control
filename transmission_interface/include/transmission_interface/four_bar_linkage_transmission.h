@@ -36,7 +36,7 @@
 #include <vector>
 
 #include <transmission_interface/transmission.h>
-#include <transmission_interface/transmission_exception.h>
+#include <transmission_interface/transmission_interface_exception.h>
 
 namespace transmission_interface
 {
@@ -200,12 +200,12 @@ inline FourBarLinkageTransmission::FourBarLinkageTransmission(const std::vector<
   if (2 != actuator_reduction.size() ||
       2 != jnt_offset_.size())
   {
-    throw TransmissionException("Reduction and offset vectors of a four-bar linkage transmission must have size 2.");
+    throw TransmissionInterfaceException("Reduction and offset vectors of a four-bar linkage transmission must have size 2.");
   }
   if (0.0 == actuator_reduction[0] ||
       0.0 == actuator_reduction[1])
   {
-    throw TransmissionException("Transmission reduction ratios cannot be zero.");
+    throw TransmissionInterfaceException("Transmission reduction ratios cannot be zero.");
   }
 }
 

@@ -47,16 +47,16 @@ TEST(PreconditionsTest, ExceptionThrowing)
   vector<double> offset_good(2, 1.0);
 
   // Invalid instance creation: Transmission cannot have zero reduction
-  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad1), TransmissionException);
-  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad2), TransmissionException);
-  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad3), TransmissionException);
+  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad1), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad2), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad3), TransmissionInterfaceException);
 
   // Invalid instance creation: Wrong parameter sizes
   vector<double> reduction_bad_size(1, 1.0);
   vector<double>& offset_bad_size = reduction_bad_size;
-  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad_size),        TransmissionException);
-  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, offset_bad_size), TransmissionException);
-  EXPECT_THROW(FourBarLinkageTransmission(reduction_bad_size, offset_good), TransmissionException);
+  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad_size),        TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, offset_bad_size), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_bad_size, offset_good), TransmissionInterfaceException);
 
   // Valid instance creation
   EXPECT_NO_THROW(FourBarLinkageTransmission trans(reduction_good));
@@ -262,7 +262,7 @@ protected:
                                          randomVector(2, rand_gen));
         out.push_back(trans);
       }
-      catch(const TransmissionException&)
+      catch(const TransmissionInterfaceException&)
       {
         // NOTE: If by chance a perfect zero is produced by the random number generator, construction will fail
         // We swallow the exception and move on to prevent a test crash.

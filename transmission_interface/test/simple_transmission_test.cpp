@@ -42,9 +42,9 @@ const double EPS = 1e-6;
 TEST(PreconditionsTest, ExceptionThrowing)
 {
   // Invalid instance creation: Transmission cannot have zero reduction
-  EXPECT_THROW(SimpleTransmission(0.0),       TransmissionException);
-  EXPECT_THROW(SimpleTransmission(0.0,  1.0), TransmissionException);
-  EXPECT_THROW(SimpleTransmission(0.0, -1.0), TransmissionException);
+  EXPECT_THROW(SimpleTransmission(0.0),       TransmissionInterfaceException);
+  EXPECT_THROW(SimpleTransmission(0.0,  1.0), TransmissionInterfaceException);
+  EXPECT_THROW(SimpleTransmission(0.0, -1.0), TransmissionInterfaceException);
 
   // Valid instance creation
   EXPECT_NO_THROW(SimpleTransmission( 1.0));
