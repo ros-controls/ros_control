@@ -47,28 +47,28 @@ TEST(PreconditionsTest, ExceptionThrowing)
   vector<double> offset_good(2, 1.0);
 
   // Invalid instance creation: Transmission cannot have zero reduction
-  EXPECT_THROW(DifferentialTransmission(reduction_bad1, reduction_good), TransmissionException);
-  EXPECT_THROW(DifferentialTransmission(reduction_bad2, reduction_good), TransmissionException);
-  EXPECT_THROW(DifferentialTransmission(reduction_bad3, reduction_good), TransmissionException);
+  EXPECT_THROW(DifferentialTransmission(reduction_bad1, reduction_good), TransmissionInterfaceException);
+  EXPECT_THROW(DifferentialTransmission(reduction_bad2, reduction_good), TransmissionInterfaceException);
+  EXPECT_THROW(DifferentialTransmission(reduction_bad3, reduction_good), TransmissionInterfaceException);
 
-  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad1), TransmissionException);
-  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad2), TransmissionException);
-  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad3), TransmissionException);
+  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad1), TransmissionInterfaceException);
+  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad2), TransmissionInterfaceException);
+  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad3), TransmissionInterfaceException);
 
-  EXPECT_THROW(DifferentialTransmission(reduction_bad1, reduction_good, offset_good), TransmissionException);
-  EXPECT_THROW(DifferentialTransmission(reduction_bad2, reduction_good, offset_good), TransmissionException);
-  EXPECT_THROW(DifferentialTransmission(reduction_bad3, reduction_good, offset_good), TransmissionException);
+  EXPECT_THROW(DifferentialTransmission(reduction_bad1, reduction_good, offset_good), TransmissionInterfaceException);
+  EXPECT_THROW(DifferentialTransmission(reduction_bad2, reduction_good, offset_good), TransmissionInterfaceException);
+  EXPECT_THROW(DifferentialTransmission(reduction_bad3, reduction_good, offset_good), TransmissionInterfaceException);
 
-  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad1, offset_good), TransmissionException);
-  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad2, offset_good), TransmissionException);
-  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad3, offset_good), TransmissionException);
+  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad1, offset_good), TransmissionInterfaceException);
+  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad2, offset_good), TransmissionInterfaceException);
+  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad3, offset_good), TransmissionInterfaceException);
 
   // Invalid instance creation: Wrong parameter sizes
   vector<double> reduction_bad_size(1, 1.0);
   vector<double>& offset_bad_size = reduction_bad_size;
-  EXPECT_THROW(DifferentialTransmission(reduction_bad_size, reduction_good),              TransmissionException);
-  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad_size),              TransmissionException);
-  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_good, offset_bad_size), TransmissionException);
+  EXPECT_THROW(DifferentialTransmission(reduction_bad_size, reduction_good),              TransmissionInterfaceException);
+  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_bad_size),              TransmissionInterfaceException);
+  EXPECT_THROW(DifferentialTransmission(reduction_good, reduction_good, offset_bad_size), TransmissionInterfaceException);
 
   // Valid instance creation
   EXPECT_NO_THROW(DifferentialTransmission(reduction_good, reduction_good));
@@ -276,7 +276,7 @@ protected:
                                       randomVector(2, rand_gen));
         out.push_back(trans);
       }
-      catch(const TransmissionException&)
+      catch(const TransmissionInterfaceException&)
       {
         // NOTE: If by chance a perfect zero is produced by the random number generator, construction will fail
         // We swallow the exception and move on to prevent a test crash.

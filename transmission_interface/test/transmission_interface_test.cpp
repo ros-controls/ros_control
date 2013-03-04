@@ -117,37 +117,37 @@ TEST(HandlePreconditionsTest, BadSize)
     ActuatorData a_data;
     JointData    j_data;
     a_data.position = bad_size_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
   {
     ActuatorData a_data;
     JointData    j_data;
     a_data.velocity = bad_size_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
   {
     ActuatorData a_data;
     JointData    j_data;
     a_data.effort = bad_size_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
   {
     ActuatorData a_data;
     JointData    j_data;
     j_data.position = bad_size_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
   {
     ActuatorData a_data;
     JointData    j_data;
     j_data.velocity = bad_size_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
   {
     ActuatorData a_data;
     JointData    j_data;
     j_data.effort = bad_size_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
 }
 
@@ -155,7 +155,7 @@ TEST(HandlePreconditionsTest, EmptyData)
 {
   SimpleTransmission trans(1.0);
 
-  EXPECT_THROW(DummyHandle("trans", &trans, ActuatorData(), JointData()), TransmissionException);
+  EXPECT_THROW(DummyHandle("trans", &trans, ActuatorData(), JointData()), TransmissionInterfaceException);
 }
 
 TEST(HandlePreconditionsTest, BadTransmissionPointer)
@@ -167,7 +167,7 @@ TEST(HandlePreconditionsTest, BadTransmissionPointer)
   a_data.position = good_vec;
   j_data.position = good_vec;
 
-  EXPECT_THROW(DummyHandle("trans", 0, a_data, j_data), TransmissionException);
+  EXPECT_THROW(DummyHandle("trans", 0, a_data, j_data), TransmissionInterfaceException);
 }
 
 TEST(HandlePreconditionsTest, BadDataPointer)
@@ -179,37 +179,37 @@ TEST(HandlePreconditionsTest, BadDataPointer)
     ActuatorData a_data;
     JointData    j_data;
     a_data.position = bad_ptr_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
   {
     ActuatorData a_data;
     JointData    j_data;
     a_data.velocity = bad_ptr_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
   {
     ActuatorData a_data;
     JointData    j_data;
     a_data.effort = bad_ptr_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
   {
     ActuatorData a_data;
     JointData    j_data;
     j_data.position = bad_ptr_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
   {
     ActuatorData a_data;
     JointData    j_data;
     j_data.velocity = bad_ptr_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
   {
     ActuatorData a_data;
     JointData    j_data;
     j_data.effort = bad_ptr_vector;
-    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionException);
+    EXPECT_THROW(DummyHandle("trans", &trans, a_data, j_data), TransmissionInterfaceException);
   }
 }
 
@@ -618,7 +618,7 @@ TEST_F(AccessorTest, AccessorValidation)
   ActuatorToJointPositionHandle trans_handle2 = trans_iface.getTransmissionHandle(trans_names[1]);
   EXPECT_EQ(trans_names[1], trans_handle2.getName());
 
-  EXPECT_THROW(trans_iface.getTransmissionHandle("unregistered_name"), TransmissionException);
+  EXPECT_THROW(trans_iface.getTransmissionHandle("unregistered_name"), TransmissionInterfaceException);
 }
 
 int main(int argc, char** argv)
