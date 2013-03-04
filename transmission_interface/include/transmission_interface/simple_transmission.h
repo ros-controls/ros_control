@@ -35,7 +35,7 @@
 #include <vector>
 
 #include <transmission_interface/transmission.h>
-#include <transmission_interface/transmission_exception.h>
+#include <transmission_interface/transmission_interface_exception.h>
 
 namespace transmission_interface
 {
@@ -177,7 +177,7 @@ inline SimpleTransmission::SimpleTransmission(const double reduction,
 {
   if (0.0 == reduction_)
   {
-    throw TransmissionException("Transmission reduction ratio cannot be zero.");
+    throw TransmissionInterfaceException("Transmission reduction ratio cannot be zero.");
   }
 }
 

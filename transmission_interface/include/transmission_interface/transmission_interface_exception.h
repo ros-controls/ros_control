@@ -1,4 +1,3 @@
- 
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2013, PAL Robotics S.L.
 //
@@ -26,19 +25,19 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_EXCEPTION_H
-#define TRANSMISSION_INTERFACE_TRANSMISSION_EXCEPTION_H
+#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_EXCEPTION_H
+#define TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_EXCEPTION_H
 
 #include <exception>
 
 namespace transmission_interface
 {
 
-class TransmissionException: public std::exception
+class TransmissionInterfaceException: public std::exception
 {
 public:
-  TransmissionException(const std::string& message) : msg(message) {}
-  virtual ~TransmissionException() throw() {}
+  TransmissionInterfaceException(const std::string& message) : msg(message) {}
+  virtual ~TransmissionInterfaceException() throw() {}
   virtual const char* what() const throw() {return msg.c_str();}
 private:
   std::string msg;
@@ -46,4 +45,4 @@ private:
 
 } // transmission_interface
 
-#endif // TRANSMISSION_INTERFACE_TRANSMISSION_EXCEPTION_H
+#endif // TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_EXCEPTION_H
