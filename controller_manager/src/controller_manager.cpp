@@ -42,7 +42,7 @@ namespace controller_manager{
 
 ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, const ros::NodeHandle& nh) :
   robot_hw_(robot_hw),
-  controller_node_(nh),
+  root_nh_(nh),
   cm_node_(nh, "controller_manager"),
   start_request_(0),
   stop_request_(0),
@@ -167,10 +167,10 @@ bool ControllerManager::loadController(const std::string& name)
     }
   }
 
-  ros::NodeHandle c_node;
+  ros::NodeHandle c_nh;
   // Constructs the controller
   try{
-    c_node = ros::NodeHandle(controller_node_, name);
+    c_nh = ros::NodeHandle(root_nh_, name);
   }
   catch(std::exception &e) {
     ROS_ERROR("Exception thrown while constructing nodehandle for controller with name '%s':\n%s", name.c_str(), e.what());
@@ -182,7 +182,7 @@ bool ControllerManager::loadController(const std::string& name)
   }
   boost::shared_ptr<controller_interface::ControllerBase> c;
   std::string type;
-  if (c_node.getParam("type", type))
+  if (c_nh.getParam("type", type))
   {
     ROS_DEBUG("Constructing controller '%s' of type '%s'", name.c_str(), type.c_str());
     try
@@ -226,7 +226,7 @@ bool ControllerManager::loadController(const std::string& name)
   bool initialized;
   std::set<std::string> claimed_resources; // Gets populated during initRequest call
   try{
-    initialized = c->initRequest(robot_hw_, c_node, claimed_resources);
+    initialized = c->initRequest(robot_hw_, root_nh_, c_nh, claimed_resources);
   }
   catch(std::exception &e){
     ROS_ERROR("Exception thrown while initializing controller %s.\n%s", name.c_str(), e.what());

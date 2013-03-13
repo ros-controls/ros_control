@@ -59,7 +59,7 @@ public:
    * non-realtime thread with a pointer to the hardware interface, itself,
    * instead of a pointer to a RobotHW.
    *
-   * \param hw The specific hardware interface used by this controller. 
+   * \param hw The specific hardware interface used by this controller.
    *
    * \param n A NodeHandle in the namespace from which the controller
    * should read its configuration, and where it should set up its ROS
@@ -68,7 +68,8 @@ public:
    * \returns True if initialization was successful and the controller
    * is ready to be started.
    */
-  virtual bool init(T* hw, ros::NodeHandle &n) = 0;
+  virtual bool init(T* hw, ros::NodeHandle &controller_nh) {return true;};
+  virtual bool init(T* hw, ros::NodeHandle& root_nh, ros::NodeHandle &controller_nh) {return true;};
 
 
 protected:
@@ -79,7 +80,7 @@ protected:
    *
    */
   virtual bool initRequest(hardware_interface::RobotHW* robot_hw,
-                           ros::NodeHandle &n,
+                           ros::NodeHandle& root_nh, ros::NodeHandle &controller_nh,
                            std::set<std::string> &claimed_resources)
   {
     // check if construction finished cleanly
@@ -99,7 +100,7 @@ protected:
 
     // return which resources are claimed by this controller
     hw->clearClaims();
-    if (!init(hw, n))
+    if (!init(hw, controller_nh) || !init(hw, root_nh, controller_nh))
     {
       ROS_ERROR("Failed to initialize the controller");
       return false;

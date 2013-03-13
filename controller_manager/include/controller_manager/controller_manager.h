@@ -101,11 +101,11 @@ public:
    *
    * This dynamically loads a controller called \c name and initializes the
    * newly
-   * loaded controller. 
+   * loaded controller.
    *
    * It determines the controller type by accessing the ROS parameter "type" in
    * the namespace given by \c name relative to the namespace of \ref
-   * controller_node_. It then initializes the controller with the
+   * root_nh_. It then initializes the controller with the
    * hardware_interface::RobotHW pointer \ref robot_hw_, the ros::NodeHandle
    * describing this namespace, and a reference to a std::set to retrieve the
    * resources needed by this controller.
@@ -117,7 +117,7 @@ public:
    * which the controller should be loaded
    *
    * \returns True on success
-   * \returns False on failure 
+   * \returns False on failure
    */
   bool loadController(const std::string& name);
 
@@ -127,7 +127,7 @@ public:
    *
    */
   bool unloadController(const std::string &name);
-  
+
   /** \brief Switch multiple controllers simultaneously.
    *
    * \param start_controllers A vector of controller names to be started
@@ -144,8 +144,8 @@ public:
 
   /** \brief Get a controller by name.
    *
-   * \param name The name of a controller 
-   * \returns An up-casted pointer to the controller identified by \c name 
+   * \param name The name of a controller
+   * \returns An up-casted pointer to the controller identified by \c name
    */
   virtual controller_interface::ControllerBase* getControllerByName(const std::string& name);
 
@@ -160,7 +160,7 @@ public:
    * then it WILL, regardless of which other loaders are registered.
    *
    * \param controller_loader A pointer to the loader to be registered
-   * 
+   *
    */
   void registerControllerLoader(boost::shared_ptr<ControllerLoaderInterface> controller_loader);
   /*\}*/
@@ -172,7 +172,7 @@ private:
 
   hardware_interface::RobotHW* robot_hw_;
 
-  ros::NodeHandle controller_node_, cm_node_;
+  ros::NodeHandle root_nh_, cm_node_;
 
   typedef boost::shared_ptr<ControllerLoaderInterface> LoaderPtr;
   std::list<LoaderPtr> controller_loaders_;
