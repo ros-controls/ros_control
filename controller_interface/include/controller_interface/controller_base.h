@@ -97,7 +97,7 @@ public:
    * is ready to be started.
    */
   virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle &controller_nh,
-                           std::set<std::string>& claimed_resources) = 0;;
+                           std::set<std::string>& claimed_resources) = 0;
 
   /// Calls \ref update only if this controller is running.
   void updateRequest(const ros::Time& time, const ros::Duration& period)
