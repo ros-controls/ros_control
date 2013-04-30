@@ -85,9 +85,11 @@ public:
    *
    * \param hw The hardware interface to the robot.
    *
-   * \param n A NodeHandle in the namespace from which the controller
-   * should read its configuration, and where it should set up its ROS
-   * interfaces.
+   * \param root_nh A NodeHandle in the root of the controller manager namespace.
+   * This is where the ROS interfaces are setup (publishers, subscribers, services).
+   *
+   * \param controller_nh A NodeHandle in the namespace of the controller.
+   * This is where the controller-specific configuration resides.
    *
    * \param[out] claimed_resources The resources claimed by this controller.
    *
@@ -95,7 +97,7 @@ public:
    * is ready to be started.
    */
   virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle &controller_nh,
-                           std::set<std::string>& claimed_resources) = 0;;
+                           std::set<std::string>& claimed_resources) = 0;
 
   /// Calls \ref update only if this controller is running.
   void updateRequest(const ros::Time& time, const ros::Duration& period)

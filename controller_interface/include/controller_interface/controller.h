@@ -69,6 +69,22 @@ public:
    * is ready to be started.
    */
   virtual bool init(T* hw, ros::NodeHandle &controller_nh) {return true;};
+
+  /** \brief The init function is called to initialize the controller from a
+   * non-realtime thread with a pointer to the hardware interface, itself,
+   * instead of a pointer to a RobotHW.
+   *
+   * \param hw The specific hardware interface used by this controller.
+   *
+   * \param root_nh A NodeHandle in the root of the controller manager namespace.
+   * This is where the ROS interfaces are setup (publishers, subscribers, services).
+   *
+   * \param controller_nh A NodeHandle in the namespace of the controller.
+   * This is where the controller-specific configuration resides.
+   *
+   * \returns True if initialization was successful and the controller
+   * is ready to be started.
+   */
   virtual bool init(T* hw, ros::NodeHandle& root_nh, ros::NodeHandle &controller_nh) {return true;};
 
 
