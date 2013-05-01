@@ -168,7 +168,6 @@ public:
 
 private:
   void getControllerNames(std::vector<std::string> &v);
-  void getControllerSchedule(std::vector<size_t> &schedule);
 
   hardware_interface::RobotHW* robot_hw_;
 
