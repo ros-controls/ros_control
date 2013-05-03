@@ -32,8 +32,8 @@
 #ifndef CONTROLLER_INTERFACE_CONTROLLER_H
 #define CONTROLLER_INTERFACE_CONTROLLER_H
 
-
 #include <controller_interface/controller_base.h>
+#include <hardware_interface/demangle_symbol.h>
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/hardware_interface.h>
 #include <ros/ros.h>
@@ -109,8 +109,9 @@ protected:
     T* hw = robot_hw->get<T>();
     if (!hw)
     {
-      ROS_ERROR("This controller requires a hardware interface of type %s."
-                " Make sure this is registered in the hardware_interface::RobotHW class.", typeid(T).name());
+      ROS_ERROR("This controller requires a hardware interface of type '%s'."
+                " Make sure this is registered in the hardware_interface::RobotHW class.",
+                getHardwareInterfaceType().c_str());
       return false;
     }
 
@@ -131,7 +132,7 @@ protected:
 
   virtual std::string getHardwareInterfaceType() const
   {
-    return typeid(T).name();
+    return hardware_interface::demangledTypeName<T>();
   }
 
 private:

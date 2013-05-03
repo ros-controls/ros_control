@@ -207,7 +207,7 @@ bool ControllerManager::loadController(const std::string& name)
   }
   else
   {
-    ROS_ERROR("Could not load controller '%s' because the type was not specified. Did you load the controller configuration on the parameter server?", name.c_str());
+    ROS_ERROR("Could not load controller '%s' because the type was not specified. Did you load the controller configuration on the parameter server (namespace: '%s')?", name.c_str(), c_nh.getNamespace().c_str());
     to.clear();
     return false;
   }

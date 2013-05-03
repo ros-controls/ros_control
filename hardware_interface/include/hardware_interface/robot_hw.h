@@ -32,6 +32,7 @@
 #include <typeinfo>
 #include <hardware_interface/hardware_interface.h>
 #include <hardware_interface/controller_info.h>
+#include <hardware_interface/demangle_symbol.h>
 #include <ros/ros.h>
 
 namespace hardware_interface
@@ -109,7 +110,7 @@ public:
   template<class T>
   void registerInterface(T* hw)
   {
-    interfaces_[typeid(T).name()] = hw;
+    interfaces_[demangledTypeName<T>()] = hw;
   }
 
 
@@ -126,14 +127,14 @@ public:
   template<class T>
   T* get()
   {
-    InterfaceMap::iterator it = interfaces_.find(typeid(T).name());
+    InterfaceMap::iterator it = interfaces_.find(demangledTypeName<T>());
     if (it == interfaces_.end())
       return NULL;
 
     T* hw = dynamic_cast<T*>(it->second);
     if (!hw)
     {
-      ROS_ERROR("Failed on dynamic_cast<T>(hw) for T = [%s]. This should never happen", typeid(T).name());
+      ROS_ERROR("Failed on dynamic_cast<T>(hw) for T = [%s]. This should never happen", demangledTypeName<T>().c_str());
       return NULL;
     }
     return hw;
