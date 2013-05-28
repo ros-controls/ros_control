@@ -39,11 +39,11 @@ namespace hardware_interface
 class JointHandle : public JointStateHandle
 {
 public:
-  JointHandle() {};
+  JointHandle() {}
   JointHandle(const JointStateHandle& js, double* cmd)
     : JointStateHandle(js), cmd_(cmd)
   {}
-  void setCommand(double command) {*cmd_ = command;};
+  void setCommand(double command) {*cmd_ = command;}
 
 private:
   double* cmd_;

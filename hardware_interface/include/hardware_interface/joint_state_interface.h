@@ -44,7 +44,7 @@ namespace hardware_interface{
 class JointStateHandle
 {
 public:
-  JointStateHandle() {};
+  JointStateHandle() {}
   JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
     : name_(name), pos_(pos), vel_(vel), eff_(eff)
   {}
@@ -63,7 +63,7 @@ private:
 
 
 /** \brief Hardware interface to support reading the state of an array of joints
- * 
+ *
  * This \ref HardwareInterface supports reading the state of an array of named
  * joints, each of which has some position, velocity, and effort (force or
  * torque).
@@ -87,7 +87,7 @@ public:
   /** \brief Register a new joint with this interface.
    *
    * \param name The name of the new joint
-   * \param pos A pointer to the storage for this joint's position 
+   * \param pos A pointer to the storage for this joint's position
    * \param vel A pointer to the storage for this joint's velocity
    * \param eff A pointer to the storage for this joint's effort (force or torque)
    *
