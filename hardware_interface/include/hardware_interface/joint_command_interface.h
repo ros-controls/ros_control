@@ -44,6 +44,7 @@ public:
     : JointStateHandle(js), cmd_(cmd)
   {}
   void setCommand(double command) {*cmd_ = command;};
+  double getCommand() const {return *cmd_;};
 
 private:
   double* cmd_;
