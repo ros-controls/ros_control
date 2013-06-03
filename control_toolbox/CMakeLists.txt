@@ -39,7 +39,7 @@ catkin_package(
     DEPENDS rosconsole tf roscpp angles tinyxml
     CATKIN_DEPENDS # TODO
     INCLUDE_DIRS include
-    LIBRARIES # TODO
+    LIBRARIES control_toolbox
 )
 
 # Tests
