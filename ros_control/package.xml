@@ -1,0 +1,32 @@
+<package>
+  <name>ros_control</name>
+  <version>1.0.0</version>
+  <description>The new ros controller manager</description>
+  <maintainer email="wim@hidof.com">Maintained by Wim Meeussen</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/ros_control</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Maintained by Wim Meeussen</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>transmission_interface</run_depend>
+  <run_depend>realtime_tools</run_depend>
+  <run_depend>controller_manager</run_depend>
+  <run_depend>controller_interface</run_depend>
+  <run_depend>hardware_interface</run_depend>
+  <run_depend>controller_manager_tests</run_depend>
+  <run_depend>controller_manager_msgs</run_depend>
+  <run_depend>control_toolbox</run_depend>
+
+
+
+
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

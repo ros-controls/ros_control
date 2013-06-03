@@ -1,0 +1,30 @@
+<package>
+  <name>controller_manager</name>
+  <version>1.0.0</version>
+  <description>The controller manager.</description>
+  <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">https://bitbucket.org/hidof/controller-manager/wiki/</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Wim Meeussen</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>controller_interface</build_depend> 
+  <build_depend>controller_manager_msgs</build_depend> 
+  <build_depend>hardware_interface</build_depend> 
+  <build_depend>realtime_tools</build_depend> 
+  <build_depend>pluginlib</build_depend> 
+  <run_depend>controller_interface</run_depend> 
+  <run_depend>controller_manager_msgs</run_depend> 
+  <run_depend>hardware_interface</run_depend> 
+  <run_depend>realtime_tools</run_depend> 
+  <run_depend>pluginlib</run_depend> 
+
+  <export>
+    <cpp lflags="-L${prefix}/lib -lcontroller_manager" cflags="-I${prefix}/include"/>
+  </export>
+</package>

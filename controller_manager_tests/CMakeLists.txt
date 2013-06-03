@@ -1,39 +1,35 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+# http://ros.org/doc/groovy/api/catkin/html/user_guide/supposed.html
+cmake_minimum_required(VERSION 2.8.3)
+project(controller_manager_tests)
+# Load catkin and all dependencies required for this package
+# TODO: remove all from COMPONENTS that are not catkin packages.
+find_package(catkin REQUIRED COMPONENTS controller_manager controller_interface control_toolbox)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
-
-rosbuild_init()
-
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-
-#uncomment if you have defined messages
-#rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
+include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
 #common commands for building c++ executables and libraries
-rosbuild_add_library(${PROJECT_NAME} src/my_robot_hw.cpp              include/controller_manager_tests/my_robot_hw.h
-                                     src/effort_test_controller.cpp   include/controller_manager_tests/effort_test_controller.h
-                                     src/my_dummy_controller.cpp      include/controller_manager_tests/my_dummy_controller.h
-                    )
-#target_link_libraries(${PROJECT_NAME} another_library)
-#rosbuild_add_boost_directories()
-#rosbuild_link_boost(${PROJECT_NAME} thread)
+add_library(${PROJECT_NAME} 
+  src/my_robot_hw.cpp
+  include/controller_manager_tests/my_robot_hw.h
+  src/effort_test_controller.cpp
+  include/controller_manager_tests/effort_test_controller.h
+  src/my_dummy_controller.cpp
+  include/controller_manager_tests/my_dummy_controller.h
+  )
 
-rosbuild_add_executable(dummy_app src/dummy_app.cpp)
-target_link_libraries(dummy_app ${PROJECT_NAME})
+add_executable(dummy_app src/dummy_app.cpp)
+target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
-rosbuild_add_executable(cm_test test/cm_test.cpp)
-rosbuild_add_gtest_build_flags(cm_test)
+# TODO: fill in what other packages will need to use this package
+## DEPENDS: system dependencies of this project that dependent projects also need
+## CATKIN_DEPENDS: catkin_packages dependent projects also need
+## INCLUDE_DIRS: 
+## LIBRARIES: libraries you create in this project that dependent projects also need
+catkin_package(
+    DEPENDS controller_manager controller_interface control_toolbox
+    CATKIN_DEPENDS # TODO
+    INCLUDE_DIRS # TODO include
+    LIBRARIES # TODO
+)
 
-rosbuild_add_rostest(test/cm_test.test)
+catkin_add_gtest(cm_test test/cm_test.cpp)
