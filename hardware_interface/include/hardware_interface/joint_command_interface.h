@@ -43,7 +43,8 @@ public:
   JointHandle(const JointStateHandle& js, double* cmd)
     : JointStateHandle(js), cmd_(cmd)
   {}
-  void setCommand(double command) {*cmd_ = command;}
+  void setCommand(double command) {*cmd_ = command;};
+  double getCommand() const {return *cmd_;};
 
 private:
   double* cmd_;
