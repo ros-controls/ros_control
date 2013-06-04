@@ -33,7 +33,7 @@
 #define CONTROLLER_INTERFACE_CONTROLLER_H
 
 #include <controller_interface/controller_base.h>
-#include <hardware_interface/demangle_symbol.h>
+#include <hardware_interface/internal/demangle_symbol.h>
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/hardware_interface.h>
 #include <ros/ros.h>
@@ -132,7 +132,7 @@ protected:
 
   virtual std::string getHardwareInterfaceType() const
   {
-    return hardware_interface::demangledTypeName<T>();
+    return hardware_interface::internal::demangledTypeName<T>();
   }
 
 private:

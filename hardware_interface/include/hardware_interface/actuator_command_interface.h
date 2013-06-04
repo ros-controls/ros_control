@@ -1,5 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2012, hiDOF INC.
+// Copyright (C) 2013, PAL Robotics S.L.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -25,73 +26,73 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
+#ifndef HARDWARE_INTERFACE_ACTUATOR_COMMAND_INTERFACE_H
+#define HARDWARE_INTERFACE_ACTUATOR_COMMAND_INTERFACE_H
 
 #include <hardware_interface/internal/demangle_symbol.h>
 #include <hardware_interface/internal/named_resource_manager.h>
-#include <hardware_interface/joint_state_interface.h>
+#include <hardware_interface/actuator_state_interface.h>
+
 
 namespace hardware_interface
 {
 
-/** \brief A handle used to read and command a single joint. */
-class JointHandle : public JointStateHandle
+/** \brief A handle used to read and command a single actuator. */
+class ActuatorHandle : public ActuatorStateHandle
 {
 public:
-  JointHandle() {}
-  JointHandle(const JointStateHandle& js, double* cmd)
-    : JointStateHandle(js), cmd_(cmd)
+  ActuatorHandle() {}
+  ActuatorHandle(const ActuatorStateHandle& js, double* cmd)
+    : ActuatorStateHandle(js), cmd_(cmd)
   {}
-  void setCommand(double command) {*cmd_ = command;};
-  double getCommand() const {return *cmd_;};
+  void setCommand(double command) {*cmd_ = command;}
 
 private:
   double* cmd_;
 };
 
 
-/** \brief Hardware interface to support commanding an array of joints
+/** \brief Hardware interface to support commanding an array of actuators
  *
  * This \ref HardwareInterface supports commanding the output of an array of
- * named joints. Note that these commands can have any semantic meaning as long
+ * named actuators. Note that these commands can have any semantic meaning as long
  * as they each can be represented by a single double, they are not necessarily
  * effort commands. To specify a meaning to this command, see the derived
- * classes like \ref EffortJointInterface etc.
+ * classes like \ref EffortActuatorInterface etc.
  *
  */
-class JointCommandInterface : public hardware_interface::HardwareInterface
+class ActuatorCommandInterface : public hardware_interface::HardwareInterface
 {
 public:
-  /// Get the vector of joint names registered to this interface.
-  std::vector<std::string> getJointNames() const
+  /// Get the vector of actuator names registered to this interface.
+  std::vector<std::string> getActuatorNames() const
   {
     return handle_map_.getNames();
   }
 
-  /** \brief Register a new joint with this interface.
+  /** \brief Register a new actuator with this interface.
    *
-   * \param name The name of the new joint
-   * \param cmd A pointer to the storage for this joint's output command
+   * \param name The name of the new actuator
+   * \param cmd A pointer to the storage for this actuator's output command
    */
-  void registerJoint(const JointStateHandle& js, double* cmd)
+  void registerActuator(const ActuatorStateHandle& as, double* cmd)
   {
-    JointHandle handle(js, cmd);
-    handle_map_.insert(js.getName(), handle);
+    ActuatorHandle handle(as, cmd);
+    handle_map_.insert(as.getName(), handle);
   }
 
-  /** \brief Get a \ref JointHandle for accessing a joint's state and setting
+  /** \brief Get a \ref ActuatorHandle for accessing a actuator's state and setting
    * its output command.
    *
-   * When a \ref JointHandle is acquired, this interface will claim the joint
+   * When a \ref ActuatorHandle is acquired, this interface will claim the actuator
    * as a resource.
    *
-   * \param name The name of the joint
+   * \param name The name of the actuator
    *
-   * \returns A \ref JointHandle corresponding to the joint identified by \c name
+   * \returns A \ref ActuatorHandle corresponding to the actuator identified by \c name
    *
    */
-  JointHandle getJointHandle(const std::string& name)
+  ActuatorHandle getActuatorHandle(const std::string& name)
   {
     try
     {
@@ -99,22 +100,22 @@ public:
     }
     catch(...)
     {
-      throw HardwareInterfaceException("Could not find joint [" + name + "] in " + internal::demangledTypeName(*this));
+      throw HardwareInterfaceException("Could not find actuator [" + name + "] in " + internal::demangledTypeName(*this));
     }
   }
 
 protected:
-  internal::NamedResourceManager<JointHandle> handle_map_;
+  internal::NamedResourceManager<ActuatorHandle> handle_map_;
 };
 
-/// \ref JointCommandInterface for commanding effort-based joints
-class EffortJointInterface : public JointCommandInterface {};
+/// \ref ActuatorCommandInterface for commanding effort-based actuators
+class EffortActuatorInterface : public ActuatorCommandInterface {};
 
-/// \ref JointCommandInterface for commanding velocity-based joints
-class VelocityJointInterface : public JointCommandInterface {};
+/// \ref ActuatorCommandInterface for commanding velocity-based actuators
+class VelocityActuatorInterface : public ActuatorCommandInterface {};
 
-/// \ref JointCommandInterface for commanding position-based joints
-class PositionJointInterface : public JointCommandInterface {};
+/// \ref ActuatorCommandInterface for commanding position-based actuators
+class PositionActuatorInterface : public ActuatorCommandInterface {};
 
 }
 
