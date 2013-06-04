@@ -30,9 +30,9 @@
 
 #include <map>
 #include <typeinfo>
+#include <hardware_interface/internal/demangle_symbol.h>
 #include <hardware_interface/hardware_interface.h>
 #include <hardware_interface/controller_info.h>
-#include <hardware_interface/demangle_symbol.h>
 #include <ros/ros.h>
 
 namespace hardware_interface
@@ -48,7 +48,7 @@ namespace hardware_interface
  *
  * The hardware interface map (\ref interfaces_) is a 1-to-1 map between
  * the nams of interface types derived from \ref HardwareInterface  and
- * instances of those interface types. 
+ * instances of those interface types.
  *
  */
 class RobotHW
@@ -102,7 +102,7 @@ public:
    * \brief Register a hardware interface.
    *
    * This associates the name of the type of interface to be registered with
-   * the given pointer. 
+   * the given pointer.
    *
    * \tparam T The hardware interface type
    * \param hw A pointer to a hardware interface
@@ -110,7 +110,7 @@ public:
   template<class T>
   void registerInterface(T* hw)
   {
-    interfaces_[demangledTypeName<T>()] = hw;
+    interfaces_[internal::demangledTypeName<T>()] = hw;
   }
 
 
@@ -127,14 +127,15 @@ public:
   template<class T>
   T* get()
   {
-    InterfaceMap::iterator it = interfaces_.find(demangledTypeName<T>());
+    InterfaceMap::iterator it = interfaces_.find(internal::demangledTypeName<T>());
     if (it == interfaces_.end())
       return NULL;
 
     T* hw = dynamic_cast<T*>(it->second);
     if (!hw)
     {
-      ROS_ERROR("Failed on dynamic_cast<T>(hw) for T = [%s]. This should never happen", demangledTypeName<T>().c_str());
+      ROS_ERROR("Failed on dynamic_cast<T>(hw) for T = [%s]. This should never happen",
+                internal::demangledTypeName<T>().c_str());
       return NULL;
     }
     return hw;

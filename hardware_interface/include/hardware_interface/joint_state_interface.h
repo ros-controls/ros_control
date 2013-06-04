@@ -32,15 +32,16 @@
 #ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 #define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 
+#include <hardware_interface/internal/demangle_symbol.h>
+#include <hardware_interface/internal/named_resource_manager.h>
 #include <hardware_interface/hardware_interface.h>
 #include <string>
-#include <map>
 #include <vector>
-#include <utility>  // for std::make_pair
 
-namespace hardware_interface{
+namespace hardware_interface
+{
 
-/// A handle used to read the state of a single joint
+/** A handle used to read the state of a single joint. */
 class JointStateHandle
 {
 public:
@@ -75,13 +76,7 @@ public:
   /// Get the vector of joint names registered to this interface.
   std::vector<std::string> getJointNames() const
   {
-    std::vector<std::string> out;
-    out.reserve(handle_map_.size());
-    for( HandleMap::const_iterator it = handle_map_.begin(); it != handle_map_.end(); ++it)
-    {
-      out.push_back(it->first);
-    }
-    return out;
+    return handle_map_.getNames();
   }
 
   /** \brief Register a new joint with this interface.
@@ -95,11 +90,7 @@ public:
   void registerJoint(const std::string& name, double* pos, double* vel, double* eff)
   {
     JointStateHandle handle(name, pos, vel, eff);
-    HandleMap::iterator it = handle_map_.find(name);
-    if (it == handle_map_.end())
-      handle_map_.insert(std::make_pair(name, handle));
-    else
-      it->second = handle;
+    handle_map_.insert(name, handle);
   }
 
   /** \brief Get a \ref JointStateHandle for accessing a joint's state
@@ -109,18 +100,18 @@ public:
    */
   JointStateHandle getJointStateHandle(const std::string& name) const
   {
-    HandleMap::const_iterator it = handle_map_.find(name);
-
-    if (it == handle_map_.end())
-      throw HardwareInterfaceException("Could not find joint [" + name + "] in JointStateInterface");
-
-    return it->second;
+    try
+    {
+      return handle_map_.get(name);
+    }
+    catch(...)
+    {
+      throw HardwareInterfaceException("Could not find joint [" + name + "] in " + internal::demangledTypeName(*this));
+    }
   }
 
 private:
-  typedef std::map<std::string, JointStateHandle> HandleMap;
-  HandleMap handle_map_;
-
+  internal::NamedResourceManager<JointStateHandle> handle_map_;
 };
 
 }

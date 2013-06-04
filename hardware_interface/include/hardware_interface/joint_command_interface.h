@@ -28,14 +28,14 @@
 #ifndef HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 #define HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 
+#include <hardware_interface/internal/demangle_symbol.h>
+#include <hardware_interface/internal/named_resource_manager.h>
 #include <hardware_interface/joint_state_interface.h>
-
 
 namespace hardware_interface
 {
 
-/** \brief A handle used to read and command a single joint
- */
+/** \brief A handle used to read and command a single joint. */
 class JointHandle : public JointStateHandle
 {
 public:
@@ -65,13 +65,7 @@ public:
   /// Get the vector of joint names registered to this interface.
   std::vector<std::string> getJointNames() const
   {
-    std::vector<std::string> out;
-    out.reserve(handle_map_.size());
-    for( HandleMap::const_iterator it = handle_map_.begin(); it != handle_map_.end(); ++it)
-    {
-      out.push_back(it->first);
-    }
-    return out;
+    return handle_map_.getNames();
   }
 
   /** \brief Register a new joint with this interface.
@@ -82,11 +76,7 @@ public:
   void registerJoint(const JointStateHandle& js, double* cmd)
   {
     JointHandle handle(js, cmd);
-    HandleMap::iterator it = handle_map_.find(js.getName());
-    if (it == handle_map_.end())
-      handle_map_.insert(std::make_pair(js.getName(), handle));
-    else
-      it->second = handle;
+    handle_map_.insert(js.getName(), handle);
   }
 
   /** \brief Get a \ref JointHandle for accessing a joint's state and setting
@@ -102,38 +92,28 @@ public:
    */
   JointHandle getJointHandle(const std::string& name)
   {
-    HandleMap::const_iterator it = handle_map_.find(name);
-
-    if (it == handle_map_.end())
-      throw HardwareInterfaceException("Could not find joint [" + name + "] in JointCommandInterface");
-
-    HardwareInterface::claim(name);
-    return it->second;
+    try
+    {
+      return handle_map_.get(name);
+    }
+    catch(...)
+    {
+      throw HardwareInterfaceException("Could not find joint [" + name + "] in " + internal::demangledTypeName(*this));
+    }
   }
 
 protected:
-  typedef std::map<std::string, JointHandle> HandleMap;
-  HandleMap handle_map_;
+  internal::NamedResourceManager<JointHandle> handle_map_;
 };
 
 /// \ref JointCommandInterface for commanding effort-based joints
-class EffortJointInterface : public JointCommandInterface
-{
-
-};
+class EffortJointInterface : public JointCommandInterface {};
 
 /// \ref JointCommandInterface for commanding velocity-based joints
-class VelocityJointInterface : public JointCommandInterface
-{
-
-};
+class VelocityJointInterface : public JointCommandInterface {};
 
 /// \ref JointCommandInterface for commanding position-based joints
-class PositionJointInterface : public JointCommandInterface
-{
-
-};
-
+class PositionJointInterface : public JointCommandInterface {};
 
 }
 
