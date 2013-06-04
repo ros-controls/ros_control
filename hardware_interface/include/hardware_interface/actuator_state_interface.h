@@ -1,5 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2012, hiDOF INC.
+// Copyright (C) 2013, PAL Robotics S.L.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -29,8 +30,8 @@
  * Author: Wim Meeussen
  */
 
-#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
+#ifndef HARDWARE_INTERFACE_ACTUATOR_STATE_INTERFACE_H
+#define HARDWARE_INTERFACE_ACTUATOR_STATE_INTERFACE_H
 
 #include <hardware_interface/internal/demangle_symbol.h>
 #include <hardware_interface/internal/named_resource_manager.h>
@@ -41,12 +42,12 @@
 namespace hardware_interface
 {
 
-/** A handle used to read the state of a single joint. */
-class JointStateHandle
+/** A handle used to read the state of a single actuator. */
+class ActuatorStateHandle
 {
 public:
-  JointStateHandle() {}
-  JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
+  ActuatorStateHandle() {}
+  ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
     : name_(name), pos_(pos), vel_(vel), eff_(eff)
   {}
 
@@ -63,42 +64,42 @@ private:
 };
 
 
-/** \brief Hardware interface to support reading the state of an array of joints
+/** \brief Hardware interface to support reading the state of an array of actuators
  *
  * This \ref HardwareInterface supports reading the state of an array of named
- * joints, each of which has some position, velocity, and effort (force or
+ * actuators, each of which has some position, velocity, and effort (force or
  * torque).
  *
  */
-class JointStateInterface: public HardwareInterface
+class ActuatorStateInterface: public HardwareInterface
 {
 public:
-  /// Get the vector of joint names registered to this interface.
-  std::vector<std::string> getJointNames() const
+  /// Get the vector of actuator names registered to this interface.
+  std::vector<std::string> getActuatorNames() const
   {
     return handle_map_.getNames();
   }
 
-  /** \brief Register a new joint with this interface.
+  /** \brief Register a new actuator with this interface.
    *
-   * \param name The name of the new joint
-   * \param pos A pointer to the storage for this joint's position
-   * \param vel A pointer to the storage for this joint's velocity
-   * \param eff A pointer to the storage for this joint's effort (force or torque)
+   * \param name The name of the new actuator
+   * \param pos A pointer to the storage for this actuator's position
+   * \param vel A pointer to the storage for this actuator's velocity
+   * \param eff A pointer to the storage for this actuator's effort (force or torque)
    *
    */
-  void registerJoint(const std::string& name, double* pos, double* vel, double* eff)
+  void registerActuator(const std::string& name, double* pos, double* vel, double* eff)
   {
-    JointStateHandle handle(name, pos, vel, eff);
+    ActuatorStateHandle handle(name, pos, vel, eff);
     handle_map_.insert(name, handle);
   }
 
-  /** \brief Get a \ref JointStateHandle for accessing a joint's state
+  /** \brief Get a \ref ActuatorStateHandle for accessing a actuator's state
    *
-   * \param name The name of the joint
+   * \param name The name of the actuator
    *
    */
-  JointStateHandle getJointStateHandle(const std::string& name) const
+  ActuatorStateHandle getActuatorStateHandle(const std::string& name) const
   {
     try
     {
@@ -106,12 +107,12 @@ public:
     }
     catch(...)
     {
-      throw HardwareInterfaceException("Could not find joint [" + name + "] in " + internal::demangledTypeName(*this));
+      throw HardwareInterfaceException("Could not get actuator [" + name + "] in " + internal::demangledTypeName(*this));
     }
   }
 
 private:
-  internal::NamedResourceManager<JointStateHandle> handle_map_;
+  internal::NamedResourceManager<ActuatorStateHandle> handle_map_;
 };
 
 }
