@@ -100,7 +100,7 @@ public:
     }
     catch(...)
     {
-      throw HardwareInterfaceException("Could not find actuator [" + name + "] in " + internal::demangledTypeName(*this));
+      throw HardwareInterfaceException("Could not find actuator '" + name + "' in " + internal::demangledTypeName(*this));
     }
   }
 

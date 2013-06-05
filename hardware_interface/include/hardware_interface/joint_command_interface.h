@@ -99,7 +99,7 @@ public:
     }
     catch(...)
     {
-      throw HardwareInterfaceException("Could not find joint [" + name + "] in " + internal::demangledTypeName(*this));
+      throw HardwareInterfaceException("Could not find joint '" + name + "' in " + internal::demangledTypeName(*this));
     }
   }
 
