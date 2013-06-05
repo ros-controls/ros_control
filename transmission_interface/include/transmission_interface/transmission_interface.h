@@ -380,7 +380,7 @@ public:
     typename HandleMap::const_iterator it = handle_map_.find(name);
     if (it == handle_map_.end())
     {
-      throw TransmissionInterfaceException("Could not find transmission [" + name + "].");
+      throw TransmissionInterfaceException("Could not find transmission '" + name + "'.");
     }
     return it->second;
   }
