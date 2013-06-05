@@ -8,9 +8,10 @@
   <url>https://bitbucket.org/hidof/controller-manager/wiki/</url>
 
   <depend package="roscpp" />
+  <rosdep name="eigen" />
 
   <export>
-    <cpp cflags="-I${prefix}/include" />
+    <cpp cflags="-I${prefix}/include `pkg-config --cflags eigen3`" />
   </export>
 
 </package>
