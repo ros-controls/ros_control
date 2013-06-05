@@ -2,14 +2,14 @@
   <name>ros_control</name>
   <version>1.0.0</version>
   <description>The new ros controller manager</description>
-  <maintainer email="wim@hidof.com">Maintained by Wim Meeussen</maintainer>
+  <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
 
   <license>BSD</license>
 
   <url type="website">http://ros.org/wiki/ros_control</url>
   <!-- <url type="bugtracker"></url> -->
 
-  <author>Maintained by Wim Meeussen</author>
+  <author>Wim Meeussen</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
