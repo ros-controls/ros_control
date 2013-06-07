@@ -23,7 +23,7 @@ add_library(control_toolbox
  )
 
 target_link_libraries(control_toolbox tinyxml)
-add_dependencies(control_toolbox control_toolbox_gencpp)
+add_dependencies(control_toolbox ${PROJECT_NAME}_gencpp)
  
 
 generate_messages(
