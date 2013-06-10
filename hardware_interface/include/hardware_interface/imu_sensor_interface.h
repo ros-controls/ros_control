@@ -46,7 +46,19 @@ namespace hardware_interface
 class ImuSensorHandle
 {
 public:
-  typedef Eigen::Map<Eigen::Quaternion<double> >                    Quaternion;
+  struct Data
+  {
+    std::string name;
+    std::string frame_id;
+    double* orientation;
+    double* orientation_covariance;
+    double* angular_velocity;
+    double* angular_velocity_covariance;
+    double* linear_acceleration;
+    double* linear_acceleration_covariance;
+  };
+
+  typedef Eigen::Map<Eigen::Quaternion<double> >                    Orientation;
   typedef Eigen::Map<Eigen::Vector3d>                               AngularVelocity;
   typedef Eigen::Map<Eigen::Vector3d>                               LinearAcceleration;
   typedef Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::RowMajor> > Covariance;
@@ -54,24 +66,39 @@ public:
   typedef Covariance                                                AngularVelocityCovariance;
   typedef Covariance                                                LinearAccelerationCovariance;
 
-  ImuSensorHandle(const std::string& name,
-                  double* orientation,
-                  double* orientation_covariance,
-                  double* angular_velocity,
-                  double* angular_velocity_covariance,
-                  double* linear_acceleration,
-                  double* linear_acceleration_covariance)
-    : name_(name),
-      orientation_(orientation),
-      orientation_covariance_(orientation_covariance),
-      angular_velocity_(angular_velocity),
-      angular_velocity_covariance_(angular_velocity_covariance),
-      linear_acceleration_(linear_acceleration),
-      linear_acceleration_covariance_(linear_acceleration_covariance)
-  {}
+  enum Capabilities
+  {
+    ORIENTATION                    = 0x01,
+    ORIENTATION_COVARIANCE         = 0x02,
+    ANGULAR_VELOCITY               = 0x04,
+    ANGULAR_VELOCITY_COVARIANCE    = 0x08,
+    LINEAR_ACCELERATION            = 0x10,
+    LINEAR_ACCELERATION_COVARIANCE = 0x20
+  };
+
+  ImuSensorHandle(const Data& data)
+    : name_(data.name),
+      frame_id_(data.frame_id),
+      orientation_(data.orientation),
+      orientation_covariance_(data.orientation_covariance),
+      angular_velocity_(data.angular_velocity),
+      angular_velocity_covariance_(data.angular_velocity_covariance),
+      linear_acceleration_(data.linear_acceleration),
+      linear_acceleration_covariance_(data.linear_acceleration_covariance),
+      capabilities_(0)
+  {
+    if (data.orientation)                    capabilities_ |= ORIENTATION;
+    if (data.orientation_covariance)         capabilities_ |= ORIENTATION_COVARIANCE;
+    if (data.angular_velocity)               capabilities_ |= ANGULAR_VELOCITY;
+    if (data.angular_velocity_covariance)    capabilities_ |= ANGULAR_VELOCITY_COVARIANCE;
+    if (data.linear_acceleration)            capabilities_ |= LINEAR_ACCELERATION;
+    if (data.linear_acceleration_covariance) capabilities_ |= LINEAR_ACCELERATION_COVARIANCE;
+  }
 
   std::string getName()                                                 const {return name_;}
-  const Quaternion& getOrientation()                                    const {return orientation_;}
+  std::string getFrameId()                                              const {return frame_id_;}
+  unsigned short getCapabilities()                                      const {return capabilities_;}
+  const Orientation& getOrientation()                                   const {return orientation_;}
   const OrientationCovariance& getOrientationCovariance()               const {return orientation_covariance_;}
   const AngularVelocity& getAngularVelocity()                           const {return angular_velocity_;}
   const AngularVelocityCovariance& getAngularVelocityCovariance()       const {return angular_velocity_covariance_;}
@@ -79,9 +106,10 @@ public:
   const LinearAccelerationCovariance& getLinearAccelerationCovariance() const {return linear_acceleration_covariance_;}
 
 private:
-  std::string                  name_;
+  std::string name_;
+  std::string frame_id_;
 
-  Quaternion                   orientation_;
+  Orientation                  orientation_;
   OrientationCovariance        orientation_covariance_;
 
   AngularVelocity              angular_velocity_;
@@ -89,6 +117,8 @@ private:
 
   LinearAcceleration           linear_acceleration_;
   LinearAccelerationCovariance linear_acceleration_covariance_;
+
+  unsigned short capabilities_;
 };
 
 class ImuSensorInterface : public HardwareInterface
@@ -103,6 +133,7 @@ public:
   /** \brief Register a new IMU sensor with this interface.
    *
    * \param name The name of the new sensor
+   * \param frame_id The reference frame to which this sensor is associated
    * \param orientation A pointer to the storage of the orientation value: a quaternion (x,y,z,w)
    * \param orientation_covariance A pointer to the storage of the orientation covariance value:
    *        a row major matrix about (x,y,z)
@@ -113,22 +144,10 @@ public:
    * \param linear_acceleration_covariance A pointer to the storage of the linear acceleration covariance value:
    *        a row major matrix about (x,y,z)
    */
-  void registerSensor(const std::string& name,
-                      double* orientation,
-                      double* orientation_covariance,
-                      double* angular_velocity,
-                      double* angular_velocity_covariance,
-                      double* linear_acceleration,
-                      double* linear_acceleration_covariance)
+  void registerSensor(const ImuSensorHandle::Data& data)
   {
-    ImuSensorHandle handle(name,
-                           orientation,
-                           orientation_covariance,
-                           angular_velocity,
-                           angular_velocity_covariance,
-                           linear_acceleration,
-                           linear_acceleration_covariance);
-    handle_map_.insert(name, handle);
+    ImuSensorHandle handle(data);
+    handle_map_.insert(data.name, handle);
   }
 
   /** \brief Get a \ref ImuSensorHandle for accessing a IMU sensor's state.
