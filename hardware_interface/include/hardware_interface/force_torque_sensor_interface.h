@@ -48,18 +48,24 @@ public:
   typedef Eigen::Map<Eigen::Vector3d> Force;
   typedef Eigen::Map<Eigen::Vector3d> Torque;
 
-  ForceTorqueSensorHandle(const std::string& name, double* force, double* torque)
+  ForceTorqueSensorHandle(const std::string& name,
+                          const std::string& frame_id,
+                          double* force,
+                          double* torque)
     : name_(name),
+      frame_id_(frame_id),
       force_(force),
       torque_(torque)
   {}
 
-  std::string getName()         const {return name_;}
+  std::string getName()     const {return name_;}
+  std::string getFrameId()  const {return frame_id_;}
   const Force& getForce()   const {return force_;}
   const Torque& getTorque() const {return torque_;}
 
 private:
   std::string name_;
+  std::string frame_id_;
   Force force_;
   Torque torque_;
 };
@@ -76,13 +82,17 @@ public:
   /** \brief Register a new force-torque sensor with this interface.
    *
    * \param name The name of the new sensor
+   * \param frame_id The reference frame to which this sensor is associated
    * \param force A pointer to the storage of the force value: a triplet (x,y,z)
    * \param torque A pointer to the storage of the torque value: a triplet (x,y,z)
    *
    */
-  void registerSensor(const std::string& name, double* force, double* torque)
+  void registerSensor(const std::string& name,
+                      const std::string& frame_id,
+                      double* force,
+                      double* torque)
   {
-    ForceTorqueSensorHandle handle(name, force, torque);
+    ForceTorqueSensorHandle handle(name, frame_id, force, torque);
     handle_map_.insert(name, handle);
   }
 
