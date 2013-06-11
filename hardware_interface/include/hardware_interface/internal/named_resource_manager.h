@@ -28,6 +28,7 @@
 #ifndef HARDWARE_INTERFACE_INTERNAL_NAMED_RESOURCE_MANAGER_H
 #define HARDWARE_INTERFACE_INTERNAL_NAMED_RESOURCE_MANAGER_H
 
+#include <stdexcept>
 #include <string>
 #include <map>
 #include <vector>
@@ -88,7 +89,7 @@ public:
 
     if (it == resource_map_.end())
     {
-      throw;
+      throw std::invalid_argument("Could not find resource.");
     }
     return it->second;
   }
