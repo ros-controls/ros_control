@@ -48,6 +48,16 @@ class ImuSensorHandle
 public:
   struct Data
   {
+    Data()
+      : name(),
+        frame_id(),
+        orientation(0),
+        orientation_covariance(0),
+        angular_velocity(0),
+        angular_velocity_covariance(0),
+        linear_acceleration(0),
+        linear_acceleration_covariance(0) {}
+
     std::string name;
     std::string frame_id;
     double* orientation;
