@@ -55,4 +55,13 @@ else()
   catkin_add_gtest(cm_test test/cm_test.cpp)
   add_rostest(test/cm_test.test)
 
+  # Install
+  install(DIRECTORY include/${PROJECT_NAME}/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+
+  install(TARGETS ${PROJECT_NAME} dummy_app
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+
 endif()
