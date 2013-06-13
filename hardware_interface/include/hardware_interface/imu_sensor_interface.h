@@ -30,9 +30,6 @@
 #ifndef HARDWARE_INTERFACE_IMU_SENSOR_INTERFACE_H
 #define HARDWARE_INTERFACE_IMU_SENSOR_INTERFACE_H
 
-#include <Eigen/Dense>
-#include <Eigen/Geometry>
-
 #include <hardware_interface/internal/demangle_symbol.h>
 #include <hardware_interface/internal/named_resource_manager.h>
 #include <hardware_interface/hardware_interface.h>
@@ -68,24 +65,6 @@ public:
     double* linear_acceleration_covariance;
   };
 
-  typedef Eigen::Map<Eigen::Quaternion<double> >                    Orientation;
-  typedef Eigen::Map<Eigen::Vector3d>                               AngularVelocity;
-  typedef Eigen::Map<Eigen::Vector3d>                               LinearAcceleration;
-  typedef Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::RowMajor> > Covariance;
-  typedef Covariance                                                OrientationCovariance;
-  typedef Covariance                                                AngularVelocityCovariance;
-  typedef Covariance                                                LinearAccelerationCovariance;
-
-  enum Capabilities
-  {
-    ORIENTATION                    = 0x01,
-    ORIENTATION_COVARIANCE         = 0x02,
-    ANGULAR_VELOCITY               = 0x04,
-    ANGULAR_VELOCITY_COVARIANCE    = 0x08,
-    LINEAR_ACCELERATION            = 0x10,
-    LINEAR_ACCELERATION_COVARIANCE = 0x20
-  };
-
   ImuSensorHandle(const Data& data)
     : name_(data.name),
       frame_id_(data.frame_id),
@@ -94,41 +73,28 @@ public:
       angular_velocity_(data.angular_velocity),
       angular_velocity_covariance_(data.angular_velocity_covariance),
       linear_acceleration_(data.linear_acceleration),
-      linear_acceleration_covariance_(data.linear_acceleration_covariance),
-      capabilities_(0)
-  {
-    if (data.orientation)                    capabilities_ |= ORIENTATION;
-    if (data.orientation_covariance)         capabilities_ |= ORIENTATION_COVARIANCE;
-    if (data.angular_velocity)               capabilities_ |= ANGULAR_VELOCITY;
-    if (data.angular_velocity_covariance)    capabilities_ |= ANGULAR_VELOCITY_COVARIANCE;
-    if (data.linear_acceleration)            capabilities_ |= LINEAR_ACCELERATION;
-    if (data.linear_acceleration_covariance) capabilities_ |= LINEAR_ACCELERATION_COVARIANCE;
-  }
+      linear_acceleration_covariance_(data.linear_acceleration_covariance)
+  {}
 
-  std::string getName()                                                 const {return name_;}
-  std::string getFrameId()                                              const {return frame_id_;}
-  unsigned short getCapabilities()                                      const {return capabilities_;}
-  const Orientation& getOrientation()                                   const {return orientation_;}
-  const OrientationCovariance& getOrientationCovariance()               const {return orientation_covariance_;}
-  const AngularVelocity& getAngularVelocity()                           const {return angular_velocity_;}
-  const AngularVelocityCovariance& getAngularVelocityCovariance()       const {return angular_velocity_covariance_;}
-  const LinearAcceleration& getLinearAcceleration()                     const {return linear_acceleration_;}
-  const LinearAccelerationCovariance& getLinearAccelerationCovariance() const {return linear_acceleration_covariance_;}
+  std::string getName()                           const {return name_;}
+  std::string getFrameId()                        const {return frame_id_;}
+  const double* getOrientation()                  const {return orientation_;}
+  const double* getOrientationCovariance()        const {return orientation_covariance_;}
+  const double* getAngularVelocity()              const {return angular_velocity_;}
+  const double* getAngularVelocityCovariance()    const {return angular_velocity_covariance_;}
+  const double* getLinearAcceleration()           const {return linear_acceleration_;}
+  const double* getLinearAccelerationCovariance() const {return linear_acceleration_covariance_;}
 
 private:
   std::string name_;
   std::string frame_id_;
 
-  Orientation                  orientation_;
-  OrientationCovariance        orientation_covariance_;
-
-  AngularVelocity              angular_velocity_;
-  AngularVelocityCovariance    angular_velocity_covariance_;
-
-  LinearAcceleration           linear_acceleration_;
-  LinearAccelerationCovariance linear_acceleration_covariance_;
-
-  unsigned short capabilities_;
+  double* orientation_;
+  double* orientation_covariance_;
+  double* angular_velocity_;
+  double* angular_velocity_covariance_;
+  double* linear_acceleration_;
+  double* linear_acceleration_covariance_;
 };
 
 class ImuSensorInterface : public HardwareInterface
@@ -146,13 +112,13 @@ public:
    * \param frame_id The reference frame to which this sensor is associated
    * \param orientation A pointer to the storage of the orientation value: a quaternion (x,y,z,w)
    * \param orientation_covariance A pointer to the storage of the orientation covariance value:
-   *        a row major matrix about (x,y,z)
+   *        a row major 3x3 matrix about (x,y,z)
    * \param angular_velocity A pointer to the storage of the angular velocity value: a triplet (x,y,z)
    * \param angular_velocity_covariance A pointer to the storage of the angular velocity covariance value:
-   *        a row major matrix about (x,y,z)
+   *        a row major 3x3 matrix about (x,y,z)
    * \param linear_acceleration A pointer to the storage of the linear acceleration value: a triplet (x,y,z)
    * \param linear_acceleration_covariance A pointer to the storage of the linear acceleration covariance value:
-   *        a row major matrix about (x,y,z)
+   *        a row major 3x3 matrix about (x,y,z)
    */
   void registerSensor(const ImuSensorHandle::Data& data)
   {

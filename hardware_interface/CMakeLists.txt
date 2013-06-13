@@ -11,9 +11,4 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 rosbuild_init()
 
-# Eigen
-find_package(Eigen REQUIRED)
-include_directories(${EIGEN_INCLUDE_DIRS})
-add_definitions(${EIGEN_DEFINITIONS})
-
 #rosbuild_add_library(${PROJECT_NAME} src/dummy_interface.cpp)

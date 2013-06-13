@@ -30,8 +30,6 @@
 #ifndef HARDWARE_INTERFACE_FORCE_CONTROL_SENSOR_INTERFACE_H
 #define HARDWARE_INTERFACE_FORCE_CONTROL_SENSOR_INTERFACE_H
 
-#include <Eigen/Dense>
-
 #include <hardware_interface/internal/demangle_symbol.h>
 #include <hardware_interface/internal/named_resource_manager.h>
 #include <hardware_interface/hardware_interface.h>
@@ -45,9 +43,6 @@ namespace hardware_interface
 class ForceTorqueSensorHandle
 {
 public:
-  typedef Eigen::Map<Eigen::Vector3d> Force;
-  typedef Eigen::Map<Eigen::Vector3d> Torque;
-
   ForceTorqueSensorHandle(const std::string& name,
                           const std::string& frame_id,
                           double* force,
@@ -60,14 +55,14 @@ public:
 
   std::string getName()     const {return name_;}
   std::string getFrameId()  const {return frame_id_;}
-  const Force& getForce()   const {return force_;}
-  const Torque& getTorque() const {return torque_;}
+  const double* getForce()  const {return force_;}
+  const double* getTorque() const {return torque_;}
 
 private:
   std::string name_;
   std::string frame_id_;
-  Force force_;
-  Torque torque_;
+  double* force_;
+  double* torque_;
 };
 
 class ForceTorqueSensorInterface : public HardwareInterface
