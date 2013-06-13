@@ -47,7 +47,7 @@ namespace hardware_interface{
 class HardwareInterface
 {
 public:
-  virtual ~HardwareInterface() { };
+  virtual ~HardwareInterface() {}
 
   /** \name Resource management
    *\{**/
@@ -73,9 +73,9 @@ class HardwareInterfaceException: public std::exception
 {
 public:
   HardwareInterfaceException(const std::string& message)
-    : msg(message) {};
+    : msg(message) {}
 
-  virtual ~HardwareInterfaceException() throw() {};
+  virtual ~HardwareInterfaceException() throw() {}
 
   virtual const char* what() const throw()
   {

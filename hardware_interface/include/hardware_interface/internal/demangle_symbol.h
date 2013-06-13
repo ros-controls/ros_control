@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef HARDWARE_INTERFACE_DEMANGLE_SYMBOL_H
-#define HARDWARE_INTERFACE_DEMANGLE_SYMBOL_H
+#ifndef HARDWARE_INTERFACE_INTERNAL_DEMANGLE_SYMBOL_H
+#define HARDWARE_INTERFACE_INTERNAL_DEMANGLE_SYMBOL_H
 
 #include <cstdlib>
 #include <string>
@@ -38,6 +38,8 @@
 #endif
 
 namespace hardware_interface
+{
+namespace internal
 {
 
 /**
@@ -73,6 +75,18 @@ inline std::string demangledTypeName()
   return demangleSymbol(typeid(T).name());
 }
 
-} // hardware_interface
+/**
+ * \brief Convenience method for demangling type names.
+ * \sa demangleSymbol
+ */
+template <class T>
+inline std::string demangledTypeName(const T&)
+{
+  return demangleSymbol(typeid(T).name());
+}
 
-#endif // HARDWARE_INTERFACE_DEMANGLE_SYMBOL_H
+}
+
+}
+
+#endif // HARDWARE_INTERFACE_INTERNAL_DEMANGLE_SYMBOL_H

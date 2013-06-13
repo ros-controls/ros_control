@@ -1,0 +1,22 @@
+<package>
+  <description>
+        The controller manager.
+  </description>
+  <author>Wim Meeussen</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://github.com/willowgarage/ros_control/wiki</url>
+
+  <depend package="controller_interface"/>
+  <depend package="controller_manager_msgs"/>
+  <depend package="hardware_interface"/>
+  <depend package="realtime_tools"/>
+  <depend package="pluginlib"/>
+
+  <!-- depend package="class_loader"/ -->
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lcontroller_manager" />
+  </export>
+
+</package>
