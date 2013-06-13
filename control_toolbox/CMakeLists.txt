@@ -3,7 +3,6 @@ project(control_toolbox)
 
 if(USE_ROSBUILD)
   include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
-  include_directories(include/control_toolbox/eigen2)
   rosbuild_init()
   #rosbuild_genmsg()
   rosbuild_gensrv()
@@ -30,7 +29,6 @@ else()
 
   include_directories(
     include 
-    include/control_toolbox/eigen2
     ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
   # Add services and generate them
@@ -57,8 +55,9 @@ else()
 
   # Declare catkin package
   catkin_package(
-    CATKIN_DEPENDS rosconsole tf roscpp angles tinyxml
-    INCLUDE_DIRS include include/control_toolbox/eigen2
+    DEPENDS tinyxml
+    CATKIN_DEPENDS rosconsole tf roscpp angles 
+    INCLUDE_DIRS include 
     LIBRARIES ${PROJECT_NAME} 
     )
 

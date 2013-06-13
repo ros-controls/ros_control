@@ -1,0 +1,19 @@
+<package>
+  <description brief="controller_manager_tests">
+     controller_manager_tests
+  </description>
+  <author>Vijay Pradeep</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/controller_manager_tests</url>
+
+  <depend package="controller_manager"/>
+  <depend package="controller_interface"/>
+
+  <export>
+    <controller_interface plugin="${prefix}/test_controllers_plugin.xml" />
+  </export>
+
+</package>
+
+
