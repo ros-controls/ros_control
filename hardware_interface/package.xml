@@ -1,0 +1,21 @@
+<package>
+  <name>hardware_interface</name>
+  <version>1.0.0</version>
+  <description>Hardware Interaface base class.</description>
+  <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">https://bitbucket.org/hidof/controller-manager/wiki/</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Wim Meeussen</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend> 
+  <run_depend>roscpp</run_depend> 
+
+  <export>
+    <cpp cflags="-I${prefix}/include"/>
+  </export>
+</package>

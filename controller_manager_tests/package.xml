@@ -1,0 +1,28 @@
+<package>
+  <name>controller_manager_tests</name>
+  <version>1.0.0</version>
+  <description>controller_manager_tests</description>
+  <maintainer email="vijay@hidof.com">Vijay Pradeep</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/controller_manager_tests</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Vijay Pradeep</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>rostest</build_depend>
+  <build_depend>control_toolbox</build_depend>
+  <build_depend>controller_manager</build_depend> 
+  <build_depend>controller_interface</build_depend> 
+  <run_depend>rostest</run_depend>
+  <run_depend>control_toolbox</run_depend>
+  <run_depend>controller_manager</run_depend> 
+  <run_depend>controller_interface</run_depend> 
+
+  <export>
+    <controller_interface plugin="${prefix}/test_controllers_plugin.xml"/>
+  </export>
+</package>
