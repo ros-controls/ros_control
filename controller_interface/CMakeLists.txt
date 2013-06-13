@@ -1,18 +1,22 @@
-# http://ros.org/doc/groovy/api/catkin/html/user_guide/supposed.html
 cmake_minimum_required(VERSION 2.8.3)
 project(controller_interface)
-# Load catkin and all dependencies required for this package
-# TODO: remove all from COMPONENTS that are not catkin packages.
-find_package(catkin REQUIRED COMPONENTS roscpp hardware_interface pluginlib)
 
-# TODO: fill in what other packages will need to use this package
-## DEPENDS: system dependencies of this project that dependent projects also need
-## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## INCLUDE_DIRS: 
-## LIBRARIES: libraries you create in this project that dependent projects also need
-catkin_package(
-    DEPENDS roscpp hardware_interface pluginlib
-    CATKIN_DEPENDS # TODO
+if(USE_ROSBUILD)
+
+  include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+
+  rosbuild_init()
+
+else()
+
+  # Load catkin and all dependencies required for this package
+  find_package(catkin REQUIRED COMPONENTS roscpp hardware_interface pluginlib)
+
+  # Declare catkin package
+  catkin_package(
+    DEPENDS boost
+    CATKIN_DEPENDS roscpp hardware_interface pluginlib
     INCLUDE_DIRS include
-    LIBRARIES # TODO
-)
+    )
+
+endif()

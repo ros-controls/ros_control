@@ -1,17 +1,18 @@
-# http://ros.org/doc/groovy/api/catkin/html/user_guide/supposed.html
 cmake_minimum_required(VERSION 2.8.3)
 project(hardware_interface)
 
-find_package(catkin REQUIRED COMPONENTS roscpp)
+if(USE_ROSBUILD)
 
-# TODO: fill in what other packages will need to use this package
-## DEPENDS: system dependencies of this project that dependent projects also need
-## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## INCLUDE_DIRS: 
-## LIBRARIES: libraries you create in this project that dependent projects also need
-catkin_package(
-    DEPENDS roscpp
-    CATKIN_DEPENDS # TODO
+  include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+  rosbuild_init()
+
+else()
+
+  find_package(catkin REQUIRED COMPONENTS roscpp)
+
+  catkin_package(
+    CATKIN_DEPENDS roscpp
     INCLUDE_DIRS include
-    LIBRARIES # TODO
-)
+    )
+
+endif()

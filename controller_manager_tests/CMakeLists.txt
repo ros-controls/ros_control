@@ -1,35 +1,58 @@
-# http://ros.org/doc/groovy/api/catkin/html/user_guide/supposed.html
 cmake_minimum_required(VERSION 2.8.3)
 project(controller_manager_tests)
-# Load catkin and all dependencies required for this package
-# TODO: remove all from COMPONENTS that are not catkin packages.
-find_package(catkin REQUIRED COMPONENTS controller_manager controller_interface control_toolbox)
 
-include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+if(USE_ROSBUILD)
 
-#common commands for building c++ executables and libraries
-add_library(${PROJECT_NAME} 
-  src/my_robot_hw.cpp
-  include/controller_manager_tests/my_robot_hw.h
-  src/effort_test_controller.cpp
-  include/controller_manager_tests/effort_test_controller.h
-  src/my_dummy_controller.cpp
-  include/controller_manager_tests/my_dummy_controller.h
-  )
+  include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
-add_executable(dummy_app src/dummy_app.cpp)
-target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
+  rosbuild_init()
 
-# TODO: fill in what other packages will need to use this package
-## DEPENDS: system dependencies of this project that dependent projects also need
-## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## INCLUDE_DIRS: 
-## LIBRARIES: libraries you create in this project that dependent projects also need
-catkin_package(
-    DEPENDS controller_manager controller_interface control_toolbox
-    CATKIN_DEPENDS # TODO
-    INCLUDE_DIRS # TODO include
-    LIBRARIES # TODO
-)
+  set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+  set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-catkin_add_gtest(cm_test test/cm_test.cpp)
+  rosbuild_add_library(${PROJECT_NAME} 
+    src/my_robot_hw.cpp
+    include/controller_manager_tests/my_robot_hw.h
+    src/effort_test_controller.cpp
+    include/controller_manager_tests/effort_test_controller.h
+    src/my_dummy_controller.cpp
+    include/controller_manager_tests/my_dummy_controller.h)
+
+  rosbuild_add_executable(dummy_app src/dummy_app.cpp)
+  target_link_libraries(dummy_app ${PROJECT_NAME})
+
+  rosbuild_add_executable(cm_test test/cm_test.cpp)
+  rosbuild_add_gtest_build_flags(cm_test)
+
+  rosbuild_add_rostest(test/cm_test.test)
+
+else()
+
+  # Load catkin and all dependencies required for this package
+  find_package(catkin REQUIRED COMPONENTS rostest controller_manager controller_interface control_toolbox)
+
+  include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+
+  #common commands for building c++ executables and libraries
+  add_library(${PROJECT_NAME} 
+    src/my_robot_hw.cpp
+    include/controller_manager_tests/my_robot_hw.h
+    src/effort_test_controller.cpp
+    include/controller_manager_tests/effort_test_controller.h
+    src/my_dummy_controller.cpp
+    include/controller_manager_tests/my_dummy_controller.h
+    )
+
+  add_executable(dummy_app src/dummy_app.cpp)
+  target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
+
+  catkin_package(
+    CATKIN_DEPENDS controller_manager controller_interface control_toolbox
+    INCLUDE_DIRS include
+    LIBRARIES ${PROJECT_NAME}
+    )
+
+  catkin_add_gtest(cm_test test/cm_test.cpp)
+  add_rostest(test/cm_test.test)
+
+endif()
