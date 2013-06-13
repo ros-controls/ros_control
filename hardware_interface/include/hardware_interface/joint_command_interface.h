@@ -95,7 +95,9 @@ public:
   {
     try
     {
-      return handle_map_.get(name);
+      JointHandle out = handle_map_.get(name);
+      HardwareInterface::claim(name);
+      return out;
     }
     catch(...)
     {
