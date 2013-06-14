@@ -26,18 +26,13 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/*
- * Author: Wim Meeussen
- */
+/// \author Wim Meeussen
 
-#ifndef HARDWARE_INTERFACE_ACTUATOR_STATE_INTERFACE_H
-#define HARDWARE_INTERFACE_ACTUATOR_STATE_INTERFACE_H
+#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
+#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 
-#include <hardware_interface/internal/demangle_symbol.h>
-#include <hardware_interface/internal/named_resource_manager.h>
-#include <hardware_interface/hardware_interface.h>
+#include <hardware_interface/resource_manager.h>
 #include <string>
-#include <vector>
 
 namespace hardware_interface
 {
@@ -52,9 +47,9 @@ public:
   {}
 
   std::string getName() const {return name_;}
-  double getPosition() const {return *pos_;}
-  double getVelocity() const {return *vel_;}
-  double getEffort()   const {return *eff_;}
+  double getPosition()  const {return *pos_;}
+  double getVelocity()  const {return *vel_;}
+  double getEffort()    const {return *eff_;}
 
 private:
   std::string name_;
@@ -63,7 +58,6 @@ private:
   const double* eff_;
 };
 
-
 /** \brief Hardware interface to support reading the state of an array of actuators
  *
  * This \ref HardwareInterface supports reading the state of an array of named
@@ -71,49 +65,7 @@ private:
  * torque).
  *
  */
-class ActuatorStateInterface: public HardwareInterface
-{
-public:
-  /// Get the vector of actuator names registered to this interface.
-  std::vector<std::string> getActuatorNames() const
-  {
-    return handle_map_.getNames();
-  }
-
-  /** \brief Register a new actuator with this interface.
-   *
-   * \param name The name of the new actuator
-   * \param pos A pointer to the storage for this actuator's position
-   * \param vel A pointer to the storage for this actuator's velocity
-   * \param eff A pointer to the storage for this actuator's effort (force or torque)
-   *
-   */
-  void registerActuator(const std::string& name, double* pos, double* vel, double* eff)
-  {
-    ActuatorStateHandle handle(name, pos, vel, eff);
-    handle_map_.insert(name, handle);
-  }
-
-  /** \brief Get a \ref ActuatorStateHandle for accessing a actuator's state
-   *
-   * \param name The name of the actuator
-   *
-   */
-  ActuatorStateHandle getActuatorStateHandle(const std::string& name) const
-  {
-    try
-    {
-      return handle_map_.get(name);
-    }
-    catch(...)
-    {
-      throw HardwareInterfaceException("Could not find actuator '" + name + "' in " + internal::demangledTypeName(*this));
-    }
-  }
-
-private:
-  internal::NamedResourceManager<ActuatorStateHandle> handle_map_;
-};
+class ActuatorStateInterface : public ResourceManager<ActuatorStateHandle> {};
 
 }
 

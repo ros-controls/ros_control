@@ -41,7 +41,7 @@ bool EffortTestController::init(hardware_interface::EffortJointInterface* hw, ro
   joint_names.push_back("hiDOF_joint2");
 
   for (unsigned i=0; i<joint_names.size(); i++)
-    joint_effort_commands_.push_back(hw->getJointHandle(joint_names[i]));
+    joint_effort_commands_.push_back(hw->getHandle(joint_names[i]));
 
   return true;
 }
