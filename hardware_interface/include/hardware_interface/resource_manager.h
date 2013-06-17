@@ -48,8 +48,8 @@ struct DontClaimResources;
 /**
  * \brief Base class for handling hardware resources.
  *
- * Hardware resources are encapsulated inside handle instances, and this class allows to register and get handles
- * by name. It is also possible to specify through the \b ClaimPolicy template parameter whether getting a handle claims
+ * Hardware resources are encapsulated inside handle instances, and this class allows to register and get them by name.
+ * It is also possible to specify through the \b ClaimPolicy template parameter whether getting a handle claims
  * the corresponding resource or not, like in the following example
  * \code
  * // If unspecified, the resource manager will not claim resources
@@ -83,6 +83,8 @@ template <class ResourceHandle, class ClaimPolicy = DontClaimResources>
 class ResourceManager : public HardwareInterface
 {
 public:
+
+  virtual ~ResourceManager() {}
 
   /** \return Vector of resource names registered to this interface. */
   std::vector<std::string> getNames() const
@@ -139,7 +141,7 @@ public:
     return it->second;
   }
 
-private:
+protected:
   typedef std::map<std::string, ResourceHandle> ResourceMap;
   ResourceMap resource_map_;
 };
@@ -154,7 +156,6 @@ struct DontClaimResources
 {
   static void claim(HardwareInterface* hw, const std::string& name) {}
 };
-
 /** \endcond */
 
 }
