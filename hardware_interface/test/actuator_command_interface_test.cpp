@@ -30,6 +30,7 @@
 #include <iostream>
 #include <string>
 #include <gtest/gtest.h>
+#include <ros/console.h>
 #include <hardware_interface/actuator_command_interface.h>
 
 using std::string;
@@ -94,7 +95,7 @@ TEST_F(ActuatorCommandInterfaceTest, ExcerciseApi)
   // Print error message
   // Requires manual output inspection, but exception message should contain the interface name (not its base clase)
   try {iface.getHandle("unknown_name");}
-  catch(const HardwareInterfaceException& e) {std::cout << e.what() << std::endl;}
+  catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 }
 
 int main(int argc, char** argv)
