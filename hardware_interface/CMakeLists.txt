@@ -21,6 +21,7 @@ rosbuild_add_gtest(actuator_state_interface_test   test/actuator_state_interface
 rosbuild_add_gtest(actuator_command_interface_test test/actuator_command_interface_test.cpp)
 rosbuild_add_gtest(joint_state_interface_test      test/joint_state_interface_test.cpp)
 rosbuild_add_gtest(joint_command_interface_test    test/joint_command_interface_test.cpp)
+rosbuild_add_gtest(robot_hw_test                   test/robot_hw_test.cpp)
 
 # TODO: why is it explicitly needed???, without it the linker fails.
 target_link_libraries(resource_manager_test           pthread)
@@ -28,3 +29,4 @@ target_link_libraries(actuator_state_interface_test   pthread)
 target_link_libraries(actuator_command_interface_test pthread)
 target_link_libraries(joint_state_interface_test      pthread)
 target_link_libraries(joint_command_interface_test    pthread)
+target_link_libraries(robot_hw_test                   pthread)
