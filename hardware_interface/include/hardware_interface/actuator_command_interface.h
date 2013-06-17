@@ -40,12 +40,19 @@ namespace hardware_interface
 class ActuatorHandle : public ActuatorStateHandle
 {
 public:
-  ActuatorHandle() {}
-  ActuatorHandle(const ActuatorStateHandle& js, double* cmd)
-    : ActuatorStateHandle(js), cmd_(cmd)
-  {}
-  void setCommand(double command) {*cmd_ = command;}
-  double getCommand() const {return *cmd_;}
+  ActuatorHandle() : ActuatorStateHandle(), cmd_(0) {}
+
+  ActuatorHandle(const ActuatorStateHandle& as, double* cmd)
+    : ActuatorStateHandle(as), cmd_(cmd)
+  {
+    if (!cmd_)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + as.getName() + "'. Command data pointer is null.");
+    }
+  }
+
+  void setCommand(double command) {assert(cmd_); *cmd_ = command;}
+  double getCommand() const {assert(cmd_); return *cmd_;}
 
 private:
   double* cmd_;

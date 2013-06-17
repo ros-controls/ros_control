@@ -36,6 +36,34 @@
 using std::string;
 using namespace hardware_interface;
 
+TEST(ActuatorCommandHandleTest, HandleConstruction)
+{
+  string name = "name1";
+  double pos, vel, eff;
+  double cmd;
+  EXPECT_NO_THROW(ActuatorHandle(ActuatorStateHandle(name, &pos, &vel, &eff), &cmd));
+  EXPECT_THROW(ActuatorHandle(ActuatorStateHandle(name, &pos, &vel, &eff), 0), HardwareInterfaceException);
+
+  // Print error messages
+  // Requires manual output inspection, but exception message should be descriptive
+  try {ActuatorHandle(ActuatorStateHandle(name, &pos, &vel, &eff), 0);}
+  catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+}
+
+#ifndef NDEBUG // NOTE: This test validates assertion triggering, hence only gets compiled in debug mode
+TEST(ActuatorStateHandleTest, AssertionTriggering)
+{
+  ActuatorHandle h;
+
+  // Data with invalid pointers should trigger an assertion
+  EXPECT_DEATH(h.getPosition(),   ".*");
+  EXPECT_DEATH(h.getVelocity(),   ".*");
+  EXPECT_DEATH(h.getEffort(),     ".*");
+  EXPECT_DEATH(h.getCommand(),    ".*");
+  EXPECT_DEATH(h.setCommand(1.0), ".*");
+}
+#endif // NDEBUG
+
 class ActuatorCommandInterfaceTest : public ::testing::Test
 {
 public:

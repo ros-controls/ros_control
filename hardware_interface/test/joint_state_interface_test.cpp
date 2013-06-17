@@ -36,6 +36,40 @@
 using std::string;
 using namespace hardware_interface;
 
+TEST(JointStateHandleTest, HandleConstruction)
+{
+  string name = "name1";
+  double pos, vel, eff;
+  EXPECT_NO_THROW(JointStateHandle(name, &pos, &vel, &eff));
+  EXPECT_THROW(JointStateHandle(name, 0, &vel, &eff), HardwareInterfaceException);
+  EXPECT_THROW(JointStateHandle(name, &pos, 0, &eff), HardwareInterfaceException);
+  EXPECT_THROW(JointStateHandle(name, &pos, &vel, 0), HardwareInterfaceException);
+
+  // Print error messages
+  // Requires manual output inspection, but exception message should be descriptive
+  try {JointStateHandle(name, 0, &vel, &eff);}
+  catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+
+  try {JointStateHandle(name, &pos, 0, &eff);}
+  catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+
+  try {JointStateHandle(name, &pos, &vel, 0);}
+  catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+
+}
+
+#ifndef NDEBUG // NOTE: This test validates assertion triggering, hence only gets compiled in debug mode
+TEST(JointStateHandleTest, AssertionTriggering)
+{
+  JointStateHandle h;
+
+  // Data with invalid pointers should trigger an assertion
+  EXPECT_DEATH(h.getPosition(), ".*");
+  EXPECT_DEATH(h.getVelocity(), ".*");
+  EXPECT_DEATH(h.getEffort(),   ".*");
+}
+#endif // NDEBUG
+
 class JointStateInterfaceTest : public ::testing::Test
 {
 public:

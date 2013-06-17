@@ -30,6 +30,7 @@
 #ifndef HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 #define HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 
+#include <cassert>
 #include <string>
 #include <hardware_interface/resource_manager.h>
 #include <hardware_interface/joint_state_interface.h>
@@ -41,12 +42,19 @@ namespace hardware_interface
 class JointHandle : public JointStateHandle
 {
 public:
-  JointHandle() {}
+  JointHandle() : JointStateHandle(), cmd_(0) {}
+
   JointHandle(const JointStateHandle& js, double* cmd)
     : JointStateHandle(js), cmd_(cmd)
-  {}
-  void setCommand(double command) {*cmd_ = command;}
-  double getCommand() const {return *cmd_;}
+  {
+    if (!cmd_)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + js.getName() + "'. Command data pointer is null.");
+    }
+  }
+
+  void setCommand(double command) {assert(cmd_); *cmd_ = command;}
+  double getCommand() const {assert(cmd_); return *cmd_;}
 
 private:
   double* cmd_;

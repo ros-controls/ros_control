@@ -41,15 +41,28 @@ namespace hardware_interface
 class ActuatorStateHandle
 {
 public:
-  ActuatorStateHandle() {}
+  ActuatorStateHandle() : name_(), pos_(0), vel_(0), eff_(0) {}
   ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
     : name_(name), pos_(pos), vel_(vel), eff_(eff)
-  {}
+  {
+    if (!pos)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Position data pointer is null.");
+    }
+    if (!vel)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Velocity data pointer is null.");
+    }
+    if (!eff)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
+    }
+  }
 
   std::string getName() const {return name_;}
-  double getPosition()  const {return *pos_;}
-  double getVelocity()  const {return *vel_;}
-  double getEffort()    const {return *eff_;}
+  double getPosition()  const {assert(pos_); return *pos_;}
+  double getVelocity()  const {assert(vel_); return *vel_;}
+  double getEffort()    const {assert(eff_); return *eff_;}
 
 private:
   std::string name_;

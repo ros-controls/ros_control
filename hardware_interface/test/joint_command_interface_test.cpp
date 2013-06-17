@@ -36,6 +36,34 @@
 using std::string;
 using namespace hardware_interface;
 
+TEST(JointCommandHandleTest, HandleConstruction)
+{
+  string name = "name1";
+  double pos, vel, eff;
+  double cmd;
+  EXPECT_NO_THROW(JointHandle(JointStateHandle(name, &pos, &vel, &eff), &cmd));
+  EXPECT_THROW(JointHandle(JointStateHandle(name, &pos, &vel, &eff), 0), HardwareInterfaceException);
+
+  // Print error messages
+  // Requires manual output inspection, but exception message should be descriptive
+  try {JointHandle(JointStateHandle(name, &pos, &vel, &eff), 0);}
+  catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+}
+
+#ifndef NDEBUG // NOTE: This test validates assertion triggering, hence only gets compiled in debug mode
+TEST(JointStateHandleTest, AssertionTriggering)
+{
+  JointHandle h;
+
+  // Data with invalid pointers should trigger an assertion
+  EXPECT_DEATH(h.getPosition(),   ".*");
+  EXPECT_DEATH(h.getVelocity(),   ".*");
+  EXPECT_DEATH(h.getEffort(),     ".*");
+  EXPECT_DEATH(h.getCommand(),    ".*");
+  EXPECT_DEATH(h.setCommand(1.0), ".*");
+}
+#endif // NDEBUG
+
 class JointCommandInterfaceTest : public ::testing::Test
 {
 public:
