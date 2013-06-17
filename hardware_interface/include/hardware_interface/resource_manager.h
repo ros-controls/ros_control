@@ -36,6 +36,8 @@
 #include <vector>
 #include <utility>  // for std::make_pair
 
+#include <ros/console.h>
+
 #include <hardware_interface/hardware_interface.h>
 #include <hardware_interface/internal/demangle_symbol.h>
 
@@ -112,6 +114,8 @@ public:
     }
     else
     {
+      ROS_WARN_STREAM("Replacing previously registered handle '" << handle.getName() << "' in '" +
+                      internal::demangleSymbol(typeid(*this).name()) + "'.");
       it->second = handle;
     }
   }
@@ -131,8 +135,8 @@ public:
 
     if (it == resource_map_.end())
     {
-      throw HardwareInterfaceException("Could not find resource '" + name + "' in " + "'" +
-                                       internal::demangleSymbol(typeid(*this).name()) + "'");
+      throw HardwareInterfaceException("Could not find resource '" + name + "' in '" +
+                                       internal::demangleSymbol(typeid(*this).name()) + "'.");
     }
 
     // If ClaimPolicy type is ClaimResources, the below method claims resources, for DontClaimResources it's a no-op
