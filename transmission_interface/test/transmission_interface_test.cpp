@@ -243,8 +243,8 @@ TEST_F(HandleWhiteBoxTest, PositionMap)
   j_curr_data.position = vector<double*>(1, &j_curr_pos[0]);
 
   ActuatorToJointPositionInterface to_jnt_pos;
-  to_jnt_pos.registerTransmission("trans_1", &trans1, a_curr_data, j_curr_data);
-  ActuatorToJointPositionHandle to_jnt_pos_handle = to_jnt_pos.getTransmissionHandle("trans_1");
+  to_jnt_pos.registerHandle(ActuatorToJointPositionHandle("trans_1", &trans1, a_curr_data, j_curr_data));
+  ActuatorToJointPositionHandle to_jnt_pos_handle = to_jnt_pos.getHandle("trans_1");
 
   // Joint -> actuator
   ActuatorData a_cmd_data;
@@ -253,8 +253,8 @@ TEST_F(HandleWhiteBoxTest, PositionMap)
   j_cmd_data.position = vector<double*>(1, &j_cmd_pos[0]);
 
   JointToActuatorPositionInterface to_act_pos;
-  to_act_pos.registerTransmission("trans_1", &trans1, a_cmd_data, j_cmd_data);
-  JointToActuatorPositionHandle to_act_pos_handle = to_act_pos.getTransmissionHandle("trans_1");
+  to_act_pos.registerHandle(JointToActuatorPositionHandle("trans_1", &trans1, a_cmd_data, j_cmd_data));
+  JointToActuatorPositionHandle to_act_pos_handle = to_act_pos.getHandle("trans_1");
 
   // Identity map
   a_curr_pos[0] = 1.0;
@@ -275,8 +275,8 @@ TEST_F(HandleWhiteBoxTest, VelocityMap)
   j_curr_data.velocity = vector<double*>(1, &j_curr_vel[0]);
 
   ActuatorToJointVelocityInterface to_jnt_vel;
-  to_jnt_vel.registerTransmission("trans_1", &trans1, a_curr_data, j_curr_data);
-  ActuatorToJointVelocityHandle to_jnt_vel_handle = to_jnt_vel.getTransmissionHandle("trans_1");
+  to_jnt_vel.registerHandle(ActuatorToJointVelocityHandle("trans_1", &trans1, a_curr_data, j_curr_data));
+  ActuatorToJointVelocityHandle to_jnt_vel_handle = to_jnt_vel.getHandle("trans_1");
 
   // Joint -> actuator
   ActuatorData a_cmd_data;
@@ -285,8 +285,8 @@ TEST_F(HandleWhiteBoxTest, VelocityMap)
   j_cmd_data.velocity = vector<double*>(1, &j_cmd_vel[0]);
 
   JointToActuatorVelocityInterface to_act_vel;
-  to_act_vel.registerTransmission("trans_1", &trans1, a_cmd_data, j_cmd_data);
-  JointToActuatorVelocityHandle to_act_vel_handle = to_act_vel.getTransmissionHandle("trans_1");
+  to_act_vel.registerHandle(JointToActuatorVelocityHandle("trans_1", &trans1, a_cmd_data, j_cmd_data));
+  JointToActuatorVelocityHandle to_act_vel_handle = to_act_vel.getHandle("trans_1");
 
   // Identity map
   a_curr_vel[0] = 1.0;
@@ -307,8 +307,8 @@ TEST_F(HandleWhiteBoxTest, EffortMap)
   j_curr_data.effort = vector<double*>(1, &j_curr_eff[0]);
 
   ActuatorToJointEffortInterface to_jnt_eff;
-  to_jnt_eff.registerTransmission("trans_1", &trans1, a_curr_data, j_curr_data);
-  ActuatorToJointEffortHandle to_jnt_eff_handle = to_jnt_eff.getTransmissionHandle("trans_1");
+  to_jnt_eff.registerHandle(ActuatorToJointEffortHandle("trans_1", &trans1, a_curr_data, j_curr_data));
+  ActuatorToJointEffortHandle to_jnt_eff_handle = to_jnt_eff.getHandle("trans_1");
 
   // Joint -> actuator
   ActuatorData a_cmd_data;
@@ -317,8 +317,8 @@ TEST_F(HandleWhiteBoxTest, EffortMap)
   j_cmd_data.effort = vector<double*>(1, &j_cmd_eff[0]);
 
   JointToActuatorEffortInterface to_act_eff;
-  to_act_eff.registerTransmission("trans_1", &trans1, a_cmd_data, j_cmd_data);
-  JointToActuatorEffortHandle to_act_eff_handle = to_act_eff.getTransmissionHandle("trans_1");
+  to_act_eff.registerHandle(JointToActuatorEffortHandle("trans_1", &trans1, a_cmd_data, j_cmd_data));
+  JointToActuatorEffortHandle to_act_eff_handle = to_act_eff.getHandle("trans_1");
 
   // Identity map
   a_curr_eff[0] = 1.0;
@@ -344,8 +344,8 @@ TEST_F(HandleWhiteBoxTest, StateMap)
   j_curr_data.effort   = vector<double*>(1, &j_curr_eff[0]);
 
   ActuatorToJointStateInterface to_jnt_state;
-  to_jnt_state.registerTransmission("trans_1", &trans1, a_curr_data, j_curr_data);
-  ActuatorToJointStateHandle to_jnt_state_handle = to_jnt_state.getTransmissionHandle("trans_1");
+  to_jnt_state.registerHandle(ActuatorToJointStateHandle("trans_1", &trans1, a_curr_data, j_curr_data));
+  ActuatorToJointStateHandle to_jnt_state_handle = to_jnt_state.getHandle("trans_1");
 
   // Joint -> actuator
   ActuatorData a_cmd_data;
@@ -359,8 +359,8 @@ TEST_F(HandleWhiteBoxTest, StateMap)
   j_cmd_data.effort   = vector<double*>(1, &j_cmd_eff[0]);
 
   JointToActuatorStateInterface to_act_state;
-  to_act_state.registerTransmission("trans_1", &trans1, a_cmd_data, j_cmd_data);
-  JointToActuatorStateHandle to_act_state_handle = to_act_state.getTransmissionHandle("trans_1");
+  to_act_state.registerHandle(JointToActuatorStateHandle("trans_1", &trans1, a_cmd_data, j_cmd_data));
+  JointToActuatorStateHandle to_act_state_handle = to_act_state.getHandle("trans_1");
 
   // Identity map
   a_curr_pos[0] = 1.0;
@@ -394,8 +394,8 @@ TEST_F(InterfaceWhiteBoxTest, PositionMap)
   j_curr_data[1].position = vector<double*>(1, &j_curr_pos[1]);
 
   ActuatorToJointPositionInterface to_jnt_pos;
-  to_jnt_pos.registerTransmission("trans_1", &trans1, a_curr_data[0], j_curr_data[0]);
-  to_jnt_pos.registerTransmission("trans_2", &trans2, a_curr_data[1], j_curr_data[1]);
+  to_jnt_pos.registerHandle(ActuatorToJointPositionHandle("trans_1", &trans1, a_curr_data[0], j_curr_data[0]));
+  to_jnt_pos.registerHandle(ActuatorToJointPositionHandle("trans_2", &trans2, a_curr_data[1], j_curr_data[1]));
 
   // Joint -> actuator
   ActuatorData a_cmd_data[2];
@@ -407,8 +407,8 @@ TEST_F(InterfaceWhiteBoxTest, PositionMap)
   j_cmd_data[1].position = vector<double*>(1, &j_cmd_pos[1]);
 
   JointToActuatorPositionInterface to_act_pos;
-  to_act_pos.registerTransmission("trans_1", &trans1, a_cmd_data[0], j_cmd_data[0]);
-  to_act_pos.registerTransmission("trans_2", &trans2, a_cmd_data[1], j_cmd_data[1]);
+  to_act_pos.registerHandle(JointToActuatorPositionHandle("trans_1", &trans1, a_cmd_data[0], j_cmd_data[0]));
+  to_act_pos.registerHandle(JointToActuatorPositionHandle("trans_2", &trans2, a_cmd_data[1], j_cmd_data[1]));
 
   // Identity map
   a_curr_pos[0] = 1.0;
@@ -436,8 +436,8 @@ TEST_F(InterfaceWhiteBoxTest, VelocityMap)
   j_curr_data[1].velocity = vector<double*>(1, &j_curr_vel[1]);
 
   ActuatorToJointVelocityInterface to_jnt_vel;
-  to_jnt_vel.registerTransmission("trans_1", &trans1, a_curr_data[0], j_curr_data[0]);
-  to_jnt_vel.registerTransmission("trans_2", &trans2, a_curr_data[1], j_curr_data[1]);
+  to_jnt_vel.registerHandle(ActuatorToJointVelocityHandle("trans_1", &trans1, a_curr_data[0], j_curr_data[0]));
+  to_jnt_vel.registerHandle(ActuatorToJointVelocityHandle("trans_2", &trans2, a_curr_data[1], j_curr_data[1]));
 
   // Joint -> actuator
   ActuatorData a_cmd_data[2];
@@ -449,8 +449,8 @@ TEST_F(InterfaceWhiteBoxTest, VelocityMap)
   j_cmd_data[1].velocity = vector<double*>(1, &j_cmd_vel[1]);
 
   JointToActuatorVelocityInterface to_act_vel;
-  to_act_vel.registerTransmission("trans_1", &trans1, a_cmd_data[0], j_cmd_data[0]);
-  to_act_vel.registerTransmission("trans_2", &trans2, a_cmd_data[1], j_cmd_data[1]);
+  to_act_vel.registerHandle(JointToActuatorVelocityHandle("trans_1", &trans1, a_cmd_data[0], j_cmd_data[0]));
+  to_act_vel.registerHandle(JointToActuatorVelocityHandle("trans_2", &trans2, a_cmd_data[1], j_cmd_data[1]));
 
   // Identity map
   a_curr_vel[0] = 1.0;
@@ -478,8 +478,8 @@ TEST_F(InterfaceWhiteBoxTest, EffortMap)
   j_curr_data[1].effort = vector<double*>(1, &j_curr_eff[1]);
 
   ActuatorToJointEffortInterface to_jnt_eff;
-  to_jnt_eff.registerTransmission("trans_1", &trans1, a_curr_data[0], j_curr_data[0]);
-  to_jnt_eff.registerTransmission("trans_2", &trans2, a_curr_data[1], j_curr_data[1]);
+  to_jnt_eff.registerHandle(ActuatorToJointEffortHandle("trans_1", &trans1, a_curr_data[0], j_curr_data[0]));
+  to_jnt_eff.registerHandle(ActuatorToJointEffortHandle("trans_2", &trans2, a_curr_data[1], j_curr_data[1]));
 
   // Joint -> actuator
   ActuatorData a_cmd_data[2];
@@ -491,8 +491,8 @@ TEST_F(InterfaceWhiteBoxTest, EffortMap)
   j_cmd_data[1].effort = vector<double*>(1, &j_cmd_eff[1]);
 
   JointToActuatorEffortInterface to_act_eff;
-  to_act_eff.registerTransmission("trans_1", &trans1, a_cmd_data[0], j_cmd_data[0]);
-  to_act_eff.registerTransmission("trans_2", &trans2, a_cmd_data[1], j_cmd_data[1]);
+  to_act_eff.registerHandle(JointToActuatorEffortHandle("trans_1", &trans1, a_cmd_data[0], j_cmd_data[0]));
+  to_act_eff.registerHandle(JointToActuatorEffortHandle("trans_2", &trans2, a_cmd_data[1], j_cmd_data[1]));
 
   // Identity map
   a_curr_eff[0] = 1.0;
@@ -530,8 +530,8 @@ TEST_F(InterfaceWhiteBoxTest, StateMap)
   j_curr_data[1].effort   = vector<double*>(1, &j_curr_eff[1]);
 
   ActuatorToJointStateInterface to_jnt_state;
-  to_jnt_state.registerTransmission("trans_1", &trans1, a_curr_data[0], j_curr_data[0]);
-  to_jnt_state.registerTransmission("trans_2", &trans2, a_curr_data[1], j_curr_data[1]);
+  to_jnt_state.registerHandle(ActuatorToJointStateHandle("trans_1", &trans1, a_curr_data[0], j_curr_data[0]));
+  to_jnt_state.registerHandle(ActuatorToJointStateHandle("trans_2", &trans2, a_curr_data[1], j_curr_data[1]));
 
   // Joint -> actuator
   ActuatorData a_cmd_data[2];
@@ -553,8 +553,8 @@ TEST_F(InterfaceWhiteBoxTest, StateMap)
   j_cmd_data[1].effort   = vector<double*>(1, &j_cmd_eff[1]);
 
   JointToActuatorStateInterface to_act_state;
-  to_act_state.registerTransmission("trans_1", &trans1, a_cmd_data[0], j_cmd_data[0]);
-  to_act_state.registerTransmission("trans_2", &trans2, a_cmd_data[1], j_cmd_data[1]);
+  to_act_state.registerHandle(JointToActuatorStateHandle("trans_1", &trans1, a_cmd_data[0], j_cmd_data[0]));
+  to_act_state.registerHandle(JointToActuatorStateHandle("trans_2", &trans2, a_cmd_data[1], j_cmd_data[1]));
 
   // Identity map
   a_curr_pos[0] = 1.0;
@@ -601,24 +601,24 @@ TEST_F(AccessorTest, AccessorValidation)
   j_curr_data[1].position = vector<double*>(1, &j_curr_pos[1]);
 
   ActuatorToJointPositionInterface trans_iface;
-  trans_iface.registerTransmission("trans_1", &trans1, a_curr_data[0], j_curr_data[0]);
-  trans_iface.registerTransmission("trans_2", &trans2, a_curr_data[1], j_curr_data[1]);
+  trans_iface.registerHandle(ActuatorToJointPositionHandle("trans_1", &trans1, a_curr_data[0], j_curr_data[0]));
+  trans_iface.registerHandle(ActuatorToJointPositionHandle("trans_2", &trans2, a_curr_data[1], j_curr_data[1]));
 
   // Retrieve transmission names
-  vector<string> trans_names = trans_iface.getTransmissionNames();
+  vector<string> trans_names = trans_iface.getNames();
   ASSERT_EQ(2, trans_names.size());
 
   EXPECT_EQ("trans_1", trans_names[0]);
   EXPECT_EQ("trans_2", trans_names[1]);
 
   // Retrieve transmission handles
-  ActuatorToJointPositionHandle trans_handle1 = trans_iface.getTransmissionHandle(trans_names[0]);
+  ActuatorToJointPositionHandle trans_handle1 = trans_iface.getHandle(trans_names[0]);
   EXPECT_EQ(trans_names[0], trans_handle1.getName());
 
-  ActuatorToJointPositionHandle trans_handle2 = trans_iface.getTransmissionHandle(trans_names[1]);
+  ActuatorToJointPositionHandle trans_handle2 = trans_iface.getHandle(trans_names[1]);
   EXPECT_EQ(trans_names[1], trans_handle2.getName());
 
-  EXPECT_THROW(trans_iface.getTransmissionHandle("unregistered_name"), TransmissionInterfaceException);
+  EXPECT_THROW(trans_iface.getHandle("unregistered_name"), TransmissionInterfaceException);
 }
 
 int main(int argc, char** argv)

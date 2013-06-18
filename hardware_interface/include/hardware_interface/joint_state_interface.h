@@ -25,18 +25,14 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/*
- * Author: Wim Meeussen
- */
+/// \author Wim Meeussen
 
 #ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 #define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 
-#include <hardware_interface/internal/demangle_symbol.h>
-#include <hardware_interface/internal/named_resource_manager.h>
-#include <hardware_interface/hardware_interface.h>
+#include <hardware_interface/internal/hardware_resource_manager.h>
+#include <cassert>
 #include <string>
-#include <vector>
 
 namespace hardware_interface
 {
@@ -45,15 +41,29 @@ namespace hardware_interface
 class JointStateHandle
 {
 public:
-  JointStateHandle() {}
+  JointStateHandle() : name_(), pos_(0), vel_(0), eff_(0) {}
+
   JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
     : name_(name), pos_(pos), vel_(vel), eff_(eff)
-  {}
+  {
+    if (!pos)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Position data pointer is null.");
+    }
+    if (!vel)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Velocity data pointer is null.");
+    }
+    if (!eff)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
+    }
+  }
 
   std::string getName() const {return name_;}
-  double getPosition() const {return *pos_;}
-  double getVelocity() const {return *vel_;}
-  double getEffort()   const {return *eff_;}
+  double getPosition()  const {assert(pos_); return *pos_;}
+  double getVelocity()  const {assert(vel_); return *vel_;}
+  double getEffort()    const {assert(eff_); return *eff_;}
 
 private:
   std::string name_;
@@ -62,7 +72,6 @@ private:
   const double* eff_;
 };
 
-
 /** \brief Hardware interface to support reading the state of an array of joints
  *
  * This \ref HardwareInterface supports reading the state of an array of named
@@ -70,49 +79,7 @@ private:
  * torque).
  *
  */
-class JointStateInterface: public HardwareInterface
-{
-public:
-  /// Get the vector of joint names registered to this interface.
-  std::vector<std::string> getJointNames() const
-  {
-    return handle_map_.getNames();
-  }
-
-  /** \brief Register a new joint with this interface.
-   *
-   * \param name The name of the new joint
-   * \param pos A pointer to the storage for this joint's position
-   * \param vel A pointer to the storage for this joint's velocity
-   * \param eff A pointer to the storage for this joint's effort (force or torque)
-   *
-   */
-  void registerJoint(const std::string& name, double* pos, double* vel, double* eff)
-  {
-    JointStateHandle handle(name, pos, vel, eff);
-    handle_map_.insert(name, handle);
-  }
-
-  /** \brief Get a \ref JointStateHandle for accessing a joint's state
-   *
-   * \param name The name of the joint
-   *
-   */
-  JointStateHandle getJointStateHandle(const std::string& name) const
-  {
-    try
-    {
-      return handle_map_.get(name);
-    }
-    catch(...)
-    {
-      throw HardwareInterfaceException("Could not find joint '" + name + "' in " + internal::demangledTypeName(*this));
-    }
-  }
-
-private:
-  internal::NamedResourceManager<JointStateHandle> handle_map_;
-};
+class JointStateInterface : public HardwareResourceManager<JointStateHandle> {};
 
 }
 
