@@ -29,10 +29,9 @@
 #ifndef HARDWARE_INTERFACE_ACTUATOR_COMMAND_INTERFACE_H
 #define HARDWARE_INTERFACE_ACTUATOR_COMMAND_INTERFACE_H
 
-#include <hardware_interface/internal/demangle_symbol.h>
-#include <hardware_interface/internal/named_resource_manager.h>
+#include <string>
+#include <hardware_interface/internal/hardware_resource_manager.h>
 #include <hardware_interface/actuator_state_interface.h>
-
 
 namespace hardware_interface
 {
@@ -41,18 +40,25 @@ namespace hardware_interface
 class ActuatorHandle : public ActuatorStateHandle
 {
 public:
-  ActuatorHandle() {}
-  ActuatorHandle(const ActuatorStateHandle& js, double* cmd)
-    : ActuatorStateHandle(js), cmd_(cmd)
-  {}
-  void setCommand(double command) {*cmd_ = command;}
+  ActuatorHandle() : ActuatorStateHandle(), cmd_(0) {}
+
+  ActuatorHandle(const ActuatorStateHandle& as, double* cmd)
+    : ActuatorStateHandle(as), cmd_(cmd)
+  {
+    if (!cmd_)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + as.getName() + "'. Command data pointer is null.");
+    }
+  }
+
+  void setCommand(double command) {assert(cmd_); *cmd_ = command;}
+  double getCommand() const {assert(cmd_); return *cmd_;}
 
 private:
   double* cmd_;
 };
 
-
-/** \brief Hardware interface to support commanding an array of actuators
+/** \brief Hardware interface to support commanding an array of actuators.
  *
  * This \ref HardwareInterface supports commanding the output of an array of
  * named actuators. Note that these commands can have any semantic meaning as long
@@ -61,52 +67,7 @@ private:
  * classes like \ref EffortActuatorInterface etc.
  *
  */
-class ActuatorCommandInterface : public hardware_interface::HardwareInterface
-{
-public:
-  /// Get the vector of actuator names registered to this interface.
-  std::vector<std::string> getActuatorNames() const
-  {
-    return handle_map_.getNames();
-  }
-
-  /** \brief Register a new actuator with this interface.
-   *
-   * \param name The name of the new actuator
-   * \param cmd A pointer to the storage for this actuator's output command
-   */
-  void registerActuator(const ActuatorStateHandle& as, double* cmd)
-  {
-    ActuatorHandle handle(as, cmd);
-    handle_map_.insert(as.getName(), handle);
-  }
-
-  /** \brief Get a \ref ActuatorHandle for accessing a actuator's state and setting
-   * its output command.
-   *
-   * When a \ref ActuatorHandle is acquired, this interface will claim the actuator
-   * as a resource.
-   *
-   * \param name The name of the actuator
-   *
-   * \returns A \ref ActuatorHandle corresponding to the actuator identified by \c name
-   *
-   */
-  ActuatorHandle getActuatorHandle(const std::string& name)
-  {
-    try
-    {
-      return handle_map_.get(name);
-    }
-    catch(...)
-    {
-      throw HardwareInterfaceException("Could not find actuator '" + name + "' in " + internal::demangledTypeName(*this));
-    }
-  }
-
-protected:
-  internal::NamedResourceManager<ActuatorHandle> handle_map_;
-};
+class ActuatorCommandInterface : public HardwareResourceManager<ActuatorHandle> {};
 
 /// \ref ActuatorCommandInterface for commanding effort-based actuators
 class EffortActuatorInterface : public ActuatorCommandInterface {};

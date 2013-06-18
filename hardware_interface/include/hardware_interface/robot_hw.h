@@ -28,12 +28,13 @@
 #ifndef HARDWARE_INTERFACE_ROBOT_HW_H
 #define HARDWARE_INTERFACE_ROBOT_HW_H
 
+#include <list>
 #include <map>
 #include <typeinfo>
 #include <hardware_interface/internal/demangle_symbol.h>
 #include <hardware_interface/hardware_interface.h>
 #include <hardware_interface/controller_info.h>
-#include <ros/ros.h>
+#include <ros/console.h>
 
 namespace hardware_interface
 {
@@ -110,9 +111,13 @@ public:
   template<class T>
   void registerInterface(T* hw)
   {
+    const std::string iface_name = internal::demangledTypeName<T>();
+    if (interfaces_.find(iface_name) != interfaces_.end())
+    {
+      ROS_WARN_STREAM("Replacing previously registered interface '" << iface_name << "'.");
+    }
     interfaces_[internal::demangledTypeName<T>()] = hw;
   }
-
 
   /**
    * \brief Get a hardware interface.
