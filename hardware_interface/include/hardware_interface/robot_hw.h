@@ -28,6 +28,7 @@
 #ifndef HARDWARE_INTERFACE_ROBOT_HW_H
 #define HARDWARE_INTERFACE_ROBOT_HW_H
 
+#include <list>
 #include <map>
 #include <typeinfo>
 #include <hardware_interface/internal/demangle_symbol.h>
