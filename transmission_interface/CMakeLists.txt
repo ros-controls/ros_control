@@ -1,28 +1,43 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(transmission_interface)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-# set(ROS_BUILD_TYPE Release)
+if(USE_ROSBUILD)
 
-rosbuild_init()
+  include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+  rosbuild_init()
 
-rosbuild_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
-rosbuild_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
-rosbuild_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
-rosbuild_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
+  set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+  set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-# TODO: why is it explicitly needed???, without it linker fails.
-target_link_libraries(simple_transmission_test           pthread)
-target_link_libraries(differential_transmission_test     pthread)
-target_link_libraries(four_bar_linkage_transmission_test pthread)
-target_link_libraries(transmission_interface_test        pthread)
+  rosbuild_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
+  rosbuild_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
+  rosbuild_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
+  rosbuild_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
+
+  # TODO: why is it explicitly needed???, without it linker fails.
+  target_link_libraries(simple_transmission_test           pthread)
+  target_link_libraries(differential_transmission_test     pthread)
+  target_link_libraries(four_bar_linkage_transmission_test pthread)
+  target_link_libraries(transmission_interface_test        pthread)
+
+else()
+
+  # Load catkin and all dependencies required for this package
+  find_package(catkin REQUIRED)
+
+  # Declare a catkin package
+  catkin_package(
+    INCLUDE_DIRS include
+    )
+
+  catkin_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
+  catkin_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
+  catkin_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
+  catkin_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
+
+  # Install
+  install(DIRECTORY include/${PROJECT_NAME}/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+
+endif()

@@ -1,0 +1,33 @@
+<package>
+  <name>realtime_tools</name>
+  <version>1.0.0</version>
+  <description>This package contains a set of tools that can be used from a hard
+    realtime thread, without breaking the realtime behavior.  The
+    tools currently only provides the realtime publisher, which makes
+    it possible to publish messages to a ROS topic from a realtime
+    thread. We plan to add a basic implementation of a realtime
+    buffer, to make it possible to get data from a (non-realtime)
+    topic callback into tha realtime loop. Once the lockfree buffer is
+    created, the realtime publisher will start using it, which will
+    result in major API changes for the realtime publisher (removal of
+    all lock methods).</description>
+  <maintainer email="sglaser@willowgarage.com">Stuart Glaser</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/realtime_tools</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author email="sglaser@willowgarage.com">Stuart Glaser</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend> 
+  <build_depend>rospy</build_depend> 
+  <run_depend>roscpp</run_depend> 
+  <run_depend>rospy</run_depend> 
+
+  <export>
+    <cpp lflags="-L${prefix}/lib -lrealtime_tools" cflags="-I${prefix}/include"/>
+  </export>
+</package>
