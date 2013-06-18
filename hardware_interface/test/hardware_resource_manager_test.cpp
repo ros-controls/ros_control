@@ -34,12 +34,12 @@
 
 #include <gtest/gtest.h>
 
-#include <hardware_interface/resource_manager.h>
+#include <hardware_interface/internal/hardware_resource_manager.h>
 
 using std::find;
+using std::set;
 using std::string;
 using std::vector;
-using std::set;
 
 using namespace hardware_interface;
 
@@ -54,23 +54,20 @@ private:
   string name_;
 };
 
-class ResourceManagerTest : public ::testing::Test
+class HardwareResourceManagerTest : public ::testing::Test
 {
 public:
-
-
-  ResourceManagerTest()
+  HardwareResourceManagerTest()
     : h1("resource1", 1),
       h2("resource2", 2) {}
-
 protected:
   HandleType h1, h2;
 };
 
-TEST_F(ResourceManagerTest, ExcerciseApi)
+TEST_F(HardwareResourceManagerTest, ExcerciseApi)
 {
   // Populate resource manager
-  ResourceManager<HandleType> mgr;
+  HardwareResourceManager<HandleType> mgr;
   ASSERT_TRUE(mgr.getNames().empty());
 
   mgr.registerHandle(h1);
@@ -98,10 +95,10 @@ TEST_F(ResourceManagerTest, ExcerciseApi)
   EXPECT_THROW(mgr.getHandle("no_resource"), HardwareInterfaceException);
 }
 
-TEST_F(ResourceManagerTest, HandleRewriting)
+TEST_F(HardwareResourceManagerTest, HandleRewriting)
 {
   // Populate resource manager
-  ResourceManager<HandleType> mgr;
+  HardwareResourceManager<HandleType> mgr;
   mgr.registerHandle(h1);
 
   // Check handle velues
@@ -129,11 +126,11 @@ TEST_F(ResourceManagerTest, HandleRewriting)
   }
 }
 
-TEST_F(ResourceManagerTest, ResourceClaims)
+TEST_F(HardwareResourceManagerTest, ResourceClaims)
 {
   // Default: Manager that does not claim resources
   {
-    ResourceManager<HandleType> mgr;
+    HardwareResourceManager<HandleType> mgr;
     mgr.registerHandle(h1);
     mgr.registerHandle(h2);
 
@@ -149,7 +146,7 @@ TEST_F(ResourceManagerTest, ResourceClaims)
 
   // Explicit setting: Manager that does not claim resources
   {
-    ResourceManager<HandleType, DontClaimResources> mgr;
+    HardwareResourceManager<HandleType, DontClaimResources> mgr;
     mgr.registerHandle(h1);
     mgr.registerHandle(h2);
     EXPECT_TRUE(mgr.getClaims().empty());
@@ -164,7 +161,7 @@ TEST_F(ResourceManagerTest, ResourceClaims)
 
   // Explicit setting: Manager that does claim resources
   {
-    ResourceManager<HandleType, ClaimResources> mgr;
+    HardwareResourceManager<HandleType, ClaimResources> mgr;
     mgr.registerHandle(h1);
     mgr.registerHandle(h2);
     EXPECT_TRUE(mgr.getClaims().empty());

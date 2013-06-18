@@ -30,7 +30,7 @@
 #define HARDWARE_INTERFACE_ACTUATOR_COMMAND_INTERFACE_H
 
 #include <string>
-#include <hardware_interface/resource_manager.h>
+#include <hardware_interface/internal/hardware_resource_manager.h>
 #include <hardware_interface/actuator_state_interface.h>
 
 namespace hardware_interface
@@ -67,7 +67,7 @@ private:
  * classes like \ref EffortActuatorInterface etc.
  *
  */
-class ActuatorCommandInterface : public ResourceManager<ActuatorHandle> {};
+class ActuatorCommandInterface : public HardwareResourceManager<ActuatorHandle> {};
 
 /// \ref ActuatorCommandInterface for commanding effort-based actuators
 class EffortActuatorInterface : public ActuatorCommandInterface {};

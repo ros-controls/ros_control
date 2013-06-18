@@ -16,7 +16,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-rosbuild_add_gtest(resource_manager_test           test/resource_manager_test.cpp)
+rosbuild_add_gtest(hardware_resource_manager_test  test/hardware_resource_manager_test.cpp)
 rosbuild_add_gtest(actuator_state_interface_test   test/actuator_state_interface_test.cpp)
 rosbuild_add_gtest(actuator_command_interface_test test/actuator_command_interface_test.cpp)
 rosbuild_add_gtest(joint_state_interface_test      test/joint_state_interface_test.cpp)
@@ -24,7 +24,7 @@ rosbuild_add_gtest(joint_command_interface_test    test/joint_command_interface_
 rosbuild_add_gtest(robot_hw_test                   test/robot_hw_test.cpp)
 
 # TODO: why is it explicitly needed???, without it the linker fails.
-target_link_libraries(resource_manager_test           pthread)
+target_link_libraries(hardware_resource_manager_test  pthread)
 target_link_libraries(actuator_state_interface_test   pthread)
 target_link_libraries(actuator_command_interface_test pthread)
 target_link_libraries(joint_state_interface_test      pthread)

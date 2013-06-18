@@ -31,7 +31,7 @@
 #ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 #define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 
-#include <hardware_interface/resource_manager.h>
+#include <hardware_interface/internal/hardware_resource_manager.h>
 #include <string>
 
 namespace hardware_interface
@@ -78,7 +78,7 @@ private:
  * torque).
  *
  */
-class ActuatorStateInterface : public ResourceManager<ActuatorStateHandle> {};
+class ActuatorStateInterface : public HardwareResourceManager<ActuatorStateHandle> {};
 
 }
 

@@ -32,7 +32,7 @@
 
 #include <cassert>
 #include <string>
-#include <hardware_interface/resource_manager.h>
+#include <hardware_interface/internal/hardware_resource_manager.h>
 #include <hardware_interface/joint_state_interface.h>
 
 namespace hardware_interface
@@ -71,7 +71,7 @@ private:
  * \note Getting a joint handle through the getHandle() method \e will claim that resource.
  *
  */
-class JointCommandInterface : public ResourceManager<JointHandle, ClaimResources> {};
+class JointCommandInterface : public HardwareResourceManager<JointHandle, ClaimResources> {};
 
 /// \ref JointCommandInterface for commanding effort-based joints.
 class EffortJointInterface : public JointCommandInterface {};

@@ -30,7 +30,7 @@
 #ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 #define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
 
-#include <hardware_interface/resource_manager.h>
+#include <hardware_interface/internal/hardware_resource_manager.h>
 #include <cassert>
 #include <string>
 
@@ -79,7 +79,7 @@ private:
  * torque).
  *
  */
-class JointStateInterface : public ResourceManager<JointStateHandle> {};
+class JointStateInterface : public HardwareResourceManager<JointStateHandle> {};
 
 }
 
