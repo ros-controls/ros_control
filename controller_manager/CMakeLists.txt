@@ -43,4 +43,9 @@ else()
   install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
+  install(DIRECTORY scripts/
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+  catkin_python_setup()
+
 endif()
