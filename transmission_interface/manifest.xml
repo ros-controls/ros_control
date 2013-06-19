@@ -7,6 +7,8 @@
   <review status="unreviewed" notes=""/>
   <url>https://github.com/willowgarage/ros_control/wiki</url>
 
+  <depend package="hardware_interface" />
+
   <export>
     <cpp cflags="-I${prefix}/include" />
     <rosdoc config="rosdoc.yaml" />

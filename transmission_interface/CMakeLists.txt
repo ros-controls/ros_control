@@ -36,12 +36,6 @@ else()
   catkin_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
   catkin_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
 
-  # TODO: why is it explicitly needed???, without it linker fails.
-  #target_link_libraries(simple_transmission_test           pthread)
-  #target_link_libraries(differential_transmission_test     pthread)
-  #target_link_libraries(four_bar_linkage_transmission_test pthread)
-  #target_link_libraries(transmission_interface_test        pthread)
-
   # Install
   install(DIRECTORY include/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
