@@ -55,7 +55,6 @@ TEST(ActuatorStateHandleTest, HandleConstruction)
 
   try {ActuatorStateHandle(name, &pos, &vel, 0);}
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
-
 }
 
 #ifndef NDEBUG // NOTE: This test validates assertion triggering, hence only gets compiled in debug mode

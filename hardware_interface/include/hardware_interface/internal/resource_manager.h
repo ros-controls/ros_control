@@ -31,6 +31,7 @@
 #ifndef HARDWARE_INTERFACE_RESOURCE_MANAGER_H
 #define HARDWARE_INTERFACE_RESOURCE_MANAGER_H
 
+#include <stdexcept>
 #include <string>
 #include <map>
 #include <vector>
@@ -60,6 +61,8 @@ public:
   /** \name Non Real-Time Safe Functions
    *\{*/
 
+  virtual ~ResourceManager() {}
+
   /** \return Vector of resource names registered to this interface. */
   std::vector<std::string> getNames() const
   {
@@ -86,8 +89,7 @@ public:
     }
     else
     {
-      ROS_WARN_STREAM("Replacing previously registered handle '" << handle.getName() << "' in '" +
-                      internal::demangleSymbol(typeid(*this).name()) + "'.");
+      ROS_WARN_STREAM("Replacing previously registered handle '" << handle.getName() << "' in '" + getTypeName() + "'.");
       it->second = handle;
     }
   }
@@ -103,8 +105,7 @@ public:
 
     if (it == resource_map_.end())
     {
-      throw std::logic_error("Could not find resource '" + name + "' in '" +
-                             internal::demangleSymbol(typeid(*this).name()) + "'.");
+      throw std::logic_error("Could not find resource '" + name + "' in '" + getTypeName() + "'.");
     }
 
     return it->second;
@@ -115,6 +116,7 @@ public:
 protected:
   typedef std::map<std::string, ResourceHandle> ResourceMap;
   ResourceMap resource_map_;
+  virtual std::string getTypeName() {return internal::demangleSymbol(typeid(*this).name());}
 };
 
 }

@@ -79,9 +79,6 @@ template <class ResourceHandle, class ClaimPolicy = DontClaimResources>
 class HardwareResourceManager : public HardwareInterface, public ResourceManager<ResourceHandle>
 {
 public:
-
-  virtual ~HardwareResourceManager() {}
-
   /** \name Non Real-Time Safe Functions
    *\{*/
 
