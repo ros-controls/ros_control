@@ -50,8 +50,8 @@ public:
   string getName() const {return name_;}
   int getValue() {return val_;}
 private:
-  int val_;
   string name_;
+  int val_;
 };
 
 class HardwareResourceManagerTest : public ::testing::Test
