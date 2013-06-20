@@ -42,6 +42,10 @@ class ActuatorHandle : public ActuatorStateHandle
 public:
   ActuatorHandle() : ActuatorStateHandle(), cmd_(0) {}
 
+  /**
+   * \param as This actuator's state handle
+   * \param cmd A pointer to the storage for this actuator's output command
+   */
   ActuatorHandle(const ActuatorStateHandle& as, double* cmd)
     : ActuatorStateHandle(as), cmd_(cmd)
   {
