@@ -1,12 +1,26 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(controller_interface)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+if(USE_ROSBUILD)
 
-rosbuild_init()
+  include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+
+  rosbuild_init()
+
+else()
+
+  # Load catkin and all dependencies required for this package
+  find_package(catkin REQUIRED COMPONENTS roscpp hardware_interface pluginlib)
+
+  # Declare catkin package
+  catkin_package(
+    DEPENDS boost
+    CATKIN_DEPENDS roscpp hardware_interface pluginlib
+    INCLUDE_DIRS include
+    )
+
+  # Install
+  install(DIRECTORY include/${PROJECT_NAME}/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+
+endif()

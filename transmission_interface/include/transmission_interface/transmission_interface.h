@@ -34,6 +34,7 @@
 #include <string>
 #include <vector>
 
+#include <hardware_interface/internal/resource_manager.h>
 #include <transmission_interface/transmission.h>
 #include <transmission_interface/transmission_interface_exception.h>
 
@@ -335,71 +336,37 @@ public:
  *   std::string getName() const;
  *  \endcode
  */
+
 template <class HandleType>
-class TransmissionInterface
+class TransmissionInterface : public hardware_interface::ResourceManager<HandleType>
 {
 public:
-  /** \name Non Real-Time Safe Functions
-   *\{*/
-  /** \brief Register a new transmission to this interface. */
-  void registerTransmission(const std::string&  name,
-                            Transmission*       transmission,
-                            const ActuatorData& actuator_data,
-                            const JointData&    joint_data)
-  {
-    HandleType handle(name, transmission, actuator_data, joint_data);
-    typename HandleMap::iterator it = handle_map_.find(name);
-    if (it == handle_map_.end())
-    {
-      handle_map_.insert(std::make_pair(name, handle));
-    }
-    else
-    {
-      it->second = handle;
-    }
-  }
 
-  /** \return Vector of transmission names registered to this interface. */
-  std::vector<std::string> getTransmissionNames() const
+  HandleType getHandle(const std::string& name)
   {
-    std::vector<std::string> out;
-    out.reserve(handle_map_.size());
-    for (typename HandleMap::const_iterator it = handle_map_.begin(); it != handle_map_.end(); ++it)
+    // Rethrow exception with a meanungful type
+    try
     {
-      out.push_back(it->first);
+      return this->hardware_interface::ResourceManager<HandleType>::getHandle(name);
     }
-    return out;
-  }
-
-  /**
-   * \param name The name of the transmission.
-   * \return Transmission handle.
-   */
-  HandleType getTransmissionHandle(const std::string& name) const
-  {
-    typename HandleMap::const_iterator it = handle_map_.find(name);
-    if (it == handle_map_.end())
+    catch(const std::logic_error& e)
     {
-      throw TransmissionInterfaceException("Could not find transmission '" + name + "'.");
+      throw TransmissionInterfaceException(e.what());
     }
-    return it->second;
   }
-  /*\}*/
 
   /** \name Real-Time Safe Functions
    *\{*/
   /** \brief Propagate the transmission maps of all managed handles. */
   void propagate()
   {
-    for (typename HandleMap::iterator it = handle_map_.begin(); it != handle_map_.end(); ++it)
+    typedef typename hardware_interface::ResourceManager<HandleType>::ResourceMap::iterator ItratorType;
+    for (ItratorType it = this->resource_map_.begin(); it != this->resource_map_.end(); ++it)
     {
       it->second.propagate();
     }
   }
   /*\}*/
-private:
-  typedef std::map<std::string, HandleType> HandleMap;
-  HandleMap handle_map_;
 };
 
 // Convenience typedefs

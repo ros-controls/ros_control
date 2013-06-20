@@ -1,4 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
+// Copyright (C) 2012, hiDOF INC.
 // Copyright (C) 2013, PAL Robotics S.L.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -25,8 +26,10 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef HARDWARE_INTERFACE_INTERNAL_NAMED_RESOURCE_MANAGER_H
-#define HARDWARE_INTERFACE_INTERNAL_NAMED_RESOURCE_MANAGER_H
+/// \author Wim Meeussen, Adolfo Rodriguez Tsouroukdissian
+
+#ifndef HARDWARE_INTERFACE_RESOURCE_MANAGER_H
+#define HARDWARE_INTERFACE_RESOURCE_MANAGER_H
 
 #include <stdexcept>
 #include <string>
@@ -34,21 +37,33 @@
 #include <vector>
 #include <utility>  // for std::make_pair
 
+#include <ros/console.h>
+
+#include <hardware_interface/internal/demangle_symbol.h>
+
 namespace hardware_interface
 {
 
-namespace internal
-{
-
 /**
- * \brief Class providing convenience methods around a map associative container.
- * \tparam Resource type.
+ * \brief Class for handling named resources.
+ *
+ * Resources are encapsulated inside handle instances, and this class allows to register and get them by name.
+ *
+ * \tparam ResourceHandle Resource handle type. Must implement the following method:
+ *  \code
+ *   std::string getName() const;
+ *  \endcode
  */
-template <class T>
-class NamedResourceManager
+template <class ResourceHandle>
+class ResourceManager
 {
 public:
-  /** \return Vector containing the names of all managed resources. */
+  /** \name Non Real-Time Safe Functions
+   *\{*/
+
+  virtual ~ResourceManager() {}
+
+  /** \return Vector of resource names registered to this interface. */
   std::vector<std::string> getNames() const
   {
     std::vector<std::string> out;
@@ -61,46 +76,49 @@ public:
   }
 
   /**
-   * \brief Insert a new element in the stored container.
-   * If the resource name already exists, the existing resource value will be replaced with \e val.
-   * \param name Resource name.
-   * \param val Resource value.
+   * \brief Register a new resource.
+   * If the resource name already exists, the previously stored resource value will be replaced with \e val.
+   * \param handle Resource value. Its type should implement a <tt>std::string getName()</tt> method.
    */
-  void insert(const std::string& name, const T& val)
+  void registerHandle(const ResourceHandle& handle)
   {
-    typename ResourceMap::iterator it = resource_map_.find(name);
+    typename ResourceMap::iterator it = resource_map_.find(handle.getName());
     if (it == resource_map_.end())
     {
-      resource_map_.insert(std::make_pair(name, val));
+      resource_map_.insert(std::make_pair(handle.getName(), handle));
     }
     else
     {
-      it->second = val;
+      ROS_WARN_STREAM("Replacing previously registered handle '" << handle.getName() << "' in '" + getTypeName() + "'.");
+      it->second = handle;
     }
   }
 
   /**
+   * \brief Get a resource handle by name.
    * \param name Resource name.
-   * \return Resource value associated to \e name. If the resource name is not found, an exception is thrown.
+   * \return Resource associated to \e name. If the resource name is not found, an exception is thrown.
    */
-  T get(const std::string& name) const
+  ResourceHandle getHandle(const std::string& name)
   {
     typename ResourceMap::const_iterator it = resource_map_.find(name);
 
     if (it == resource_map_.end())
     {
-      throw std::invalid_argument("Could not find resource.");
+      throw std::logic_error("Could not find resource '" + name + "' in '" + getTypeName() + "'.");
     }
+
     return it->second;
   }
 
-private:
-  typedef std::map<std::string, T> ResourceMap;
+  /*\}*/
+
+protected:
+  typedef std::map<std::string, ResourceHandle> ResourceMap;
   ResourceMap resource_map_;
+  virtual std::string getTypeName() {return internal::demangleSymbol(typeid(*this).name());}
 };
 
 }
 
-}
-
-#endif // HARDWARE_INTERFACE_INTERNAL_NAMED_RESOURCE_MANAGER_H
+#endif // HARDWARE_INTERFACE_RESOURCE_MANAGER_H

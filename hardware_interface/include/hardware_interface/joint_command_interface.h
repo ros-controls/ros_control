@@ -25,11 +25,14 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
+/// \author Wim Meeussen
+
 #ifndef HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 #define HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
 
-#include <hardware_interface/internal/demangle_symbol.h>
-#include <hardware_interface/internal/named_resource_manager.h>
+#include <cassert>
+#include <string>
+#include <hardware_interface/internal/hardware_resource_manager.h>
 #include <hardware_interface/joint_state_interface.h>
 
 namespace hardware_interface
@@ -39,19 +42,25 @@ namespace hardware_interface
 class JointHandle : public JointStateHandle
 {
 public:
-  JointHandle() {}
+  JointHandle() : JointStateHandle(), cmd_(0) {}
+
   JointHandle(const JointStateHandle& js, double* cmd)
     : JointStateHandle(js), cmd_(cmd)
-  {}
-  void setCommand(double command) {*cmd_ = command;};
-  double getCommand() const {return *cmd_;};
+  {
+    if (!cmd_)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + js.getName() + "'. Command data pointer is null.");
+    }
+  }
+
+  void setCommand(double command) {assert(cmd_); *cmd_ = command;}
+  double getCommand() const {assert(cmd_); return *cmd_;}
 
 private:
   double* cmd_;
 };
 
-
-/** \brief Hardware interface to support commanding an array of joints
+/** \brief Hardware interface to support commanding an array of joints.
  *
  * This \ref HardwareInterface supports commanding the output of an array of
  * named joints. Note that these commands can have any semantic meaning as long
@@ -59,61 +68,18 @@ private:
  * effort commands. To specify a meaning to this command, see the derived
  * classes like \ref EffortJointInterface etc.
  *
+ * \note Getting a joint handle through the getHandle() method \e will claim that resource.
+ *
  */
-class JointCommandInterface : public hardware_interface::HardwareInterface
-{
-public:
-  /// Get the vector of joint names registered to this interface.
-  std::vector<std::string> getJointNames() const
-  {
-    return handle_map_.getNames();
-  }
+class JointCommandInterface : public HardwareResourceManager<JointHandle, ClaimResources> {};
 
-  /** \brief Register a new joint with this interface.
-   *
-   * \param name The name of the new joint
-   * \param cmd A pointer to the storage for this joint's output command
-   */
-  void registerJoint(const JointStateHandle& js, double* cmd)
-  {
-    JointHandle handle(js, cmd);
-    handle_map_.insert(js.getName(), handle);
-  }
-
-  /** \brief Get a \ref JointHandle for accessing a joint's state and setting
-   * its output command.
-   *
-   * When a \ref JointHandle is acquired, this interface will claim the joint
-   * as a resource.
-   *
-   * \param name The name of the joint
-   *
-   * \returns A \ref JointHandle corresponding to the joint identified by \c name
-   *
-   */
-  JointHandle getJointHandle(const std::string& name)
-  {
-    try
-    {
-      return handle_map_.get(name);
-    }
-    catch(...)
-    {
-      throw HardwareInterfaceException("Could not find joint '" + name + "' in " + internal::demangledTypeName(*this));
-    }
-  }
-
-protected:
-  internal::NamedResourceManager<JointHandle> handle_map_;
-};
-
-/// \ref JointCommandInterface for commanding effort-based joints
+/// \ref JointCommandInterface for commanding effort-based joints.
 class EffortJointInterface : public JointCommandInterface {};
 
-/// \ref JointCommandInterface for commanding velocity-based joints
+/// \ref JointCommandInterface for commanding velocity-based joints.
 class VelocityJointInterface : public JointCommandInterface {};
 
-/// \ref JointCommandInterface for commanding position-based joints
+/// \ref JointCommandInterface for commanding position-based joints.
 class PositionJointInterface : public JointCommandInterface {};
 
 }

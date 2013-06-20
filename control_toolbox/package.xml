@@ -1,0 +1,32 @@
+<package>
+  <name>control_toolbox</name>
+  <version>1.0.0</version>
+  <description>The control toolbox contains modules that are useful across all controllers.</description>
+  <maintainer email="sachinc@willowgarage.com">Sachin Chitta</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/control_toolbox</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Melonee Wise</author>
+  <author>Sachin Chitta</author>
+  <author>John Hsu</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>rosconsole</build_depend> 
+  <build_depend>tf</build_depend> 
+  <build_depend>roscpp</build_depend> 
+  <build_depend>angles</build_depend> 
+  <build_depend>message_generation</build_depend> 
+  <run_depend>rosconsole</run_depend> 
+  <run_depend>tf</run_depend> 
+  <run_depend>roscpp</run_depend> 
+  <run_depend>angles</run_depend> 
+  <run_depend>message_runtime</run_depend>
+
+  <export>
+    <cpp lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lcontrol_toolbox" cflags="-I${prefix}/include -I${prefix}/include/control_toolbox/eigen2"/>
+  </export>
+</package>
