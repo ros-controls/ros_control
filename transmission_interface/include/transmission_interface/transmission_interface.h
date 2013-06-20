@@ -344,6 +344,7 @@ public:
 
   HandleType getHandle(const std::string& name)
   {
+    // Rethrow exception with a meanungful type
     try
     {
       return this->hardware_interface::ResourceManager<HandleType>::getHandle(name);
