@@ -124,7 +124,7 @@ bool Pid::init(const ros::NodeHandle &node)
 double Pid::computeCommand(double error, ros::Duration dt)
 {
   double p_term, d_term;
-  p_error_ = error; // this is error = target-state
+  p_error_ = error; // this is error = target - state
 
   if (dt == ros::Duration(0.0) || std::isnan(error) || std::isinf(error))
     return 0.0;
