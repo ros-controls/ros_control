@@ -26,6 +26,8 @@ else()
     include/controller_manager/controller_loader_interface.h
     include/controller_manager/controller_loader.h)
 
+  add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
+
   # Declare catkin package
   catkin_package(
     DEPENDS boost
@@ -40,5 +42,10 @@ else()
 
   install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+
+  install(DIRECTORY scripts/
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+  catkin_python_setup()
 
 endif()
