@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 
   // Transmission interface
   ActuatorToJointPositionInterface act_to_jnt_pos;
-  act_to_jnt_pos.registerHandle("trans", &trans, a_data, j_data);
+  act_to_jnt_pos.registerHandle(ActuatorToJointPositionHandle("trans", &trans, a_data, j_data));
 
   // Propagate actuator position to joint space
   act_to_jnt_pos.propagate();
@@ -132,14 +132,28 @@ public:
     // ...once the raw data has been wrapped, the rest is straightforward //////////////////////////////////////////////
 
     // Register transmissions to each interface
-    act_to_jnt_state.registerHandle("sim_trans", &sim_trans, a_state_data[0], j_state_data[0]);
-    act_to_jnt_state.registerHandle("dif_trans", &dif_trans, a_state_data[1], j_state_data[1]);
+    act_to_jnt_state.registerHandle(ActuatorToJointStateHandle("sim_trans",
+                                                               &sim_trans,
+                                                               a_state_data[0],
+                                                               j_state_data[0]));
 
-    jnt_to_act_pos.registerHandle("sim_trans", &sim_trans, a_cmd_data[0], j_cmd_data[0]);
-    jnt_to_act_pos.registerHandle("dif_trans", &dif_trans, a_cmd_data[1], j_cmd_data[1]);
+    act_to_jnt_state.registerHandle(ActuatorToJointStateHandle("dif_trans",
+                                                              &dif_trans,
+                                                              a_state_data[1],
+                                                              j_state_data[1]));
 
-    // Names must be unique within a single transmission interface, but a same name can be used in multiple interfaces,
-    // as shown above
+    jnt_to_act_pos.registerHandle(JointToActuatorPositionHandle("sim_trans",
+                                                                &sim_trans,
+                                                                a_cmd_data[0],
+                                                                j_cmd_data[0]));
+
+    jnt_to_act_pos.registerHandle(JointToActuatorPositionHandle("dif_trans",
+                                                                &dif_trans,
+                                                                a_cmd_data[1],
+                                                                j_cmd_data[1]));
+
+    // Names must be unique within a single transmission interface, but a same name can be used in
+    // multiple interfaces, as shown above
   }
 
   void read()

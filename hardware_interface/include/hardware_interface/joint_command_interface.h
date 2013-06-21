@@ -44,6 +44,10 @@ class JointHandle : public JointStateHandle
 public:
   JointHandle() : JointStateHandle(), cmd_(0) {}
 
+  /**
+   * \param js This joint's state handle
+   * \param cmd A pointer to the storage for this joint's output command
+   */
   JointHandle(const JointStateHandle& js, double* cmd)
     : JointStateHandle(js), cmd_(cmd)
   {
