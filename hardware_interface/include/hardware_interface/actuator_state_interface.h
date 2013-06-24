@@ -42,6 +42,13 @@ class ActuatorStateHandle
 {
 public:
   ActuatorStateHandle() : name_(), pos_(0), vel_(0), eff_(0) {}
+
+  /**
+   * \param name The name of the actuator
+   * \param pos A pointer to the storage for this actuator's position
+   * \param vel A pointer to the storage for this actuator's velocity
+   * \param eff A pointer to the storage for this actuator's effort (force or torque)
+   */
   ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
     : name_(name), pos_(pos), vel_(vel), eff_(eff)
   {
