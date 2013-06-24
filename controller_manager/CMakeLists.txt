@@ -26,7 +26,9 @@ else()
     include/controller_manager/controller_loader_interface.h
     include/controller_manager/controller_loader.h)
 
-  add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
+  if(catkin_EXPORTED_TARGETS)
+    add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
+  endif()
 
   # Declare catkin package
   catkin_package(
