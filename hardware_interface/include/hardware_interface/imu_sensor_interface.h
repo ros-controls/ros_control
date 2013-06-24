@@ -101,4 +101,6 @@ private:
 /** \brief Hardware interface to support reading the state of an IMU sensor. */
 class ImuSensorInterface : public HardwareResourceManager<ImuSensorHandle> {};
 
+}
+
 #endif // HARDWARE_INTERFACE_IMU_SENSOR_INTERFACE_H
