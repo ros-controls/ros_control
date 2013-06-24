@@ -28,8 +28,8 @@
 
 /// \author Wim Meeussen
 
-#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
+#ifndef HARDWARE_INTERFACE_ACTUATOR_STATE_INTERFACE_H
+#define HARDWARE_INTERFACE_ACTUATOR_STATE_INTERFACE_H
 
 #include <hardware_interface/internal/hardware_resource_manager.h>
 #include <string>
