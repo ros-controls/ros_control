@@ -30,16 +30,17 @@
 #ifndef HARDWARE_INTERFACE_IMU_SENSOR_INTERFACE_H
 #define HARDWARE_INTERFACE_IMU_SENSOR_INTERFACE_H
 
-#include <hardware_interface/internal/demangle_symbol.h>
-#include <hardware_interface/internal/named_resource_manager.h>
-#include <hardware_interface/hardware_interface.h>
+#include <hardware_interface/internal/hardware_resource_manager.h>
 #include <string>
-#include <vector>
 
 namespace hardware_interface
 {
 
-/// A handle used to read the state of a IMU sensor.
+/** \brief A handle used to read the state of a IMU sensor.
+ *
+ * Depending on the sensor, not all readings exposed by the handle class might be available.
+ * TODO: Document more!
+ */
 class ImuSensorHandle
 {
 public:
@@ -55,14 +56,14 @@ public:
         linear_acceleration(0),
         linear_acceleration_covariance(0) {}
 
-    std::string name;
-    std::string frame_id;
-    double* orientation;
-    double* orientation_covariance;
-    double* angular_velocity;
-    double* angular_velocity_covariance;
-    double* linear_acceleration;
-    double* linear_acceleration_covariance;
+    std::string name;                       ///< The name of the sensor
+    std::string frame_id;                   ///< The reference frame to which this sensor is associated
+    double* orientation;                    ///< A pointer to the storage of the orientation value: a quaternion (x,y,z,w)
+    double* orientation_covariance;         ///< A pointer to the storage of the orientation covariance value: a row major 3x3 matrix about (x,y,z)
+    double* angular_velocity;               ///< A pointer to the storage of the angular velocity value: a triplet (x,y,z)
+    double* angular_velocity_covariance;    ///< A pointer to the storage of the angular velocity covariance value: a row major 3x3 matrix about (x,y,z)
+    double* linear_acceleration;            ///< A pointer to the storage of the linear acceleration value: a triplet (x,y,z)
+    double* linear_acceleration_covariance; ///< A pointer to the storage of the linear acceleration covariance value: a row major 3x3 matrix about (x,y,z)
   };
 
   ImuSensorHandle(const Data& data)
@@ -97,58 +98,7 @@ private:
   double* linear_acceleration_covariance_;
 };
 
-class ImuSensorInterface : public HardwareInterface
-{
-public:
-  /// Get the vector of IMU sensor names registered to this interface.
-  std::vector<std::string> getSensorNames() const
-  {
-    return handle_map_.getNames();
-  }
-
-  /** \brief Register a new IMU sensor with this interface.
-   *
-   * \param name The name of the new sensor
-   * \param frame_id The reference frame to which this sensor is associated
-   * \param orientation A pointer to the storage of the orientation value: a quaternion (x,y,z,w)
-   * \param orientation_covariance A pointer to the storage of the orientation covariance value:
-   *        a row major 3x3 matrix about (x,y,z)
-   * \param angular_velocity A pointer to the storage of the angular velocity value: a triplet (x,y,z)
-   * \param angular_velocity_covariance A pointer to the storage of the angular velocity covariance value:
-   *        a row major 3x3 matrix about (x,y,z)
-   * \param linear_acceleration A pointer to the storage of the linear acceleration value: a triplet (x,y,z)
-   * \param linear_acceleration_covariance A pointer to the storage of the linear acceleration covariance value:
-   *        a row major 3x3 matrix about (x,y,z)
-   */
-  void registerSensor(const ImuSensorHandle::Data& data)
-  {
-    ImuSensorHandle handle(data);
-    handle_map_.insert(data.name, handle);
-  }
-
-  /** \brief Get a \ref ImuSensorHandle for accessing a IMU sensor's state.
-   *
-   * \param name The name of the sensor
-   * \return A \ref ImuSensorHandle corresponding to the sensor identified by \c name
-   *
-   */
-  ImuSensorHandle getSensorHandle(const std::string& name)
-  {
-    try
-    {
-      return handle_map_.get(name);
-    }
-    catch(...)
-    {
-      throw HardwareInterfaceException("Could not find IMU sensor '" + name + "' in " +
-                                       internal::demangledTypeName(*this));
-    }
-  }
-
-protected:
-  internal::NamedResourceManager<ImuSensorHandle> handle_map_;
-};
-
-}
+/** \brief Hardware interface to support reading the state of an IMU sensor. */
+class ImuSensorInterface : public HardwareResourceManager<ImuSensorHandle> {};
 
 #endif // HARDWARE_INTERFACE_IMU_SENSOR_INTERFACE_H

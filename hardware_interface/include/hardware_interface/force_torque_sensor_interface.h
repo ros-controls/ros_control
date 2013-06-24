@@ -30,11 +30,8 @@
 #ifndef HARDWARE_INTERFACE_FORCE_CONTROL_SENSOR_INTERFACE_H
 #define HARDWARE_INTERFACE_FORCE_CONTROL_SENSOR_INTERFACE_H
 
-#include <hardware_interface/internal/demangle_symbol.h>
-#include <hardware_interface/internal/named_resource_manager.h>
-#include <hardware_interface/hardware_interface.h>
+#include <hardware_interface/internal/hardware_resource_manager.h>
 #include <string>
-#include <vector>
 
 namespace hardware_interface
 {
@@ -43,6 +40,13 @@ namespace hardware_interface
 class ForceTorqueSensorHandle
 {
 public:
+  /**
+   * \param name The name of the sensor
+   * \param frame_id The reference frame to which this sensor is associated
+   * \param force A pointer to the storage of the force value: a triplet (x,y,z)
+   * \param torque A pointer to the storage of the torque value: a triplet (x,y,z)
+   *
+   */
   ForceTorqueSensorHandle(const std::string& name,
                           const std::string& frame_id,
                           double* force,
@@ -65,54 +69,8 @@ private:
   double* torque_;
 };
 
-class ForceTorqueSensorInterface : public HardwareInterface
-{
-public:
-  /// Get the vector of force-torque sensor names registered to this interface.
-  std::vector<std::string> getSensorNames() const
-  {
-    return handle_map_.getNames();
-  }
-
-  /** \brief Register a new force-torque sensor with this interface.
-   *
-   * \param name The name of the new sensor
-   * \param frame_id The reference frame to which this sensor is associated
-   * \param force A pointer to the storage of the force value: a triplet (x,y,z)
-   * \param torque A pointer to the storage of the torque value: a triplet (x,y,z)
-   *
-   */
-  void registerSensor(const std::string& name,
-                      const std::string& frame_id,
-                      double* force,
-                      double* torque)
-  {
-    ForceTorqueSensorHandle handle(name, frame_id, force, torque);
-    handle_map_.insert(name, handle);
-  }
-
-  /** \brief Get a \ref ForceTorqueSensorHandle for accessing a force-torque sensor's state.
-   *
-   * \param name The name of the sensor
-   * \return A \ref ForceTorqueSensorHandle corresponding to the sensor identified by \c name
-   *
-   */
-  ForceTorqueSensorHandle getSensorHandle(const std::string& name)
-  {
-    try
-    {
-      return handle_map_.get(name);
-    }
-    catch(...)
-    {
-      throw HardwareInterfaceException("Could not find force-torque sensor '" + name + "' in " +
-                                       internal::demangledTypeName(*this));
-    }
-  }
-
-protected:
-  internal::NamedResourceManager<ForceTorqueSensorHandle> handle_map_;
-};
+/** \brief Hardware interface to support reading the state of a force-torque sensor. */
+class ForceTorqueSensorInterface : public HardwareResourceManager<ForceTorqueSensorHandle> {};
 
 }
 
