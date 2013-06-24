@@ -75,6 +75,16 @@ inline std::string demangledTypeName()
   return demangleSymbol(typeid(T).name());
 }
 
+/**
+* \brief Convenience method for demangling type names.
+* \sa demangleSymbol
+*/
+template <class T>
+inline std::string demangledTypeName(const T& val)
+{
+  return demangleSymbol(typeid(val).name());
+}
+
 }
 
 }
