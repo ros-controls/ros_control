@@ -1,13 +1,15 @@
 <package>
   <name>ros_control</name>
   <version>1.0.0</version>
-  <description>The new ros controller manager</description>
+  <description>A set of packages that include controller interfaces, controller managers, transmissions, hardware_interfaces and the control_toolbox.</description>
+
   <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
 
   <license>BSD</license>
 
   <url type="website">http://ros.org/wiki/ros_control</url>
-  <!-- <url type="bugtracker"></url> -->
+  <url type="bugtracker">https://github.com/willowgarage/ros_control/issues</url>
+  <url type="repository">https://github.com/willowgarage/ros_control/</url>
 
   <author>Wim Meeussen</author>
 
@@ -21,10 +23,6 @@
   <run_depend>controller_manager_tests</run_depend>
   <run_depend>controller_manager_msgs</run_depend>
   <run_depend>control_toolbox</run_depend>
-
-
-
-
 
   <export>
     <metapackage/>
