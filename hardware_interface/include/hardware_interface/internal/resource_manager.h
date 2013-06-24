@@ -89,7 +89,8 @@ public:
     }
     else
     {
-      ROS_WARN_STREAM("Replacing previously registered handle '" << handle.getName() << "' in '" + getTypeName() + "'.");
+      ROS_WARN_STREAM("Replacing previously registered handle '" << handle.getName() << "' in '" +
+                      internal::demangledTypeName(*this) + "'.");
       it->second = handle;
     }
   }
@@ -105,7 +106,8 @@ public:
 
     if (it == resource_map_.end())
     {
-      throw std::logic_error("Could not find resource '" + name + "' in '" + getTypeName() + "'.");
+      throw std::logic_error("Could not find resource '" + name + "' in '" +
+                             internal::demangledTypeName(*this) + "'.");
     }
 
     return it->second;
@@ -116,7 +118,6 @@ public:
 protected:
   typedef std::map<std::string, ResourceHandle> ResourceMap;
   ResourceMap resource_map_;
-  virtual std::string getTypeName() {return internal::demangleSymbol(typeid(*this).name());}
 };
 
 }
