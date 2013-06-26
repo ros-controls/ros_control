@@ -78,9 +78,7 @@ def shutdown():
             rospy.logout("Trying to unload %s" % name)
             unload_controller(name)
             rospy.logout("Succeeded in unloading %s" % name)
-    except rospy.ServiceException:
-        rospy.logwarn("Controller Spawner couldn't reach controller_manager to take down controllers.")
-    except rospy.exceptions.ROSException:
+    except (rospy.ServiceException, rospy.exceptions.ROSException) as exc:
         rospy.logwarn("Controller Spawner couldn't reach controller_manager to take down controllers.")
 
 # At this moment, I am absolutely livid about Python's lack of
