@@ -1,0 +1,18 @@
+<package>
+  <description>
+    Classes for enforcing safety limits.
+  </description>
+  <author>Adolfo Rodriguez Tsouroukdissian</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://github.com/willowgarage/ros_control/wiki</url>
+
+  <depend package="roscpp" />
+  <depend package="hardware_interface" />
+  <depend package="urdf_interface" />
+
+  <export>
+    <cpp cflags="-I${prefix}/include" />
+  </export>
+
+</package>
