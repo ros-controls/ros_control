@@ -39,4 +39,4 @@ There are three main elements involved in setting up a transmission_interface:
 - Read transmission configuration from configuration files.
 
 ### Examples ###
-Please refer to the  [transmission_interface](https://github.com/willowgarage/ros_control/wiki/transmission_interface) wiki page.
+Please refer to the  [transmission_interface](https://github.com/ros-controls/ros_control/wiki/transmission_interface) wiki page.
