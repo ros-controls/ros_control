@@ -64,4 +64,4 @@ void EffortTestController::stopping(const ros::Time& time)
   ROS_INFO("Stopping JointState Controller");
 }
 
-PLUGINLIB_EXPORT_CLASS( controller_manager_tests::EffortTestController, controller_interface::ControllerBase)
+PLUGINLIB_DECLARE_CLASS(controller_manager_tests, EffortTestController, controller_manager_tests::EffortTestController, controller_interface::ControllerBase)

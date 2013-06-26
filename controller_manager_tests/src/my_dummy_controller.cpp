@@ -31,5 +31,5 @@
 
 using namespace controller_manager_tests;
 
-PLUGINLIB_EXPORT_CLASS( controller_manager_tests::MyDummyController, controller_interface::ControllerBase)
+PLUGINLIB_DECLARE_CLASS(controller_manager_tests, MyDummyController, controller_manager_tests::MyDummyController, controller_interface::ControllerBase)
 
