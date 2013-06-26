@@ -1,6 +1,6 @@
 <package>
   <name>controller_manager</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>The controller manager.</description>
   <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
 

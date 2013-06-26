@@ -1,6 +1,6 @@
 <package>
   <name>hardware_interface</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>Hardware Interaface base class.</description>
   <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
 
