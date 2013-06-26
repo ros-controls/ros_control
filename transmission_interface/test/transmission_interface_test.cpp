@@ -619,6 +619,11 @@ TEST_F(AccessorTest, AccessorValidation)
   EXPECT_EQ(trans_names[1], trans_handle2.getName());
 
   EXPECT_THROW(trans_iface.getHandle("unregistered_name"), TransmissionInterfaceException);
+
+  // Print error message
+  // Requires manual output inspection, but exception message should contain the interface name (not its base clase)
+  try {trans_iface.getHandle("unregistered_name");}
+  catch(const TransmissionInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 }
 
 int main(int argc, char** argv)
