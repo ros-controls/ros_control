@@ -10,9 +10,11 @@ if(USE_ROSBUILD)
   set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
   rosbuild_add_gtest(soft_joint_limits_interface_test  test/soft_joint_limits_interface_test.cpp)
+  rosbuild_add_gtest(joint_limits_urdf_test            test/joint_limits_urdf_test.cpp)
 
   # TODO: why is it explicitly needed???, without it the linker fails.
   target_link_libraries(soft_joint_limits_interface_test  pthread)
+  target_link_libraries(joint_limits_urdf_test            pthread)
 
 else()
 
@@ -25,6 +27,7 @@ else()
     )
 
   catkin_add_gtest(soft_joint_limits_interface_test  test/soft_joint_limits_interface_test.cpp)
+  catkin_add_gtest(joint_limits_urdf_test            test/joint_limits_urdf_test.cpp)
 
   # Install
   install(DIRECTORY include/${PROJECT_NAME}/

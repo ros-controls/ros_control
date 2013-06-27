@@ -37,10 +37,11 @@
 
 #include <ros/duration.h>
 
-#include <urdf_interface/joint.h>
-
 #include <hardware_interface/internal/resource_manager.h>
 #include <hardware_interface/joint_command_interface.h>
+
+#include <safety_limits_interface/joint_limits.h>
+#include <safety_limits_interface/safety_limits_interface_exception.h>
 
 namespace safety_limits_interface
 {
@@ -56,26 +57,6 @@ T saturate(const T val, const T min_val, const T max_val)
 
 }
 
-
-/// An exception related to a \ref SafetyLimitsInterface
-// TODO: Update ref above!
-class JointLimitsInterfaceException: public std::exception
-{
-public:
-  JointLimitsInterfaceException(const std::string& message)
-    : msg(message) {}
-
-  virtual ~JointLimitsInterfaceException() throw() {}
-
-  virtual const char* what() const throw()
-  {
-    return msg.c_str();
-  }
-
-private:
-  std::string msg;
-};
-
 /**
  * TODO
  */
@@ -86,48 +67,36 @@ public:
   std::string getName() const {return jh_.getName();}
 
 protected:
-  typedef boost::shared_ptr<const urdf::Joint> UrdfJointPtr;
-
   JointSoftLimitsHandle() {}
 
-  // TODO: Missing limits/safety specification throws here, or makes enforceLimits() be a no-op (and print warning)
-  JointSoftLimitsHandle(const hardware_interface::JointHandle& jh, UrdfJointPtr urdf_joint)
+  JointSoftLimitsHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits)
     : jh_(jh),
-      urdf_joint_(urdf_joint)
-  {
-    if (!urdf_joint)
-    {
-      throw JointLimitsInterfaceException("Cannot enforce limits for joint '" + getName() + "'. URDF joint pointer is null.");
-    }
-    if (!urdf_joint_->limits)
-    {
-      throw JointLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
-                                           "'. URDF joint does not have limits specification.");
-    }
-  }
+      limits_(limits)
+  {}
 
   hardware_interface::JointHandle jh_;
-  boost::shared_ptr<const urdf::Joint> urdf_joint_;
+  JointLimits limits_;
 };
 
 /** \brief A handle used to enforce position and velocity limits of a position-controlled joint.
  * TODO
  */
 
-// TODO: Drop explicit dependency on URDF?
-
 class PositionJointSoftLimitsHandle : public JointSoftLimitsHandle
 {
 public:
   PositionJointSoftLimitsHandle() {}
 
-  PositionJointSoftLimitsHandle(const hardware_interface::JointHandle& jh, UrdfJointPtr urdf_joint)
-    : JointSoftLimitsHandle(jh, urdf_joint)
+  PositionJointSoftLimitsHandle(const hardware_interface::JointHandle& jh,
+                                const JointLimits&                     limits,
+                                const SoftJointLimits&                 soft_limits)
+    : JointSoftLimitsHandle(jh, limits),
+      soft_limits_(soft_limits)
   {
-    if (!urdf_joint_->safety)
+    if (!limits.has_velocity_limits)
     {
-      throw JointLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
-                                           "'. URDF joint does not have safety specification.");
+      throw SafetyLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
+                                           "'. It has no velocity limits specification.");
     }
   }
 
@@ -138,7 +107,6 @@ public:
   void enforceLimits(const ros::Duration& period)
   {
     assert(period.toSec() > 0.0);
-    assert(urdf_joint_ && urdf_joint_->limits && urdf_joint_->safety);
 
     using internal::saturate;
 
@@ -146,38 +114,42 @@ public:
     const double pos = jh_.getPosition();
 
     // Velocity bounds
-    double vel_low  = -urdf_joint_->limits->velocity;
-    double vel_high =  urdf_joint_->limits->velocity;
+    double soft_min_vel = -limits_.max_velocity;
+    double soft_max_vel =  limits_.max_velocity;
 
-    const bool has_pos_bounds = urdf_joint_->type == urdf::Joint::REVOLUTE || urdf_joint_->type == urdf::Joint::PRISMATIC;
-    if (has_pos_bounds)
+    if (limits_.has_position_limits)
     {
       // Velocity bounds depend on the velocity limit and the proximity to the position limit
-      const double pos_soft_min = urdf_joint_->safety->soft_lower_limit;
-      const double pos_soft_max = urdf_joint_->safety->soft_upper_limit;
-      const double vel_max      = urdf_joint_->limits->velocity;
-      const double kp           = urdf_joint_->safety->k_position;
+      soft_min_vel = saturate(-soft_limits_.k_position * (pos - soft_limits_.min_position),
+                              -limits_.max_velocity,
+                               limits_.max_velocity);
 
-      vel_low  = saturate(-kp * (pos - pos_soft_min), -vel_max, vel_max);
-      vel_high = saturate(-kp * (pos - pos_soft_max), -vel_max, vel_max);
+      soft_max_vel = saturate(-soft_limits_.k_position * (pos - soft_limits_.max_position),
+                              -limits_.max_velocity,
+                               limits_.max_velocity);
     }
 
     // Position bounds
     const double dt = period.toSec();
-    double pos_low  = pos + vel_low  * dt;
-    double pos_high = pos + vel_high * dt;
+    double pos_low  = pos + soft_min_vel * dt;
+    double pos_high = pos + soft_max_vel * dt;
 
-    if (has_pos_bounds)
+    if (limits_.has_position_limits)
     {
       // This extra measure safeguards against pathological cases, like when the soft limit lies beyond the hard limit
-      pos_low = std::max(pos_low, urdf_joint_->limits->lower);
-      pos_high = std::min(pos_high, urdf_joint_->limits->upper);
+      pos_low  = std::max(pos_low,  limits_.min_position);
+      pos_high = std::min(pos_high, limits_.max_position);
     }
 
     // Saturate position command according to bounds
-    const double pos_cmd = saturate(jh_.getCommand(), pos_low, pos_high);
+    const double pos_cmd = saturate(jh_.getCommand(),
+                                    pos_low,
+                                    pos_high);
     jh_.setCommand(pos_cmd);
   }
+
+private:
+  SoftJointLimits soft_limits_;
 };
 
 /**
@@ -188,13 +160,21 @@ class EffortJointSoftLimitsHandle : public JointSoftLimitsHandle
 public:
   EffortJointSoftLimitsHandle() {}
 
-  EffortJointSoftLimitsHandle(const hardware_interface::JointHandle& jh, UrdfJointPtr urdf_joint)
-    : JointSoftLimitsHandle(jh, urdf_joint)
+  EffortJointSoftLimitsHandle(const hardware_interface::JointHandle& jh,
+                              const JointLimits&                     limits,
+                              const SoftJointLimits&                 soft_limits)
+  : JointSoftLimitsHandle(jh, limits),
+    soft_limits_(soft_limits)
   {
-    if (!urdf_joint_->safety)
+    if (!limits.has_velocity_limits)
     {
-      throw JointLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
-                                           "'. URDF joint does not have safety specification.");
+      throw SafetyLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
+                                           "'. It has no velocity limits specification.");
+    }
+    if (!limits.has_effort_limits)
+    {
+      throw SafetyLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
+                                           "'. It has no effort limits specification.");
     }
   }
 
@@ -204,8 +184,6 @@ public:
    */
   void enforceLimits(const ros::Duration& /*period*/)
   {
-    assert(urdf_joint_ && urdf_joint_->limits && urdf_joint_->safety);
-
     using internal::saturate;
 
     // Current state
@@ -213,32 +191,39 @@ public:
     const double vel = jh_.getVelocity();
 
     // Velocity bounds
-    double vel_low  = -urdf_joint_->limits->velocity;
-    double vel_high =  urdf_joint_->limits->velocity;
+    double soft_min_vel = -limits_.max_velocity;
+    double soft_max_vel =  limits_.max_velocity;
 
-    if (urdf_joint_->type == urdf::Joint::REVOLUTE || urdf_joint_->type == urdf::Joint::PRISMATIC)
+    if (limits_.has_position_limits)
     {
       // Velocity bounds depend on the velocity limit and the proximity to the position limit
-      const double pos_soft_max = urdf_joint_->safety->soft_upper_limit;
-      const double pos_soft_min = urdf_joint_->safety->soft_lower_limit;
-      const double vel_max      = urdf_joint_->limits->velocity;
-      const double kp           = urdf_joint_->safety->k_position;
+      soft_min_vel  = saturate(-soft_limits_.k_position * (pos - soft_limits_.min_position),
+                               -limits_.max_velocity,
+                                limits_.max_velocity);
 
-      vel_high = saturate(-kp * (pos - pos_soft_max), -vel_max, vel_max);
-      vel_low  = saturate(-kp * (pos - pos_soft_min), -vel_max, vel_max);
+      soft_max_vel = saturate(-soft_limits_.k_position * (pos - soft_limits_.max_position),
+                              -limits_.max_velocity,
+                               limits_.max_velocity);
     }
 
-    // Effort bounds
-    const double eff_max = urdf_joint_->limits->effort;
-    const double kv      = urdf_joint_->safety->k_velocity;
+    // Effort bounds depend on the velocity and effort bounds
+    const double soft_min_eff = saturate(-soft_limits_.k_velocity * (vel - soft_min_vel),
+                                         -limits_.max_effort,
+                                          limits_.max_effort);
 
-    const double eff_high = saturate(-kv * (vel - vel_high), -eff_max, eff_max);
-    const double eff_low  = saturate(-kv * (vel - vel_low), -eff_max, eff_max);
+    const double soft_max_eff = saturate(-soft_limits_.k_velocity * (vel - soft_max_vel),
+                                         -limits_.max_effort,
+                                          limits_.max_effort);
 
     // Saturate effort command according to bounds
-    const double eff_cmd = saturate(jh_.getCommand(), eff_low, eff_high);
+    const double eff_cmd = saturate(jh_.getCommand(),
+                                    soft_min_eff,
+                                    soft_max_eff);
     jh_.setCommand(eff_cmd);
   }
+
+private:
+  SoftJointLimits soft_limits_;
 };
 
 /**
@@ -249,9 +234,15 @@ class VelocityJointSaturationHandle : public JointSoftLimitsHandle
 public:
   VelocityJointSaturationHandle () {}
 
-  VelocityJointSaturationHandle(const hardware_interface::JointHandle& jh, UrdfJointPtr urdf_joint)
-    : JointSoftLimitsHandle(jh, urdf_joint)
-  {}
+  VelocityJointSaturationHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits)
+    : JointSoftLimitsHandle(jh, limits)
+  {
+    if (!limits.has_velocity_limits)
+    {
+      throw SafetyLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
+                                           "'. It has no velocity limits specification.");
+    }
+  }
 
   /**
    * \brief Enforce joint limits. If velocity or
@@ -259,13 +250,12 @@ public:
    */
   void enforceLimits(const ros::Duration& /*period*/)
   {
-    assert(urdf_joint_ && urdf_joint_->limits);
-
     using internal::saturate;
 
     // Saturate velocity command according to limits
-    const double vel_max = urdf_joint_->limits->velocity;
-    const double vel_cmd = saturate(jh_.getCommand(), -vel_max, vel_max);
+    const double vel_cmd = saturate(jh_.getCommand(),
+                                   -limits_.max_velocity,
+                                    limits_.max_velocity);
     jh_.setCommand(vel_cmd);
   }
 };
@@ -285,7 +275,7 @@ public:
     }
     catch(const std::logic_error& e)
     {
-      throw JointLimitsInterfaceException(e.what());
+      throw SafetyLimitsInterfaceException(e.what());
     }
   }
 

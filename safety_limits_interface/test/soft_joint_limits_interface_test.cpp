@@ -65,42 +65,39 @@ TEST(SaturateTest, Saturate)
   EXPECT_NEAR(max, saturate(val, min, max), EPS);
 }
 
+
 class JointLimitsTest
 {
 public:
   JointLimitsTest()
     : pos(0.0), vel(0.0), eff(0.0), cmd(0.0),
       name("joint_name"),
-      state_handle(name, &pos, &vel, &eff),
-      cmd_handle(state_handle, &cmd)
+      period(0.1),
+      cmd_handle(JointStateHandle(name, &pos, &vel, &eff), &cmd)
   {
-    urdf_limits.reset(new urdf::JointLimits);
-    urdf_limits->effort   =  8.0;
-    urdf_limits->velocity =  2.0;
-    urdf_limits->lower    = -1.0;
-    urdf_limits->upper    =  1.0;
+    limits.has_position_limits = true;
+    limits.min_position = -1.0;
+    limits.max_position =  1.0;
 
-    urdf_safety.reset(new urdf::JointSafety);
-    urdf_safety->k_position       = 20.0;
-    urdf_safety->k_velocity       = 40.0; // TODO: Tune value
-    urdf_safety->soft_lower_limit = -0.8;
-    urdf_safety->soft_upper_limit =  0.8;
+    limits.has_velocity_limits = true;
+    limits.max_velocity = 2.0;
 
-    urdf_joint.reset(new urdf::Joint);
-    urdf_joint->limits = urdf_limits;
-    urdf_joint->safety = urdf_safety;
+    limits.has_effort_limits = true;
+    limits.max_effort = 8.0;
 
-    urdf_joint->type = urdf::Joint::UNKNOWN;
+    soft_limits.min_position = -0.8;
+    soft_limits.max_position =  0.8;
+    soft_limits.k_position = 20.0;
+    soft_limits.k_velocity = 40.0; // TODO: Tune value
   }
 
 protected:
   double pos, vel, eff, cmd;
   string name;
-  JointStateHandle state_handle;
+  ros::Duration period;
   JointHandle cmd_handle;
-  boost::shared_ptr<urdf::JointLimits> urdf_limits;
-  boost::shared_ptr<urdf::JointSafety> urdf_safety;
-  boost::shared_ptr<urdf::Joint> urdf_joint;
+  JointLimits limits;
+  SoftJointLimits soft_limits;
 };
 
 class JointLimitsHandleTest : public JointLimitsTest, public ::testing::Test {};
@@ -109,38 +106,58 @@ class JointLimitsHandleTest : public JointLimitsTest, public ::testing::Test {};
 TEST_F(JointLimitsHandleTest, AssertionTriggering)
 {
   // Data with invalid pointers should trigger an assertion
-  EXPECT_DEATH(PositionJointSoftLimitsHandle().enforceLimits(ros::Duration(1e-3)), ".*");
-  EXPECT_DEATH(EffortJointSoftLimitsHandle().enforceLimits(ros::Duration(1e-3)), ".*");
-  EXPECT_DEATH(VelocityJointSaturationHandle().enforceLimits(ros::Duration(1e-3)), ".*");
+  EXPECT_DEATH(PositionJointSoftLimitsHandle().enforceLimits(period), ".*");
+  EXPECT_DEATH(EffortJointSoftLimitsHandle().enforceLimits(period), ".*");
+  EXPECT_DEATH(VelocityJointSaturationHandle().enforceLimits(period), ".*");
+
+  // Negative period should trigger an assertion
+  EXPECT_DEATH(PositionJointSoftLimitsHandle(cmd_handle, limits, soft_limits).enforceLimits(ros::Duration(-0.1)), ".*");
 }
 #endif // NDEBUG
 
 TEST_F(JointLimitsHandleTest, HandleConstruction)
 {
-  // TODO: We cannot check if the joint handle is properly constructed or not!. We can only wait until it fails at enforceLimits()
   {
-    boost::shared_ptr<urdf::Joint> urdf_joint_bad;
-    EXPECT_THROW(PositionJointSoftLimitsHandle(cmd_handle, urdf_joint_bad), JointLimitsInterfaceException);
+    JointLimits limits_bad;
+    EXPECT_THROW(PositionJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits), SafetyLimitsInterfaceException);
+
+    // Print error messages. Requires manual output inspection, but exception message should be descriptive
+    try {PositionJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits);}
+    catch(const SafetyLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
   }
 
   {
-    boost::shared_ptr<urdf::Joint> urdf_joint_bad(new urdf::Joint);
-    EXPECT_THROW(PositionJointSoftLimitsHandle(cmd_handle, urdf_joint_bad), JointLimitsInterfaceException);
+    JointLimits limits_bad;
+    limits_bad.has_effort_limits = true;
+    EXPECT_THROW(EffortJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits), SafetyLimitsInterfaceException);
+
+    // Print error messages. Requires manual output inspection, but exception message should be descriptive
+    try {EffortJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits);}
+    catch(const SafetyLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
   }
 
   {
-    boost::shared_ptr<urdf::Joint> urdf_joint_bad(new urdf::Joint);
-    urdf_joint_bad->limits = urdf_limits;
-    EXPECT_THROW(PositionJointSoftLimitsHandle(cmd_handle, urdf_joint_bad), JointLimitsInterfaceException);
+    JointLimits limits_bad;
+    limits_bad.has_velocity_limits = true;
+    EXPECT_THROW(EffortJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits), SafetyLimitsInterfaceException);
+
+    // Print error messages. Requires manual output inspection, but exception message should be descriptive
+    try {EffortJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits);}
+    catch(const SafetyLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
   }
 
   {
-    boost::shared_ptr<urdf::Joint> urdf_joint_bad(new urdf::Joint);
-    urdf_joint_bad->safety = urdf_safety;
-    EXPECT_THROW(PositionJointSoftLimitsHandle(cmd_handle, urdf_joint_bad), JointLimitsInterfaceException);
+    JointLimits limits_bad;
+    EXPECT_THROW(VelocityJointSaturationHandle(cmd_handle, limits_bad), SafetyLimitsInterfaceException);
+
+    // Print error messages. Requires manual output inspection, but exception message should be descriptive
+    try {VelocityJointSaturationHandle(cmd_handle, limits_bad);}
+    catch(const SafetyLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
   }
 
-  EXPECT_NO_THROW(PositionJointSoftLimitsHandle(cmd_handle, urdf_joint));
+  EXPECT_NO_THROW(PositionJointSoftLimitsHandle(cmd_handle, limits, soft_limits));
+  EXPECT_NO_THROW(EffortJointSoftLimitsHandle(cmd_handle, limits, soft_limits));
+  EXPECT_NO_THROW(VelocityJointSaturationHandle(cmd_handle, limits));
 }
 
 class PositionJointSoftLimitsHandleTest : public JointLimitsTest, public ::testing::Test {};
@@ -148,9 +165,8 @@ class PositionJointSoftLimitsHandleTest : public JointLimitsTest, public ::testi
 TEST_F(PositionJointSoftLimitsHandleTest, EnforceVelocityBounds)
 {
   // Test setup
-  PositionJointSoftLimitsHandle limits_handle(cmd_handle, urdf_joint);
-  ros::Duration period(0.1);
-  const double max_increment = period.toSec() * urdf_joint->limits->velocity;
+  PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+  const double max_increment = period.toSec() * limits.max_velocity;
   pos = 0.0;
 
   double cmd;
@@ -189,41 +205,27 @@ TEST_F(PositionJointSoftLimitsHandleTest, EnforceVelocityBounds)
   EXPECT_NEAR(-max_increment, cmd_handle.getCommand(), EPS);
 }
 
-class EnforceSoftLimitsTest : public PositionJointSoftLimitsHandleTest, public ::testing::WithParamInterface<std::string> {};
+// NOTE: Bool param represents whether joint has position limits or not
+class EnforceSoftLimitsTest : public PositionJointSoftLimitsHandleTest {};
 
 // This is a black box test and does not verify against random precomuted values, but rather that the expected
-// qualitative behavior is honored.
-TEST_P(EnforceSoftLimitsTest, EnforcePositionBounds)
+// qualitative behavior is honored
+TEST_F(EnforceSoftLimitsTest, EnforcePositionBounds)
 {
   // Test setup
-  // NOTE: If urdf::Joint::type wasn't an anonymous enum, the following conditional could've been saved
-  if      ("REVOLUTE"  == GetParam()) {urdf_joint->type = urdf::Joint::REVOLUTE;}
-  else if ("PRISMATIC" == GetParam()) {urdf_joint->type = urdf::Joint::PRISMATIC;}
-
-  PositionJointSoftLimitsHandle limits_handle(cmd_handle, urdf_joint);
-
-  ros::Duration period(0.1);
-
-  // Convenience variables
-  const double soft_lower_limit = urdf_safety->soft_lower_limit;
-  const double soft_upper_limit = urdf_safety->soft_upper_limit;
-
-  const double hard_lower_limit = urdf_limits->lower;
-  const double hard_upper_limit = urdf_limits->upper;
-
-  const double workspace_center = (hard_lower_limit + hard_upper_limit) / 2.0;
-
+  PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+  const double workspace_center = (limits.min_position + limits.max_position) / 2.0;
 
   // Current position == upper soft limit
   {
     // Can't get any closer to hard limit (zero max velocity)
-    pos = soft_upper_limit;
-    cmd_handle.setCommand(hard_upper_limit); // Try to get closer to the hard limit
+    pos = soft_limits.max_position;
+    cmd_handle.setCommand(limits.max_position); // Try to get closer to the hard limit
     limits_handle.enforceLimits(period);
     EXPECT_NEAR(cmd_handle.getPosition(), cmd_handle.getCommand(), EPS);
 
     // OK to move away from hard limit
-    cmd_handle.setCommand(workspace_center); // Try to go to workspace center
+    cmd_handle.setCommand(workspace_center);   // Try to go to workspace center
     limits_handle.enforceLimits(period);
     EXPECT_GT(cmd_handle.getPosition(), cmd_handle.getCommand());
   }
@@ -231,13 +233,13 @@ TEST_P(EnforceSoftLimitsTest, EnforcePositionBounds)
   // Current position == lower soft limit
   {
     // Can't get any closer to hard limit (zero min velocity)
-    pos = soft_lower_limit;
-    cmd_handle.setCommand(hard_lower_limit); // Try to get closer to the hard limit
+    pos = soft_limits.min_position;
+    cmd_handle.setCommand(limits.min_position); // Try to get closer to the hard limit
     limits_handle.enforceLimits(period);
     EXPECT_NEAR(cmd_handle.getPosition(), cmd_handle.getCommand(), EPS);
 
     // OK to move away from hard limit
-    cmd_handle.setCommand(workspace_center); // Try to go to workspace center
+    cmd_handle.setCommand(workspace_center);   // Try to go to workspace center
     limits_handle.enforceLimits(period);
     EXPECT_LT(cmd_handle.getPosition(), cmd_handle.getCommand());
   }
@@ -245,13 +247,13 @@ TEST_P(EnforceSoftLimitsTest, EnforcePositionBounds)
   // Current position > upper soft limit
   {
     // Can't get any closer to hard limit (negative max velocity)
-    pos = (soft_upper_limit + hard_upper_limit) / 2.0; // Halfway between soft and hard limit
-    cmd_handle.setCommand(hard_upper_limit);           // Try to get closer to the hard limit
+    pos = (soft_limits.max_position + limits.max_position) / 2.0; // Halfway between soft and hard limit
+    cmd_handle.setCommand(limits.max_position);           // Try to get closer to the hard limit
     limits_handle.enforceLimits(period);
     EXPECT_GT(cmd_handle.getPosition(), cmd_handle.getCommand());
 
     // OK to move away from hard limit
-    cmd_handle.setCommand(workspace_center);           // Try to go to workspace center
+    cmd_handle.setCommand(workspace_center);             // Try to go to workspace center
     limits_handle.enforceLimits(period);
     EXPECT_GT(cmd_handle.getPosition(), cmd_handle.getCommand());
   }
@@ -259,110 +261,89 @@ TEST_P(EnforceSoftLimitsTest, EnforcePositionBounds)
   // Current position < lower soft limit
   {
     // Can't get any closer to hard limit (positive min velocity)
-    pos = (soft_lower_limit + hard_lower_limit) / 2.0; // Halfway between soft and hard limit
-    cmd_handle.setCommand(hard_lower_limit);           // Try to get closer to the hard limit
+    pos = (soft_limits.min_position + limits.min_position) / 2.0; // Halfway between soft and hard limit
+    cmd_handle.setCommand(limits.min_position);           // Try to get closer to the hard limit
     limits_handle.enforceLimits(period);
     EXPECT_LT(cmd_handle.getPosition(), cmd_handle.getCommand());
 
     // OK to move away from hard limit
-    cmd_handle.setCommand(workspace_center);           // Try to go to workspace center
+    cmd_handle.setCommand(workspace_center);             // Try to go to workspace center
     limits_handle.enforceLimits(period);
     EXPECT_LT(cmd_handle.getPosition(), cmd_handle.getCommand());
   }
 }
 
-TEST_P(EnforceSoftLimitsTest, PathologicalSoftBounds)
+TEST_F(EnforceSoftLimitsTest, PathologicalSoftBounds)
 {
-  // Test setup
-  // NOTE: If urdf::Joint::type wasn't an anonymous enum, the following conditional could've been saved
-  if      ("REVOLUTE"  == GetParam()) {urdf_joint->type = urdf::Joint::REVOLUTE;}
-  else if ("PRISMATIC" == GetParam()) {urdf_joint->type = urdf::Joint::PRISMATIC;}
-
-  PositionJointSoftLimitsHandle limits_handle(cmd_handle, urdf_joint);
-
-  ros::Duration period(0.1);
-
   // Safety limits are past the hard limits
-  urdf_safety->soft_lower_limit = urdf_limits->lower * (1.0 - 0.5 * urdf_limits->lower / std::abs(urdf_limits->lower));
-  urdf_safety->soft_upper_limit = urdf_limits->upper * (1.0 + 0.5 * urdf_limits->upper / std::abs(urdf_limits->upper));
+  soft_limits.min_position = limits.min_position * (1.0 - 0.5 * limits.min_position / std::abs(limits.min_position));
+  soft_limits.max_position = limits.max_position * (1.0 + 0.5 * limits.max_position / std::abs(limits.max_position));
 
-  // Convenience variables
-  const double soft_lower_limit = urdf_safety->soft_lower_limit;
-  const double soft_upper_limit = urdf_safety->soft_upper_limit;
-
-  const double hard_lower_limit = urdf_limits->lower;
-  const double hard_upper_limit = urdf_limits->upper;
+  // Test setup
+  PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
 
   // Current position == higher hard limit
   {
     // Hit hard limit
-    pos = hard_upper_limit;                        // On hard limit
-    cmd_handle.setCommand(2.0 * hard_upper_limit); // Way beyond hard limit
+    pos = limits.max_position;                        // On hard limit
+    cmd_handle.setCommand(2.0 * limits.max_position); // Way beyond hard limit
     limits_handle.enforceLimits(period);
-    EXPECT_NEAR(hard_upper_limit, cmd_handle.getCommand(), EPS);
+    EXPECT_NEAR(limits.max_position, cmd_handle.getCommand(), EPS);
   }
 
   // Current position == lower hard limit
   {
     // Hit hard limit
-    pos = hard_lower_limit;                        // On hard limit
-    cmd_handle.setCommand(2.0 * hard_lower_limit); // Way beyond hard limit
+    pos = limits.min_position;                        // On hard limit
+    cmd_handle.setCommand(2.0 * limits.min_position); // Way beyond hard limit
     limits_handle.enforceLimits(period);
-    EXPECT_NEAR(hard_lower_limit, cmd_handle.getCommand(), EPS);
+    EXPECT_NEAR(limits.min_position, cmd_handle.getCommand(), EPS);
   }
 }
-
-INSTANTIATE_TEST_CASE_P(WithSoftPositionBounds,
-                        EnforceSoftLimitsTest,
-                        ::testing::Values("REVOLUTE", "PRISMATIC"));
-
 
 class VelocityJointSaturationHandleTest : public JointLimitsTest, public ::testing::Test {};
 
 TEST_F(VelocityJointSaturationHandleTest, EnforceVelocityBounds)
 {
   // Test setup
-  VelocityJointSaturationHandle limits_handle(cmd_handle, urdf_joint);
-  ros::Duration period(0.1);
-  const double vel_max = urdf_joint->limits->velocity;
-  pos = 0.0;
+  VelocityJointSaturationHandle limits_handle(cmd_handle, limits);
 
+  pos = 0.0;
   double cmd;
 
   // Velocity within bounds
-  cmd = vel_max / 2.0;
+  cmd = limits.max_velocity / 2.0;
   cmd_handle.setCommand(cmd);
   limits_handle.enforceLimits(period);
   EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
 
-  cmd = -vel_max / 2.0;
+  cmd = -limits.max_velocity / 2.0;
   cmd_handle.setCommand(cmd);
   limits_handle.enforceLimits(period);
   EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
 
   // Velocity at bounds
-  cmd = vel_max;
+  cmd = limits.max_velocity;
   cmd_handle.setCommand(cmd);
   limits_handle.enforceLimits(period);
   EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
 
-  cmd = -vel_max;
+  cmd = -limits.max_velocity;
   cmd_handle.setCommand(cmd);
   limits_handle.enforceLimits(period);
   EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
 
   // Velocity beyond bounds
-  cmd = 2.0 * vel_max;
+  cmd = 2.0 * limits.max_velocity;
   cmd_handle.setCommand(cmd);
   limits_handle.enforceLimits(period);
-  EXPECT_NEAR(vel_max, cmd_handle.getCommand(), EPS);
+  EXPECT_NEAR(limits.max_velocity, cmd_handle.getCommand(), EPS);
 
-  cmd = -2.0 * vel_max;
+  cmd = -2.0 * limits.max_velocity;
   cmd_handle.setCommand(cmd);
   limits_handle.enforceLimits(period);
-  EXPECT_NEAR(-vel_max, cmd_handle.getCommand(), EPS);
+  EXPECT_NEAR(-limits.max_velocity, cmd_handle.getCommand(), EPS);
 }
-
 
 class SoftJointLimitsInterfaceTest :public JointLimitsTest, public ::testing::Test
 {
@@ -371,25 +352,20 @@ public:
     : JointLimitsTest(),
       pos2(0.0), vel2(0.0), eff2(0.0), cmd2(0.0),
       name2("joint2_name"),
-      state_handle2(name2, &pos2, &vel2, &eff2),
-      cmd_handle2(state_handle2, &cmd2)
+      cmd_handle2(JointStateHandle(name2, &pos2, &vel2, &eff2), &cmd2)
   {}
 
 protected:
   double pos2, vel2, eff2, cmd2;
   string name2;
-  JointStateHandle state_handle2;
   JointHandle cmd_handle2;
 };
 
 TEST_F(SoftJointLimitsInterfaceTest, InterfaceRegistration)
 {
-  urdf_joint->type = urdf::Joint::REVOLUTE;
-  ros::Duration period(0.1);
-
   // Populate interface
-  PositionJointSoftLimitsHandle limits_handle1(cmd_handle,  urdf_joint);
-  PositionJointSoftLimitsHandle limits_handle2(cmd_handle2, urdf_joint);
+  PositionJointSoftLimitsHandle limits_handle1(cmd_handle, limits, soft_limits);
+  PositionJointSoftLimitsHandle limits_handle2(cmd_handle2, limits, soft_limits);
 
   PositionJointSoftLimitsInterface iface;
   iface.registerHandle(limits_handle1);
@@ -408,15 +384,12 @@ TEST_F(SoftJointLimitsInterfaceTest, InterfaceRegistration)
   // Print error message
   // Requires manual output inspection, but exception message should contain the interface name (not its base clase)
   try {iface.getHandle("unknown_name");}
-  catch(const JointLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+  catch(const SafetyLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 
   // Enforce limits of all managed joints
-  const double soft_upper_limit = urdf_safety->soft_upper_limit;
-  const double hard_upper_limit = urdf_limits->upper;
-
-  pos = pos2 = (soft_upper_limit + hard_upper_limit) / 2.0; // Halfway between soft and hard limit
-  cmd_handle.setCommand(hard_upper_limit);                  // Try to get closer to the hard limit
-  cmd_handle2.setCommand(hard_upper_limit);
+  pos = pos2 = (soft_limits.max_position + limits.max_position) / 2.0; // Halfway between soft and hard limit
+  cmd_handle.setCommand(limits.max_position);                               // Try to get closer to the hard limit
+  cmd_handle2.setCommand(limits.max_position);
   iface.enforceLimits(period);
   EXPECT_GT(cmd_handle.getPosition(),  cmd_handle.getCommand());
   EXPECT_GT(cmd_handle2.getPosition(), cmd_handle2.getCommand());
@@ -427,4 +400,3 @@ int main(int argc, char** argv)
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-
