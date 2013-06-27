@@ -114,8 +114,8 @@ public:
     const double pos = jh_.getPosition();
 
     // Velocity bounds
-    double soft_min_vel = -limits_.max_velocity;
-    double soft_max_vel =  limits_.max_velocity;
+    double soft_min_vel;
+    double soft_max_vel;
 
     if (limits_.has_position_limits)
     {
@@ -127,6 +127,12 @@ public:
       soft_max_vel = saturate(-soft_limits_.k_position * (pos - soft_limits_.max_position),
                               -limits_.max_velocity,
                                limits_.max_velocity);
+    }
+    else
+    {
+      // No position limits, eg. continuous joints
+      soft_min_vel = -limits_.max_velocity;
+      soft_max_vel =  limits_.max_velocity;
     }
 
     // Position bounds
@@ -191,8 +197,8 @@ public:
     const double vel = jh_.getVelocity();
 
     // Velocity bounds
-    double soft_min_vel = -limits_.max_velocity;
-    double soft_max_vel =  limits_.max_velocity;
+    double soft_min_vel;
+    double soft_max_vel;
 
     if (limits_.has_position_limits)
     {
@@ -204,6 +210,12 @@ public:
       soft_max_vel = saturate(-soft_limits_.k_position * (pos - soft_limits_.max_position),
                               -limits_.max_velocity,
                                limits_.max_velocity);
+    }
+    else
+    {
+      // No position limits, eg. continuous joints
+      soft_min_vel = -limits_.max_velocity;
+      soft_max_vel =  limits_.max_velocity;
     }
 
     // Effort bounds depend on the velocity and effort bounds
@@ -248,14 +260,33 @@ public:
    * \brief Enforce joint limits. If velocity or
    * \param period Control period
    */
-  void enforceLimits(const ros::Duration& /*period*/)
+  void enforceLimits(const ros::Duration& period)
   {
     using internal::saturate;
 
+    // Velocity bounds
+    double vel_low;
+    double vel_high;
+
+    if (limits_.has_acceleration_limits)
+    {
+      assert(period.toSec() > 0.0);
+      const double vel = jh_.getVelocity();
+      const double dt  = period.toSec();
+
+      vel_low  = std::max(vel - limits_.max_acceleration * dt, -limits_.max_velocity);
+      vel_high = std::min(vel + limits_.max_acceleration * dt,  limits_.max_velocity);
+    }
+    else
+    {
+      vel_low  = -limits_.max_velocity;
+      vel_high =  limits_.max_velocity;
+    }
+
     // Saturate velocity command according to limits
     const double vel_cmd = saturate(jh_.getCommand(),
-                                   -limits_.max_velocity,
-                                    limits_.max_velocity);
+                                    vel_low,
+                                    vel_high);
     jh_.setCommand(vel_cmd);
   }
 };

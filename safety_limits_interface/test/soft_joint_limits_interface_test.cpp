@@ -345,6 +345,43 @@ TEST_F(VelocityJointSaturationHandleTest, EnforceVelocityBounds)
   EXPECT_NEAR(-limits.max_velocity, cmd_handle.getCommand(), EPS);
 }
 
+TEST_F(VelocityJointSaturationHandleTest, EnforceVelocityAndAccelerationBounds)
+{
+  // Test setup
+  limits.has_acceleration_limits = true;
+  limits.max_acceleration = limits.max_velocity / period.toSec();
+  VelocityJointSaturationHandle limits_handle(cmd_handle, limits);
+
+  pos = 0.0;
+  double cmd;
+
+  // Positive velocity
+  vel = limits.max_velocity / 2.0;
+
+  cmd = limits.max_velocity * 2.0; // Try to go beyond +max velocity
+  cmd_handle.setCommand(cmd);
+  limits_handle.enforceLimits(period);
+  EXPECT_NEAR(limits.max_velocity, cmd_handle.getCommand(), EPS); // Max velocity bounded by velocity limit
+
+  cmd = -limits.max_velocity * 2.0; // Try to go beyond -max velocity
+  cmd_handle.setCommand(cmd);
+  limits_handle.enforceLimits(period);
+  EXPECT_NEAR(-limits.max_velocity / 2.0, cmd_handle.getCommand(), EPS); // Max velocity bounded by acceleration limit
+
+  // Negative velocity
+  vel = -limits.max_velocity / 2.0;
+
+  cmd = limits.max_velocity * 2.0; // Try to go beyond +max velocity
+  cmd_handle.setCommand(cmd);
+  limits_handle.enforceLimits(period);
+  EXPECT_NEAR(limits.max_velocity / 2.0, cmd_handle.getCommand(), EPS); // Max velocity bounded by acceleration limit
+
+  cmd = -limits.max_velocity * 2.0; // Try to go beyond -max velocity
+  cmd_handle.setCommand(cmd);
+  limits_handle.enforceLimits(period);
+  EXPECT_NEAR(-limits.max_velocity, cmd_handle.getCommand(), EPS); // Max velocity bounded by velocity limit
+}
+
 class SoftJointLimitsInterfaceTest :public JointLimitsTest, public ::testing::Test
 {
 public:
