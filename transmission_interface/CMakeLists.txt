@@ -24,7 +24,9 @@ if(USE_ROSBUILD)
 else()
 
   # Load catkin and all dependencies required for this package
-  find_package(catkin REQUIRED)
+  find_package(catkin REQUIRED hardware_interface)
+
+  include_directories(include ${catkin_INCLUDE_DIRS})
 
   # Declare a catkin package
   catkin_package(
@@ -35,6 +37,7 @@ else()
   catkin_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
   catkin_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
   catkin_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
+  target_link_libraries(transmission_interface_test ${catkin_LIBRARIES})
 
   # Install
   install(DIRECTORY include/${PROJECT_NAME}/

@@ -52,7 +52,9 @@ else()
   add_executable(dummy_app src/dummy_app.cpp)
   target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
-  catkin_add_gtest(cm_test test/cm_test.cpp)
+  add_executable(cm_test test/cm_test.cpp)
+  add_dependencies(tests cm_test)
+  target_link_libraries(cm_test ${GTEST_LIBRARIES} ${catkin_LIBRARIES})
   add_rostest(test/cm_test.test)
 
   # Install
