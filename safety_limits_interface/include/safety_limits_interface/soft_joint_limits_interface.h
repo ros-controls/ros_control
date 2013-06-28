@@ -57,32 +57,11 @@ T saturate(const T val, const T min_val, const T max_val)
 
 }
 
-/**
- * TODO
- */
-class JointSoftLimitsHandle
-{
-public:
-  /** \return Joint name. */
-  std::string getName() const {return jh_.getName();}
-
-protected:
-  JointSoftLimitsHandle() {}
-
-  JointSoftLimitsHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits)
-    : jh_(jh),
-      limits_(limits)
-  {}
-
-  hardware_interface::JointHandle jh_;
-  JointLimits limits_;
-};
-
 /** \brief A handle used to enforce position and velocity limits of a position-controlled joint.
  * TODO
  */
 
-class PositionJointSoftLimitsHandle : public JointSoftLimitsHandle
+class PositionJointSoftLimitsHandle
 {
 public:
   PositionJointSoftLimitsHandle() {}
@@ -90,7 +69,8 @@ public:
   PositionJointSoftLimitsHandle(const hardware_interface::JointHandle& jh,
                                 const JointLimits&                     limits,
                                 const SoftJointLimits&                 soft_limits)
-    : JointSoftLimitsHandle(jh, limits),
+    : jh_(jh),
+      limits_(limits),
       soft_limits_(soft_limits)
   {
     if (!limits.has_velocity_limits)
@@ -99,6 +79,9 @@ public:
                                            "'. It has no velocity limits specification.");
     }
   }
+
+  /** \return Joint name. */
+  std::string getName() const {return jh_.getName();}
 
   /**
    * \brief Enforce joint limits. TODO
@@ -135,6 +118,8 @@ public:
       soft_max_vel =  limits_.max_velocity;
     }
 
+    // TODO: Insert calls to Reflexxes Type II to enforce acceleration limits as well
+
     // Position bounds
     const double dt = period.toSec();
     double pos_low  = pos + soft_min_vel * dt;
@@ -155,13 +140,15 @@ public:
   }
 
 private:
+  hardware_interface::JointHandle jh_;
+  JointLimits limits_;
   SoftJointLimits soft_limits_;
 };
 
 /**
  * TODO
  */
-class EffortJointSoftLimitsHandle : public JointSoftLimitsHandle
+class EffortJointSoftLimitsHandle
 {
 public:
   EffortJointSoftLimitsHandle() {}
@@ -169,7 +156,8 @@ public:
   EffortJointSoftLimitsHandle(const hardware_interface::JointHandle& jh,
                               const JointLimits&                     limits,
                               const SoftJointLimits&                 soft_limits)
-  : JointSoftLimitsHandle(jh, limits),
+  : jh_(jh),
+    limits_(limits),
     soft_limits_(soft_limits)
   {
     if (!limits.has_velocity_limits)
@@ -183,6 +171,9 @@ public:
                                            "'. It has no effort limits specification.");
     }
   }
+
+  /** \return Joint name. */
+  std::string getName() const {return jh_.getName();}
 
   /**
    * \brief Enforce joint limits. If velocity or
@@ -235,19 +226,22 @@ public:
   }
 
 private:
+  hardware_interface::JointHandle jh_;
+  JointLimits limits_;
   SoftJointLimits soft_limits_;
 };
 
 /**
  * TODO
  */
-class VelocityJointSaturationHandle : public JointSoftLimitsHandle
+class VelocityJointSaturationHandle
 {
 public:
   VelocityJointSaturationHandle () {}
 
   VelocityJointSaturationHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits)
-    : JointSoftLimitsHandle(jh, limits)
+    : jh_(jh),
+      limits_(limits)
   {
     if (!limits.has_velocity_limits)
     {
@@ -255,6 +249,9 @@ public:
                                            "'. It has no velocity limits specification.");
     }
   }
+
+  /** \return Joint name. */
+  std::string getName() const {return jh_.getName();}
 
   /**
    * \brief Enforce joint limits. If velocity or
@@ -289,6 +286,10 @@ public:
                                     vel_high);
     jh_.setCommand(vel_cmd);
   }
+
+private:
+  hardware_interface::JointHandle jh_;
+  JointLimits limits_;
 };
 
 /** \brief TODO
