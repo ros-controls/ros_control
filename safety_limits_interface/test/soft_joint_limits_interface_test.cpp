@@ -112,6 +112,9 @@ TEST_F(JointLimitsHandleTest, AssertionTriggering)
 
   // Negative period should trigger an assertion
   EXPECT_DEATH(PositionJointSoftLimitsHandle(cmd_handle, limits, soft_limits).enforceLimits(ros::Duration(-0.1)), ".*");
+
+  limits.has_acceleration_limits = true;
+  EXPECT_DEATH(VelocityJointSaturationHandle(cmd_handle, limits).enforceLimits(ros::Duration(-0.1)), ".*");
 }
 #endif // NDEBUG
 
@@ -205,12 +208,9 @@ TEST_F(PositionJointSoftLimitsHandleTest, EnforceVelocityBounds)
   EXPECT_NEAR(-max_increment, cmd_handle.getCommand(), EPS);
 }
 
-// NOTE: Bool param represents whether joint has position limits or not
-class EnforceSoftLimitsTest : public PositionJointSoftLimitsHandleTest {};
-
 // This is a black box test and does not verify against random precomuted values, but rather that the expected
 // qualitative behavior is honored
-TEST_F(EnforceSoftLimitsTest, EnforcePositionBounds)
+TEST_F(PositionJointSoftLimitsHandleTest, EnforcePositionBounds)
 {
   // Test setup
   PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
@@ -273,7 +273,7 @@ TEST_F(EnforceSoftLimitsTest, EnforcePositionBounds)
   }
 }
 
-TEST_F(EnforceSoftLimitsTest, PathologicalSoftBounds)
+TEST_F(PositionJointSoftLimitsHandleTest, PathologicalSoftBounds)
 {
   // Safety limits are past the hard limits
   soft_limits.min_position = limits.min_position * (1.0 - 0.5 * limits.min_position / std::abs(limits.min_position));
@@ -345,7 +345,7 @@ TEST_F(VelocityJointSaturationHandleTest, EnforceVelocityBounds)
   EXPECT_NEAR(-limits.max_velocity, cmd_handle.getCommand(), EPS);
 }
 
-TEST_F(VelocityJointSaturationHandleTest, EnforceVelocityAndAccelerationBounds)
+TEST_F(VelocityJointSaturationHandleTest, EnforceAccelerationBounds)
 {
   // Test setup
   limits.has_acceleration_limits = true;
@@ -382,10 +382,10 @@ TEST_F(VelocityJointSaturationHandleTest, EnforceVelocityAndAccelerationBounds)
   EXPECT_NEAR(-limits.max_velocity, cmd_handle.getCommand(), EPS); // Max velocity bounded by velocity limit
 }
 
-class SoftJointLimitsInterfaceTest :public JointLimitsTest, public ::testing::Test
+class JointLimitsInterfaceTest :public JointLimitsTest, public ::testing::Test
 {
 public:
-  SoftJointLimitsInterfaceTest()
+  JointLimitsInterfaceTest()
     : JointLimitsTest(),
       pos2(0.0), vel2(0.0), eff2(0.0), cmd2(0.0),
       name2("joint2_name"),
@@ -398,7 +398,7 @@ protected:
   JointHandle cmd_handle2;
 };
 
-TEST_F(SoftJointLimitsInterfaceTest, InterfaceRegistration)
+TEST_F(JointLimitsInterfaceTest, InterfaceRegistration)
 {
   // Populate interface
   PositionJointSoftLimitsHandle limits_handle1(cmd_handle, limits, soft_limits);
