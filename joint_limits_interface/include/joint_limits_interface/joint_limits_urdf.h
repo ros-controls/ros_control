@@ -27,51 +27,55 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef SAFETY_LIMITS_INTERFACE_JOINT_LIMITS_H
-#define SAFETY_LIMITS_INTERFACE_JOINT_LIMITS_H
+#ifndef JOINT_LIMITS_INTERFACE_JOINT_LIMITS_URDF_H
+#define JOINT_LIMITS_INTERFACE_JOINT_LIMITS_URDF_H
 
-namespace safety_limits_interface
+#include <urdf_interface/joint.h>
+#include <joint_limits_interface/joint_limits.h>
+#include <joint_limits_interface/joint_limits_interface_exception.h>
+
+namespace joint_limits_interface
 {
 
-struct JointLimits
+bool getJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, JointLimits& limits)
 {
-  JointLimits()
-    : min_position(0.0),
-      max_position(0.0),
-      max_velocity(0.0),
-      max_acceleration(0.0),
-      max_effort(0.0),
-      has_position_limits(false),
-      has_velocity_limits(false),
-      has_acceleration_limits(false),
-      has_effort_limits(false)
-  {}
+  if (!urdf_joint || !urdf_joint->limits)
+  {
+    return false;
+  }
 
-  double min_position;
-  double max_position;
-  double max_velocity;
-  double max_acceleration;
-  double max_effort;
-  bool   has_position_limits;
-  bool   has_velocity_limits;
-  bool   has_acceleration_limits;
-  bool   has_effort_limits;
-};
+  limits.has_position_limits = urdf_joint->type == urdf::Joint::REVOLUTE || urdf_joint->type == urdf::Joint::PRISMATIC;
+  if (limits.has_position_limits)
+  {
+    limits.min_position = urdf_joint->limits->lower;
+    limits.max_position = urdf_joint->limits->upper;
+  }
 
-struct SoftJointLimits
+  limits.has_velocity_limits = true;
+  limits.max_velocity = urdf_joint->limits->velocity;
+
+  limits.has_acceleration_limits = false;
+
+  limits.has_effort_limits = true;
+  limits.max_effort = urdf_joint->limits->effort;
+
+  return true;
+}
+
+bool getSoftJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, SoftJointLimits& soft_limits)
 {
-  SoftJointLimits()
-    : min_position(0.0),
-      max_position(0.0),
-      k_position(0.0),
-      k_velocity(0.0)
-  {}
+  if (!urdf_joint || !urdf_joint->safety)
+  {
+    return false;
+  }
 
-  double min_position;
-  double max_position;
-  double k_position;
-  double k_velocity;
-};
+  soft_limits.min_position = urdf_joint->safety->soft_lower_limit;
+  soft_limits.max_position = urdf_joint->safety->soft_upper_limit;
+  soft_limits.k_position = urdf_joint->safety->k_position;
+  soft_limits.k_velocity = urdf_joint->safety->k_velocity;
+
+  return true;
+}
 
 }
 

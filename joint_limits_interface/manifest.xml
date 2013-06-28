@@ -1,6 +1,6 @@
 <package>
   <description>
-    Classes for enforcing safety limits.
+    Interface for enforcing joint limits.
   </description>
   <author>Adolfo Rodriguez Tsouroukdissian</author>
   <license>BSD</license>

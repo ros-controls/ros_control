@@ -28,10 +28,10 @@
 /// \author Adolfo Rodriguez Tsouroukdissian
 
 #include <gtest/gtest.h>
-#include <safety_limits_interface/joint_limits_urdf.h>
+#include <joint_limits_interface/joint_limits_urdf.h>
 
 using std::string;
-using namespace safety_limits_interface;
+using namespace joint_limits_interface;
 
 class JointLimitsUrdfTest : public ::testing::Test
 {
@@ -65,7 +65,7 @@ protected:
 
 TEST_F(JointLimitsUrdfTest, GetJointLimits)
 {
-  using namespace safety_limits_interface;
+  using namespace joint_limits_interface;
 
   // Unset URDF joint
   {
@@ -154,7 +154,7 @@ TEST_F(JointLimitsUrdfTest, GetJointLimits)
 
 TEST_F(JointLimitsUrdfTest, GetSoftJointLimits)
 {
-  using namespace safety_limits_interface;
+  using namespace joint_limits_interface;
 
   // Unset URDF joint
   {

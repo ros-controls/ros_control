@@ -25,57 +25,29 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/// \author Adolfo Rodriguez Tsouroukdissian
+#ifndef JOINT_LIMITS_INTERFACE_JOINT_LIMITS_INTERFACE_EXCEPTION_H
+#define JOINT_LIMITS_INTERFACE_JOINT_LIMITS_INTERFACE_EXCEPTION_H
 
-#ifndef SAFETY_LIMITS_INTERFACE_JOINT_LIMITS_URDF_H
-#define SAFETY_LIMITS_INTERFACE_JOINT_LIMITS_URDF_H
-
-#include <urdf_interface/joint.h>
-#include <safety_limits_interface/joint_limits.h>
-#include <safety_limits_interface/safety_limits_interface_exception.h>
-
-namespace safety_limits_interface
+namespace joint_limits_interface
 {
 
-bool getJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, JointLimits& limits)
+/// An exception related to a \ref JointLimitsInterface
+class JointLimitsInterfaceException: public std::exception
 {
-  if (!urdf_joint || !urdf_joint->limits)
+public:
+  JointLimitsInterfaceException(const std::string& message)
+    : msg(message) {}
+
+  virtual ~JointLimitsInterfaceException() throw() {}
+
+  virtual const char* what() const throw()
   {
-    return false;
+    return msg.c_str();
   }
 
-  limits.has_position_limits = urdf_joint->type == urdf::Joint::REVOLUTE || urdf_joint->type == urdf::Joint::PRISMATIC;
-  if (limits.has_position_limits)
-  {
-    limits.min_position = urdf_joint->limits->lower;
-    limits.max_position = urdf_joint->limits->upper;
-  }
-
-  limits.has_velocity_limits = true;
-  limits.max_velocity = urdf_joint->limits->velocity;
-
-  limits.has_acceleration_limits = false;
-
-  limits.has_effort_limits = true;
-  limits.max_effort = urdf_joint->limits->effort;
-
-  return true;
-}
-
-bool getSoftJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, SoftJointLimits& soft_limits)
-{
-  if (!urdf_joint || !urdf_joint->safety)
-  {
-    return false;
-  }
-
-  soft_limits.min_position = urdf_joint->safety->soft_lower_limit;
-  soft_limits.max_position = urdf_joint->safety->soft_upper_limit;
-  soft_limits.k_position = urdf_joint->safety->k_position;
-  soft_limits.k_velocity = urdf_joint->safety->k_velocity;
-
-  return true;
-}
+private:
+  std::string msg;
+};
 
 }
 

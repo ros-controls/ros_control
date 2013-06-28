@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef SAFETY_LIMITS_INTERFACE_SOFT_JOINT_LIMITS_INTERFACE_H
-#define SAFETY_LIMITS_INTERFACE_SOFT_JOINT_LIMITS_INTERFACE_H
+#ifndef JOINT_LIMITS_INTERFACE_JOINT_LIMITS_INTERFACE_H
+#define JOINT_LIMITS_INTERFACE_JOINT_LIMITS_INTERFACE_H
 
 #include <algorithm>
 #include <cassert>
@@ -40,10 +40,10 @@
 #include <hardware_interface/internal/resource_manager.h>
 #include <hardware_interface/joint_command_interface.h>
 
-#include <safety_limits_interface/joint_limits.h>
-#include <safety_limits_interface/safety_limits_interface_exception.h>
+#include <joint_limits_interface/joint_limits.h>
+#include <joint_limits_interface/joint_limits_interface_exception.h>
 
-namespace safety_limits_interface
+namespace joint_limits_interface
 {
 
 namespace internal
@@ -57,10 +57,9 @@ T saturate(const T val, const T min_val, const T max_val)
 
 }
 
-/** \brief A handle used to enforce position and velocity limits of a position-controlled joint.
- * TODO
- */
+/** \brief A handle used to enforce position and velocity limits of a position-controlled joint. */
 
+// TODO: Leverage %Reflexxes Type II library for acceleration limits handling?
 class PositionJointSoftLimitsHandle
 {
 public:
@@ -75,7 +74,7 @@ public:
   {
     if (!limits.has_velocity_limits)
     {
-      throw SafetyLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
+      throw JointLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
                                            "'. It has no velocity limits specification.");
     }
   }
@@ -84,8 +83,10 @@ public:
   std::string getName() const {return jh_.getName();}
 
   /**
-   * \brief Enforce joint limits. TODO
-   * \param period Control period
+   * \brief Enforce position and velocity limits for a joint subject to soft limits.
+   *
+   * If the joint has no position limits (eg. a continuous joint), only velocity limits will be enforced.
+   * \param period Control period.
    */
   void enforceLimits(const ros::Duration& period)
   {
@@ -118,8 +119,6 @@ public:
       soft_max_vel =  limits_.max_velocity;
     }
 
-    // TODO: Insert calls to Reflexxes Type II to enforce acceleration limits as well
-
     // Position bounds
     const double dt = period.toSec();
     double pos_low  = pos + soft_min_vel * dt;
@@ -145,9 +144,9 @@ private:
   SoftJointLimits soft_limits_;
 };
 
-/**
- * TODO
- */
+/** \brief A handle used to enforce position, velocity and effort limits of an effort-controlled joint. */
+
+// TODO: This class is untested!. Update unit tests accordingly.
 class EffortJointSoftLimitsHandle
 {
 public:
@@ -162,12 +161,12 @@ public:
   {
     if (!limits.has_velocity_limits)
     {
-      throw SafetyLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
+      throw JointLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
                                            "'. It has no velocity limits specification.");
     }
     if (!limits.has_effort_limits)
     {
-      throw SafetyLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
+      throw JointLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
                                            "'. It has no effort limits specification.");
     }
   }
@@ -176,8 +175,10 @@ public:
   std::string getName() const {return jh_.getName();}
 
   /**
-   * \brief Enforce joint limits. If velocity or
-   * \param period Control period
+   * \brief Enforce position, velocity and effort limits for a joint subject to soft limits.
+   *
+   * If the joint has no position limits (eg. a continuous joint), only velocity and effort limits will be enforced.
+   * \param period Control period.
    */
   void enforceLimits(const ros::Duration& /*period*/)
   {
@@ -231,9 +232,8 @@ private:
   SoftJointLimits soft_limits_;
 };
 
-/**
- * TODO
- */
+
+/** \brief A handle used to enforce velocity and acceleration limits of a velocity-controlled joint. */
 class VelocityJointSaturationHandle
 {
 public:
@@ -245,7 +245,7 @@ public:
   {
     if (!limits.has_velocity_limits)
     {
-      throw SafetyLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
+      throw JointLimitsInterfaceException("Cannot enforce limits for joint '" + getName() +
                                            "'. It has no velocity limits specification.");
     }
   }
@@ -254,8 +254,8 @@ public:
   std::string getName() const {return jh_.getName();}
 
   /**
-   * \brief Enforce joint limits. If velocity or
-   * \param period Control period
+   * \brief Enforce joint velocity and acceleration limits.
+   * \param period Control period.
    */
   void enforceLimits(const ros::Duration& period)
   {
@@ -292,7 +292,14 @@ private:
   JointLimits limits_;
 };
 
-/** \brief TODO
+/**
+ * \brief Interface for enforcing joint limits.
+ *
+ * \tparam HandleType %Handle type. Must implement the following methods:
+ *  \code
+ *   void enforceLimits();
+ *   std::string getName() const;
+ *  \endcode
  */
 template <class HandleType>
 class JointLimitsInterface : public hardware_interface::ResourceManager<HandleType>
@@ -307,7 +314,7 @@ public:
     }
     catch(const std::logic_error& e)
     {
-      throw SafetyLimitsInterfaceException(e.what());
+      throw JointLimitsInterfaceException(e.what());
     }
   }
 

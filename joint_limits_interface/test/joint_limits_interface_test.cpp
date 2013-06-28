@@ -30,18 +30,18 @@
 #include <string>
 #include <gtest/gtest.h>
 #include <ros/console.h>
-#include <safety_limits_interface/soft_joint_limits_interface.h>
+#include <joint_limits_interface/joint_limits_interface.h>
 
 using std::string;
 using namespace hardware_interface;
-using namespace safety_limits_interface;
+using namespace joint_limits_interface;
 
 // Floating-point value comparison threshold
 const double EPS = 1e-12;
 
 TEST(SaturateTest, Saturate)
 {
-  using namespace safety_limits_interface::internal;
+  using namespace joint_limits_interface::internal;
   const double min = -1.0;
   const double max =  2.0;
   double val;
@@ -122,40 +122,40 @@ TEST_F(JointLimitsHandleTest, HandleConstruction)
 {
   {
     JointLimits limits_bad;
-    EXPECT_THROW(PositionJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits), SafetyLimitsInterfaceException);
+    EXPECT_THROW(PositionJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits), JointLimitsInterfaceException);
 
     // Print error messages. Requires manual output inspection, but exception message should be descriptive
     try {PositionJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits);}
-    catch(const SafetyLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+    catch(const JointLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
   }
 
   {
     JointLimits limits_bad;
     limits_bad.has_effort_limits = true;
-    EXPECT_THROW(EffortJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits), SafetyLimitsInterfaceException);
+    EXPECT_THROW(EffortJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits), JointLimitsInterfaceException);
 
     // Print error messages. Requires manual output inspection, but exception message should be descriptive
     try {EffortJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits);}
-    catch(const SafetyLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+    catch(const JointLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
   }
 
   {
     JointLimits limits_bad;
     limits_bad.has_velocity_limits = true;
-    EXPECT_THROW(EffortJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits), SafetyLimitsInterfaceException);
+    EXPECT_THROW(EffortJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits), JointLimitsInterfaceException);
 
     // Print error messages. Requires manual output inspection, but exception message should be descriptive
     try {EffortJointSoftLimitsHandle(cmd_handle, limits_bad, soft_limits);}
-    catch(const SafetyLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+    catch(const JointLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
   }
 
   {
     JointLimits limits_bad;
-    EXPECT_THROW(VelocityJointSaturationHandle(cmd_handle, limits_bad), SafetyLimitsInterfaceException);
+    EXPECT_THROW(VelocityJointSaturationHandle(cmd_handle, limits_bad), JointLimitsInterfaceException);
 
     // Print error messages. Requires manual output inspection, but exception message should be descriptive
     try {VelocityJointSaturationHandle(cmd_handle, limits_bad);}
-    catch(const SafetyLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+    catch(const JointLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
   }
 
   EXPECT_NO_THROW(PositionJointSoftLimitsHandle(cmd_handle, limits, soft_limits));
@@ -421,7 +421,7 @@ TEST_F(JointLimitsInterfaceTest, InterfaceRegistration)
   // Print error message
   // Requires manual output inspection, but exception message should contain the interface name (not its base clase)
   try {iface.getHandle("unknown_name");}
-  catch(const SafetyLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+  catch(const JointLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 
   // Enforce limits of all managed joints
   pos = pos2 = (soft_limits.max_position + limits.max_position) / 2.0; // Halfway between soft and hard limit

@@ -25,29 +25,52 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef SAFETY_LIMITS_INTERFACE_SAFETY_LIMITS_INTERFACE_EXCEPTION_H
-#define SAFETY_LIMITS_INTERFACE_SAFETY_LIMITS_INTERFACE_EXCEPTION_H
+/// \author Adolfo Rodriguez Tsouroukdissian
 
-namespace safety_limits_interface
+#ifndef JOINT_LIMITS_INTERFACE_JOINT_LIMITS_H
+#define JOINT_LIMITS_INTERFACE_JOINT_LIMITS_H
+
+namespace joint_limits_interface
 {
 
-/// An exception related to a \ref SafetyLimitsInterface
-// TODO: Update ref above!
-class SafetyLimitsInterfaceException: public std::exception
+struct JointLimits
 {
-public:
-  SafetyLimitsInterfaceException(const std::string& message)
-    : msg(message) {}
+  JointLimits()
+    : min_position(0.0),
+      max_position(0.0),
+      max_velocity(0.0),
+      max_acceleration(0.0),
+      max_effort(0.0),
+      has_position_limits(false),
+      has_velocity_limits(false),
+      has_acceleration_limits(false),
+      has_effort_limits(false)
+  {}
 
-  virtual ~SafetyLimitsInterfaceException() throw() {}
+  double min_position;
+  double max_position;
+  double max_velocity;
+  double max_acceleration;
+  double max_effort;
+  bool   has_position_limits;
+  bool   has_velocity_limits;
+  bool   has_acceleration_limits;
+  bool   has_effort_limits;
+};
 
-  virtual const char* what() const throw()
-  {
-    return msg.c_str();
-  }
+struct SoftJointLimits
+{
+  SoftJointLimits()
+    : min_position(0.0),
+      max_position(0.0),
+      k_position(0.0),
+      k_velocity(0.0)
+  {}
 
-private:
-  std::string msg;
+  double min_position;
+  double max_position;
+  double k_position;
+  double k_velocity;
 };
 
 }
