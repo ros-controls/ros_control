@@ -45,7 +45,7 @@ else()
   install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
-  install(DIRECTORY scripts/
+  install(PROGRAMS scripts/spawner scripts/unspawner scripts/controller_manager
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
   catkin_python_setup()
