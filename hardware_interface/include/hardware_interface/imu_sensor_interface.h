@@ -66,7 +66,7 @@ public:
     double* linear_acceleration_covariance; ///< A pointer to the storage of the linear acceleration covariance value: a row major 3x3 matrix about (x,y,z)
   };
 
-  ImuSensorHandle(const Data& data)
+  ImuSensorHandle(const Data& data = Data())
     : name_(data.name),
       frame_id_(data.frame_id),
       orientation_(data.orientation),
