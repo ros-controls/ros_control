@@ -32,7 +32,6 @@
 
 #include <urdf_interface/joint.h>
 #include <joint_limits_interface/joint_limits.h>
-#include <joint_limits_interface/joint_limits_interface_exception.h>
 
 namespace joint_limits_interface
 {
@@ -41,7 +40,7 @@ namespace joint_limits_interface
  * \brief Populate a JointLimits instance from URDF joint data.
  * \param[in] urdf_joint URDF joint.
  * \param[out] limits Where URDF joint limit data gets written into. Limits in \e urdf_joint will overwrite existing
- * values. Values in \e limits not present in \e urdf_joint remain untouched.
+ * values. Values in \e limits not present in \e urdf_joint remain unchanged.
  * \return True if \e urdf_joint has a valid limits specification, false otherwise.
  */
 bool getJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, JointLimits& limits)

@@ -65,8 +65,6 @@ protected:
 
 TEST_F(JointLimitsUrdfTest, GetJointLimits)
 {
-  using namespace joint_limits_interface;
-
   // Unset URDF joint
   {
     JointLimits limits;
