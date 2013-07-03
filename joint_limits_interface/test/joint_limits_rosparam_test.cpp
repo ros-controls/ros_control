@@ -75,6 +75,56 @@ TEST(JointLimitsRosParamTest, GetJointLimits)
     EXPECT_EQ(20.0, limits.max_effort);
   }
 
+  // Specifying flags but not values should set nothing
+  {
+    JointLimits limits;
+    EXPECT_TRUE(getJointLimits("yinfoo_joint", nh, limits));
+
+    EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_FALSE(limits.has_velocity_limits);
+    EXPECT_FALSE(limits.has_acceleration_limits);
+    EXPECT_FALSE(limits.has_jerk_limits);
+    EXPECT_FALSE(limits.has_effort_limits);
+  }
+
+  // Specifying values but not flags should set nothing
+  {
+    JointLimits limits;
+    EXPECT_TRUE(getJointLimits("yangfoo_joint", nh, limits));
+
+    EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_FALSE(limits.has_velocity_limits);
+    EXPECT_FALSE(limits.has_acceleration_limits);
+    EXPECT_FALSE(limits.has_jerk_limits);
+    EXPECT_FALSE(limits.has_effort_limits);
+  }
+
+  // Disable already set values
+  {
+    JointLimits limits;
+    EXPECT_TRUE(getJointLimits("foo_joint", nh, limits));
+    EXPECT_TRUE(limits.has_position_limits);
+    EXPECT_TRUE(limits.has_velocity_limits);
+    EXPECT_TRUE(limits.has_acceleration_limits);
+    EXPECT_TRUE(limits.has_jerk_limits);
+    EXPECT_TRUE(limits.has_effort_limits);
+
+    EXPECT_TRUE(getJointLimits("antifoo_joint", nh, limits));
+    EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_FALSE(limits.has_velocity_limits);
+    EXPECT_FALSE(limits.has_acceleration_limits);
+    EXPECT_FALSE(limits.has_jerk_limits);
+    EXPECT_FALSE(limits.has_effort_limits);
+  }
+
+  // Incomplete position limits specification does not get loaded
+  {
+    JointLimits limits;
+    EXPECT_TRUE(getJointLimits("baz_joint", nh, limits));
+
+    EXPECT_FALSE(limits.has_position_limits);
+  }
+
   // Override only one field, leave all others unchanged
   {
     JointLimits limits, limits_ref;
@@ -98,18 +148,6 @@ TEST(JointLimitsRosParamTest, GetJointLimits)
 
     EXPECT_EQ(limits_ref.has_effort_limits, limits.has_effort_limits);
     EXPECT_EQ(limits_ref.max_effort, limits.max_effort);
-  }
-
-  // Incomplete limits specification does not get loaded
-  {
-    JointLimits limits;
-    EXPECT_TRUE(getJointLimits("baz_joint", nh, limits));
-
-    EXPECT_FALSE(limits.has_position_limits);
-    EXPECT_FALSE(limits.has_velocity_limits);
-    EXPECT_FALSE(limits.has_acceleration_limits);
-    EXPECT_FALSE(limits.has_jerk_limits);
-    EXPECT_FALSE(limits.has_effort_limits);
   }
 }
 

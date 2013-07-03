@@ -90,11 +90,12 @@ bool getJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, Jo
   }
 
   // Position limits
-  bool has_pos_limits = false;
-  if(limits_nh.getParam("has_position_limits", has_pos_limits) && has_pos_limits)
+  bool has_position_limits = false;
+  if(limits_nh.getParam("has_position_limits", has_position_limits))
   {
+    if (!has_position_limits) {limits.has_position_limits = false;}
     double min_pos, max_pos;
-    if (limits_nh.getParam("min_position", min_pos) && limits_nh.getParam("max_position", max_pos))
+    if (has_position_limits && limits_nh.getParam("min_position", min_pos) && limits_nh.getParam("max_position", max_pos))
     {
       limits.has_position_limits = true;
       limits.min_position = min_pos;
@@ -103,11 +104,12 @@ bool getJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, Jo
   }
 
   // Velocity limits
-  bool has_vel_limits = false;
-  if(limits_nh.getParam("has_velocity_limits", has_vel_limits) && has_vel_limits)
+  bool has_velocity_limits = false;
+  if(limits_nh.getParam("has_velocity_limits", has_velocity_limits))
   {
+    if (!has_velocity_limits) {limits.has_velocity_limits = false;}
     double max_vel;
-    if (limits_nh.getParam("max_velocity", max_vel))
+    if (has_velocity_limits && limits_nh.getParam("max_velocity", max_vel))
     {
       limits.has_velocity_limits = true;
       limits.max_velocity = max_vel;
@@ -115,11 +117,12 @@ bool getJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, Jo
   }
 
   // Acceleration limits
-  bool has_acc_limits = false;
-  if(limits_nh.getParam("has_acceleration_limits", has_acc_limits) && has_acc_limits)
+  bool has_acceleration_limits = false;
+  if(limits_nh.getParam("has_acceleration_limits", has_acceleration_limits))
   {
+    if (!has_acceleration_limits) {limits.has_acceleration_limits = false;}
     double max_acc;
-    if (limits_nh.getParam("max_acceleration", max_acc))
+    if (has_acceleration_limits && limits_nh.getParam("max_acceleration", max_acc))
     {
       limits.has_acceleration_limits = true;
       limits.max_acceleration = max_acc;
@@ -128,10 +131,11 @@ bool getJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, Jo
 
   // Jerk limits
   bool has_jerk_limits = false;
-  if(limits_nh.getParam("has_jerk_limits", has_jerk_limits) && has_jerk_limits)
+  if(limits_nh.getParam("has_jerk_limits", has_jerk_limits))
   {
+    if (!has_jerk_limits) {limits.has_jerk_limits = false;}
     double max_jerk;
-    if (limits_nh.getParam("max_jerk", max_jerk))
+    if (has_jerk_limits && limits_nh.getParam("max_jerk", max_jerk))
     {
       limits.has_jerk_limits = true;
       limits.max_jerk = max_jerk;
@@ -140,10 +144,11 @@ bool getJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, Jo
 
   // Effort limits
   bool has_effort_limits = false;
-  if(limits_nh.getParam("has_effort_limits", has_effort_limits) && has_effort_limits)
+  if(limits_nh.getParam("has_effort_limits", has_effort_limits))
   {
+    if (!has_effort_limits) {limits.has_effort_limits = false;}
     double max_effort;
-    if (limits_nh.getParam("max_effort", max_effort))
+    if (has_effort_limits && limits_nh.getParam("max_effort", max_effort))
     {
       limits.has_effort_limits = true;
       limits.max_effort = max_effort;
