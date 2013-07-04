@@ -77,8 +77,8 @@ bool getJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, Jo
     const std::string limits_namespace = "joint_limits/" + joint_name;
     if (!nh.hasParam(limits_namespace))
     {
-      ROS_WARN_STREAM("No joint limits specification found for joint '" << joint_name <<
-                      "' in the parameter server (namespace " << nh.getNamespace() + "/" + limits_namespace << ").");
+      ROS_DEBUG_STREAM("No joint limits specification found for joint '" << joint_name <<
+                       "' in the parameter server (namespace " << nh.getNamespace() + "/" + limits_namespace << ").");
       return false;
     }
     limits_nh = ros::NodeHandle(nh, limits_namespace);
