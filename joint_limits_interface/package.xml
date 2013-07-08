@@ -1,0 +1,25 @@
+<package>
+  <name>joint_limits_interface</name>
+  <version>1.0.0</version>
+  <description>Interface for enforcing joint limits.</description>
+  <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
+  <license>BSD</license>
+
+  <url type="website">https://github.com/willowgarage/ros_control/wiki</url>
+  <!-- <url type="bugtracker"></url> -->
+  <author>Adolfo Rodriguez Tsouroukdissian</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>hardware_interface</build_depend>
+  <build_depend>urdf_interface</build_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>hardware_interface</run_depend>
+  <build_depend>urdf_interface</build_depend>
+
+  <export>
+    <cpp cflags="-I${prefix}/include"/>
+  </export>
+</package>
