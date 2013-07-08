@@ -27,7 +27,6 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#include <iostream>
 #include <string>
 #include <gtest/gtest.h>
 #include <ros/console.h>
