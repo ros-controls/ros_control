@@ -1,7 +1,7 @@
 <package>
   <name>transmission_interface</name>
   <version>0.4.0</version>
-  <description>Transmission Interaface.</description>
+  <description>Transmission Interface.</description>
   <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
 
   <license>Modified BSD</license>
