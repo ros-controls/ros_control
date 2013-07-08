@@ -2,28 +2,30 @@
 \mainpage
 \htmlinclude manifest.html
 
-\b joint_limits_interface contains data structures for representing joint limits, methods for
+\b %joint_limits_interface contains data structures for representing joint limits, methods for
 populating them from common formats such as URDF and rosparam, and methods for enforcing limits on different kinds
 of joint commands.
 
 \section codeapi Code API
 
-There are two main elements involved in setting up a joint_limits_interface:
+There are two main elements involved in setting up a %joint_limits_interface:
 
-<b>Joint limits representation</b>
+\subsection limits_representation Joint limits representation
 
   - \ref joint_limits_interface::JointLimits "JointLimits" Position, velocity, acceleration, jerk and effort.
   - \ref joint_limits_interface::SoftJointLimits "SoftJointLimits" Soft position limits, k_p, k_v (as described <a href="http://www.ros.org/wiki/pr2_controller_manager/safety_limits">here</a> ).
   - \ref joint_limits_urdf.h "Convenience methods" for loading joint limits information (only position, velocity, effort), as well as soft joint limits information from the URDF.
   - \ref joint_limits_rosparam.h "Convenience methods" for loading joint limits from ROS parameter server (all values). Parameter specification is the same used in MoveIt, with the addition that we also parse jerk and effort limits.
 
-<b>Joint limits interface</b>
+\subsection limits_interface Joint limits interface
 
   - For \b effort-controlled joints, the soft-limits implementation from the PR2 has been ported (\ref joint_limits_interface::EffortJointSoftLimitsHandle "handle", \ref joint_limits_interface::EffortJointSoftLimitsInterface "interface").
   - For \b position-controlled joints, a modified version of the PR2 soft limits has been implemented (\ref joint_limits_interface::PositionJointSoftLimitsHandle "handle", \ref joint_limits_interface::PositionJointSoftLimitsInterface "interface").
   - For \b velocity-controlled joints, simple saturation based on acceleration and velocity limits has been implemented (\ref joint_limits_interface::VelocityJointSaturationHandle "handle", \ref joint_limits_interface::VelocityJointSaturationInterface "interface").
 
 \section example Examples
+
+\subsection limits_representation_example Joint limits representation
 
 The first example shows the different ways of populating joint limits data structures.
 
@@ -62,6 +64,8 @@ int main(int argc, char** argv)
   const bool rosparam_limits_ok = getJointLimits("foo_joint", nh, limits);
 }
 \endcode
+
+\subsection limits_interface_example Joint limits interface
 
 The second example integrates joint limits enforcing into an existing robot hardware implementation.
 

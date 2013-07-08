@@ -179,7 +179,6 @@ public:
    * \brief Enforce position, velocity and effort limits for a joint subject to soft limits.
    *
    * If the joint has no position limits (eg. a continuous joint), only velocity and effort limits will be enforced.
-   * \param period Control period.
    */
   void enforceLimits(const ros::Duration& /*period*/)
   {
