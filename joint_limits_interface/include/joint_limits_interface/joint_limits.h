@@ -45,8 +45,8 @@ struct JointLimits
       has_position_limits(false),
       has_velocity_limits(false),
       has_acceleration_limits(false),
-      has_effort_limits(false),
-      has_jerk_limits(false)
+      has_jerk_limits(false),
+      has_effort_limits(false)
   {}
 
   double min_position;

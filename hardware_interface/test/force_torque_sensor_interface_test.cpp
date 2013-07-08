@@ -60,8 +60,8 @@ class ForceTorqueSensorInterfaceTest : public ::testing::Test
 {
 public:
   ForceTorqueSensorInterfaceTest()
-    : force1(), torque1(),
-      force2(), torque2(),
+    : force1(), force2(),
+      torque1(), torque2(),
       name1("name_1"), name2("name_2"),
       frame_id1("frame_1"), frame_id2("frame_2"),
       h1(name1, frame_id1, force1, torque1),
