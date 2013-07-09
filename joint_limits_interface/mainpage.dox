@@ -67,6 +67,9 @@ int main(int argc, char** argv)
 }
 \endcode
 
+A joint limits specification in YAML format that can be loaded to the ROS parameter server can be found
+\ref joint_limits_interface::getJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, JointLimits& limits) "here".
+
 \subsection limits_interface_example Joint limits interface
 
 The second example integrates joint limits enforcing into an existing robot hardware implementation.
