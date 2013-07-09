@@ -11,6 +11,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>rostest</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>hardware_interface</build_depend>
   <build_depend>urdf_interface</build_depend>
