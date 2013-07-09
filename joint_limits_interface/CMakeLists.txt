@@ -23,7 +23,7 @@ if(USE_ROSBUILD)
 
 else()
 
-  find_package(catkin REQUIRED COMPONENTS roscpp)
+  find_package(catkin REQUIRED COMPONENTS roscpp rostest)
 
   # Declare catkin package
   catkin_package(
