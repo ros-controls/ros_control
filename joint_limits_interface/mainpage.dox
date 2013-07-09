@@ -2,13 +2,15 @@
 \mainpage
 \htmlinclude manifest.html
 
-\b %joint_limits_interface contains data structures for representing joint limits, methods for
+joint_limits_interface contains data structures for representing joint limits, methods for
 populating them from common formats such as URDF and rosparam, and methods for enforcing limits on different kinds
 of joint commands.
 
+The joint_limits_interface is \e not used by controllers themselves (it does not implement a \p HardwareInterface) but instead operates after the controllers have updated, in the \p write() method (or equivalent) of the robot abstraction. Enforcing limits will \e overwrite the commands set by the controllers, it does not operate on a separate raw data buffer.
+
 \section codeapi Code API
 
-There are two main elements involved in setting up a %joint_limits_interface:
+There are two main elements involved in setting up a joint_limits_interface:
 
 \subsection limits_representation Joint limits representation
 
