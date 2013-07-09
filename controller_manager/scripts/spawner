@@ -60,24 +60,26 @@ unload_controller_service = ""
 def shutdown():
     global loaded,unload_controller_service,load_controller_service,switch_controller_service
 
-    # unloader
-    print("  Controller Spawner: Waiting for service "+unload_controller_service)
-    rospy.wait_for_service(unload_controller_service)
-    unload_controller = rospy.ServiceProxy(unload_controller_service, UnloadController)
-
-    # switcher
-    print("  Controller Spawner: Waiting for service "+switch_controller_service)
-    rospy.wait_for_service(switch_controller_service)
-    switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
+    return #temp
 
     try:
+        # unloader
+        rospy.loginfo("Controller Spawner: Waiting for service "+unload_controller_service)
+        rospy.wait_for_service(unload_controller_service, 3)
+        unload_controller = rospy.ServiceProxy(unload_controller_service, UnloadController)
+
+        # switcher
+        rospy.loginfo("Controller Spawner: Waiting for service "+switch_controller_service)
+        rospy.wait_for_service(switch_controller_service, 3)
+        switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
+
         switch_controller([], loaded, SwitchControllerRequest.STRICT)
         for name in reversed(loaded):
             rospy.logout("Trying to unload %s" % name)
             unload_controller(name)
             rospy.logout("Succeeded in unloading %s" % name)
-    except rospy.ServiceException:
-        rospy.logwarn("Spawner couldn't reach controller_manager to take down controllers.")
+    except (rospy.ServiceException, rospy.exceptions.ROSException) as exc:
+        rospy.logwarn("Controller Spawner couldn't reach controller_manager to take down controllers.")
 
 # At this moment, I am absolutely livid about Python's lack of
 # reasonable scoping mechanisms.  This variable had to be declared
@@ -117,15 +119,20 @@ def main():
     unload_controller_service = robot_namespace+"controller_manager/unload_controller"
     switch_controller_service = robot_namespace+'controller_manager/switch_controller'
 
-    # loader
-    print("  Controller Spawner: Waiting for service "+load_controller_service)
-    rospy.wait_for_service(load_controller_service)
-    load_controller = rospy.ServiceProxy(load_controller_service, LoadController)
+    try:
+        # loader
+        rospy.loginfo("Controller Spawner: Waiting for service "+load_controller_service)
+        rospy.wait_for_service(load_controller_service, timeout=10)
+        load_controller = rospy.ServiceProxy(load_controller_service, LoadController)
 
-    #switcher
-    print("  Controller Spawner: Waiting for service "+switch_controller_service)
-    rospy.wait_for_service(switch_controller_service)
-    switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
+        #switcher
+        rospy.loginfo("Controller Spawner: Waiting for service "+switch_controller_service)
+        rospy.wait_for_service(switch_controller_service, timeout=10)
+        switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
+
+    except rospy.exceptions.ROSException:
+        rospy.logwarn("Controller Spawner couldn't reach controller_manager to load controllers.")
+        return
 
     global wait_for_topic_result  # Python scoping sucks
     if wait_for_topic:
@@ -145,7 +152,7 @@ def main():
             if not warned_about_not_hearing_anything:
                 if time.time() - started_waiting > 10.0:
                     warned_about_not_hearing_anything = True
-                    rospy.logwarn("Spawner hasn't heard anything from its \"wait for\" topic (%s)" % \
+                    rospy.logwarn("Controller Spawner hasn't heard anything from its \"wait for\" topic (%s)" % \
                                       wait_for_topic)
         while not wait_for_topic_result.data:
             time.sleep(0.01)
@@ -170,7 +177,7 @@ def main():
 
     # load controllers
     for name in controllers:
-        print("Loading controller "+name)
+        rospy.loginfo("Loading controller: "+name)
         resp = load_controller(name)
         if resp.ok != 0:
             loaded.append(name)
@@ -178,7 +185,7 @@ def main():
             time.sleep(1) # give error message a chance to get out
             rospy.logerr("Failed to load %s" % name)
 
-    rospy.loginfo("  Controller Spawner: Loaded controllers: %s" % ', '.join(loaded))
+    rospy.loginfo("Controller Spawner: Loaded controllers: %s" % ', '.join(loaded))
 
     if rospy.is_shutdown():
         return

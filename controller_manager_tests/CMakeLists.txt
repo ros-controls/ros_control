@@ -33,6 +33,12 @@ else()
 
   include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
+  catkin_package(
+    CATKIN_DEPENDS controller_manager controller_interface control_toolbox
+    INCLUDE_DIRS include
+    LIBRARIES ${PROJECT_NAME}
+    )
+
   #common commands for building c++ executables and libraries
   add_library(${PROJECT_NAME} 
     src/my_robot_hw.cpp
@@ -46,13 +52,9 @@ else()
   add_executable(dummy_app src/dummy_app.cpp)
   target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
-  catkin_package(
-    CATKIN_DEPENDS controller_manager controller_interface control_toolbox
-    INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_NAME}
-    )
-
-  catkin_add_gtest(cm_test test/cm_test.cpp)
+  add_executable(cm_test test/cm_test.cpp)
+  add_dependencies(tests cm_test)
+  target_link_libraries(cm_test ${GTEST_LIBRARIES} ${catkin_LIBRARIES})
   add_rostest(test/cm_test.test)
 
   # Install
@@ -63,5 +65,8 @@ else()
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+
+  install(FILES test_controllers_plugin.xml
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 endif()

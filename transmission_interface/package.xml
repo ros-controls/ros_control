@@ -6,12 +6,14 @@
 
   <license>Modified BSD</license>
 
-  <url type="website">https://github.com/willowgarage/ros_control/wiki</url>
+  <url type="website">https://github.com/ros-controls/ros_control/wiki</url>
   <!-- <url type="bugtracker"></url> -->
 
   <author>Adolfo Rodriguez Tsouroukdissian</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>hardware_interface</build_depend>
 
   <export>
     <cpp cflags="-I${prefix}/include"/>
