@@ -32,20 +32,37 @@ else()
 
   find_package(catkin REQUIRED COMPONENTS roscpp)
 
+  include_directories(include)
+
   # Declare catkin package
   catkin_package(
     CATKIN_DEPENDS roscpp
     INCLUDE_DIRS include
     )
 
-  catkin_add_gtest(hardware_resource_manager_test     test/hardware_resource_manager_test.cpp)
-  catkin_add_gtest(actuator_state_interface_test      test/actuator_state_interface_test.cpp)
-  catkin_add_gtest(actuator_command_interface_test    test/actuator_command_interface_test.cpp)
-  catkin_add_gtest(joint_state_interface_test         test/joint_state_interface_test.cpp)
-  catkin_add_gtest(joint_command_interface_test       test/joint_command_interface_test.cpp)
+  catkin_add_gtest(hardware_resource_manager_test  test/hardware_resource_manager_test.cpp)
+  target_link_libraries(hardware_resource_manager_test ${catkin_LIBRARIES})
+
+  catkin_add_gtest(actuator_state_interface_test   test/actuator_state_interface_test.cpp)
+  target_link_libraries(actuator_state_interface_test ${catkin_LIBRARIES})
+
+  catkin_add_gtest(actuator_command_interface_test test/actuator_command_interface_test.cpp)
+  target_link_libraries(actuator_command_interface_test ${catkin_LIBRARIES})
+
+  catkin_add_gtest(joint_state_interface_test      test/joint_state_interface_test.cpp)
+  target_link_libraries(joint_state_interface_test ${catkin_LIBRARIES})
+
+  catkin_add_gtest(joint_command_interface_test    test/joint_command_interface_test.cpp)
+  target_link_libraries(joint_command_interface_test ${catkin_LIBRARIES})
+
   catkin_add_gtest(force_torque_sensor_interface_test test/force_torque_sensor_interface_test.cpp)
-  catkin_add_gtest(imu_sensor_interface_test          test/imu_sensor_interface_test.cpp)
-  catkin_add_gtest(robot_hw_test                      test/robot_hw_test.cpp)
+  target_link_libraries(force_torque_sensor_interface_test ${catkin_LIBRARIES})
+
+  catkin_add_gtest(imu_sensor_interface_test       test/imu_sensor_interface_test.cpp)
+  target_link_libraries(imu_sensor_interface_test ${catkin_LIBRARIES})
+
+  catkin_add_gtest(robot_hw_test                   test/robot_hw_test.cpp)
+  target_link_libraries(robot_hw_test ${catkin_LIBRARIES})
 
   # Install
   install(DIRECTORY include/${PROJECT_NAME}/
