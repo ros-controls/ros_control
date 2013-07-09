@@ -57,6 +57,10 @@ namespace joint_limits_interface
  *     max_jerk: 100.0
  *     has_effort_limits: true
  *     max_effort: 20.0
+ *   bar_joint:
+ *     has_position_limits: false # Continuous joint
+ *     has_velocity_limits: true
+ *     max_velocity: 4.0
  * \endcode
  *
  * This specification is similar to the one used by <a href="http://moveit.ros.org/wiki/MoveIt!">MoveIt!</a>,
