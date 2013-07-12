@@ -111,7 +111,7 @@ def main():
     rospy.init_node('spawner', anonymous=True)
 
     # add a '/' to the namespace if needed
-    if robot_namespace[-1] != '/':
+    if robot_namespace and robot_namespace[-1] != '/':
         robot_namespace = robot_namespace+'/'
 
     # set service names based on namespace
