@@ -10,6 +10,8 @@ if(USE_ROSBUILD)
   set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
   set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
+  # TODO: add tranmission parser to ROSBUILD - I don't know how to use rosbuild
+
   rosbuild_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
   rosbuild_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
   rosbuild_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
@@ -26,13 +28,27 @@ else()
   # Load catkin and all dependencies required for this package
   find_package(catkin REQUIRED hardware_interface)
 
-  include_directories(include ${catkin_INCLUDE_DIRS})
+  ## Build 
+  include_directories(
+    include 
+    ${catkin_INCLUDE_DIRS}
+  )
+  link_directories(${catkin_LIBRARY_DIRS})
+
+  # Transmission Paraser Library
+  add_library(${PROJECT_NAME}_parser
+    src/transmission_parser.cpp
+  )
+  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
   # Declare a catkin package
   catkin_package(
+    LIBRARIES
+      ${PROJECT_NAME}_parser
     INCLUDE_DIRS include
-    )
+  )
 
+  # Tests
   catkin_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
   catkin_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
   catkin_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
