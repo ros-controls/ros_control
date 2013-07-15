@@ -32,7 +32,9 @@ else()
     src/controller_manager.cpp
     include/controller_manager/controller_manager.h
     include/controller_manager/controller_loader_interface.h
-    include/controller_manager/controller_loader.h)
+    include/controller_manager/controller_loader.h
+  )
+  target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
   if(catkin_EXPORTED_TARGETS)
     add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
