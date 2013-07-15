@@ -7,6 +7,8 @@
   <review status="unreviewed" notes=""/>
   <url>https://github.com/ros-controls/ros_control/wiki</url>
 
+  <rosdep name="tinyxml" />
+
   <depend package="hardware_interface" />
 
   <export>
