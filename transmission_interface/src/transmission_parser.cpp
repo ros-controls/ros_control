@@ -33,12 +33,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-/*
-  Author: Dave Coleman
-  Desc:   Parses <transmission> elements into corresponding structs from XML (URDF)
-*/
-
-#include "transmission_interface/transmission_parser.h"
+#include <transmission_interface/transmission_parser.h>
 
 namespace transmission_interface
 {
@@ -53,10 +48,6 @@ bool TransmissionParser::parse(const std::string& urdf, std::vector<Transmission
       " configuration file: %s\n", urdf.c_str());
     return false;
   }
-
-  // Debug
-  //doc.Print();
-  //std::cout << *(doc.RootElement()) << std::endl;
 
   // Find joints in transmission tags
   TiXmlElement *root = doc.RootElement();
@@ -110,10 +101,10 @@ bool TransmissionParser::parse(const std::string& urdf, std::vector<Transmission
         << transmission.name_);
       continue;
     }
-    
+
     // Save loaded transmission
     transmissions.push_back(transmission);
-    
+
   } // end for <transmission>
 
   if( transmissions.empty() )
@@ -201,7 +192,7 @@ bool TransmissionParser::parseActuators(TiXmlElement *trans_it, std::vector<Actu
       ROS_ERROR_STREAM_NAMED("parser","No hardware interface string found for actuator '"
         << actuator.name_ << "'");
       continue;
-    }    
+    }
 
     // \todo: implement other generic actuator properties
 

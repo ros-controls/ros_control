@@ -33,10 +33,11 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-/* 
-   Author: Dave Coleman
-   Desc:   Parses <transmission> elements into corresponding structs from XML (URDF)
-*/
+/// \author Dave Coleman
+/// \file Parses <tt><transmission></tt> elements into corresponding structs from XML (URDF).
+
+#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_PARSER_H
+#define TRANSMISSION_INTERFACE_TRANSMISSION_PARSER_H
 
 // ros_control
 #include <transmission_interface/transmission_info.h>
@@ -54,44 +55,46 @@ class TransmissionParser
 {
 public:
   /**
-   * @brief Constructor
+   * \brief Constructor
    */
   TransmissionParser()
   {
   }
 
   /**
-   * @brief Destructor
+   * \brief Destructor
    */
   ~TransmissionParser()
   {
   }
 
   /**
-   * @brief Parses the tranmission elements of a URDF
-   * @param urdf_string - XML string of a valid URDF file that contains <tranmission> elements
-   * @param transmissions - vector of loaded transmission meta data
-   * @return true if parsing was successful
+   * \brief Parses the tranmission elements of a URDF
+   * \param[in] urdf_string - XML string of a valid URDF file that contains <tranmission> elements
+   * \param[out] transmissions - vector of loaded transmission meta data
+   * \return true if parsing was successful
    */
   static bool parse(const std::string& urdf_string, std::vector<TransmissionInfo>& transmissions);
 
 private:
   /**
-   * @brief Parses the joint elements within tranmission elements of a URDF
-   * @param trans_it - pointer to the current XML element being parsed
-   * @param joints - resulting list of joints in the transmission
-   * @return true if successful
+   * \brief Parses the joint elements within tranmission elements of a URDF
+   * \param[in] trans_it - pointer to the current XML element being parsed
+   * \param[out] joints - resulting list of joints in the transmission
+   * \return true if successful
    */
   static bool parseJoints(TiXmlElement *trans_it, std::vector<JointInfo>& joints);
 
   /**
-   * @brief Parses the actuator elements within tranmission elements of a URDF
-   * @param trans_it - pointer to the current XML element being parsed
-   * @param actuators - resulting list of actuators in the transmission
-   * @return true if successful
+   * \brief Parses the actuator elements within tranmission elements of a URDF
+   * \param[in] trans_it - pointer to the current XML element being parsed
+   * \param[out] actuators - resulting list of actuators in the transmission
+   * \return true if successful
    */
   static bool parseActuators(TiXmlElement *trans_it, std::vector<ActuatorInfo>& actuators);
 
 }; // class
 
 } // namespace
+
+#endif
