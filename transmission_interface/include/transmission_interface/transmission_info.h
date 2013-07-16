@@ -32,14 +32,14 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
+/**
+ * \file
+ * \brief Structs to hold tranmission data loaded straight from XML (URDF).
+ * \author Dave Coleman
+ */
 
-/*
-  Author: Dave Coleman
-  Desc:   Structs to hold tranmission data loaded straight from XML (URDF)
-*/
-
-#ifndef TRANSMISSION_INTERFACE_INFO_H
-#define TRANSMISSION_INTERFACE_INFO_H
+#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_INFO_H
+#define TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_INFO_H
 
 #include <vector>
 #include <string>
@@ -50,7 +50,7 @@
 namespace transmission_interface
 {
 
-/** 
+/**
  * \brief Contains semantic info about a given joint loaded from XML (URDF)
  */
 struct JointInfo
@@ -61,7 +61,7 @@ struct JointInfo
   TiXmlElement* xml_element_;
 };
 
-/** 
+/**
  * \brief Contains semantic info about a given actuator loaded from XML (URDF)
  */
 struct ActuatorInfo {
@@ -70,7 +70,7 @@ struct ActuatorInfo {
   TiXmlElement* xml_element_;
 };
 
-/** 
+/**
  * \brief Contains semantic info about a given transmission loaded from XML (URDF)
  */
 struct TransmissionInfo

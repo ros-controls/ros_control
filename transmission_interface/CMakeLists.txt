@@ -10,7 +10,9 @@ if(USE_ROSBUILD)
   set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
   set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-  # TODO: add tranmission parser to ROSBUILD - I don't know how to use rosbuild
+  # Transmission Paraser Library
+  rosbuild_add_library(${PROJECT_NAME}_parser src/transmission_parser.cpp)
+  target_link_libraries(${PROJECT_NAME}_parser)
 
   rosbuild_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
   rosbuild_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
@@ -28,9 +30,9 @@ else()
   # Load catkin and all dependencies required for this package
   find_package(catkin REQUIRED hardware_interface)
 
-  ## Build 
+  # Build
   include_directories(
-    include 
+    include
     ${catkin_INCLUDE_DIRS}
   )
   link_directories(${catkin_LIBRARY_DIRS})
@@ -39,12 +41,12 @@ else()
   add_library(${PROJECT_NAME}_parser
     src/transmission_parser.cpp
   )
-  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} tinyxml)
 
   # Declare a catkin package
   catkin_package(
-    LIBRARIES
-      ${PROJECT_NAME}_parser
+    DEPENDS tinyxml
+    LIBRARIES ${PROJECT_NAME}_parser
     INCLUDE_DIRS include
   )
 
