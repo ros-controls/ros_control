@@ -33,8 +33,11 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-/// \author Dave Coleman
-/// \file Parses <tt><transmission></tt> elements into corresponding structs from XML (URDF).
+/**
+ * \file
+ * \brief Parses <tt>\<transmission\></tt> elements into corresponding structs from XML (URDF).
+ * \author Dave Coleman
+ */
 
 #ifndef TRANSMISSION_INTERFACE_TRANSMISSION_PARSER_H
 #define TRANSMISSION_INTERFACE_TRANSMISSION_PARSER_H
@@ -70,7 +73,7 @@ public:
 
   /**
    * \brief Parses the tranmission elements of a URDF
-   * \param[in] urdf_string - XML string of a valid URDF file that contains <tranmission> elements
+   * \param[in] urdf_string - XML string of a valid URDF file that contains <tt>\<tranmission\></tt> elements
    * \param[out] transmissions - vector of loaded transmission meta data
    * \return true if parsing was successful
    */

@@ -32,9 +32,11 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
-
-/// \author Dave Coleman
-/// \file Structs to hold tranmission data loaded straight from XML (URDF)
+/**
+ * \file
+ * \brief Structs to hold tranmission data loaded straight from XML (URDF).
+ * \author Dave Coleman
+ */
 
 #ifndef TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_INFO_H
 #define TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_INFO_H
