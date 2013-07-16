@@ -2,12 +2,14 @@
 \mainpage
 \htmlinclude manifest.html
 
-\b transmission_interface contains data structures for representing mechanical transmissions, and methods for
+transmission_interface contains data structures for representing mechanical transmissions, and methods for
 propagating position, velocity and effort variables between actuator and joint spaces.
 
 In the same spirit as the \b hardware_interface package, this package wraps existing raw data (eg. current actuator
 positon, reference joint command, etc.) under a consistent interface. By not imposing a specific layout on the raw data,
 it becomes easier to support arbitrary hardware drivers to software control.
+
+The transmission_interface is \e not used by controllers themselves (it does not implement a \p HardwareInterface) but instead operates before or after the controllers update, in the \p read() and \p write() methods (or equivalents) of the robot abstraction.
 
 \section codeapi Code API
 

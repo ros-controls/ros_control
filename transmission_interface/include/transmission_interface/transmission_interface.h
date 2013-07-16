@@ -372,28 +372,28 @@ public:
 // Convenience typedefs
 
 /** Interface for propagating actuator state (position, velocity and effort) to joint state on a set of transmissions. */
-typedef TransmissionInterface<ActuatorToJointStateHandle> ActuatorToJointStateInterface;
+class ActuatorToJointStateInterface : public TransmissionInterface<ActuatorToJointStateHandle> {};
 
 /** Interface for propagating actuator positions to joint positions on a set of transmissions. */
-typedef TransmissionInterface<ActuatorToJointPositionHandle> ActuatorToJointPositionInterface;
+class ActuatorToJointPositionInterface : public TransmissionInterface<ActuatorToJointPositionHandle> {};
 
 /** Interface for propagating actuator velocities to joint velocities on a set of transmissions. */
-typedef TransmissionInterface<ActuatorToJointVelocityHandle> ActuatorToJointVelocityInterface;
+class ActuatorToJointVelocityInterface : public TransmissionInterface<ActuatorToJointVelocityHandle> {};
 
 /** Interface for propagating actuator efforts to joint efforts on a set of transmissions. */
-typedef TransmissionInterface<ActuatorToJointEffortHandle> ActuatorToJointEffortInterface;
+class ActuatorToJointEffortInterface : public TransmissionInterface<ActuatorToJointEffortHandle> {};
 
 /** Interface for propagating joint state (position, velocity and effort) to actuator state on a set of transmissions. */
-typedef TransmissionInterface<JointToActuatorStateHandle> JointToActuatorStateInterface;
+class JointToActuatorStateInterface : public TransmissionInterface<JointToActuatorStateHandle> {};
 
 /** Interface for propagating joint positions to actuator positions on a set of transmissions. */
-typedef TransmissionInterface<JointToActuatorPositionHandle> JointToActuatorPositionInterface;
+class JointToActuatorPositionInterface : public TransmissionInterface<JointToActuatorPositionHandle> {};
 
 /** Interface for propagating joint velocities to actuator velocities on a set of transmissions. */
-typedef TransmissionInterface<JointToActuatorVelocityHandle> JointToActuatorVelocityInterface;
+class JointToActuatorVelocityInterface : public TransmissionInterface<JointToActuatorVelocityHandle> {};
 
 /** Interface for propagating joint efforts to actuator efforts on a set of transmissions. */
-typedef TransmissionInterface<JointToActuatorEffortHandle> JointToActuatorEffortInterface;
+class JointToActuatorEffortInterface : public TransmissionInterface<JointToActuatorEffortHandle> {};
 
 } // transmission_interface
 

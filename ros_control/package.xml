@@ -15,6 +15,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <run_depend>joint_limits_interface</run_depend>
   <run_depend>transmission_interface</run_depend>
   <run_depend>realtime_tools</run_depend>
   <run_depend>controller_manager</run_depend>

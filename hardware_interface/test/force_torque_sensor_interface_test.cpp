@@ -1,3 +1,4 @@
+ 
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2013, PAL Robotics S.L.
 //
@@ -27,70 +28,74 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
+#include <iostream>
 #include <string>
 #include <gtest/gtest.h>
 #include <ros/console.h>
-#include <hardware_interface/actuator_state_interface.h>
+#include <hardware_interface/force_torque_sensor_interface.h>
 
 using std::string;
 using namespace hardware_interface;
 
-TEST(ActuatorStateHandleTest, HandleConstruction)
+TEST(ForceTorqueSensorHandleTest, HandleConstruction)
 {
-  string name = "name1";
-  double pos, vel, eff;
-  EXPECT_NO_THROW(ActuatorStateHandle(name, &pos, &vel, &eff));
-  EXPECT_THROW(ActuatorStateHandle(name, 0, &vel, &eff), HardwareInterfaceException);
-  EXPECT_THROW(ActuatorStateHandle(name, &pos, 0, &eff), HardwareInterfaceException);
-  EXPECT_THROW(ActuatorStateHandle(name, &pos, &vel, 0), HardwareInterfaceException);
+  // Empty handle
+  {
+    ForceTorqueSensorHandle handle;
+    EXPECT_EQ("", handle.getName());
+    EXPECT_EQ("", handle.getFrameId());
+    EXPECT_TRUE(0 == handle.getForce());
+    EXPECT_TRUE(0 == handle.getTorque());
+  }
 
-  // Print error messages
-  // Requires manual output inspection, but exception message should be descriptive
-  try {ActuatorStateHandle(name, 0, &vel, &eff);}
-  catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
-
-  try {ActuatorStateHandle(name, &pos, 0, &eff);}
-  catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
-
-  try {ActuatorStateHandle(name, &pos, &vel, 0);}
-  catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
+  // Valid handle
+  {
+    double force[3]  = {1.0, 2.0, 3.0};
+    double torque[3] = {-1.0, -2.0, -3.0};
+    ForceTorqueSensorHandle("name_1", "frame_1", force, torque);
+  }
 }
 
-#ifndef NDEBUG // NOTE: This test validates assertion triggering, hence only gets compiled in debug mode
-TEST(ActuatorStateHandleTest, AssertionTriggering)
-{
-  ActuatorStateHandle h;
-
-  // Data with invalid pointers should trigger an assertion
-  EXPECT_DEATH(h.getPosition(), ".*");
-  EXPECT_DEATH(h.getVelocity(), ".*");
-  EXPECT_DEATH(h.getEffort(),   ".*");
-}
-#endif // NDEBUG
-
-class ActuatorStateInterfaceTest : public ::testing::Test
+class ForceTorqueSensorInterfaceTest : public ::testing::Test
 {
 public:
-  ActuatorStateInterfaceTest()
-    : pos1(1.0), vel1(2.0), eff1(3.0),
-      pos2(4.0), vel2(5.0), eff2(6.0),
-      name1("name_1"),
-      name2("name_2"),
-      h1(name1, &pos1, &vel1, &eff1),
-      h2(name2, &pos2, &vel2, &eff2)
-  {}
+  ForceTorqueSensorInterfaceTest()
+    : force1(), force2(),
+      torque1(), torque2(),
+      name1("name_1"), name2("name_2"),
+      frame_id1("frame_1"), frame_id2("frame_2"),
+      h1(name1, frame_id1, force1, torque1),
+      h2(name2, frame_id2, 0, torque2) // Torque-only sensor
+  {
+    force1[0] = 1.0;
+    force1[1] = 2.0;
+    force1[2] = 3.0;
+
+    torque1[0] = -force1[0];
+    torque1[1] = -force1[1];
+    torque1[2] = -force1[2];
+
+    force2[0] = 4.0;
+    force2[1] = 5.0;
+    force2[2] = 6.0;
+
+    torque2[0] = -force2[0];
+    torque2[1] = -force2[1];
+    torque2[2] = -force2[2];
+  }
 
 protected:
-  double pos1, vel1, eff1;
-  double pos2, vel2, eff2;
-  string name1;
-  string name2;
-  ActuatorStateHandle h1, h2;
+  double force1[3], force2[3];
+  double torque1[3], torque2[3];
+  string name1, name2;
+  string frame_id1, frame_id2;
+  ForceTorqueSensorHandle h1;
+  ForceTorqueSensorHandle h2;
 };
 
-TEST_F(ActuatorStateInterfaceTest, ExcerciseApi)
+TEST_F(ForceTorqueSensorInterfaceTest, ExcerciseApi)
 {
-  ActuatorStateInterface iface;
+  ForceTorqueSensorInterface iface;
   iface.registerHandle(h1);
   iface.registerHandle(h2);
 
@@ -98,17 +103,26 @@ TEST_F(ActuatorStateInterfaceTest, ExcerciseApi)
   EXPECT_NO_THROW(iface.getHandle(name1));
   EXPECT_NO_THROW(iface.getHandle(name2));
 
-  ActuatorStateHandle h1_tmp = iface.getHandle(name1);
+  ForceTorqueSensorHandle h1_tmp = iface.getHandle(name1);
   EXPECT_EQ(name1, h1_tmp.getName());
-  EXPECT_DOUBLE_EQ(pos1, h1_tmp.getPosition());
-  EXPECT_DOUBLE_EQ(vel1, h1_tmp.getVelocity());
-  EXPECT_DOUBLE_EQ(eff1, h1_tmp.getEffort());
+  EXPECT_EQ(frame_id1, h1_tmp.getFrameId());
+  EXPECT_TRUE(0 != h1_tmp.getForce());
+  EXPECT_TRUE(0 != h1_tmp.getTorque());
+  EXPECT_DOUBLE_EQ(force1[0], h1_tmp.getForce()[0]);
+  EXPECT_DOUBLE_EQ(force1[1], h1_tmp.getForce()[1]);
+  EXPECT_DOUBLE_EQ(force1[2], h1_tmp.getForce()[2]);
+  EXPECT_DOUBLE_EQ(torque1[0], h1_tmp.getTorque()[0]);
+  EXPECT_DOUBLE_EQ(torque1[1], h1_tmp.getTorque()[1]);
+  EXPECT_DOUBLE_EQ(torque1[2], h1_tmp.getTorque()[2]);
 
-  ActuatorStateHandle h2_tmp = iface.getHandle(name2);
+  ForceTorqueSensorHandle h2_tmp = iface.getHandle(name2);
   EXPECT_EQ(name2, h2_tmp.getName());
-  EXPECT_DOUBLE_EQ(pos2, h2_tmp.getPosition());
-  EXPECT_DOUBLE_EQ(vel2, h2_tmp.getVelocity());
-  EXPECT_DOUBLE_EQ(eff2, h2_tmp.getEffort());
+  EXPECT_EQ(frame_id2, h2_tmp.getFrameId());
+  EXPECT_TRUE(0 == h2_tmp.getForce());
+  EXPECT_TRUE(0 != h2_tmp.getTorque());
+  EXPECT_DOUBLE_EQ(torque2[0], h2_tmp.getTorque()[0]);
+  EXPECT_DOUBLE_EQ(torque2[1], h2_tmp.getTorque()[1]);
+  EXPECT_DOUBLE_EQ(torque2[2], h2_tmp.getTorque()[2]);
 
   // This interface does not claim resources
   EXPECT_TRUE(iface.getClaims().empty());
@@ -124,4 +138,3 @@ int main(int argc, char** argv)
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-
