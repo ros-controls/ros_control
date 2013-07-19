@@ -4,6 +4,7 @@
   <description>A set of packages that include controller interfaces, controller managers, transmissions, hardware_interfaces and the control_toolbox.</description>
 
   <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
+  <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
   <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>
 
   <license>BSD</license>
