@@ -1,6 +1,6 @@
 <package>
   <name>joint_limits_interface</name>
-  <version>1.0.0</version>
+  <version>0.5.0</version>
   <description>Interface for enforcing joint limits.</description>
   <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
   <license>BSD</license>
@@ -15,11 +15,9 @@
   <build_depend>rostest</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>hardware_interface</build_depend>
-  <build_depend>urdf_interface</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>hardware_interface</run_depend>
-  <build_depend>urdf_interface</build_depend>
 
   <export>
     <cpp cflags="-I${prefix}/include"/>
