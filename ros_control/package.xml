@@ -1,9 +1,10 @@
 <package>
   <name>ros_control</name>
-  <version>0.4.0</version>
+  <version>0.5.0</version>
   <description>A set of packages that include controller interfaces, controller managers, transmissions, hardware_interfaces and the control_toolbox.</description>
 
   <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
+  <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>
 
   <license>BSD</license>
 
