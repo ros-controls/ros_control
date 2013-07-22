@@ -28,8 +28,14 @@ else()
   # Declare catkin package
   catkin_package(
     CATKIN_DEPENDS roscpp
-    INCLUDE_DIRS include
-    )
+    INCLUDE_DIRS
+      include
+      ${urdfdom_INCLUDE_DIRS}
+    LIBRARIES
+      ${urdfdom_LIBRARIES}
+  )
+
+  include_directories(SYSTEM ${urdfdom_INCLUDE_DIRS})
 
   catkin_add_gtest(joint_limits_interface_test test/joint_limits_interface_test.cpp)
   catkin_add_gtest(joint_limits_urdf_test      test/joint_limits_urdf_test.cpp)
