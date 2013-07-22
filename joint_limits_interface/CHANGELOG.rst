@@ -2,8 +2,8 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.2 (2013-07-22)
+------------------
 * Fixed gtests for joint_limits_interface in catkin
 * Merge pull request `#93 <https://github.com/davetcoleman/ros_control/issues/93>`_ from pal-robotics/master
   joint_limits_interface broken in Groocy and Hydro

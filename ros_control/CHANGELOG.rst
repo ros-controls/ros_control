@@ -2,8 +2,8 @@
 Changelog for package ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.2 (2013-07-22)
+------------------
 * Fix to build transmission_interface
 
 0.5.1 (2013-07-19)
