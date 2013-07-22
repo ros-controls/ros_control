@@ -1,8 +1,10 @@
 <package>
   <name>transmission_interface</name>
-  <version>0.5.0</version>
+  <version>0.5.1</version>
   <description>Transmission Interface.</description>
+
   <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
+  <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>
 
   <license>Modified BSD</license>
 
