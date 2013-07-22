@@ -36,6 +36,7 @@ else()
   include_directories(
     include
     ${catkin_INCLUDE_DIRS}
+    ${tinyxml_INCLUDE_DIRS}
   )
   link_directories(${catkin_LIBRARY_DIRS})
 
@@ -43,7 +44,7 @@ else()
   add_library(${PROJECT_NAME}_parser
     src/transmission_parser.cpp
   )
-  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${tinyxml_libraries} tinyxml)
+  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${tinyxml_LIBRARIES} tinyxml)
 
   # Declare a catkin package
   catkin_package(
@@ -52,6 +53,7 @@ else()
       ${PROJECT_NAME}_parser
     INCLUDE_DIRS 
       include
+      ${tinyxml_INCLUDE_DIRS}
   )
 
   # Tests
@@ -59,7 +61,7 @@ else()
   catkin_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
   catkin_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
   catkin_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
-  target_link_libraries(transmission_interface_test ${catkin_LIBRARIES} ${tinyxml_libraries})
+  target_link_libraries(transmission_interface_test ${catkin_LIBRARIES} ${tinyxml_LIBRARIES})
 
   # Install
   install(DIRECTORY include/${PROJECT_NAME}/
