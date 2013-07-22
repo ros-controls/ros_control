@@ -30,7 +30,7 @@ else()
   # Load catkin and all dependencies required for this package
   find_package(catkin REQUIRED 
     hardware_interface
-    )
+  )
 
   # Build
   include_directories(
