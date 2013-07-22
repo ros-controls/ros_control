@@ -10,6 +10,7 @@
   <depend package="roscpp" />
   <depend package="rostest" />
   <depend package="hardware_interface" />
+  <depend package="urdf_interface" />
 
   <export>
     <cpp cflags="-I${prefix}/include" />

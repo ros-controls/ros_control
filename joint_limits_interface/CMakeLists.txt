@@ -25,19 +25,23 @@ else()
 
   find_package(catkin REQUIRED COMPONENTS roscpp rostest)
 
+  include_directories(
+    SYSTEM 
+    include
+    ${catkin_INCLUDE_DIRS}
+    ${urdfdom_INCLUDE_DIRS}
+  )
+
   # Declare catkin package
   catkin_package(
     CATKIN_DEPENDS 
       roscpp
-    INCLUDE_DIRS 
+    INCLUDE_DIRS
       include
+      ${urdfdom_INCLUDE_DIRS}
+    LIBRARIES
+      ${urdfdom_LIBRARIES}
   )
-
-  include_directories(
-    include
-    ${catkin_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIR}
-    )
 
   catkin_add_gtest(joint_limits_interface_test test/joint_limits_interface_test.cpp)
   target_link_libraries(joint_limits_interface_test ${catkin_LIBRARIES})
