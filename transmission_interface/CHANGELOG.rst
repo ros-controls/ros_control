@@ -2,6 +2,10 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.3 (2013-07-22)
+------------------
+* Duplicated URDF's method of including tinyxml
+
 0.5.2 (2013-07-22)
 ------------------
 * Trivial cleanup

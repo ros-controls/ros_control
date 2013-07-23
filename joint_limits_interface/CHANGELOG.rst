@@ -2,6 +2,9 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.3 (2013-07-22)
+------------------
+
 0.5.2 (2013-07-22)
 ------------------
 * Fixed gtests for joint_limits_interface in catkin
