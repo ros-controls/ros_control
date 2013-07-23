@@ -44,10 +44,11 @@ from controller_manager_msgs.srv import *
 from std_msgs.msg import *
 
 def print_usage(exit_code = 0):
-    print 'spawner [--stopped] [--wait-for=wait_for_topic] [--namespace=robot_namespace] <controller names>'
+    print 'spawner [--stopped] [--wait-for=wait_for_topic] [--namespace=robot_namespace] [--delay-start=seconds] <controller names>'
     print "  stopped: loads controllers, but doesn't start them"
     print "  wait-for: doesn't load or start controllers until it hears 'True' on wait_for_topic (Bool)"
     print "  namespace: namespace of the controller_manager services"
+    print "  delay-start: number of seconds to wait before starting controllers, useful for simulation stability"
     sys.exit(exit_code)
 
 loaded = []
@@ -91,10 +92,11 @@ def main():
     global unload_controller_service,load_controller_service,switch_controller_service
 
     opts, args = getopt.gnu_getopt(rospy.myargv()[1:], 'h',
-                                   ['wait-for=', 'stopped','namespace='])
+                                   ['wait-for=', 'stopped','namespace=','delay-start='])
     wait_for_topic = None
     autostart = 1
     robot_namespace = ""
+    delay_start = 0.0
     for o, a in opts:
         if o == '-h':
             print_usage()
@@ -104,6 +106,8 @@ def main():
             autostart = 0
         elif o == '--namespace':
             robot_namespace = a
+        elif o == '--delay-start':
+            delay_start = a
 
     if not args:
         print_usage(1)
@@ -158,6 +162,11 @@ def main():
             time.sleep(0.01)
             if rospy.is_shutdown():
                 return
+
+    # delay start if desired
+    if delay_start:
+        rospy.loginfo("Waiting "+delay_start+" seconds before starting")
+        time.sleep(float(delay_start))
 
     # hook for unloading controllers on shutdown
     rospy.on_shutdown(shutdown)
