@@ -1,6 +1,6 @@
 <package>
   <name>controller_manager_msgs</name>
-  <version>0.5.3</version>
+  <version>0.5.4</version>
   <description>Messages and services for the controller manager.</description>
   <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
 
