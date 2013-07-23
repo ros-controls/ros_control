@@ -17,6 +17,9 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>hardware_interface</build_depend>
+  <build_depend>tinyxml</build_depend>
+
+  <run_depend>tinyxml</run_depend>
 
   <export>
     <cpp cflags="-I${prefix}/include"/>
