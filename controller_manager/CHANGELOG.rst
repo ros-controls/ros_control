@@ -51,7 +51,7 @@ Changelog for package controller_manager
 * Fix typo in rosdoc config files.
 * Adding explicit header for recursive mutex
 * Removing getControllerByNameImpl
-* Switching controller_manager controllers_lock_ to be a recursive lock
+* Switching controller_manager ``controllers_lock_`` to be a recursive lock
 * Fixing comment indent
 * Adding template parameter doc
 * Changing @ commands to \ commands
