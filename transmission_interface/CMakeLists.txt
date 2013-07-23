@@ -32,11 +32,14 @@ else()
     hardware_interface
   )
 
+  find_library(TINYXML tinyxml)
+
   # Build
   include_directories(
     include
     ${catkin_INCLUDE_DIRS}
     ${tinyxml_INCLUDE_DIRS}
+    ${TINYXML}
   )
   link_directories(${catkin_LIBRARY_DIRS})
 
@@ -44,7 +47,7 @@ else()
   add_library(${PROJECT_NAME}_parser
     src/transmission_parser.cpp
   )
-  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${tinyxml_LIBRARIES} tinyxml)
+  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${tinyxml_LIBRARIES} ${TINYXML})
 
   # Declare a catkin package
   catkin_package(
@@ -54,6 +57,7 @@ else()
     INCLUDE_DIRS 
       include
       ${tinyxml_INCLUDE_DIRS}
+      ${TINYXML}
   )
 
   # Tests
