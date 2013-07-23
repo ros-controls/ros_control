@@ -32,14 +32,17 @@ else()
     hardware_interface
   )
 
-  find_library(TINYXML tinyxml)
+  # Include a custom cmake file for TinyXML
+  set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+  include(SearchForTinyXML)
+  include_directories(${tinyxml_INCLUDE_DIRS})
+  link_directories(${tinyxml_library_dirs})
+  add_definitions(${tinyxml_cflags})
 
   # Build
   include_directories(
     include
     ${catkin_INCLUDE_DIRS}
-    ${tinyxml_INCLUDE_DIRS}
-    ${TINYXML}
   )
   link_directories(${catkin_LIBRARY_DIRS})
 
@@ -47,17 +50,14 @@ else()
   add_library(${PROJECT_NAME}_parser
     src/transmission_parser.cpp
   )
-  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${tinyxml_LIBRARIES} ${TINYXML})
+  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${tinyxml_LIBRARIES})
 
   # Declare a catkin package
   catkin_package(
-    DEPENDS tinyxml
     LIBRARIES 
       ${PROJECT_NAME}_parser
     INCLUDE_DIRS 
       include
-      ${tinyxml_INCLUDE_DIRS}
-      ${TINYXML}
   )
 
   # Tests
