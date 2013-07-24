@@ -2,6 +2,10 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.5 (2013-07-23)
+------------------
+* transmission_interface: fixup finding tinyxml
+
 0.5.4 (2013-07-23)
 ------------------
 
