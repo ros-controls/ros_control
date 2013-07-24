@@ -1,6 +1,6 @@
 <package>
   <name>controller_manager_tests</name>
-  <version>0.5.4</version>
+  <version>0.5.5</version>
   <description>controller_manager_tests</description>
   <maintainer email="vijay@hidof.com">Vijay Pradeep</maintainer>
 
