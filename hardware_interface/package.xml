@@ -3,6 +3,7 @@
   <version>0.5.5</version>
   <description>Hardware Interface base class.</description>
   <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
+  <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
 
   <license>BSD</license>
 
@@ -11,6 +12,7 @@
   <url type="repository">https://github.com/ros-controls/ros_control</url>
 
   <author>Wim Meeussen</author>
+  <author>Adolfo Rodriguez Tsouroukdissian</author>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend> 
