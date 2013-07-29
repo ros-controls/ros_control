@@ -61,7 +61,7 @@ public:
    *
    * \param hw The specific hardware interface used by this controller.
    *
-   * \param n A NodeHandle in the namespace from which the controller
+   * \param controller_nh A NodeHandle in the namespace from which the controller
    * should read its configuration, and where it should set up its ROS
    * interface.
    *
