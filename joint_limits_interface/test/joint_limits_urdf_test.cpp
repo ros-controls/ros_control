@@ -88,6 +88,7 @@ TEST_F(JointLimitsUrdfTest, GetJointLimits)
 
     // Position
     EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_TRUE(limits.angle_wraparound);
 
     // Velocity
     EXPECT_TRUE(limits.has_velocity_limits);
@@ -112,6 +113,7 @@ TEST_F(JointLimitsUrdfTest, GetJointLimits)
     EXPECT_TRUE(limits.has_position_limits);
     EXPECT_DOUBLE_EQ(urdf_joint->limits->lower, limits.min_position);
     EXPECT_DOUBLE_EQ(urdf_joint->limits->upper, limits.max_position);
+    EXPECT_FALSE(limits.angle_wraparound);
 
     // Velocity
     EXPECT_TRUE(limits.has_velocity_limits);
@@ -136,6 +138,7 @@ TEST_F(JointLimitsUrdfTest, GetJointLimits)
     EXPECT_TRUE(limits.has_position_limits);
     EXPECT_DOUBLE_EQ(urdf_joint->limits->lower, limits.min_position);
     EXPECT_DOUBLE_EQ(urdf_joint->limits->upper, limits.max_position);
+    EXPECT_FALSE(limits.angle_wraparound);
 
     // Velocity
     EXPECT_TRUE(limits.has_velocity_limits);

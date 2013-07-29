@@ -105,6 +105,12 @@ bool getJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, Jo
       limits.min_position = min_pos;
       limits.max_position = max_pos;
     }
+
+    bool angle_wraparound;
+    if (!has_position_limits && limits_nh.getParam("angle_wraparound", angle_wraparound))
+    {
+      limits.angle_wraparound = angle_wraparound;
+    }
   }
 
   // Velocity limits
