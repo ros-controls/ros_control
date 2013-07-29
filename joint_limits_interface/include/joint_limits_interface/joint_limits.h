@@ -46,7 +46,8 @@ struct JointLimits
       has_velocity_limits(false),
       has_acceleration_limits(false),
       has_jerk_limits(false),
-      has_effort_limits(false)
+      has_effort_limits(false),
+      angle_wraparound(false)
   {}
 
   double min_position;
@@ -61,6 +62,7 @@ struct JointLimits
   bool   has_acceleration_limits;
   bool   has_jerk_limits;
   bool   has_effort_limits;
+  bool   angle_wraparound;
 };
 
 struct SoftJointLimits

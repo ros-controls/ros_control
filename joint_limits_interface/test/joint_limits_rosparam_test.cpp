@@ -73,6 +73,8 @@ TEST(JointLimitsRosParamTest, GetJointLimits)
 
     EXPECT_TRUE(limits.has_effort_limits);
     EXPECT_EQ(20.0, limits.max_effort);
+
+    EXPECT_FALSE(limits.angle_wraparound);
   }
 
   // Specifying flags but not values should set nothing
@@ -115,6 +117,7 @@ TEST(JointLimitsRosParamTest, GetJointLimits)
     EXPECT_FALSE(limits.has_acceleration_limits);
     EXPECT_FALSE(limits.has_jerk_limits);
     EXPECT_FALSE(limits.has_effort_limits);
+    EXPECT_TRUE(limits.angle_wraparound);
   }
 
   // Incomplete position limits specification does not get loaded
