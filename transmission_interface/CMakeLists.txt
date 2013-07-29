@@ -63,5 +63,9 @@ else()
   # Install
   install(DIRECTORY include/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+    
+  install(TARGETS ${PROJECT_NAME}_parser
+    DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+  
 
 endif()

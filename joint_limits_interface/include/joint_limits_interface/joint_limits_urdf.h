@@ -62,6 +62,11 @@ bool getJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, JointLimits
     limits.max_position = urdf_joint->limits->upper;
   }
 
+  if (!limits.has_position_limits && urdf_joint->type == urdf::Joint::CONTINUOUS)
+  {
+    limits.angle_wraparound = true;
+  }
+
   limits.has_velocity_limits = true;
   limits.max_velocity = urdf_joint->limits->velocity;
 
