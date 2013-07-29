@@ -11,6 +11,7 @@ joint_limits:
     max_jerk: 100.0
     has_effort_limits: true
     max_effort: 20.0
+    angle_wraparound: true # should be ignored, has position limits
 
   yinfoo_joint:
     has_position_limits: true
@@ -33,6 +34,7 @@ joint_limits:
     has_acceleration_limits: false
     has_jerk_limits: false
     has_effort_limits: false
+    angle_wraparound: true # should be accepted, has no position limits
 
   bar_joint:
     has_velocity_limits: true
