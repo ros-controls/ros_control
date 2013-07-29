@@ -52,6 +52,9 @@ public:
   ControllerBase(): state_(CONSTRUCTED){}
   virtual ~ControllerBase(){}
 
+  /** \name Real-Time Safe Functions
+   *\{*/
+
   /** \brief This is called from within the realtime thread just before the
    * first call to \ref update
    *
@@ -80,24 +83,6 @@ public:
   {
     return (state_ == RUNNING);
   }
-
-  /** \brief Request that the controller be initialized
-   *
-   * \param hw The hardware interface to the robot.
-   *
-   * \param root_nh A NodeHandle in the root of the controller manager namespace.
-   * This is where the ROS interfaces are setup (publishers, subscribers, services).
-   *
-   * \param controller_nh A NodeHandle in the namespace of the controller.
-   * This is where the controller-specific configuration resides.
-   *
-   * \param[out] claimed_resources The resources claimed by this controller.
-   *
-   * \returns True if initialization was successful and the controller
-   * is ready to be started.
-   */
-  virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle &controller_nh,
-                           std::set<std::string>& claimed_resources) = 0;
 
   /// Calls \ref update only if this controller is running.
   void updateRequest(const ros::Time& time, const ros::Duration& period)
@@ -132,8 +117,33 @@ public:
       return false;
   }
 
+  /*\}*/
+
+  /** \name Non Real-Time Safe Functions
+   *\{*/
+
   /// Get the name of this controller's hardware interface type
   virtual std::string getHardwareInterfaceType() const = 0;
+
+  /** \brief Request that the controller be initialized
+   *
+   * \param hw The hardware interface to the robot.
+   *
+   * \param root_nh A NodeHandle in the root of the controller manager namespace.
+   * This is where the ROS interfaces are setup (publishers, subscribers, services).
+   *
+   * \param controller_nh A NodeHandle in the namespace of the controller.
+   * This is where the controller-specific configuration resides.
+   *
+   * \param[out] claimed_resources The resources claimed by this controller.
+   *
+   * \returns True if initialization was successful and the controller
+   * is ready to be started.
+   */
+  virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle &controller_nh,
+                           std::set<std::string>& claimed_resources) = 0;
+
+  /*\}*/
 
   /// The current execution state of the controller
   enum {CONSTRUCTED, INITIALIZED, RUNNING} state_;
