@@ -30,20 +30,20 @@ else()
   # Load catkin and all dependencies required for this package
   find_package(catkin REQUIRED
     hardware_interface
+    cmake_modules
   )
 
   # Include a custom cmake file for TinyXML
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-  find_package(TINYXML REQUIRED)
+  find_package(TinyXML REQUIRED)
 
   # Build
-  include_directories(include ${catkin_INCLUDE_DIRS} ${TINYXML_INCLUDE_DIRS})
+  include_directories(include ${catkin_INCLUDE_DIRS} ${TinyXML_INCLUDE_DIRS})
 
   # Transmission Paraser Library
   add_library(${PROJECT_NAME}_parser
     src/transmission_parser.cpp
   )
-  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${TINYXML_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${TinyXML_LIBRARIES})
 
   # Declare a catkin package
   catkin_package(
@@ -51,6 +51,8 @@ else()
       ${PROJECT_NAME}_parser
     INCLUDE_DIRS
       include
+    DEPENDS
+      TinyXML
   )
 
   # Tests
@@ -58,7 +60,7 @@ else()
   catkin_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
   catkin_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
   catkin_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
-  target_link_libraries(transmission_interface_test ${catkin_LIBRARIES} ${TINYXML_LIBRARIES})
+  target_link_libraries(transmission_interface_test ${catkin_LIBRARIES} ${TinyXML_LIBRARIES})
 
   # Install
   install(DIRECTORY include/${PROJECT_NAME}/
