@@ -125,6 +125,7 @@ controller_interface::ControllerBase* ControllerManager::getControllerByName(con
 void ControllerManager::getControllerNames(std::vector<std::string> &names)
 {
   boost::recursive_mutex::scoped_lock guard(controllers_lock_);
+  names.clear();
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
