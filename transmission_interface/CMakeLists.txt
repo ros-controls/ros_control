@@ -51,6 +51,8 @@ else()
       ${PROJECT_NAME}_parser
     INCLUDE_DIRS
       include
+    DEPENDS
+      TinyXML
   )
 
   # Tests
