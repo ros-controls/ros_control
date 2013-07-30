@@ -5,8 +5,16 @@ Changelog for package controller_manager
 0.5.6 (2013-07-29)
 ------------------
 
-Forthcoming
------------
+0.5.7 (2013-07-30)
+------------------
+* Update controller_manager.cpp
+  getControllerNames now clears names before adding current names.  This fixes a bug in reloadControllerLibrariesSrv where the method is called twice in a row without first clearing the list.
+  Steps to reproduce:
+  - Spawn controller
+  - Stop controller
+  - reload-libraries
+  controller_manager.cpp:501: bool controller_manager::ControllerManager::reloadControllerLibrariesSrv(controller_manager_msgs::ReloadControllerLibraries::Request&, controller_manager_msgs::ReloadControllerLibraries::Response&): Assertion `controllers.empty()' failed.
+
 * Updated changelogs
 
 0.5.5 (2013-07-23)

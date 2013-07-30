@@ -5,8 +5,9 @@ Changelog for package controller_interface
 0.5.6 (2013-07-29)
 ------------------
 
-Forthcoming
------------
+0.5.7 (2013-07-30)
+------------------
+
 * Updated changelogs
 * Documentation fixes.
   - Tag (non)realtime methods in ControllerBase.

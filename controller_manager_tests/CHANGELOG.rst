@@ -5,8 +5,9 @@ Changelog for package controller_manager_tests
 0.5.6 (2013-07-29)
 ------------------
 
-Forthcoming
------------
+0.5.7 (2013-07-30)
+------------------
+
 * Updated changelogs
 
 0.5.5 (2013-07-23)
