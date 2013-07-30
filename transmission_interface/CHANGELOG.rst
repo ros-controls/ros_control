@@ -5,11 +5,8 @@ Changelog for package transmission_interface
 0.5.6 (2013-07-29)
 ------------------
 
-Forthcoming
------------
-* Added TinyXML to catkin_package DEPENDS
+* NOTE: ros_control now requires ros-*-cmake-modules for source-installations. Install via rosdep or manually
 * Removed the local FindTINYXML.cmake and switched to catkin's cmake_modules version
-* Updated changelogs
 * Installed missing transmission_interface_library
 
 0.5.5 (2013-07-23)
