@@ -5,6 +5,10 @@ Changelog for package controller_manager
 0.5.6 (2013-07-29)
 ------------------
 
+Forthcoming
+-----------
+* Updated changelogs
+
 0.5.5 (2013-07-23)
 ------------------
 * Tweaked Changelog

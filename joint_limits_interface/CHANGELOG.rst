@@ -5,6 +5,13 @@ Changelog for package joint_limits_interface
 0.5.6 (2013-07-29)
 ------------------
 
+Forthcoming
+-----------
+* Updated changelogs
+* Add angle_wraparound joint limit property.
+  For full compatibility with MoveIt!'s joint limit specification.
+  Note that we still have the extra effort and jerk specification.
+
 0.5.5 (2013-07-23)
 ------------------
 
