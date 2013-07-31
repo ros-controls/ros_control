@@ -11,3 +11,7 @@ controller_manager_msgs/src/controller_manager_msgs/__init__.py
 qtcreator-build-*
 CMakeLists.txt.user
 gh-pages
+
+# We had to disable manifest.xml in joint_limits_interface because of a package naming conflict
+# See issue https://github.com/ros-controls/ros_control/issues/101#issuecomment-21781620
+joint_limits_interface/manifest.xml
