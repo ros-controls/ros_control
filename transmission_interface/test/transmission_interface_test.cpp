@@ -217,7 +217,11 @@ class TransmissionInterfaceSetup : public ::testing::Test
 {
 public:
   TransmissionInterfaceSetup()
-    : trans1( 10.0, 1.0),
+    : a_curr_pos(), a_curr_vel(), a_curr_eff(),
+      j_curr_pos(), j_curr_vel(), j_curr_eff(),
+      a_cmd_pos(), a_cmd_vel(), a_cmd_eff(),
+      j_cmd_pos(), j_cmd_vel(), j_cmd_eff(),
+      trans1( 10.0, 1.0),
       trans2(-10.0, 1.0) {}
 
 protected:
