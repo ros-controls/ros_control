@@ -139,8 +139,8 @@ bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info
   }
   catch(pluginlib::LibraryLoadException &ex)
   {
-    ROS_ERROR_STREAM_NAMED("parser", "Failed to create transmission '" << transmission_info.name_ <<
-                           "' of type '" << transmission_info.type_ << "'.\n" << ex.what());
+    ROS_ERROR_STREAM_NAMED("parser", "Failed to load transmission '" << transmission_info.name_ <<
+                           "'. Unsupported type '" << transmission_info.type_ << "'.\n" << ex.what());
     return false;
   }
 
@@ -154,13 +154,14 @@ bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info
                                   jnt_info.hardware_interfaces_.begin()))
     {
       ROS_ERROR_STREAM_NAMED("parser",
-                             "Transmission '" << transmission_info.name_ <<
-                             "' has joints with different hardware interfaces. This is currently unsupported.");
+                             "Failed to load transmission '" << transmission_info.name_ <<
+                             "'. It has joints with different hardware interfaces. This is currently unsupported.");
       return false;
     }
   }
 
   // Load transmission to all specified interfaces
+  bool has_at_least_one_hw_iface = false;
   BOOST_FOREACH(const std::string& hw_iface, hw_ifaces_ref)
   {
     RequisiteProviderPtr req_provider;
@@ -171,14 +172,22 @@ bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info
     }
     catch(pluginlib::LibraryLoadException &ex)
     {
-      ROS_ERROR_STREAM_NAMED("parser", "Failed to process the '" << hw_iface <<
+      ROS_WARN_STREAM_NAMED("parser", "Failed to process the '" << hw_iface <<
                              "' hardware interface for transmission '" << transmission_info.name_ <<
                              "'.\n" << ex.what());
       continue;
     }
 
     const bool load_ok = req_provider->loadTransmissionMaps(transmission_info, loader_data, transmission);
-    if (!load_ok) {continue;} // TODO: React differently?, log something?
+    if (load_ok) {has_at_least_one_hw_iface = true;}
+    else {continue;}
+  }
+
+  if (!has_at_least_one_hw_iface)
+  {
+    ROS_ERROR_STREAM_NAMED("parser", "Failed to load transmission '" << transmission_info.name_ <<
+                           "'. It contains no valid hardware interfaces.");
+    return false;
   }
 
   return true;

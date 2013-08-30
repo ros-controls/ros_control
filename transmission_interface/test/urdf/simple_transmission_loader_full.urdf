@@ -7,6 +7,7 @@
     <joint name="foo_joint">
       <offset>0.5</offset> <!--optional-->
       <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="foo_actuator">
