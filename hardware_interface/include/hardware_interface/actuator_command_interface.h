@@ -58,6 +58,8 @@ public:
   void setCommand(double command) {assert(cmd_); *cmd_ = command;}
   double getCommand() const {assert(cmd_); return *cmd_;}
 
+  double* getCommandPtr() {return cmd_;}
+
 private:
   double* cmd_;
 };
