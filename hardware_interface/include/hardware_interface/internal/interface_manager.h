@@ -81,10 +81,10 @@ public:
     if (it == interfaces_.end())
       return NULL;
 
-    T* iface = dynamic_cast<T*>(it->second);
+    T* iface = static_cast<T*>(it->second);
     if (!iface)
     {
-      ROS_ERROR_STREAM("Failed on dynamic_cast<T>(iface) for T = '" << internal::demangledTypeName<T>().c_str() <<
+      ROS_ERROR_STREAM("Failed reconstructing type T = '" << internal::demangledTypeName<T>().c_str() <<
                        "'. This should never happen");
       return NULL;
     }
