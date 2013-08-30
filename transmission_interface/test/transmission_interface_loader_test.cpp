@@ -49,6 +49,7 @@ public:
       act_vel(0.0),
       act_eff(0.0),
       jnt_pos_cmd(0.0),
+      jnt_vel_cmd(0.0),
       jnt_eff_cmd(0.0)
   {
     // Populate actuators interface
@@ -60,6 +61,10 @@ public:
       hardware_interface::ActuatorHandle pos_cmd_handle(state_handle, &jnt_pos_cmd);
       pos_act_iface.registerHandle(pos_cmd_handle);
       robot_hw.registerInterface(&pos_act_iface);
+
+      hardware_interface::ActuatorHandle vel_cmd_handle(state_handle, &jnt_vel_cmd);
+      vel_act_iface.registerHandle(vel_cmd_handle);
+      robot_hw.registerInterface(&vel_act_iface);
 
       hardware_interface::ActuatorHandle eff_cmd_handle(state_handle, &jnt_eff_cmd);
       eff_act_iface.registerHandle(eff_cmd_handle);
@@ -77,9 +82,10 @@ public:
   }
 
 protected:
-  double act_pos, act_vel, act_eff, jnt_pos_cmd, jnt_eff_cmd;
+  double act_pos, act_vel, act_eff, jnt_pos_cmd, jnt_vel_cmd, jnt_eff_cmd;
   hardware_interface::ActuatorStateInterface    act_state_iface;
   hardware_interface::PositionActuatorInterface pos_act_iface;
+  hardware_interface::VelocityActuatorInterface vel_act_iface;
   hardware_interface::EffortActuatorInterface   eff_act_iface;
 
   hardware_interface::RobotHW   robot_hw;
@@ -92,7 +98,7 @@ protected:
 
   TransmissionLoaderData loader_data;
 };
-/*
+
 TEST_F(TransmissionInterfaceLoaderTest, InvalidLoaderData)
 {
   // Parse transmission info
@@ -153,11 +159,26 @@ TEST_F(TransmissionInterfaceLoaderTest, UnsupportedHwInterfaceType)
   // Parse transmission info
   std::vector<TransmissionInfo> infos = parseUrdf("test/urdf/simple_transmission_loader_full.urdf");
   ASSERT_EQ(1, infos.size());
-  TransmissionInfo& info = infos.front();
-  info.joints_.front().hardware_interfaces_[0] = "unsupported/hw_interface_type";
 
-  TransmissionInterfaceLoader trans_iface_loader;
-  ASSERT_FALSE(trans_iface_loader.load(info, loader_data));
+  // Transmission has only one hardware interface, which is unsupported. Loading should fail
+  {
+    TransmissionInfo info = infos.front();
+    info.joints_.front().hardware_interfaces_.clear();
+    info.joints_.front().hardware_interfaces_.resize(1, "unsupported/hw_interface_type");
+
+    TransmissionInterfaceLoader trans_iface_loader;
+    EXPECT_FALSE(trans_iface_loader.load(info, loader_data));
+  }
+
+  // Transmission has multiple hardware interfaces, of which one is unsupported. Loading should succeed
+  // (best-effort policy)
+  {
+    TransmissionInfo info = infos.front();
+    info.joints_.front().hardware_interfaces_.push_back("unsupported/hw_interface_type");
+
+    TransmissionInterfaceLoader trans_iface_loader;
+    EXPECT_TRUE(trans_iface_loader.load(info, loader_data));
+  }
 }
 
 TEST_F(TransmissionInterfaceLoaderTest, UnavailableInterface)
@@ -173,19 +194,18 @@ TEST_F(TransmissionInterfaceLoaderTest, UnavailableInterface)
   TransmissionInterfaceLoader trans_iface_loader;
   ASSERT_FALSE(trans_iface_loader.load(info, loader_data));
 }
-*/
 
 // We currently can't load a transmission where each joint requires a different set of hardware interfaces
-//TEST_F(TransmissionInterfaceLoaderTest, UnsupportedFeature)
-//{
-//  // Parse transmission info
-//  std::vector<TransmissionInfo> infos = parseUrdf("test/urdf/transmission_interface_loader_unsupported.urdf");
-//  ASSERT_EQ(1, infos.size());
-//  const TransmissionInfo& info = infos.front();
+TEST_F(TransmissionInterfaceLoaderTest, UnsupportedFeature)
+{
+  // Parse transmission info
+  std::vector<TransmissionInfo> infos = parseUrdf("test/urdf/transmission_interface_loader_unsupported.urdf");
+  ASSERT_EQ(1, infos.size());
+  const TransmissionInfo& info = infos.front();
 
-//  TransmissionInterfaceLoader trans_iface_loader;
-//  ASSERT_FALSE(trans_iface_loader.load(info, loader_data));
-//}
+  TransmissionInterfaceLoader trans_iface_loader;
+  ASSERT_FALSE(trans_iface_loader.load(info, loader_data));
+}
 
 TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoad)
 {
@@ -201,10 +221,12 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoad)
   // TODO: Revisit implementation so this is not needed
   loader_data.robot_hw->registerInterface(&(loader_data.joint_interfaces->joint_state_interface));
   loader_data.robot_hw->registerInterface(&(loader_data.joint_interfaces->position_joint_interface));
+  loader_data.robot_hw->registerInterface(&(loader_data.joint_interfaces->velocity_joint_interface));
   loader_data.robot_hw->registerInterface(&(loader_data.joint_interfaces->effort_joint_interface));
 
   loader_data.robot_transmissions->registerInterface(&(loader_data.transmission_interfaces->act_to_jnt_state));
   loader_data.robot_transmissions->registerInterface(&(loader_data.transmission_interfaces->jnt_to_act_pos_cmd));
+  loader_data.robot_transmissions->registerInterface(&(loader_data.transmission_interfaces->jnt_to_act_vel_cmd));
   loader_data.robot_transmissions->registerInterface(&(loader_data.transmission_interfaces->jnt_to_act_eff_cmd));
 
   using namespace hardware_interface;
@@ -212,36 +234,46 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoad)
   // Actuator handles
   ASSERT_EQ(1, info.actuators_.size());
   PositionActuatorInterface* act_pos_cmd_iface = robot_hw.get<PositionActuatorInterface>();
+  VelocityActuatorInterface* act_vel_cmd_iface = robot_hw.get<VelocityActuatorInterface>();
   EffortActuatorInterface*   act_eff_cmd_iface = robot_hw.get<EffortActuatorInterface>();
 
   ASSERT_TRUE(0 != act_pos_cmd_iface);
+  ASSERT_TRUE(0 != act_vel_cmd_iface);
   ASSERT_TRUE(0 != act_eff_cmd_iface);
 
   ASSERT_NO_THROW(act_pos_cmd_iface->getHandle(info.actuators_.front().name_));
+  ASSERT_NO_THROW(act_vel_cmd_iface->getHandle(info.actuators_.front().name_));
   ASSERT_NO_THROW(act_eff_cmd_iface->getHandle(info.actuators_.front().name_));
   ActuatorHandle act_pos_cmd_handle = act_pos_cmd_iface->getHandle(info.actuators_.front().name_);
+  ActuatorHandle act_vel_cmd_handle = act_vel_cmd_iface->getHandle(info.actuators_.front().name_);
   ActuatorHandle act_eff_cmd_handle = act_eff_cmd_iface->getHandle(info.actuators_.front().name_);
 
   // Joint handles
   ASSERT_EQ(1, info.joints_.size());
   PositionJointInterface* pos_jnt_iface = robot_hw.get<PositionJointInterface>();
+  VelocityJointInterface* vel_jnt_iface = robot_hw.get<VelocityJointInterface>();
   EffortJointInterface*   eff_jnt_iface = robot_hw.get<EffortJointInterface>();
 
   ASSERT_TRUE(0 != pos_jnt_iface);
+  ASSERT_TRUE(0 != vel_jnt_iface);
   ASSERT_TRUE(0 != eff_jnt_iface);
 
   ASSERT_NO_THROW(pos_jnt_iface->getHandle(info.joints_.front().name_));
+  ASSERT_NO_THROW(vel_jnt_iface->getHandle(info.joints_.front().name_));
   ASSERT_NO_THROW(eff_jnt_iface->getHandle(info.joints_.front().name_));
   JointHandle pos_jnt_handle = pos_jnt_iface->getHandle(info.joints_.front().name_);
+  JointHandle vel_jnt_handle = vel_jnt_iface->getHandle(info.joints_.front().name_);
   JointHandle eff_jnt_handle = eff_jnt_iface->getHandle(info.joints_.front().name_);
 
   // Transmission interfaces
   ActuatorToJointStateInterface*    act_to_jnt_state   = robot_transmissions.get<ActuatorToJointStateInterface>();
   JointToActuatorPositionInterface* jnt_to_act_pos_cmd = robot_transmissions.get<JointToActuatorPositionInterface>();
+  JointToActuatorVelocityInterface* jnt_to_act_vel_cmd = robot_transmissions.get<JointToActuatorVelocityInterface>();
   JointToActuatorEffortInterface*   jnt_to_act_eff_cmd = robot_transmissions.get<JointToActuatorEffortInterface>();
 
   ASSERT_TRUE(0 != act_to_jnt_state);
   ASSERT_TRUE(0 != jnt_to_act_pos_cmd);
+  ASSERT_TRUE(0 != jnt_to_act_vel_cmd);
   ASSERT_TRUE(0 != jnt_to_act_eff_cmd);
 
   // Propagate state forward
@@ -257,6 +289,10 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoad)
   pos_jnt_handle.setCommand(1.5);
   jnt_to_act_pos_cmd->propagate();
   EXPECT_NEAR(50.0, act_pos_cmd_handle.getPosition(), EPS);
+
+  vel_jnt_handle.setCommand(1.0);
+  jnt_to_act_vel_cmd->propagate();
+  EXPECT_NEAR(50.0, act_vel_cmd_handle.getPosition(), EPS);
 
   eff_jnt_handle.setCommand(50.0);
   jnt_to_act_eff_cmd->propagate();
