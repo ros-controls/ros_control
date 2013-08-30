@@ -18,9 +18,6 @@ if(USE_ROSBUILD)
     src/simple_transmission_loader.cpp    include/transmission_interface/simple_transmission_loader.h
     src/transmission_interface_loader.cpp include/transmission_interface/transmission_interface_loader.h)
 
-  rosbuild_add_library(simple_transmission_loader src/simple_transmission_loader.cpp)
-  target_link_libraries(simple_transmission_loader           transmission_interface_loader)
-
   rosbuild_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
   rosbuild_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
   rosbuild_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
@@ -46,7 +43,9 @@ else()
   find_package(catkin REQUIRED
     hardware_interface
     cmake_modules
+    pluginlib
     resource_retriever
+    roscpp
   )
 
   # Include a custom cmake file for TinyXML
@@ -60,7 +59,9 @@ else()
       include
     DEPENDS
       TinyXML
+      pluginlib
       resource_retriever
+      roscpp
   )
 
 ###########
@@ -70,11 +71,20 @@ else()
   # Build
   include_directories(include ${catkin_INCLUDE_DIRS} ${TinyXML_INCLUDE_DIRS})
 
-  # Transmission Paraser Library
+  # Transmission parser Library
   add_library(${PROJECT_NAME}_parser
-    src/transmission_parser.cpp
+    src/transmission_parser.cpp include/transmission_interface/transmission_parser.h
   )
   target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${TinyXML_LIBRARIES})
+
+  # Transmission loader library
+  add_library(transmission_interface_loader
+    src/transmission_loader.cpp           include/transmission_interface/transmission_loader.h
+    src/simple_transmission_loader.cpp    include/transmission_interface/simple_transmission_loader.h
+    src/transmission_interface_loader.cpp include/transmission_interface/transmission_interface_loader.h
+  )
+  target_link_libraries(transmission_interface_loader ${catkin_LIBRARIES} ${TinyXML_LIBRARIES})
+
 
 #############
 ## Install ##
@@ -110,8 +120,14 @@ else()
     target_link_libraries(transmission_interface_test ${catkin_LIBRARIES} ${TinyXML_LIBRARIES})
   endif()
 
-  catkin_add_gtest(transmission_parser_test           test/transmission_parser_test.cpp)
-  target_link_libraries(transmission_parser_test   ${PROJECT_NAME}_parser)
+  catkin_add_gtest(transmission_parser_test test/transmission_parser_test.cpp)
+  target_link_libraries(transmission_parser_test ${PROJECT_NAME}_parser)
 
+  catkin_add_gtest(simple_transmission_loader_test test/simple_transmission_loader_test.cpp)
+  target_link_libraries(simple_transmission_loader_test ${PROJECT_NAME}_parser)
+
+  catkin_add_gtest(transmission_interface_loader_test test/transmission_interface_loader_test.cpp)
+  target_link_libraries(transmission_interface_loader_test ${PROJECT_NAME}_parser
+                                                           transmission_interface_loader)
 
 endif()
