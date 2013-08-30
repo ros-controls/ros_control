@@ -166,6 +166,9 @@ public:
   std::size_t numActuators() const {return 1;}
   std::size_t numJoints()    const {return 1;}
 
+  double getActuatorReduction() const {return reduction_;}
+  double getJointOffset()       const {return jnt_offset_;}
+
 private:
   double reduction_;
   double jnt_offset_;

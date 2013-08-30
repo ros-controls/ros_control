@@ -171,11 +171,30 @@ TEST(PreconditionsTest, AssertionTriggering)
 
 TEST(PreconditionsTest, AccessorValidation)
 {
-  DifferentialTransmission trans(vector<double>(2, 1.0),
-                                 vector<double>(2, 1.0));
+  std::vector<double> act_reduction(2);
+  act_reduction[0] =  2.0;
+  act_reduction[1] = -2.0;
+
+  std::vector<double> jnt_reduction(2);
+  jnt_reduction[0] =  4.0;
+  jnt_reduction[1] = -4.0;
+
+  std::vector<double> jnt_offset(2);
+  jnt_offset[0] =  1.0;
+  jnt_offset[1] = -1.0;
+
+  DifferentialTransmission trans(act_reduction,
+                                 jnt_reduction,
+                                 jnt_offset);
 
   EXPECT_EQ(2, trans.numActuators());
   EXPECT_EQ(2, trans.numJoints());
+  EXPECT_EQ( 2.0, trans.getActuatorReduction()[0]);
+  EXPECT_EQ(-2.0, trans.getActuatorReduction()[1]);
+  EXPECT_EQ( 4.0, trans.getJointReduction()[0]);
+  EXPECT_EQ(-4.0, trans.getJointReduction()[1]);
+  EXPECT_EQ( 1.0, trans.getJointOffset()[0]);
+  EXPECT_EQ(-1.0, trans.getJointOffset()[1]);
 }
 
 class TransmissionSetup : public ::testing::Test

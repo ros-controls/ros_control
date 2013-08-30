@@ -188,6 +188,9 @@ public:
   std::size_t numActuators() const {return 2;}
   std::size_t numJoints()    const {return 2;}
 
+  const std::vector<double>& getActuatorReduction() const {return act_reduction_;}
+  const std::vector<double>& getJointOffset()       const {return jnt_offset_;}
+
 protected:
   std::vector<double>  act_reduction_;
   std::vector<double>  jnt_offset_;
