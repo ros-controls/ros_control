@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- No transmission name -->
+<transmission>
+  <type>transmission_interface/SimpleTransmission</type> <!--No name attribute-->
+  <joint name="baz_joint">
+    <offset>0.5</offset>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="baz_actuator">
+    <mechanicalReduction>50</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission>
+  <type>transmission_interface/SimpleTransmission name=""</type> <!--Empty name attribute-->
+  <joint name="baz_joint">
+    <offset>0.5</offset>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="baz_actuator">
+    <mechanicalReduction>50</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- No transmission type -->
+<transmission name="simple_trans">
+  <!--<type>transmission_interface/SimpleTransmission</type>-->
+  <joint name="baz_joint">
+    <offset>0.5</offset>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="baz_actuator">
+    <mechanicalReduction>50</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="simple_trans">
+  <type></type> <!-- Empty -->
+  <joint name="baz_joint">
+    <offset>0.5</offset>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="baz_actuator">
+    <mechanicalReduction>50</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- No hardware interface -->
+<transmission name="simple_trans">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="baz_joint">
+    <offset>0.5</offset>
+    <!--<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>-->
+  </joint>
+  <actuator name="baz_actuator">
+    <mechanicalReduction>50</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="simple_trans">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="baz_joint">
+    <offset>0.5</offset>
+    <hardwareInterface></hardwareInterface> <!-- Empty -->
+  </joint>
+  <actuator name="baz_actuator">
+    <mechanicalReduction>50</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- No actuator name -->
+<transmission name="simple_trans">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="baz_joint">
+    <offset>0.5</offset>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator> <!--No name attribute-->
+    <mechanicalReduction>50</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="simple_trans">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="baz_joint">
+    <offset>0.5</offset>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name=""> <!--Empty name attribute-->
+    <mechanicalReduction>50</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- No joint name -->
+<transmission name="simple_trans">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint> <!--No name attribute-->
+    <offset>0.5</offset>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="baz_actuator">
+    <mechanicalReduction>50</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="simple_trans">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name=""> <!--Empty name attribute-->
+    <offset>0.5</offset>
+    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="baz_actuator">
+    <mechanicalReduction>50</mechanicalReduction>
+  </actuator>
+</transmission>
+
+</robot>

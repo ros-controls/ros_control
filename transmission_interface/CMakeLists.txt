@@ -5,6 +5,7 @@ project(transmission_interface)
 find_package(catkin REQUIRED
   hardware_interface
   cmake_modules
+  resource_retriever
 )
 
 # Include a custom cmake file for TinyXML
@@ -18,6 +19,7 @@ catkin_package(
     include
   DEPENDS
     TinyXML
+    resource_retriever
 )
 
 ###########
@@ -59,6 +61,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
 ## Testing ##
 #############
 
+<<<<<<< HEAD
 if(CATKIN_ENABLE_TESTING)
   catkin_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
   catkin_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
@@ -66,3 +69,6 @@ if(CATKIN_ENABLE_TESTING)
   catkin_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
   target_link_libraries(transmission_interface_test ${catkin_LIBRARIES} ${TinyXML_LIBRARIES})
 endif()
+
+catkin_add_gtest(transmission_parser_test           test/transmission_parser_test.cpp)
+target_link_libraries(transmission_parser_test   ${PROJECT_NAME}_parser)
