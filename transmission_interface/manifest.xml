@@ -10,10 +10,15 @@
   <rosdep name="tinyxml" />
 
   <depend package="hardware_interface" />
+  <depend package="pluginlib" />
+  <depend package="roscpp" />
+
+<depend package="resource_retriever" /> <!--Tests only-->
 
   <export>
     <cpp cflags="-I${prefix}/include" />
     <rosdoc config="rosdoc.yaml" />
+    <transmission_interface plugin="${prefix}/ros_control_plugins.xml" />
   </export>
 
 </package>
