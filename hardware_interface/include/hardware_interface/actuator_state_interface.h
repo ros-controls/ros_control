@@ -71,6 +71,10 @@ public:
   double getVelocity()  const {assert(vel_); return *vel_;}
   double getEffort()    const {assert(eff_); return *eff_;}
 
+  const double* getPositionPtr() const {return pos_;}
+  const double* getVelocityPtr() const {return vel_;}
+  const double* getEffortPtr()   const {return eff_;}
+
 private:
   std::string name_;
   const double* pos_;
