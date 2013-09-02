@@ -150,7 +150,8 @@ bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info
   BOOST_FOREACH(const JointInfo& jnt_info, transmission_info.joints_)
   {
     // Error out if at least one joint has a different set of hardware interfaces
-    if (!internal::is_permutation(hw_ifaces_ref.begin(), hw_ifaces_ref.end(),
+    if (hw_ifaces_ref.size() != jnt_info.hardware_interfaces_.size() ||
+        !internal::is_permutation(hw_ifaces_ref.begin(), hw_ifaces_ref.end(),
                                   jnt_info.hardware_interfaces_.begin()))
     {
       ROS_ERROR_STREAM_NAMED("parser",
