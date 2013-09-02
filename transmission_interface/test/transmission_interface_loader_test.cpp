@@ -31,7 +31,6 @@
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/actuator_state_interface.h>
 #include <hardware_interface/actuator_command_interface.h>
-//#include <transmission_interface/simple_transmission.h>
 #include <transmission_interface/transmission_interface_loader.h>
 #include "read_file.h"
 
@@ -40,7 +39,35 @@ typedef TransmissionLoader::TransmissionPtr TransmissionPtr;
 
 // Floating-point value comparison threshold
 const double EPS = 1e-6;
+/*
+TEST(IsPermutationTest, IsPermutation)
+{
+  using internal::is_permutation;
 
+  std::vector<int> a(3);
+  a[0] = 0;
+  a[1] = 1;
+  a[2] = 2;
+
+  std::vector<int> b(3);
+  b[0] = 0;
+  b[1] = 2;
+  b[2] = 1;
+
+  std::vector<int> c(3);
+  c[0] = 0;
+  c[1] = 1;
+  c[2] = 3;
+
+  std::vector<int> d(1, 1);
+
+  EXPECT_TRUE(is_permutation(a.begin(),  a.end(), a.begin()));
+  EXPECT_TRUE(is_permutation(a.begin(),  a.end(), b.begin()));
+  EXPECT_FALSE(is_permutation(a.begin(), a.end(), c.begin()));
+  EXPECT_FALSE(is_permutation(a.begin(), a.end(), d.begin()));
+  EXPECT_FALSE(is_permutation(d.begin(), d.end(), a.begin()));
+}
+*/
 class TransmissionInterfaceLoaderTest : public ::testing::Test
 {
 public:
@@ -200,11 +227,42 @@ TEST_F(TransmissionInterfaceLoaderTest, UnsupportedFeature)
 {
   // Parse transmission info
   std::vector<TransmissionInfo> infos = parseUrdf("test/urdf/transmission_interface_loader_unsupported.urdf");
+  ASSERT_EQ(2, infos.size());
+
+  // Different hw interface counts
+  {
+    const TransmissionInfo& info = infos.front();
+    TransmissionInterfaceLoader trans_iface_loader;
+    ASSERT_FALSE(trans_iface_loader.load(info, loader_data));
+  }
+
+  // Same hw interface count, but different types
+  {
+    const TransmissionInfo& info = infos.back();
+    TransmissionInterfaceLoader trans_iface_loader;
+    ASSERT_FALSE(trans_iface_loader.load(info, loader_data));
+  }
+}
+
+TEST_F(TransmissionInterfaceLoaderTest, HwIfacePermutation)
+{
+  // Add additional actuator interfaces needed by this test
+  hardware_interface::ActuatorStateHandle state_handle("bar_actuator", &act_pos, &act_vel, &act_eff);
+  act_state_iface.registerHandle(state_handle);
+
+  hardware_interface::ActuatorHandle pos_cmd_handle(state_handle, &jnt_pos_cmd);
+  pos_act_iface.registerHandle(pos_cmd_handle);
+
+  hardware_interface::ActuatorHandle vel_cmd_handle(state_handle, &jnt_vel_cmd);
+  vel_act_iface.registerHandle(vel_cmd_handle);
+
+  // Parse transmission info
+  std::vector<TransmissionInfo> infos = parseUrdf("test/urdf/transmission_interface_loader_hw_iface_permutation.urdf");
   ASSERT_EQ(1, infos.size());
   const TransmissionInfo& info = infos.front();
 
   TransmissionInterfaceLoader trans_iface_loader;
-  ASSERT_FALSE(trans_iface_loader.load(info, loader_data));
+  ASSERT_TRUE(trans_iface_loader.load(info, loader_data));
 }
 
 TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoad)
