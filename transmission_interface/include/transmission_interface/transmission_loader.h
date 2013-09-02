@@ -49,7 +49,6 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/robot_hw.h>
 
-// Project
 #include <transmission_interface/robot_transmissions.h>
 #include <transmission_interface/transmission_info.h>
 #include <transmission_interface/transmission.h>
@@ -70,6 +69,13 @@ public:
   virtual TransmissionPtr load(const TransmissionInfo& transmission_info) = 0;
 
 protected:
+  enum ParseStatus
+  {
+    SUCCESS,
+    NO_DATA,
+    BAD_TYPE
+  };
+
   static bool checkActuatorDimension(const TransmissionInfo& transmission_info, const unsigned int expected_dim)
   {
     const unsigned int dim = transmission_info.actuators_.size();
@@ -104,6 +110,36 @@ protected:
     element_stream >> element;
     return element;
   }
+
+  static ParseStatus getActuatorReduction(const TiXmlElement& parent_el,
+                                          const std::string   actuator_name,
+                                          const std::string   transmission_name,
+                                          bool                required,
+                                          double&             reduction);
+
+  static ParseStatus getJointReduction(const TiXmlElement& parent_el,
+                                       const std::string   joint_name,
+                                       const std::string   transmission_name,
+                                       bool                required,
+                                       double&             reduction);
+
+  static ParseStatus getJointOffset(const TiXmlElement& parent_el,
+                                    const std::string   joint_name,
+                                    const std::string   transmission_name,
+                                    bool                required,
+                                    double&             offset);
+
+  static ParseStatus getActuatorRole(const TiXmlElement& parent_el,
+                                     const std::string   actuator_name,
+                                     const std::string   transmission_name,
+                                     bool                required,
+                                     std::string&        role);
+
+  static ParseStatus getJointRole(const TiXmlElement& parent_el,
+                                  const std::string   joint_name,
+                                  const std::string   transmission_name,
+                                  bool                required,
+                                  std::string&        role);
 };
 
 } // namespace

@@ -35,7 +35,8 @@
 // Pluginlib
 #include <pluginlib/class_list_macros.h>
 
-// Project
+// ros_control
+#include <hardware_interface/internal/demangle_symbol.h>
 #include <transmission_interface/simple_transmission.h>
 #include <transmission_interface/simple_transmission_loader.h>
 
@@ -54,31 +55,22 @@ SimpleTransmissionLoader::TransmissionPtr SimpleTransmissionLoader::load(const T
 
   // Parse required mechanical reduction
   double reduction = 0.0;
-  TiXmlElement* reduction_el = actuator_el.FirstChildElement("mechanicalReduction");
-  if(!reduction_el)
-  {
-    ROS_ERROR_STREAM_NAMED("parser", "Actuator does not specify the required <mechanicalReduction> element.");
-    return TransmissionPtr();
-  }
-  try {reduction = boost::lexical_cast<double>(reduction_el->GetText());}
-  catch (const boost::bad_lexical_cast&)
-  {
-    ROS_ERROR_STREAM_NAMED("parser", "Actuator specifies the <mechanicalReduction> element, but is not a number.");
-    return TransmissionPtr();
-  }
+  const ParseStatus reduction_status = getActuatorReduction(actuator_el,
+                                                            transmission_info.actuators_.front().name_,
+                                                            transmission_info.name_,
+                                                            true, // Required
+                                                            reduction);
+  if (reduction_status != SUCCESS) {return TransmissionPtr();}
 
-  // Parse optional joint offset
+  // Parse optional joint offset. Even though it's optional --and to avoid surprises-- we fail if the element is
+  // specified but is of the wrong type
   double joint_offset = 0.0;
-  TiXmlElement* joint_offset_el = joint_el.FirstChildElement("offset");
-  if(joint_offset_el)
-  {
-    try {joint_offset = boost::lexical_cast<double>(joint_offset_el->GetText());}
-    catch (const boost::bad_lexical_cast&)
-    {
-      ROS_ERROR_STREAM_NAMED("parser", "Joint specifies the <offset> element, but is not a number.");
-      return TransmissionPtr();
-    }
-  }
+  const ParseStatus joint_offset_status = getJointOffset(joint_el,
+                                                         transmission_info.joints_.front().name_,
+                                                         transmission_info.name_,
+                                                         false, // Optional
+                                                         joint_offset);
+  if (joint_offset_status == BAD_TYPE) {return TransmissionPtr();}
 
   // Transmission instance
   try
@@ -88,7 +80,9 @@ SimpleTransmissionLoader::TransmissionPtr SimpleTransmissionLoader::load(const T
   }
   catch(const TransmissionInterfaceException& ex)
   {
-    ROS_ERROR_STREAM_NAMED("parser", "Failed to construct simple transmission instance. " << ex.what());
+    using hardware_interface::internal::demangledTypeName;
+    ROS_ERROR_STREAM_NAMED("parser", "Failed to construct transmission '" << transmission_info.name_ << "' of type '" <<
+                           demangledTypeName<SimpleTransmission>()<< "'. " << ex.what());
     return TransmissionPtr();
   }
 }
