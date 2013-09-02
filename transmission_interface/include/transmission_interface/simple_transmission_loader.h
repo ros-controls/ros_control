@@ -30,6 +30,7 @@
 #ifndef TRANSMISSION_INTERFACE_SIMPLE_TRANSMISSION_LOADER_H
 #define TRANSMISSION_INTERFACE_SIMPLE_TRANSMISSION_LOADER_H
 
+// ros_control
 #include <transmission_interface/transmission_loader.h>
 
 namespace transmission_interface
@@ -37,19 +38,6 @@ namespace transmission_interface
 
 /**
  * \brief TODO
- *
- * \code
- * <transmission name="simple_trans">
- *   <type>transmission_interface/SimpleTransmission</type>
- *   <transmissionInterface>transmission_interface/JointToActuatorStateInterface</transmissionInterface>
- *   <joint name="foo_joint">
- *     <offset>0.5</offset> <!--optional-->
- *   </joint>
- *   <actuator name="foo_motor">
- *     <mechanicalReduction>50</mechanicalReduction>
- *   </actuator>
- *  </transmission>
- * \endcode
  */
 class SimpleTransmissionLoader : public TransmissionLoader
 {
