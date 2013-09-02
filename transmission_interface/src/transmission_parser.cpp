@@ -234,29 +234,6 @@ bool TransmissionParser::parseActuators(TiXmlElement *trans_it, std::vector<Actu
       // continue; // NOTE: Hardware interface is optional, so we keep on going
     }
 
-//    // Hardware interfaces
-//    TiXmlElement *hw_iface_it = NULL;
-//    for (hw_iface_it = actuator_it->FirstChildElement("hardwareInterface"); hw_iface_it;
-//         hw_iface_it = hw_iface_it->NextSiblingElement("hardwareInterface"))
-//    {
-//      if(!hw_iface_it)
-//      {
-//        ROS_ERROR_STREAM_NAMED("parser","No hardware interface element found for actuator '"
-//          << actuator.name_ << "'.");
-//        continue;
-//      }
-//      const std::string hardware_interface_name = hw_iface_it->GetText();
-//      if (hardware_interface_name.empty())
-//      {
-//        ROS_ERROR_STREAM_NAMED("parser","Skipping empty hardware interface for actuator '"
-//                               << actuator.name_ << "'.");
-//        continue;
-//      }
-//      actuator.hardware_interfaces_.push_back(hardware_interface_name);
-//    }
-
-    // \todo: implement other generic actuator properties
-
     // Actuator xml element
     std::stringstream ss;
     ss << *actuator_it;
