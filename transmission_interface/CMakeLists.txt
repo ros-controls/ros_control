@@ -89,6 +89,12 @@ target_link_libraries(transmission_parser_test ${PROJECT_NAME}_parser)
 catkin_add_gtest(simple_transmission_loader_test test/simple_transmission_loader_test.cpp)
 target_link_libraries(simple_transmission_loader_test ${PROJECT_NAME}_parser)
 
+catkin_add_gtest(differential_transmission_loader_test test/differential_transmission_loader_test.cpp)
+target_link_libraries(differential_transmission_loader_test ${PROJECT_NAME}_parser)
+
+catkin_add_gtest(four_bar_linkage_transmission_loader_test test/four_bar_linkage_transmission_loader_test.cpp)
+target_link_libraries(four_bar_linkage_transmission_loader_test ${PROJECT_NAME}_parser)
+
 catkin_add_gtest(transmission_interface_loader_test test/transmission_interface_loader_test.cpp)
 target_link_libraries(transmission_interface_loader_test ${PROJECT_NAME}_parser
                                                           transmission_interface_loader)
