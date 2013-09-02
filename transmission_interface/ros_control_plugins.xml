@@ -17,6 +17,14 @@
     </description>
   </class>
 
+  <class name="transmission_interface/FourBarLinkageTransmission"
+         type="transmission_interface::FourBarLinkageTransmissionLoader"
+         base_class_type="transmission_interface::TransmissionLoader">
+    <description>
+      Load from a URDF description the configuration of a four-bar linkage transmission.
+    </description>
+  </class>
+
   <!-- Hardware interfaces -->
   <class name="hardware_interface/JointStateInterface"
          type="transmission_interface::JointStateInterfaceProvider"
@@ -53,6 +61,5 @@
       EffortJointInterface specialization.
     </description>
   </class>
-
 
 </library>
