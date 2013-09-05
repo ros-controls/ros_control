@@ -25,10 +25,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-// Boost
-#include <boost/foreach.hpp>
-#include <boost/lexical_cast.hpp>
-
 // ROS
 #include <ros/console.h>
 
