@@ -122,7 +122,7 @@ bool VelocityJointInterfaceProvider::registerTransmission(TransmissionLoaderData
                                                           TransmissionHandleData& handle_data)
 {
   // Setup joint state interface first (if not yet done)
-  if (!hasResource(handle_data.name, loader_data.transmission_interfaces->act_to_jnt_state))
+  if (!hasResource(handle_data.name, loader_data.transmission_interfaces.act_to_jnt_state))
   {
     if (!JointStateInterfaceProvider::registerTransmission(loader_data, handle_data)) {return false;}
   }
@@ -130,7 +130,7 @@ bool VelocityJointInterfaceProvider::registerTransmission(TransmissionLoaderData
   // If command interface does not yet exist in the robot transmissions, add it and use internal data structures
   if (!loader_data.robot_transmissions->get<JointToActuatorVelocityInterface>())
   {
-    loader_data.robot_transmissions->registerInterface(&loader_data.transmission_interfaces->jnt_to_act_vel_cmd);
+    loader_data.robot_transmissions->registerInterface(&loader_data.transmission_interfaces.jnt_to_act_vel_cmd);
   }
   JointToActuatorVelocityInterface& interface = *(loader_data.robot_transmissions->get<JointToActuatorVelocityInterface>());
 

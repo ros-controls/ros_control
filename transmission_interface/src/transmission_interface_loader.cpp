@@ -61,18 +61,18 @@ bool RequisiteProvider::loadTransmissionMaps(const TransmissionInfo& transmissio
   // successfully
   const bool jnt_data_ok = updateJointInterfaces(transmission_info,
                                                  loader_data.robot_hw,
-                                                 *(loader_data.joint_interfaces),
-                                                 *(loader_data.raw_joint_data_map));
+                                                 loader_data.joint_interfaces,
+                                                 loader_data.raw_joint_data_map);
   if (!jnt_data_ok) {return false;}
 
   // Joint data
   const bool jnt_state_data_ok = getJointStateData(transmission_info,
-                                                   *(loader_data.raw_joint_data_map),
+                                                   loader_data.raw_joint_data_map,
                                                    handle_data.jnt_state_data);
   if (!jnt_state_data_ok) {return false;}
 
   const bool jnt_cmd_data_ok = getJointCommandData(transmission_info,
-                                                   *(loader_data.raw_joint_data_map),
+                                                   loader_data.raw_joint_data_map,
                                                    handle_data.jnt_cmd_data);
   if (!jnt_cmd_data_ok) {return false;}
 
@@ -102,12 +102,8 @@ TransmissionInterfaceLoader::TransmissionInterfaceLoader(hardware_interface::Rob
   if (!robot_hw)            {throw std::invalid_argument("Invalid robot hardware pointer.");}
   if (!robot_transmissions) {throw std::invalid_argument("Invalid robot transmissions pointer.");}
 
-  loader_data_.robot_hw         =  robot_hw_ptr_;
-  loader_data_.joint_interfaces = &joint_interfaces_;
-  loader_data_.raw_joint_data_map   = &raw_joint_data_map_;
-
-  loader_data_.robot_transmissions     =  robot_transmissions_ptr_;
-  loader_data_.transmission_interfaces = &transmission_interfaces_;
+  loader_data_.robot_hw            =  robot_hw_ptr_;
+  loader_data_.robot_transmissions =  robot_transmissions_ptr_;
 }
 
 bool TransmissionInterfaceLoader::load(const std::string& urdf)
@@ -131,9 +127,6 @@ bool TransmissionInterfaceLoader::load(const std::string& urdf)
 
 bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info)
 {
-  // Validate inputs
-  if (!isValid(loader_data_)) {return false;}
-
   // Create transmission instance
   TransmissionPtr transmission;
   try
@@ -197,23 +190,6 @@ bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info
   }
 
   return true;
-}
-
-bool TransmissionInterfaceLoader::isValid(const TransmissionLoaderData& loader_data)
-{
-  std::string error_str;
-  bool ret = true;
-  if (!loader_data.robot_hw)            {error_str += "\n- RobotHW instance not specified.";    ret = false;}
-  if (!loader_data.joint_interfaces)    {error_str += "\n- Joint_interfaces not specified.";    ret = false;}
-  if (!loader_data.raw_joint_data_map)  {error_str += "\n- Raw joint data map not specified.";  ret = false;}
-  if (!loader_data.robot_transmissions) {error_str += "\n- Robot transmissions not specified."; ret = false;}
-  if (!loader_data.transmission_interfaces) {error_str += "\n- Transmission interfaces not specified."; ret = false;}
-
-  if (!ret)
-  {
-    ROS_ERROR_STREAM_NAMED("parser", "Transmission loader data not properly initialized:" << error_str);
-  }
-  return ret;
 }
 
 } // namespace

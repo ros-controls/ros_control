@@ -128,7 +128,7 @@ bool JointStateInterfaceProvider::registerTransmission(TransmissionLoaderData& l
   // If interface does not yet exist in the robot transmissions, add it and use internal data structures
   if (!loader_data.robot_transmissions->get<ActuatorToJointStateInterface>())
   {
-    loader_data.robot_transmissions->registerInterface(&loader_data.transmission_interfaces->act_to_jnt_state);
+    loader_data.robot_transmissions->registerInterface(&loader_data.transmission_interfaces.act_to_jnt_state);
   }
   ActuatorToJointStateInterface& interface = *(loader_data.robot_transmissions->get<ActuatorToJointStateInterface>());
 
