@@ -16,7 +16,7 @@
 <depend package="resource_retriever" /> <!--Tests only-->
 
   <export>
-    <cpp cflags="-I${prefix}/include" />
+    <cpp cflags="-I${prefix}/include " lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -ltransmission_interface_parser -ltransmission_interface_loader"/>
     <rosdoc config="rosdoc.yaml" />
     <transmission_interface plugin="${prefix}/ros_control_plugins.xml" />
   </export>

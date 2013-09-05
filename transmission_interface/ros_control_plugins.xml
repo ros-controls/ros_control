@@ -1,4 +1,4 @@
-<library path="lib/libtransmission_interface_loader">
+<library path="lib/libtransmission_interface_loader_plugins">
 
   <!-- Transmission types -->
   <class name="transmission_interface/SimpleTransmission"
