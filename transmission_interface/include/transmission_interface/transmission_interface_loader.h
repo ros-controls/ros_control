@@ -1,4 +1,3 @@
-
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2013, PAL Robotics S.L.
 //
@@ -33,6 +32,8 @@
 
 // C++ standard
 #include <algorithm>
+#include <limits>
+#include <map>
 #include <string>
 #include <utility>
 #include <vector>
@@ -60,6 +61,7 @@
 #include <transmission_interface/transmission_interface.h>
 #include <transmission_interface/transmission_info.h>
 #include <transmission_interface/transmission_loader.h>
+#include <transmission_interface/transmission_parser.h>
 
 namespace transmission_interface
 {
@@ -105,14 +107,24 @@ bool is_permutation(ForwardIt1 first, ForwardIt1 last,
 // TODO: Don't assume interfaces?
 struct RawJointData
 {
-  std::vector<std::string> names;
-  std::vector<double>      position;
-  std::vector<double>      velocity;
-  std::vector<double>      effort;
-  std::vector<double>      position_cmd;
-  std::vector<double>      velocity_cmd;
-  std::vector<double>      effort_cmd;
+  RawJointData()
+    : position(std::numeric_limits<double>::quiet_NaN()),
+      velocity(std::numeric_limits<double>::quiet_NaN()),
+      effort(std::numeric_limits<double>::quiet_NaN()),
+      position_cmd(std::numeric_limits<double>::quiet_NaN()),
+      velocity_cmd(std::numeric_limits<double>::quiet_NaN()),
+      effort_cmd(std::numeric_limits<double>::quiet_NaN())
+  {}
+
+  double position;
+  double velocity;
+  double effort;
+  double position_cmd;
+  double velocity_cmd;
+  double effort_cmd;
 };
+
+typedef std::map<std::string, RawJointData> RawJointDataMap;
 
 /**
  * \brief Joint interfaces of a robot. Only used interfaces need to be populated.
@@ -143,7 +155,7 @@ struct TransmissionLoaderData
   TransmissionLoaderData()
     : robot_hw(0),
       joint_interfaces(0),
-      raw_joint_data(0),
+      raw_joint_data_map(0),
       robot_transmissions(0),
       transmission_interfaces(0),
       transmission_data()
@@ -151,7 +163,7 @@ struct TransmissionLoaderData
 
   hardware_interface::RobotHW*  robot_hw;
   JointInterfaces*              joint_interfaces;
-  RawJointData*                 raw_joint_data;
+  RawJointDataMap*              raw_joint_data_map;
 
   RobotTransmissions*            robot_transmissions;
   ForwardTransmissionInterfaces* transmission_interfaces;
@@ -174,14 +186,15 @@ public:
    * \param[out] joint_ifaces Joint interfaces where new joints will be added. It may already contain data, which
    * will not be overwritten; only new joints will be added.
    *
-   * \param raw_joint_data[out] Structure where the raw data of new joints will reside.  It may already contain data,
+   * \param raw_joint_data_map[out] Structure where the raw data of new joints will reside.  It may already contain data,
    * which will not be overwritten; only new data will be added.
    *
    * \return true if succesful.
    */
-  virtual bool updateJointInterfaces(const TransmissionInfo& transmission_info,
-                                     JointInterfaces&        joint_interfaces,
-                                     RawJointData&           raw_joint_data) = 0;
+  virtual bool updateJointInterfaces(const TransmissionInfo&      transmission_info,
+                                     hardware_interface::RobotHW* robot_hw,
+                                     JointInterfaces&             joint_interfaces,
+                                     RawJointDataMap&             raw_joint_data_map) = 0;
 
   bool loadTransmissionMaps(const TransmissionInfo& transmission_info,
                             TransmissionLoaderData& loader_data,
@@ -198,11 +211,11 @@ protected:
   };
 
   virtual bool getJointStateData(const TransmissionInfo& transmission_info,
-                                 const RawJointData&     raw_joint_data,
+                                 const RawJointDataMap&  raw_joint_data_map,
                                  JointData&              jnt_state_data) = 0;
 
   virtual bool getJointCommandData(const TransmissionInfo& transmission_info,
-                                   const RawJointData&     raw_joint_data,
+                                   const RawJointDataMap&  raw_joint_data_map,
                                    JointData&              jnt_cmd_data) = 0;
 
   virtual bool getActuatorStateData(const TransmissionInfo&      transmission_info,
@@ -236,9 +249,6 @@ protected:
       return false;
     }
   }
-
-  static unsigned int addJoint(const std::string& name, RawJointData& raw_joint_data);
-
 
   template <class HardwareInterface, class Handle>
   bool getActuatorHandles(const std::vector<ActuatorInfo>& actuators_info,
@@ -278,13 +288,18 @@ protected:
   }
 };
 
+// TODO: Doc
 class TransmissionInterfaceLoader
 {
 public:
-  TransmissionInterfaceLoader();
+  TransmissionInterfaceLoader(hardware_interface::RobotHW* robot_hw,
+                              RobotTransmissions*          robot_transmissions);
 
-  bool load(const TransmissionInfo& transmission_info,
-            TransmissionLoaderData& loader_data);
+  bool load(const std::string& urdf);
+
+  bool load(const TransmissionInfo& transmission_info);
+
+  TransmissionLoaderData* getData() {return &loader_data_;}
 
 private:
   typedef pluginlib::ClassLoader<TransmissionLoader>      TransmissionClassLoader;
@@ -299,99 +314,17 @@ private:
   TransmissionClassLoaderPtr transmission_class_loader_;
   RequisiteProviderClassLoaderPtr req_provider_loader_;
 
-protected:
-  bool isValid(const TransmissionLoaderData& loader_data);
-};
+private:
+  hardware_interface::RobotHW* robot_hw_ptr_;
+  RobotTransmissions*          robot_transmissions_ptr_;
 
-class JointStateInterfaceProvider : public RequisiteProvider
-{
-public:
-  bool updateJointInterfaces(const TransmissionInfo& transmission_info,
-                             JointInterfaces&        joint_interfaces,
-                             RawJointData&           raw_joint_data);
+  JointInterfaces               joint_interfaces_;
+  RawJointDataMap               raw_joint_data_map_;
+  ForwardTransmissionInterfaces transmission_interfaces_;
 
-protected:
-  bool getJointStateData(const TransmissionInfo& transmission_info,
-                         const RawJointData&     raw_joint_data,
-                         JointData&              jnt_state_data);
+  TransmissionLoaderData loader_data_;
 
-  bool getJointCommandData(const TransmissionInfo& transmission_info,
-                           const RawJointData&     raw_joint_data,
-                           JointData&              jnt_cmd_data) {return true;}
-
-  bool getActuatorStateData(const TransmissionInfo&      transmission_info,
-                            hardware_interface::RobotHW* robot_hw,
-                            ActuatorData&                act_state_data);
-
-  bool getActuatorCommandData(const TransmissionInfo&      transmission_info,
-                              hardware_interface::RobotHW* robot_hw,
-                              ActuatorData&                act_cmd_data) {return true;}
-
-  bool registerTransmission(TransmissionLoaderData& loader_data,
-                            TransmissionHandleData& handle_data);
-};
-
-class PositionJointInterfaceProvider : public JointStateInterfaceProvider
-{
-public:
-  bool updateJointInterfaces(const TransmissionInfo& transmission_info,
-                             JointInterfaces&        joint_interfaces,
-                             RawJointData&           raw_joint_data);
-
-protected:
-
-  bool getJointCommandData(const TransmissionInfo& transmission_info,
-                           const RawJointData&     raw_joint_data,
-                           JointData&              jnt_cmd_data);
-
-  bool getActuatorCommandData(const TransmissionInfo&      transmission_info,
-                              hardware_interface::RobotHW* robot_hw,
-                              ActuatorData&                act_cmd_data);
-
-  bool registerTransmission(TransmissionLoaderData& loader_data,
-                            TransmissionHandleData& handle_data);
-};
-
-class VelocityJointInterfaceProvider : public JointStateInterfaceProvider
-{
-public:
-  bool updateJointInterfaces(const TransmissionInfo& transmission_info,
-                             JointInterfaces&        joint_interfaces,
-                             RawJointData&           raw_joint_data);
-
-protected:
-
-  bool getJointCommandData(const TransmissionInfo& transmission_info,
-                           const RawJointData&     raw_joint_data,
-                           JointData&              jnt_cmd_data);
-
-  bool getActuatorCommandData(const TransmissionInfo&      transmission_info,
-                              hardware_interface::RobotHW* robot_hw,
-                              ActuatorData&                act_cmd_data);
-
-  bool registerTransmission(TransmissionLoaderData& loader_data,
-                            TransmissionHandleData& handle_data);
-};
-
-class EffortJointInterfaceProvider : public JointStateInterfaceProvider
-{
-public:
-  bool updateJointInterfaces(const TransmissionInfo& transmission_info,
-                             JointInterfaces&        joint_interfaces,
-                             RawJointData&           raw_joint_data);
-
-protected:
-
-  bool getJointCommandData(const TransmissionInfo& transmission_info,
-                           const RawJointData&     raw_joint_data,
-                           JointData&              jnt_cmd_data);
-
-  bool getActuatorCommandData(const TransmissionInfo&      transmission_info,
-                              hardware_interface::RobotHW* robot_hw,
-                              ActuatorData&                act_cmd_data);
-
-  bool registerTransmission(TransmissionLoaderData& loader_data,
-                            TransmissionHandleData& handle_data);
+  static bool isValid(const TransmissionLoaderData& loader_data);
 };
 
 } // namespace
