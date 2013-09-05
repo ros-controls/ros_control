@@ -154,20 +154,15 @@ struct TransmissionLoaderData
 
   TransmissionLoaderData()
     : robot_hw(0),
-      joint_interfaces(0),
-      raw_joint_data_map(0),
-      robot_transmissions(0),
-      transmission_interfaces(0),
-      transmission_data()
+      robot_transmissions(0)
   {}
 
-  hardware_interface::RobotHW*  robot_hw;
-  JointInterfaces*              joint_interfaces;
-  RawJointDataMap*              raw_joint_data_map;
-
-  RobotTransmissions*            robot_transmissions;
-  ForwardTransmissionInterfaces* transmission_interfaces;
-  std::vector<TransmissionPtr>   transmission_data;
+  hardware_interface::RobotHW*  robot_hw;            ///< Lifecycle is externally controlled (ie. hardware abstraction)
+  RobotTransmissions*           robot_transmissions; ///< Lifecycle is externally controlled (ie. hardware abstraction)
+  JointInterfaces               joint_interfaces;
+  RawJointDataMap               raw_joint_data_map;
+  ForwardTransmissionInterfaces transmission_interfaces;
+  std::vector<TransmissionPtr>  transmission_data;
 };
 
 class RequisiteProvider // TODO: There must be a more descriptive name for this class!
@@ -318,13 +313,7 @@ private:
   hardware_interface::RobotHW* robot_hw_ptr_;
   RobotTransmissions*          robot_transmissions_ptr_;
 
-  JointInterfaces               joint_interfaces_;
-  RawJointDataMap               raw_joint_data_map_;
-  ForwardTransmissionInterfaces transmission_interfaces_;
-
   TransmissionLoaderData loader_data_;
-
-  static bool isValid(const TransmissionLoaderData& loader_data);
 };
 
 } // namespace
