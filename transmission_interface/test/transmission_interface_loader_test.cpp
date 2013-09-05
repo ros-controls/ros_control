@@ -226,7 +226,8 @@ TEST_F(TransmissionInterfaceLoaderTest, AccessorValidation)
   ASSERT_TRUE(0 != loader_data_ptr);
   ASSERT_TRUE(&robot_hw == loader_data_ptr->robot_hw);
   ASSERT_TRUE(&robot_transmissions == loader_data_ptr->robot_transmissions);
-  ASSERT_EQ(3, loader_data_ptr->raw_joint_data_map->size());
+  ASSERT_EQ(3, loader_data_ptr->raw_joint_data_map.size());
+  ASSERT_EQ(6, loader_data_ptr->transmission_data.size()); // Each transmission is added as many times as joint interfaces
 }
 
 TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoad)
