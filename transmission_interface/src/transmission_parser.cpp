@@ -45,7 +45,7 @@ bool TransmissionParser::parse(const std::string& urdf, std::vector<Transmission
   TiXmlDocument doc;
   if (!doc.Parse(urdf.c_str()) && doc.Error())
   {
-    ROS_ERROR("Can't parse transmissions. Invalid URDF.");
+    ROS_ERROR("Can't parse transmissions. Invalid robot description.");
     return false;
   }
 
