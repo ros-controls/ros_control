@@ -230,6 +230,21 @@ TEST_F(TransmissionInterfaceLoaderTest, AccessorValidation)
   ASSERT_EQ(6, loader_data_ptr->transmission_data.size()); // Each transmission is added as many times as joint interfaces
 }
 
+TEST_F(TransmissionInterfaceLoaderTest, DuplicateTransmissions)
+{
+  // Parse transmission info
+  const std::string urdf_filename = "test/urdf/transmission_interface_loader_duplicate.urdf";
+  std::string urdf;
+  ASSERT_TRUE(readFile(urdf_filename, urdf));
+
+  // Load transmissions
+  TransmissionInterfaceLoader trans_iface_loader(&robot_hw, &robot_transmissions);
+  ASSERT_TRUE(trans_iface_loader.load(urdf)); // NOTE: Using URDF loader
+
+  // NOTE: We allow to overwrite an existing transmission in the same way a hardware interface can be overwritten.
+  // An informative warning message is printed notifying that a transmission handle has been overwritten.
+}
+
 TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoad)
 {
   // Parse transmission info
