@@ -86,7 +86,7 @@ bool is_permutation(ForwardIt1 first, ForwardIt1 last,
     for (ForwardIt1 i = first; i != last; ++i) {
       if (i != std::find(first, i, *i)) continue; // already counted this *i
 
-      unsigned int m = std::count(d_first, d_last, *i);
+      int m = std::count(d_first, d_last, *i);
       if (m==0 || std::count(i, last, *i) != m) {
           return false;
       }
