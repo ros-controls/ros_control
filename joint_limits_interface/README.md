@@ -3,9 +3,9 @@
 ### Overview ###
 
 **joint_limits_interface** contains data structures for representing joint limits, methods for populating them from common
-formats such as URDF and rosparam, and methods for enforcing limits on different kinds of joint commands.
+formats such as URDF and the ROS parameter server, and methods for enforcing limits on different kinds of hardware interfaces.
 
-The joint_limits_interface is *not* used by controllers themselves (it does not implement a `HardwareInterface`) but
+The **joint_limits_interface** is *not* used by controllers themselves (it does not implement a `HardwareInterface`) but
 instead operates after the controllers have updated, in the `write()` method (or equivalent) of the robot abstraction.
 Enforcing limits will *overwrite* the commands set by the controllers, it does not operate on a separate raw data buffer.
 
@@ -14,8 +14,11 @@ There are two main elements involved in setting up a joint limits interface:
  - **Joint limits representation**
    - **JointLimits** Position, velocity, acceleration, jerk and effort.
    - **SoftJointLimits** Soft position limits, `k_p`, `k_v` (as described [here](http://www.ros.org/wiki/pr2_controller_manager/safety_limits)).
-   - **Loading from URDF: ** There are conveinece methods for loading joint limits information (position, velocity, effort), as well as soft joint limits information from the URDF.
-   - **Loading from ROS params: ** There are conveinece methods for loading joint limits from the ROS parameter server (all values). Parameter specification is the same used in MoveIt, with the addition that we also parse jerk and effort limits.
+   - **Loading from URDF** There are conveinece methods for loading joint limits information
+     (position, velocity and effort), as well as soft joint limits information from the URDF.
+   - **Loading from ROS params** There are conveinece methods for loading joint limits from the ROS parameter server
+     (position, velocity, acceleration, jerk and effort).Parameter specification is the same used in MoveIt,
+     with the addition that we also parse jerk and effort limits.
 
  - **Joint limits interface**
 
