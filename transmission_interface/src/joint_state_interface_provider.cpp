@@ -54,7 +54,7 @@ bool JointStateInterfaceProvider::updateJointInterfaces(const TransmissionInfo& 
     const std::string& name = joint_info.name_;
 
     // Do nothing if joint already exists on the hardware interface
-    if (hasResource(name, interface)) {return true;}
+    if (hasResource(name, interface)) {continue;}
 
     // Update hardware interface
     using hardware_interface::JointStateHandle;
