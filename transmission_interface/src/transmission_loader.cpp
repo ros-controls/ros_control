@@ -37,8 +37,8 @@ namespace transmission_interface
 
 TransmissionLoader::ParseStatus
 TransmissionLoader::getActuatorReduction(const TiXmlElement& parent_el,
-                                         const std::string   actuator_name,
-                                         const std::string   transmission_name,
+                                         const std::string&  actuator_name,
+                                         const std::string&  transmission_name,
                                          bool                required,
                                          double&             reduction)
 {
@@ -72,8 +72,8 @@ TransmissionLoader::getActuatorReduction(const TiXmlElement& parent_el,
 
 TransmissionLoader::ParseStatus
 TransmissionLoader::getJointReduction(const TiXmlElement& parent_el,
-                                      const std::string   joint_name,
-                                      const std::string   transmission_name,
+                                      const std::string&  joint_name,
+                                      const std::string&  transmission_name,
                                       bool                required,
                                       double&             reduction)
 {
@@ -107,8 +107,8 @@ TransmissionLoader::getJointReduction(const TiXmlElement& parent_el,
 
 TransmissionLoader::ParseStatus
 TransmissionLoader::getJointOffset(const TiXmlElement& parent_el,
-                                   const std::string   joint_name,
-                                   const std::string   transmission_name,
+                                   const std::string&  joint_name,
+                                   const std::string&  transmission_name,
                                    bool                required,
                                    double&             offset)
 {
@@ -142,8 +142,8 @@ TransmissionLoader::getJointOffset(const TiXmlElement& parent_el,
 
 TransmissionLoader::ParseStatus
 TransmissionLoader::getActuatorRole(const TiXmlElement& parent_el,
-                                    const std::string   actuator_name,
-                                    const std::string   transmission_name,
+                                    const std::string&  actuator_name,
+                                    const std::string&  transmission_name,
                                     bool                required,
                                     std::string&        role)
 {
@@ -186,8 +186,8 @@ TransmissionLoader::getActuatorRole(const TiXmlElement& parent_el,
 
 TransmissionLoader::ParseStatus
 TransmissionLoader::getJointRole(const TiXmlElement& parent_el,
-                                 const std::string   joint_name,
-                                 const std::string   transmission_name,
+                                 const std::string&  joint_name,
+                                 const std::string&  transmission_name,
                                  bool                required,
                                  std::string&        role)
 {
