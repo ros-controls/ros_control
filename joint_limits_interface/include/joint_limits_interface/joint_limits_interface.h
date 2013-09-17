@@ -33,6 +33,8 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
+#include <limits>
 
 #include <boost/shared_ptr.hpp>
 
@@ -58,20 +60,48 @@ T saturate(const T val, const T min_val, const T max_val)
 
 }
 
-/** \brief A handle used to enforce position and velocity limits of a position-controlled joint. */
+/**
+ * \brief A handle used to enforce position and velocity limits of a position-controlled joint.
+ *
+ * This class implements a very simple position and velocity limits enforcing policy, and tries to impose the least
+ * amount of requisites on the underlying hardware platform.
+ * This lowers considerably the entry barrier to use it, but also implies some limitations.
+ *
+ * <b>Requisites</b>
+ * - Position (for non-continuous joints) and velocity limits specification.
+ * - Soft limits specification. The \c k_velocity parameter is \e not used.
+ *
+ * <b>Open loop nature</b>
+ *
+ * Joint position and velocity limits are enforced in an open-loop fashion, that is, the command is checked for
+ * validity without relying on the actual position/velocity values.
+ *
+ * - Actual position values are \e not used because in some platforms there might be a substantial lag
+ *   between sending a command and executing it (propagate comand to hardware, reach control objective,
+ *   read from hardware).
+ *
+ * - Actual velocity values are \e not used because of the above reason, and because some platforms might not expose
+ *   trustworthy velocity measurements, or none at all.
+ *
+ * The downside of the open loop behavior is that velocity limits will not be enforced when recovering from large
+ * position tracking errors. Only the command is guaranteed to comply with the limits specification.
+ */
 
 // TODO: Leverage %Reflexxes Type II library for acceleration limits handling?
 class PositionJointSoftLimitsHandle
 {
 public:
-  PositionJointSoftLimitsHandle() {}
+  PositionJointSoftLimitsHandle()
+    : prev_cmd_(std::numeric_limits<double>::quiet_NaN())
+  {}
 
   PositionJointSoftLimitsHandle(const hardware_interface::JointHandle& jh,
                                 const JointLimits&                     limits,
                                 const SoftJointLimits&                 soft_limits)
     : jh_(jh),
       limits_(limits),
-      soft_limits_(soft_limits)
+      soft_limits_(soft_limits),
+      prev_cmd_(std::numeric_limits<double>::quiet_NaN())
   {
     if (!limits.has_velocity_limits)
     {
@@ -96,7 +126,9 @@ public:
     using internal::saturate;
 
     // Current position
-    const double pos = jh_.getPosition();
+    // TODO: Doc!
+    if (std::isnan(prev_cmd_)) {prev_cmd_ = jh_.getPosition();} // Happens only once at initialization
+    const double pos = prev_cmd_;
 
     // Velocity bounds
     double soft_min_vel;
@@ -137,12 +169,17 @@ public:
                                     pos_low,
                                     pos_high);
     jh_.setCommand(pos_cmd);
+
+    // Cache variables
+    prev_cmd_ = jh_.getCommand();
   }
 
 private:
   hardware_interface::JointHandle jh_;
   JointLimits limits_;
   SoftJointLimits soft_limits_;
+
+  double prev_cmd_;
 };
 
 /** \brief A handle used to enforce position, velocity and effort limits of an effort-controlled joint. */
