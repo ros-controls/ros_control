@@ -42,8 +42,6 @@ const double EPS = 1e-6;
 
 TEST(IsPermutationTest, IsPermutation)
 {
-  using internal::is_permutation;
-
   std::vector<int> a(3);
   a[0] = 0;
   a[1] = 1;
@@ -61,11 +59,11 @@ TEST(IsPermutationTest, IsPermutation)
 
   std::vector<int> d(1, 1);
 
-  EXPECT_TRUE(is_permutation(a.begin(),  a.end(), a.begin()));
-  EXPECT_TRUE(is_permutation(a.begin(),  a.end(), b.begin()));
-  EXPECT_FALSE(is_permutation(a.begin(), a.end(), c.begin()));
-  EXPECT_FALSE(is_permutation(a.begin(), a.end(), d.begin()));
-  EXPECT_FALSE(is_permutation(d.begin(), d.end(), a.begin()));
+  EXPECT_TRUE(internal::is_permutation(a.begin(),  a.end(), a.begin()));
+  EXPECT_TRUE(internal::is_permutation(a.begin(),  a.end(), b.begin()));
+  EXPECT_FALSE(internal::is_permutation(a.begin(), a.end(), c.begin()));
+  EXPECT_FALSE(internal::is_permutation(a.begin(), a.end(), d.begin()));
+  EXPECT_FALSE(internal::is_permutation(d.begin(), d.end(), a.begin()));
 }
 
 class TransmissionInterfaceLoaderTest : public ::testing::Test
