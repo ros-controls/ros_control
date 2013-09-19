@@ -51,8 +51,10 @@ FourBarLinkageTransmissionLoader::load(const TransmissionInfo& transmission_info
   const bool act_config_ok = getActuatorConfig(transmission_info, act_reduction);
   if (!act_config_ok) {return TransmissionPtr();}
 
+  std::vector<double> jnt_reduction;
   std::vector<double> jnt_offset;
   const bool jnt_config_ok = getJointConfig(transmission_info,
+                                            jnt_reduction,
                                             jnt_offset);
 
   if (!jnt_config_ok) {return TransmissionPtr();}
@@ -61,6 +63,7 @@ FourBarLinkageTransmissionLoader::load(const TransmissionInfo& transmission_info
   try
   {
     TransmissionPtr transmission(new FourBarLinkageTransmission(act_reduction,
+                                                                jnt_reduction,
                                                                 jnt_offset));
     return transmission;
   }
@@ -150,6 +153,7 @@ bool FourBarLinkageTransmissionLoader::getActuatorConfig(const TransmissionInfo&
 }
 
 bool FourBarLinkageTransmissionLoader::getJointConfig(const TransmissionInfo& transmission_info,
+                                                      std::vector<double>&    joint_reduction,
                                                       std::vector<double>&    joint_offset)
 {
   const std::string JOINT1_ROLE = "joint1";
@@ -210,10 +214,20 @@ bool FourBarLinkageTransmissionLoader::getJointConfig(const TransmissionInfo& tr
   }
 
   // Joint configuration
+  joint_reduction.resize(2, 1.0);
   joint_offset.resize(2, 0.0);
   for (unsigned int i = 0; i < 2; ++i)
   {
     const unsigned int id = id_map[i];
+
+    // Parse optional mechanical reductions. Even though it's optional --and to avoid surprises-- we fail if the element
+    // is specified but is of the wrong type
+    const ParseStatus reduction_status = getJointReduction(jnt_elements[id],
+                                                           jnt_names[id],
+                                                           transmission_info.name_,
+                                                           false, // Optional
+                                                           joint_reduction[i]);
+    if (reduction_status == BAD_TYPE) {return false;}
 
     // Parse optional joint offset. Even though it's optional --and to avoid surprises-- we fail if the element is
     // specified but is of the wrong type

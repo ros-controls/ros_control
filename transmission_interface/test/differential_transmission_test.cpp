@@ -291,8 +291,8 @@ protected:
       try
       {
         DifferentialTransmission trans(randomVector(2, rand_gen),
-                                      randomVector(2, rand_gen),
-                                      randomVector(2, rand_gen));
+                                       randomVector(2, rand_gen),
+                                       randomVector(2, rand_gen));
         out.push_back(trans);
       }
       catch(const TransmissionInterfaceException&)
