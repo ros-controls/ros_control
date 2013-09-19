@@ -60,8 +60,6 @@ unload_controller_service = ""
 def shutdown():
     global loaded,unload_controller_service,load_controller_service,switch_controller_service
 
-    return #temp
-
     try:
         # unloader
         rospy.loginfo("Controller Spawner: Waiting for service "+unload_controller_service)
