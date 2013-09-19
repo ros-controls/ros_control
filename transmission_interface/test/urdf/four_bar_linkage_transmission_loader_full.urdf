@@ -7,11 +7,13 @@
     <joint name="bar_joint">
       <role>joint2</role>
       <offset>-0.5</offset> <!--optional-->
+      <mechanicalReduction>-2</mechanicalReduction> <!--optional-->
       <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
     <joint name="foo_joint">
       <role>joint1</role>
       <offset>0.5</offset> <!--optional-->
+      <mechanicalReduction>2</mechanicalReduction> <!--optional-->
       <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="foo_actuator">
