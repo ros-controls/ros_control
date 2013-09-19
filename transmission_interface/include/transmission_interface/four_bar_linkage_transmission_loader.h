@@ -53,6 +53,7 @@ private:
                                 std::vector<double>&    actuator_reduction);
 
   static bool getJointConfig(const TransmissionInfo& transmission_info,
+                             std::vector<double>&    joint_reduction,
                              std::vector<double>&    joint_offset);
 };
 

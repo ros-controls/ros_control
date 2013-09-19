@@ -75,6 +75,10 @@ TEST(FourBarLinkageTransmissionLoaderTest, FullSpec)
   EXPECT_EQ( 50.0, actuator_reduction[0]);
   EXPECT_EQ(-50.0, actuator_reduction[1]);
 
+  const std::vector<double>& joint_reduction = four_bar_linkage_transmission->getJointReduction();
+  EXPECT_EQ( 2.0, joint_reduction[0]);
+  EXPECT_EQ(-2.0, joint_reduction[1]);
+
   const std::vector<double>& joint_offset = four_bar_linkage_transmission->getJointOffset();
   EXPECT_EQ( 0.5, joint_offset[0]);
   EXPECT_EQ(-0.5, joint_offset[1]);
@@ -103,6 +107,10 @@ TEST(FourBarLinkageTransmissionLoaderTest, MinimalSpec)
   EXPECT_EQ( 50.0, actuator_reduction[0]);
   EXPECT_EQ(-50.0, actuator_reduction[1]);
 
+  const std::vector<double>& joint_reduction = four_bar_linkage_transmission->getJointReduction();
+  EXPECT_EQ(1.0, joint_reduction[0]);
+  EXPECT_EQ(1.0, joint_reduction[1]);
+
   const std::vector<double>& joint_offset = four_bar_linkage_transmission->getJointOffset();
   EXPECT_EQ(0.0, joint_offset[0]);
   EXPECT_EQ(0.0, joint_offset[1]);
@@ -112,7 +120,7 @@ TEST(FourBarLinkageTransmissionLoaderTest, InvalidSpec)
 {
   // Parse transmission info
   std::vector<TransmissionInfo> infos = parseUrdf("test/urdf/four_bar_linkage_transmission_loader_invalid.urdf");
-  ASSERT_EQ(12, infos.size());
+  ASSERT_EQ(14, infos.size());
 
   // Transmission loader
   boost::shared_ptr<TransmissionLoader> transmission_loader = createTransmissionLoader(infos.front().type_);
