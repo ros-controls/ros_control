@@ -208,15 +208,15 @@ inline FourBarLinkageTransmission::FourBarLinkageTransmission(const std::vector<
     jnt_reduction_(joint_reduction),
     jnt_offset_(joint_offset)
 {
-  if (numActuators() != actuator_reduction.size() ||
-      numJoints()    != jnt_reduction_.size()     ||
+  if (numActuators() != act_reduction_.size() ||
+      numJoints()    != jnt_reduction_.size() ||
       numJoints()    != jnt_offset_.size())
   {
     throw TransmissionInterfaceException("Reduction and offset vectors of a four-bar linkage transmission must have size 2.");
   }
-  if (0.0 == actuator_reduction[0] ||
-      0.0 == actuator_reduction[1] ||
-      0.0 == jnt_reduction_[0]     ||
+  if (0.0 == act_reduction_[0] ||
+      0.0 == act_reduction_[1] ||
+      0.0 == jnt_reduction_[0] ||
       0.0 == jnt_reduction_[1])
   {
     throw TransmissionInterfaceException("Transmission reduction ratios cannot be zero.");
