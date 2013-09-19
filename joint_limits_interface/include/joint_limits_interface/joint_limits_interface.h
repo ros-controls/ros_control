@@ -85,6 +85,9 @@ T saturate(const T val, const T min_val, const T max_val)
  *
  * The downside of the open loop behavior is that velocity limits will not be enforced when recovering from large
  * position tracking errors. Only the command is guaranteed to comply with the limits specification.
+ *
+ * \note: This handle type is \e stateful, ie. it stores the previous position command to estimate the command
+ * velocity.
  */
 
 // TODO: Leverage %Reflexxes Type II library for acceleration limits handling?
