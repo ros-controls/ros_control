@@ -220,8 +220,8 @@ bool DifferentialTransmissionLoader::getJointConfig(const TransmissionInfo& tran
   {
     const unsigned int id = id_map[i];
 
-    // Parse optional mechanical reductions. Even though it's optional --and to avoid surprises-- we fail if the element is
-    // specified but is of the wrong type
+    // Parse optional mechanical reductions. Even though it's optional --and to avoid surprises-- we fail if the element
+    // is specified but is of the wrong type
     const ParseStatus reduction_status = getJointReduction(jnt_elements[id],
                                                            jnt_names[id],
                                                            transmission_info.name_,
