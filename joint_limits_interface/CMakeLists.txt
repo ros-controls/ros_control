@@ -43,16 +43,18 @@ else()
       ${urdfdom_LIBRARIES}
   )
 
-  catkin_add_gtest(joint_limits_interface_test test/joint_limits_interface_test.cpp)
-  target_link_libraries(joint_limits_interface_test ${catkin_LIBRARIES})
+  if(CATKIN_ENABLE_TESTING)
+    catkin_add_gtest(joint_limits_interface_test test/joint_limits_interface_test.cpp)
+    target_link_libraries(joint_limits_interface_test ${catkin_LIBRARIES})
 
-  catkin_add_gtest(joint_limits_urdf_test      test/joint_limits_urdf_test.cpp)
-  target_link_libraries(joint_limits_urdf_test ${catkin_LIBRARIES})
+    catkin_add_gtest(joint_limits_urdf_test      test/joint_limits_urdf_test.cpp)
+    target_link_libraries(joint_limits_urdf_test ${catkin_LIBRARIES})
 
-  catkin_add_gtest(joint_limits_rosparam_test  test/joint_limits_urdf_test.cpp)
-  target_link_libraries(joint_limits_rosparam_test ${catkin_LIBRARIES})
+    catkin_add_gtest(joint_limits_rosparam_test  test/joint_limits_urdf_test.cpp)
+    target_link_libraries(joint_limits_rosparam_test ${catkin_LIBRARIES})
 
-  add_rostest(test/joint_limits_rosparam.test)
+    add_rostest(test/joint_limits_rosparam.test)
+  endif()
 
   # Install
   install(DIRECTORY include/${PROJECT_NAME}/
