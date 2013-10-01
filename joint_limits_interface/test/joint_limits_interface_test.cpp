@@ -8,7 +8,7 @@
 //   * Redistributions in binary form must reproduce the above copyright
 //     notice, this list of conditions and the following disclaimer in the
 //     documentation and/or other materials provided with the distribution.
-//   * Neither the name of hiDOF, Inc. nor the names of its
+//   * Neither the name of PAL Robotics S.L. nor the names of its
 //     contributors may be used to endorse or promote products derived from
 //     this software without specific prior written permission.
 //
@@ -168,44 +168,58 @@ class PositionJointSoftLimitsHandleTest : public JointLimitsTest, public ::testi
 TEST_F(PositionJointSoftLimitsHandleTest, EnforceVelocityBounds)
 {
   // Test setup
-  PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
   const double max_increment = period.toSec() * limits.max_velocity;
   pos = 0.0;
 
   double cmd;
 
   // Move slower than maximum velocity
-  cmd = max_increment / 2.0;
-  cmd_handle.setCommand(cmd);
-  limits_handle.enforceLimits(period);
-  EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
-
-  cmd = -max_increment / 2.0;
-  cmd_handle.setCommand(cmd);
-  limits_handle.enforceLimits(period);
-  EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
+  {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+    cmd = max_increment / 2.0;
+    cmd_handle.setCommand(cmd);
+    limits_handle.enforceLimits(period);
+    EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
+  }
+  {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+    cmd = -max_increment / 2.0;
+    cmd_handle.setCommand(cmd);
+    limits_handle.enforceLimits(period);
+    EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
+  }
 
   // Move at maximum velocity
-  cmd = max_increment;
-  cmd_handle.setCommand(cmd);
-  limits_handle.enforceLimits(period);
-  EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
-
-  cmd = -max_increment;
-  cmd_handle.setCommand(cmd);
-  limits_handle.enforceLimits(period);
-  EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
+  {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+    cmd = max_increment;
+    cmd_handle.setCommand(cmd);
+    limits_handle.enforceLimits(period);
+    EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
+  }
+  {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+    cmd = -max_increment;
+    cmd_handle.setCommand(cmd);
+    limits_handle.enforceLimits(period);
+    EXPECT_NEAR(cmd, cmd_handle.getCommand(), EPS);
+  }
 
   // Try to move faster than the maximum velocity, enforce velocity limits
-  cmd = 2.0 * max_increment;
-  cmd_handle.setCommand(cmd);
-  limits_handle.enforceLimits(period);
-  EXPECT_NEAR(max_increment, cmd_handle.getCommand(), EPS);
-
-  cmd = -2.0 * max_increment;
-  cmd_handle.setCommand(cmd);
-  limits_handle.enforceLimits(period);
-  EXPECT_NEAR(-max_increment, cmd_handle.getCommand(), EPS);
+  {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+    cmd = 2.0 * max_increment;
+    cmd_handle.setCommand(cmd);
+    limits_handle.enforceLimits(period);
+    EXPECT_NEAR(max_increment, cmd_handle.getCommand(), EPS);
+  }
+  {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+    cmd = -2.0 * max_increment;
+    cmd_handle.setCommand(cmd);
+    limits_handle.enforceLimits(period);
+    EXPECT_NEAR(-max_increment, cmd_handle.getCommand(), EPS);
+  }
 }
 
 // This is a black box test and does not verify against random precomuted values, but rather that the expected
@@ -213,11 +227,12 @@ TEST_F(PositionJointSoftLimitsHandleTest, EnforceVelocityBounds)
 TEST_F(PositionJointSoftLimitsHandleTest, EnforcePositionBounds)
 {
   // Test setup
-  PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
   const double workspace_center = (limits.min_position + limits.max_position) / 2.0;
 
   // Current position == upper soft limit
   {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+
     // Can't get any closer to hard limit (zero max velocity)
     pos = soft_limits.max_position;
     cmd_handle.setCommand(limits.max_position); // Try to get closer to the hard limit
@@ -232,6 +247,8 @@ TEST_F(PositionJointSoftLimitsHandleTest, EnforcePositionBounds)
 
   // Current position == lower soft limit
   {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+
     // Can't get any closer to hard limit (zero min velocity)
     pos = soft_limits.min_position;
     cmd_handle.setCommand(limits.min_position); // Try to get closer to the hard limit
@@ -246,6 +263,8 @@ TEST_F(PositionJointSoftLimitsHandleTest, EnforcePositionBounds)
 
   // Current position > upper soft limit
   {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+
     // Can't get any closer to hard limit (negative max velocity)
     pos = (soft_limits.max_position + limits.max_position) / 2.0; // Halfway between soft and hard limit
     cmd_handle.setCommand(limits.max_position);           // Try to get closer to the hard limit
@@ -260,6 +279,8 @@ TEST_F(PositionJointSoftLimitsHandleTest, EnforcePositionBounds)
 
   // Current position < lower soft limit
   {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+
     // Can't get any closer to hard limit (positive min velocity)
     pos = (soft_limits.min_position + limits.min_position) / 2.0; // Halfway between soft and hard limit
     cmd_handle.setCommand(limits.min_position);           // Try to get closer to the hard limit
@@ -279,11 +300,10 @@ TEST_F(PositionJointSoftLimitsHandleTest, PathologicalSoftBounds)
   soft_limits.min_position = limits.min_position * (1.0 - 0.5 * limits.min_position / std::abs(limits.min_position));
   soft_limits.max_position = limits.max_position * (1.0 + 0.5 * limits.max_position / std::abs(limits.max_position));
 
-  // Test setup
-  PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
-
   // Current position == higher hard limit
   {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+
     // Hit hard limit
     pos = limits.max_position;                        // On hard limit
     cmd_handle.setCommand(2.0 * limits.max_position); // Way beyond hard limit
@@ -293,6 +313,8 @@ TEST_F(PositionJointSoftLimitsHandleTest, PathologicalSoftBounds)
 
   // Current position == lower hard limit
   {
+    PositionJointSoftLimitsHandle limits_handle(cmd_handle, limits, soft_limits);
+
     // Hit hard limit
     pos = limits.min_position;                        // On hard limit
     cmd_handle.setCommand(2.0 * limits.min_position); // Way beyond hard limit
