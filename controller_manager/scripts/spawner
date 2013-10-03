@@ -130,7 +130,7 @@ def main():
         # should be fast. Further, we're interested in knowing if we have a compliant controller manager from
         # early on
         rospy.loginfo("Controller Spawner: Waiting for service "+unload_controller_service)
-        rospy.wait_for_service(unload_controller_service, timeout=10)
+        rospy.wait_for_service(unload_controller_service, timeout=30)
 
     except rospy.exceptions.ROSException:
         rospy.logwarn("Controller Spawner couldn't find the expected controller_manager ROS interface.")
