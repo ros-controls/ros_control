@@ -117,12 +117,12 @@ def main():
     try:
         # loader
         rospy.loginfo("Controller Spawner: Waiting for service "+load_controller_service)
-        rospy.wait_for_service(load_controller_service, timeout=10)
+        rospy.wait_for_service(load_controller_service, timeout=30)
         load_controller = rospy.ServiceProxy(load_controller_service, LoadController)
 
         # switcher
         rospy.loginfo("Controller Spawner: Waiting for service "+switch_controller_service)
-        rospy.wait_for_service(switch_controller_service, timeout=10)
+        rospy.wait_for_service(switch_controller_service, timeout=30)
         switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
 
         # unloader
@@ -130,7 +130,7 @@ def main():
         # should be fast. Further, we're interested in knowing if we have a compliant controller manager from
         # early on
         rospy.loginfo("Controller Spawner: Waiting for service "+unload_controller_service)
-        rospy.wait_for_service(unload_controller_service, timeout=10)
+        rospy.wait_for_service(unload_controller_service, timeout=30)
 
     except rospy.exceptions.ROSException:
         rospy.logwarn("Controller Spawner couldn't find the expected controller_manager ROS interface.")
@@ -152,7 +152,7 @@ def main():
             if rospy.is_shutdown():
                 return
             if not warned_about_not_hearing_anything:
-                if time.time() - started_waiting > 10.0:
+                if time.time() - started_waiting > 30.0:
                     warned_about_not_hearing_anything = True
                     rospy.logwarn("Controller Spawner hasn't heard anything from its \"wait for\" topic (%s)" % \
                                       wait_for_topic)
