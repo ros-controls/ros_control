@@ -21,7 +21,7 @@ if(USE_ROSBUILD)
   target_link_libraries(joint_limits_urdf_test      pthread)
   target_link_libraries(joint_limits_rosparam_test  pthread)
 
-else()
+else() # catkin
 
   find_package(catkin REQUIRED COMPONENTS roscpp rostest)
 

@@ -5,6 +5,23 @@ Changelog for package controller_manager
 0.5.6 (2013-07-29)
 ------------------
 
+0.5.8 (2013-10-11)
+------------------
+* Fixed additional timeout that was just added
+* Merge branch 'hydro-devel' into extended_wait_time
+* Extended wait time to 30 seconds for slower computers
+* Renamed manifest.xml to prevent conflicts with rosdep
+* Fix broken unspawner script.
+* Check controller_manager API early. Fast shutdown.
+  - Check for all services required by spawner at the beginning, so it can know
+  early on that it has all its requisites.
+  - Remove service waiting from shutdown to ensure a fast teardown.
+  Usecase: A spawner that dies after the controller manager should not wait
+  for services to appear as they will never appear, the controllers are already
+  stopped. This happens for example when killing a Gazebo session.
+* Restore controller stop+unload on node kill.
+  - Fixes `#111 <https://github.com/ros-controls/ros_control/issues/111>`_.
+
 0.5.7 (2013-07-30)
 ------------------
 * Update controller_manager.cpp
