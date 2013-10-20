@@ -60,6 +60,68 @@ T saturate(const T val, const T min_val, const T max_val)
 
 }
 
+/** \brief A handle used to enforce position and velocity limits of a position-controlled joint that does not have
+    soft limits. */
+class PositionJointSaturationHandle
+{
+public:
+  PositionJointSaturationHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits)
+  {
+    jh_ = jh;
+    limits_ = limits;
+
+    if (limits_.has_position_limits)
+    {
+      min_pos_limit_ = limits_.min_position;
+      max_pos_limit_ = limits_.max_position;
+    }
+    else
+    {
+      min_pos_limit_ = -std::numeric_limits<double>::max();
+      max_pos_limit_ = std::numeric_limits<double>::max();
+    }
+
+    prev_cmd_ = std::numeric_limits<double>::quiet_NaN();
+  }
+
+  /** \return Joint name. */
+  std::string getName() const {return jh_.getName();}
+
+  /**
+   * \brief Enforce position and velocity limits for a joint that is not subject to soft limits.
+   *
+   * \param period Control period.
+   */
+  void enforceLimits(const ros::Duration& period)
+  {
+    if (std::isnan(prev_cmd_))
+      prev_cmd_ = jh_.getPosition();
+
+    double min_pos, max_pos;
+    if (limits_.has_velocity_limits)
+    {
+      const double delta_pos = limits_.max_velocity * period.toSec();
+      min_pos = std::max(prev_cmd_ - delta_pos, min_pos_limit_);
+      max_pos = std::min(prev_cmd_ + delta_pos, max_pos_limit_);
+    }
+    else
+    {
+      min_pos = min_pos_limit_;
+      max_pos = max_pos_limit_;
+    }
+
+    const double cmd = internal::saturate(jh_.getCommand(), min_pos, max_pos);
+    jh_.setCommand(cmd);
+    prev_cmd_ = cmd;
+  }
+
+private:
+  hardware_interface::JointHandle jh_;
+  JointLimits limits_;
+  double min_pos_limit_, max_pos_limit_;
+  double prev_cmd_;
+};
+
 /**
  * \brief A handle used to enforce position and velocity limits of a position-controlled joint.
  *
@@ -223,7 +285,7 @@ public:
         min_eff = 0;
       else if (pos > limits_.max_position)
         max_eff = 0;
-    } 
+    }
 
     if (limits_.has_velocity_limits)
     {
@@ -389,6 +451,68 @@ private:
   JointLimits limits_;
 };
 
+/** \brief A handle used to enforce position, velocity, and acceleration limits of a velocity-controlled joint. */
+class VelocityJointSoftLimitsHandle
+{
+public:
+  VelocityJointSoftLimitsHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits,
+                                const SoftJointLimits& soft_limits)
+  {
+    jh_ = jh;
+    limits_ = limits;
+    soft_limits_ = soft_limits;
+    if (limits.has_velocity_limits)
+      max_vel_limit_ = limits.max_velocity;
+    else
+      max_vel_limit_ = std::numeric_limits<double>::max();
+  }
+
+  /** \return Joint name. */
+  std::string getName() const {return jh_.getName();}
+
+  /**
+   * \brief Enforce position, velocity, and acceleration limits for a velocity-controlled joint subject to soft limits.
+   *
+   * \param period Control period.
+   */
+  void enforceLimits(const ros::Duration& period)
+  {
+    using internal::saturate;
+
+    double min_vel, max_vel;
+    if (limits_.has_position_limits)
+    {
+      // Velocity bounds depend on the velocity limit and the proximity to the position limit.
+      const double pos = jh_.getPosition();
+      min_vel = saturate(-soft_limits_.k_position * (pos - soft_limits_.min_position),
+                         -max_vel_limit_, max_vel_limit_);
+      max_vel = saturate(-soft_limits_.k_position * (pos - soft_limits_.max_position),
+                         -max_vel_limit_, max_vel_limit_);
+    }
+    else
+    {
+      min_vel = -max_vel_limit_;
+      max_vel = max_vel_limit_;
+    }
+
+    if (limits_.has_acceleration_limits)
+    {
+      const double vel = jh_.getVelocity();
+      const double delta_t = period.toSec();
+      min_vel = std::max(vel - limits_.max_acceleration * delta_t, min_vel);
+      max_vel = std::min(vel + limits_.max_acceleration * delta_t, max_vel);
+    }
+
+    jh_.setCommand(saturate(jh_.getCommand(), min_vel, max_vel));
+  }
+
+private:
+  hardware_interface::JointHandle jh_;
+  JointLimits limits_;
+  SoftJointLimits soft_limits_;
+  double max_vel_limit_;
+};
+
 /**
  * \brief Interface for enforcing joint limits.
  *
@@ -429,6 +553,9 @@ public:
   /*\}*/
 };
 
+/** Interface for enforcing limits on a position-controlled joint through saturation. */
+class PositionJointSaturationInterface : public JointLimitsInterface<PositionJointSaturationHandle> {};
+
 /** Interface for enforcing limits on a position-controlled joint with soft position limits. */
 class PositionJointSoftLimitsInterface : public JointLimitsInterface<PositionJointSoftLimitsHandle> {};
 
@@ -440,6 +567,9 @@ class EffortJointSoftLimitsInterface : public JointLimitsInterface<EffortJointSo
 
 /** Interface for enforcing limits on a velocity-controlled joint through saturation. */
 class VelocityJointSaturationInterface : public JointLimitsInterface<VelocityJointSaturationHandle> {};
+
+/** Interface for enforcing limits on a velocity-controlled joint with soft position limits. */
+class VelocityJointSoftLimitsInterface : public JointLimitsInterface<VelocityJointSoftLimitsHandle> {};
 
 }
 
