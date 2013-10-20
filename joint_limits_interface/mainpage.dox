@@ -21,9 +21,17 @@ There are two main elements involved in setting up a joint_limits_interface:
 
 \subsection limits_interface Joint limits interface
 
-  - For \b effort-controlled joints, the soft-limits implementation from the PR2 has been ported (\ref joint_limits_interface::EffortJointSoftLimitsHandle "handle", \ref joint_limits_interface::EffortJointSoftLimitsInterface "interface").
-  - For \b position-controlled joints, a modified version of the PR2 soft limits has been implemented (\ref joint_limits_interface::PositionJointSoftLimitsHandle "handle", \ref joint_limits_interface::PositionJointSoftLimitsInterface "interface").
-  - For \b velocity-controlled joints, simple saturation based on acceleration and velocity limits has been implemented (\ref joint_limits_interface::VelocityJointSaturationHandle "handle", \ref joint_limits_interface::VelocityJointSaturationInterface "interface").
+For \b effort-controlled joints, \b position-controlled joints, and \b velocity-controlled joints, two types of interfaces have been created. The first is a saturation interface, used for joints that have normal limits but not soft limits. The second is an interface that implements soft limits, similar to the one used on the PR2.
+
+  - Effort-controlled joints
+    - Saturation: \ref joint_limits_interface::EffortJointSaturationHandle "Handle", \ref joint_limits_interface::EffortJointSaturationInterface "Interface"
+    - Soft limits: \ref joint_limits_interface::EffortJointSoftLimitsHandle "Handle", \ref joint_limits_interface::EffortJointSoftLimitsInterface "Interface"
+  - Position-controlled joints
+    - Saturation: \ref joint_limits_interface::PositionJointSaturationHandle "Handle", \ref joint_limits_interface::PositionJointSaturationInterface "Interface"
+    - Soft limits: \ref joint_limits_interface::PositionJointSoftLimitsHandle "Handle", \ref joint_limits_interface::PositionJointSoftLimitsInterface "Interface"
+  - Velocity-controlled joints
+    - Saturation: \ref joint_limits_interface::VelocityJointSaturationHandle "Handle", \ref joint_limits_interface::VelocityJointSaturationInterface "interface"
+    - Soft limits: \ref joint_limits_interface::VelocityJointSoftLimitsHandle "Handle", \ref joint_limits_interface::VelocityJointSoftLimitsInterface "Interface"
 
 \section example Examples
 
