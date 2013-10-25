@@ -57,9 +57,9 @@ def main():
         while True:
             to_stop = []
             listed = list_controllers()
-            for c in zip(listed.controllers, listed.state):
-                if c[0] in to_inhibit and c[1] == 'running':
-                    to_stop.append(c[0])
+            for controller_state in listed.controller:
+                if controller_state.name in to_inhibit and controller_state.state == 'running':
+                    to_stop.append(controller_state.name)
 
             if to_stop:
                 rospy.logout("Inhibiting controllers: %s" % ', '.join(to_stop))

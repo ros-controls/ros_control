@@ -57,18 +57,15 @@ load_controller_service = ""
 switch_controller_service = ""
 unload_controller_service = ""
 
+
 def shutdown():
     global loaded,unload_controller_service,load_controller_service,switch_controller_service
 
     try:
         # unloader
-        rospy.loginfo("Controller Spawner: Waiting for service "+unload_controller_service)
-        rospy.wait_for_service(unload_controller_service, 3)
         unload_controller = rospy.ServiceProxy(unload_controller_service, UnloadController)
 
         # switcher
-        rospy.loginfo("Controller Spawner: Waiting for service "+switch_controller_service)
-        rospy.wait_for_service(switch_controller_service, 3)
         switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
 
         switch_controller([], loaded, SwitchControllerRequest.STRICT)
@@ -115,21 +112,28 @@ def main():
     # set service names based on namespace
     load_controller_service = robot_namespace+"controller_manager/load_controller"
     unload_controller_service = robot_namespace+"controller_manager/unload_controller"
-    switch_controller_service = robot_namespace+'controller_manager/switch_controller'
+    switch_controller_service = robot_namespace+"controller_manager/switch_controller"
 
     try:
         # loader
         rospy.loginfo("Controller Spawner: Waiting for service "+load_controller_service)
-        rospy.wait_for_service(load_controller_service, timeout=10)
+        rospy.wait_for_service(load_controller_service, timeout=30)
         load_controller = rospy.ServiceProxy(load_controller_service, LoadController)
 
-        #switcher
+        # switcher
         rospy.loginfo("Controller Spawner: Waiting for service "+switch_controller_service)
-        rospy.wait_for_service(switch_controller_service, timeout=10)
+        rospy.wait_for_service(switch_controller_service, timeout=30)
         switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
 
+        # unloader
+        # NOTE: We check for the unloader's existence here, although its used on shutdown because shutdown
+        # should be fast. Further, we're interested in knowing if we have a compliant controller manager from
+        # early on
+        rospy.loginfo("Controller Spawner: Waiting for service "+unload_controller_service)
+        rospy.wait_for_service(unload_controller_service, timeout=30)
+
     except rospy.exceptions.ROSException:
-        rospy.logwarn("Controller Spawner couldn't reach controller_manager to load controllers.")
+        rospy.logwarn("Controller Spawner couldn't find the expected controller_manager ROS interface.")
         return
 
     global wait_for_topic_result  # Python scoping sucks
@@ -148,7 +152,7 @@ def main():
             if rospy.is_shutdown():
                 return
             if not warned_about_not_hearing_anything:
-                if time.time() - started_waiting > 10.0:
+                if time.time() - started_waiting > 30.0:
                     warned_about_not_hearing_anything = True
                     rospy.logwarn("Controller Spawner hasn't heard anything from its \"wait for\" topic (%s)" % \
                                       wait_for_topic)

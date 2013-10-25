@@ -185,6 +185,63 @@ private:
   double prev_cmd_;
 };
 
+/** \brief A handle used to enforce position, velocity, and effort limits of an effort-controlled joint that does not
+    have soft limits. */
+class EffortJointSaturationHandle
+{
+public:
+  EffortJointSaturationHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits)
+  {
+    jh_ = jh;
+    limits_ = limits;
+  }
+
+  /** \return Joint name. */
+  std::string getName() const {return jh_.getName();}
+
+  /**
+   * \brief Enforce position, velocity, and effort limits for a joint that is not subject to soft limits.
+   */
+  void enforceLimits(const ros::Duration& /* period */)
+  {
+    double min_eff, max_eff;
+    if (limits_.has_effort_limits)
+    {
+      min_eff = -limits_.max_effort;
+      max_eff = limits_.max_effort;
+    }
+    else
+    {
+      min_eff = -std::numeric_limits<double>::max();
+      max_eff = std::numeric_limits<double>::max();
+    }
+
+    if (limits_.has_position_limits)
+    {
+      const double pos = jh_.getPosition();
+      if (pos < limits_.min_position)
+        min_eff = 0;
+      else if (pos > limits_.max_position)
+        max_eff = 0;
+    }
+
+    if (limits_.has_velocity_limits)
+    {
+      const double vel = jh_.getVelocity();
+      if (vel < -limits_.max_velocity)
+        min_eff = 0;
+      else if (vel > limits_.max_velocity)
+        max_eff = 0;
+    }
+
+    jh_.setCommand(internal::saturate(jh_.getCommand(), min_eff, max_eff));
+  }
+
+private:
+  hardware_interface::JointHandle jh_;
+  JointLimits limits_;
+};
+
 /** \brief A handle used to enforce position, velocity and effort limits of an effort-controlled joint. */
 
 // TODO: This class is untested!. Update unit tests accordingly.
@@ -374,6 +431,9 @@ public:
 
 /** Interface for enforcing limits on a position-controlled joint with soft position limits. */
 class PositionJointSoftLimitsInterface : public JointLimitsInterface<PositionJointSoftLimitsHandle> {};
+
+/** Interface for enforcing limits on an effort-controlled joint through saturation. */
+class EffortJointSaturationInterface : public JointLimitsInterface<EffortJointSaturationHandle> {};
 
 /** Interface for enforcing limits on an effort-controlled joint with soft position limits. */
 class EffortJointSoftLimitsInterface : public JointLimitsInterface<EffortJointSoftLimitsHandle> {};

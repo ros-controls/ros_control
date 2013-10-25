@@ -5,6 +5,16 @@ Changelog for package hardware_interface
 0.5.6 (2013-07-29)
 ------------------
 
+0.5.8 (2013-10-11)
+------------------
+* Renamed manifest.xml to prevent conflicts with rosdep
+* Move from postfix to prefix increment in loops.
+  Detected by cppcheck 'postfixOperator' warning.
+* CMakeLists fix to fit with OpenEmbedded/Yocto meta-ros layer.
+  Increase the compatibility of the ros_control code with
+  meta-ros, an OpenEmbedded/Yocto layer that provides recipes for ROS
+  packages disabling catking checking the variable CATKIN_ENABLE_TESTING.
+
 0.5.7 (2013-07-30)
 ------------------
 

@@ -5,6 +5,10 @@ Changelog for package controller_manager_msgs
 0.5.6 (2013-07-29)
 ------------------
 
+0.5.8 (2013-10-11)
+------------------
+* Renamed manifest.xml to prevent conflicts with rosdep
+
 0.5.7 (2013-07-30)
 ------------------
 
