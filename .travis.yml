@@ -11,6 +11,7 @@ notifications:
   email:
     recipients:
       - davetcoleman@gmail.com
+      - adolfo.rodriguez@pal-robotics.com
     on_success: change #[always|never|change] # default: change
     on_failure: change #[always|never|change] # default: always
 before_install: # Use this to prepare the system to install prerequisites or dependencies
