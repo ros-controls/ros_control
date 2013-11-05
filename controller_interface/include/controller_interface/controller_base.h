@@ -84,11 +84,29 @@ public:
     return (state_ == RUNNING);
   }
 
-  /// Calls \ref update only if this controller is running.
-  void updateRequest(const ros::Time& time, const ros::Duration& period)
+  /// Calls \ref update only if this controller is running and the update period has elapsed
+  void updateRequest(const ros::Time& time, const ros::Duration& min_period)
   {
-    if (state_ == RUNNING)
+    if (state_ != RUNNING) return;
+
+    // get time since last update (update period)
+    ros::Duration period;
+    if (update_period_.isZero()) {
+      period = min_period;
+    } else {
+      if (!last_update_time_.isZero() && (time >= last_update_time_)) {
+        period = time - last_update_time_;
+      } else {
+        period = update_period_;
+      }
+    }
+
+    // update only if update period has elapsed
+    if (period >= update_period_)
+    {
       update(time, period);
+      last_update_time_ = time;
+    }
   }
 
   /// Calls \ref starting only if this controller is initialized or already running
@@ -98,6 +116,7 @@ public:
     if (state_ == RUNNING || state_ == INITIALIZED){
       starting(time);
       state_ = RUNNING;
+      last_update_time_ = ros::Time();
       return true;
     }
     else
@@ -115,6 +134,34 @@ public:
     }
     else
       return false;
+  }
+
+  /** \brief Returns the desired update period of this controller.
+   *
+   * \returns The update period.
+   */
+  const ros::Duration& getUpdatePeriod() const
+  {
+      return update_period_;
+  }
+
+  /** \brief Returns the desired update period of this controller.
+   *
+   * \param period The update period.
+   * \note The controller will never be updated faster than the controller manager.
+   */
+  void setUpdatePeriod(const ros::Duration& period)
+  {
+      update_period_ = period;
+  }
+
+  /** \brief Returns the timestamp of the last controller update.
+   *
+   * \returns The last update timestamp. If the controller has not been updated since it was started, the return value will be ros::Time().
+   */
+  const ros::Time& getLastUpdateTime() const
+  {
+      return last_update_time_;
   }
 
   /*\}*/
@@ -152,6 +199,12 @@ public:
 private:
   ControllerBase(const ControllerBase &c);
   ControllerBase& operator =(const ControllerBase &c);
+
+  /// The update period of the controller
+  ros::Duration update_period_;
+
+  /// The last update time of this controller
+  ros::Time last_update_time_;
 
 };
 
