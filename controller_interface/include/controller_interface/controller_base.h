@@ -87,8 +87,11 @@ public:
   /// Calls \ref update only if this controller is running.
   void updateRequest(const ros::Time& time, const ros::Duration& period)
   {
-    if (state_ == RUNNING)
+    if (state_ == RUNNING) {
       update(time, period);
+      last_update_time_ = time;
+      skipped_update_cycles_ = 0;
+    }
   }
 
   /// Calls \ref starting only if this controller is initialized or already running
@@ -98,6 +101,8 @@ public:
     if (state_ == RUNNING || state_ == INITIALIZED){
       starting(time);
       state_ = RUNNING;
+      last_update_time_ = ros::Time();
+      skipped_update_cycles_ = 0;
       return true;
     }
     else
@@ -115,6 +120,15 @@ public:
     }
     else
       return false;
+  }
+
+  /** \brief Returns the timestamp of the last controller update.
+   *
+   * \returns The last update timestamp. If the controller has not been updated since it was started, the return value will be ros::Time().
+   */
+  virtual ros::Time getLastUpdateTime() const
+  {
+      return last_update_time_;
   }
 
   /*\}*/
@@ -147,6 +161,12 @@ public:
 
   /// The current execution state of the controller
   enum {CONSTRUCTED, INITIALIZED, RUNNING} state_;
+
+  /// The number of cycles skipped since the last update
+  int skipped_update_cycles_;
+
+  /// The last update time of this controller
+  ros::Time last_update_time_;
 
 
 private:
