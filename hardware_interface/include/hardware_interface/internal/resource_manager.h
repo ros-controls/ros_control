@@ -106,6 +106,11 @@ public:
 
     if (it == resource_map_.end())
     {
+      ROS_DEBUG_STREAM_NAMED("resource_manager","Available resource handles:");
+      for(it = resource_map_.begin(); it != resource_map_.end(); ++it)
+      {
+        ROS_DEBUG_STREAM_NAMED("resource_manager"," - " << it->first);
+      }
       throw std::logic_error("Could not find resource '" + name + "' in '" +
                              internal::demangledTypeName(*this) + "'.");
     }
