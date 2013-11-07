@@ -88,8 +88,36 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
 
 
   // Update all controllers
-  for (size_t i=0; i<controllers.size(); i++)
-    controllers[i].c->updateRequest(time, period);
+  for (size_t i=0; i<controllers.size(); i++) {
+    const ControllerSpec& spec = controllers[i];
+
+    // skip cycle if update_every_n_cycles parameter is set
+    if (spec.update_every_n_cycles > 0) {
+      if (spec.c->skipped_update_cycles_ + 1 < spec.update_every_n_cycles) {
+        spec.c->skipped_update_cycles_++;
+        continue;
+      }
+    }
+
+    // skip cycle if min_update_period is set
+    ros::Duration time_since_last_update = period;
+    if (!spec.min_update_period.isZero()) {
+      ros::Time last_update_time = spec.c->getLastUpdateTime();
+      if (!last_update_time.isZero() && (time >= last_update_time)) {
+        time_since_last_update = time - last_update_time;
+      } else {
+        time_since_last_update = spec.min_update_period;
+      }
+
+      if (time_since_last_update < spec.min_update_period) {
+        spec.c->skipped_update_cycles_++;
+        continue;
+      }
+    }
+
+    spec.c->updateRequest(time, time_since_last_update);
+  }
+
 
   // there are controllers to start/stop
   if (please_switch_)
@@ -222,6 +250,25 @@ bool ControllerManager::loadController(const std::string& name)
     return false;
   }
 
+  // Configure timing parameter
+  int update_every_n_cycles = 0;
+  double min_update_period = 0.0;
+  double max_update_frequency = 0.0;
+  if (c_nh.getParam("update_every_n_cycles", update_every_n_cycles))
+  {
+    if (update_every_n_cycles > 1) {
+      ROS_DEBUG("Controller '%s' of type '%s' will only be updated in steps of %d cycles.", name.c_str(), type.c_str(), update_every_n_cycles);
+    }
+  }
+  if (c_nh.getParam("min_update_period", min_update_period))
+  {
+    ROS_DEBUG("Controller '%s' of type '%s' will be updated not faster than every %f seconds.", name.c_str(), type.c_str(), min_update_period);
+
+  } else if (c_nh.getParam("max_update_frequency", max_update_frequency) && max_update_frequency > 0.0) {
+    ROS_DEBUG("Controller '%s' of type '%s' will be updated at a maximum rate of %f Hz.", name.c_str(), type.c_str(), max_update_frequency);
+    min_update_period = 1. / max_update_frequency;
+  }
+
   // Initializes the controller
   ROS_DEBUG("Initializing controller '%s'", name.c_str());
   bool initialized;
@@ -252,6 +299,8 @@ bool ControllerManager::loadController(const std::string& name)
   to[to.size()-1].info.name = name;
   to[to.size()-1].info.resources = claimed_resources;
   to[to.size()-1].c = c;
+  to[to.size()-1].update_every_n_cycles = update_every_n_cycles;
+  to[to.size()-1].min_update_period = ros::Duration(min_update_period);
 
   // Destroys the old controllers list when the realtime thread is finished with it.
   int former_current_controllers_list_ = current_controllers_list_;
