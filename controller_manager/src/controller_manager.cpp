@@ -90,9 +90,17 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
   // Update all controllers
   for (size_t i=0; i<controllers.size(); i++) {
     const ControllerSpec& spec = controllers[i];
+    ros::Time last_update_time = spec.c->getLastUpdateTime();
+    ros::Duration time_since_last_update = period;
 
     // skip cycle if update_every_n_cycles parameter is set
     if (spec.update_every_n_cycles > 0) {
+      if (!last_update_time.isZero() && (time >= last_update_time)) {
+        time_since_last_update = time_since_last_update = time - last_update_time;
+      } else {
+        time_since_last_update = period * spec.update_every_n_cycles;
+      }
+
       if (spec.c->skipped_update_cycles_ + 1 < spec.update_every_n_cycles) {
         spec.c->skipped_update_cycles_++;
         continue;
@@ -100,9 +108,7 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
     }
 
     // skip cycle if min_update_period is set
-    ros::Duration time_since_last_update = period;
     if (!spec.min_update_period.isZero()) {
-      ros::Time last_update_time = spec.c->getLastUpdateTime();
       if (!last_update_time.isZero() && (time >= last_update_time)) {
         time_since_last_update = time - last_update_time;
       } else {
