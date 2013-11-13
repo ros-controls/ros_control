@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(controller_manager)
-set(CMAKE_BUILD_TYPE Debug)
 
 if(USE_ROSBUILD)
 
