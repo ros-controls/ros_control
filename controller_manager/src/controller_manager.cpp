@@ -248,6 +248,10 @@ bool ControllerManager::loadController(const std::string& name)
   {
     if (update_every_n_cycles > 1) {
       ROS_DEBUG("Controller '%s' of type '%s' will only be updated in steps of %d cycles.", name.c_str(), type.c_str(), update_every_n_cycles);
+    } else if (update_every_n_cycles < 0) {
+      ROS_ERROR("Could not load controller '%s' because the 'update_every_n_cycles' parameter cannot be negative.", name.c_str());
+      to.clear();
+      return false;
     }
   }
 

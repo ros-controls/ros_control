@@ -124,7 +124,8 @@ public:
 
   /** \brief Returns the timestamp of the last controller update.
    *
-   * \returns The last update timestamp. If the controller has not been updated since it was started, the return value will be ros::Time().
+   * \returns The last update timestamp. If the controller has not been updated since
+   * it was started, the return value will be ros::Time().
    */
   virtual ros::Time getLastUpdateTime() const
   {
