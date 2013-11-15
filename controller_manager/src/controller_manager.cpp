@@ -90,24 +90,22 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
   // Update all controllers
   for (size_t i=0; i<controllers.size(); i++) {
     const ControllerSpec& spec = controllers[i];
-    ros::Time last_update_time = spec.c->getLastUpdateTime();
-    ros::Duration time_since_last_update = period;
 
-    // skip cycle if update_every_n_cycles parameter is set
-    if (spec.update_every_n_cycles > 0) {
-      if (!last_update_time.isZero() && (time >= last_update_time)) {
-        time_since_last_update = time_since_last_update = time - last_update_time;
-      } else {
-        time_since_last_update = period * spec.update_every_n_cycles;
-      }
+    // update period accumulator and skipped_update_cycles counter
+    spec.c->total_update_period_ += period;
+    spec.c->skipped_update_cycles_++;
 
-      if (spec.c->skipped_update_cycles_ + 1 < spec.update_every_n_cycles) {
-        spec.c->skipped_update_cycles_++;
-        continue;
-      }
+    // skip cycle if skipped_update_cycles < update_every_n_cycles
+    //    (always update if update_every_n_cycles <= 1)
+    if (spec.c->skipped_update_cycles_ < spec.update_every_n_cycles) {
+      continue;
     }
 
-    spec.c->updateRequest(time, time_since_last_update);
+    spec.c->updateRequest(time, spec.c->total_update_period_);
+
+    // reset period accumulator and skipped_update_cycles counter
+    spec.c->total_update_period_ = ros::Duration();
+    spec.c->skipped_update_cycles_ = 0;
   }
 
 
@@ -243,13 +241,13 @@ bool ControllerManager::loadController(const std::string& name)
   }
 
   // Configure update_every_n_cycles parameter
-  int update_every_n_cycles = 0;
+  int update_every_n_cycles = 1;
   if (c_nh.getParam("update_every_n_cycles", update_every_n_cycles))
   {
     if (update_every_n_cycles > 1) {
       ROS_DEBUG("Controller '%s' of type '%s' will only be updated in steps of %d cycles.", name.c_str(), type.c_str(), update_every_n_cycles);
-    } else if (update_every_n_cycles < 0) {
-      ROS_ERROR("Could not load controller '%s' because the 'update_every_n_cycles' parameter cannot be negative.", name.c_str());
+    } else if (update_every_n_cycles < 1) {
+      ROS_ERROR("Could not load controller '%s' because the 'update_every_n_cycles' parameter cannot be zero or negative.", name.c_str());
       to.clear();
       return false;
     }
