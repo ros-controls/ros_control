@@ -204,6 +204,12 @@ bool ControllerManager::loadController(const std::string& name)
     catch (const std::runtime_error &ex)
     {
       ROS_ERROR("Could not load class %s: %s", type.c_str(), ex.what());
+      // Output all available controllers for debugging
+      for( std::list<LoaderPtr>::iterator it = controller_loaders_.begin(); it != controller_loaders_.end(); ++it)
+      {
+        std::vector<std::string> cur_types = (*it)->getDeclaredClasses();
+        std::copy(cur_types.begin(), cur_types.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+      }
     }
   }
   else
