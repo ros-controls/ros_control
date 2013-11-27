@@ -48,7 +48,7 @@ namespace hardware_interface
  * hardware.
  *
  * The hardware interface map (\ref interfaces_) is a 1-to-1 map between
- * the nams of interface types derived from \ref HardwareInterface  and
+ * the names of interface types derived from \ref HardwareInterface  and
  * instances of those interface types.
  *
  */

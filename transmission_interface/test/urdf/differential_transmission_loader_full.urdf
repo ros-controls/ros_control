@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <transmission name="differential_trans">
+    <type>transmission_interface/DifferentialTransmission</type>
+    <joint name="bar_joint">
+      <role>joint2</role>
+      <offset>-0.5</offset> <!--optional-->
+      <mechanicalReduction>-2</mechanicalReduction> <!--optional-->
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <joint name="foo_joint">
+      <role>joint1</role>
+      <offset>0.5</offset> <!--optional-->
+      <mechanicalReduction>2</mechanicalReduction> <!--optional-->
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="foo_actuator">
+      <role>actuator1</role>
+      <mechanicalReduction>50</mechanicalReduction>
+    </actuator>
+    <actuator name="bar_actuator">
+      <role>actuator2</role>
+      <mechanicalReduction>-50</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+</robot>

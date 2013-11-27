@@ -190,6 +190,10 @@ public:
   std::size_t numActuators() const {return 2;}
   std::size_t numJoints()    const {return 2;}
 
+  const std::vector<double>& getActuatorReduction() const {return act_reduction_;}
+  const std::vector<double>& getJointReduction()    const {return jnt_reduction_;}
+  const std::vector<double>& getJointOffset()       const {return jnt_offset_;}
+
 protected:
   std::vector<double>  act_reduction_;
   std::vector<double>  jnt_reduction_;
@@ -204,16 +208,16 @@ inline DifferentialTransmission::DifferentialTransmission(const std::vector<doub
     jnt_reduction_(joint_reduction),
     jnt_offset_(joint_offset)
 {
-  if (2 != actuator_reduction.size() ||
-      2 != jnt_reduction_.size()   ||
-      2 != jnt_offset_.size())
+  if (numActuators() != act_reduction_.size() ||
+      numJoints()    != jnt_reduction_.size() ||
+      numJoints()    != jnt_offset_.size())
   {
     throw TransmissionInterfaceException("Reduction and offset vectors of a differential transmission must have size 2.");
   }
 
-  if (0.0 == actuator_reduction[0] ||
-      0.0 == actuator_reduction[1] ||
-      0.0 == jnt_reduction_[0]   ||
+  if (0.0 == act_reduction_[0] ||
+      0.0 == act_reduction_[1] ||
+      0.0 == jnt_reduction_[0] ||
       0.0 == jnt_reduction_[1]
   )
   {
