@@ -30,7 +30,7 @@ class ControllerManagerGUI(Plugin):
 class ControllerManagerWidget(QWidget):
 
     _column_names = ['name', 'state', 'type', 'hw_iface', 'resources']
-    _column_names_pretty = ['Controller Name', 'State', 'Type', 'HW Interface', 'Resources']
+    _column_names_pretty = ['Controller Name', 'State', 'Type', 'HW Interface', 'Claimed Resources']
 
     sig_sysmsg = Signal(str)
     def __init__(self, plugin):
