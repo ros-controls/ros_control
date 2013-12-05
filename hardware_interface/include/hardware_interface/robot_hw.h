@@ -32,6 +32,7 @@
 #include <map>
 #include <typeinfo>
 #include <hardware_interface/internal/demangle_symbol.h>
+#include <hardware_interface/internal/interface_manager.h>
 #include <hardware_interface/hardware_interface.h>
 #include <hardware_interface/controller_info.h>
 #include <ros/console.h>
@@ -52,7 +53,7 @@ namespace hardware_interface
  * instances of those interface types.
  *
  */
-class RobotHW
+class RobotHW : public InterfaceManager
 {
 public:
   RobotHW()
@@ -93,64 +94,6 @@ public:
 
     return in_conflict;
   }
-
-  /*\}*/
-
-  /** \name Hardware Interface Management
-   *\{*/
-
-  /**
-   * \brief Register a hardware interface.
-   *
-   * This associates the name of the type of interface to be registered with
-   * the given pointer.
-   *
-   * \tparam T The hardware interface type
-   * \param hw A pointer to a hardware interface
-   */
-  template<class T>
-  void registerInterface(T* hw)
-  {
-    const std::string iface_name = internal::demangledTypeName<T>();
-    if (interfaces_.find(iface_name) != interfaces_.end())
-    {
-      ROS_WARN_STREAM("Replacing previously registered interface '" << iface_name << "'.");
-    }
-    interfaces_[internal::demangledTypeName<T>()] = hw;
-  }
-
-  /**
-   * \brief Get a hardware interface.
-   *
-   * Since \ref RobotHW only stores one interface per type, this returns a
-   * pointer to the requested interface type. If the interface type is not
-   * registered, it will return \c NULL.
-   *
-   * \tparam T The hardware interface type
-   * \return A pointer to a hardware interface or \c NULL
-   */
-  template<class T>
-  T* get()
-  {
-    InterfaceMap::iterator it = interfaces_.find(internal::demangledTypeName<T>());
-    if (it == interfaces_.end())
-      return NULL;
-
-    T* hw = dynamic_cast<T*>(it->second);
-    if (!hw)
-    {
-      ROS_ERROR("Failed on dynamic_cast<T>(hw) for T = [%s]. This should never happen",
-                internal::demangledTypeName<T>().c_str());
-      return NULL;
-    }
-    return hw;
-  }
-
-  /*\}*/
-
-private:
-  typedef std::map<std::string, HardwareInterface*> InterfaceMap;
-  InterfaceMap interfaces_;
 };
 
 }
