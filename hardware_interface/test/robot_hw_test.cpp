@@ -106,7 +106,7 @@ TEST_F(RobotHWTest, InterfaceRewriting)
   JointStateInterface* state_iface_ptr = hw.get<JointStateInterface>();
   EXPECT_EQ(1, state_iface_ptr->getNames().size());
 
-  // Register second interface and verufy that it has taken the place of the previously inserted one
+  // Register second interface and verify that it has taken the place of the previously inserted one
   hw.registerInterface(&state2_iface);
   state_iface_ptr = hw.get<JointStateInterface>();
   EXPECT_EQ(2, state_iface_ptr->getNames().size());

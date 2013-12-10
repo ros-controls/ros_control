@@ -17,6 +17,7 @@ if(USE_ROSBUILD)
   rosbuild_add_gtest(force_torque_sensor_interface_test test/force_torque_sensor_interface_test.cpp)
   rosbuild_add_gtest(imu_sensor_interface_test          test/imu_sensor_interface_test.cpp)
   rosbuild_add_gtest(robot_hw_test                      test/robot_hw_test.cpp)
+  rosbuild_add_gtest(interface_manager_test             test/interface_manager_test.cpp)
 
   # TODO: why is it explicitly needed???, without it the linker fails.
   target_link_libraries(hardware_resource_manager_test     pthread)
@@ -64,6 +65,9 @@ else()
 
     catkin_add_gtest(robot_hw_test                   test/robot_hw_test.cpp)
     target_link_libraries(robot_hw_test ${catkin_LIBRARIES})
+
+    catkin_add_gtest(interface_manager_test          test/interface_manager_test.cpp)
+    target_link_libraries(interface_manager_test ${catkin_LIBRARIES})
   endif()
 
   # Install
