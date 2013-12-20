@@ -57,7 +57,7 @@ TEST(IsPermutationTest, IsPermutation)
   c[1] = 1;
   c[2] = 3;
 
-  std::vector<int> d(1, 1);
+  std::vector<int> d(3, 1);
 
   EXPECT_TRUE(internal::is_permutation(a.begin(),  a.end(), a.begin()));
   EXPECT_TRUE(internal::is_permutation(a.begin(),  a.end(), b.begin()));

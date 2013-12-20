@@ -34,22 +34,9 @@
 #include <transmission_interface/differential_transmission.h>
 #include <transmission_interface/transmission_loader.h>
 #include "read_file.h"
+#include "loader_utils.h"
 
-using namespace transmission_interface;
-typedef TransmissionLoader::TransmissionPtr TransmissionPtr;
 
-boost::shared_ptr<TransmissionLoader> createTransmissionLoader(const std::string& type)
-{
-  pluginlib::ClassLoader<TransmissionLoader> class_loader("transmission_interface",
-                                                          "transmission_interface::TransmissionLoader");
-  try
-  {
-    boost::shared_ptr<TransmissionLoader> transmission_loader;
-    transmission_loader = class_loader.createInstance(type);
-    return transmission_loader;
-  }
-  catch(...) {return boost::shared_ptr<TransmissionLoader>();}
-}
 
 TEST(DifferentialTransmissionLoaderTest, FullSpec)
 {
@@ -58,7 +45,8 @@ TEST(DifferentialTransmissionLoaderTest, FullSpec)
   ASSERT_EQ(1, infos.size());
 
   // Transmission loader
-  boost::shared_ptr<TransmissionLoader> transmission_loader = createTransmissionLoader(infos.front().type_);
+  TransmissionPluginLoader loader;
+  boost::shared_ptr<TransmissionLoader> transmission_loader = loader.create(infos.front().type_);
   ASSERT_TRUE(0 != transmission_loader);
 
   TransmissionPtr transmission;
@@ -90,7 +78,8 @@ TEST(DifferentialTransmissionLoaderTest, MinimalSpec)
   ASSERT_EQ(1, infos.size());
 
   // Transmission loader
-  boost::shared_ptr<TransmissionLoader> transmission_loader = createTransmissionLoader(infos.front().type_);
+  TransmissionPluginLoader loader;
+  boost::shared_ptr<TransmissionLoader> transmission_loader = loader.create(infos.front().type_);
   ASSERT_TRUE(0 != transmission_loader);
 
   TransmissionPtr transmission;
@@ -121,7 +110,8 @@ TEST(DifferentialTransmissionLoaderTest, InvalidSpec)
   ASSERT_EQ(13, infos.size());
 
   // Transmission loader
-  boost::shared_ptr<TransmissionLoader> transmission_loader = createTransmissionLoader(infos.front().type_);
+  TransmissionPluginLoader loader;
+  boost::shared_ptr<TransmissionLoader> transmission_loader = loader.create(infos.front().type_);
   ASSERT_TRUE(0 != transmission_loader);
 
   BOOST_FOREACH(const TransmissionInfo& info, infos)
