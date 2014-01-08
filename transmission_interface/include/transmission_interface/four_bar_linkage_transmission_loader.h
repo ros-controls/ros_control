@@ -40,8 +40,7 @@ namespace transmission_interface
 {
 
 /**
- * \brief TODO
- *
+ * \brief Class for loading a four-bar linkage transmission instance from configuration data.
  */
 class FourBarLinkageTransmissionLoader : public TransmissionLoader
 {

@@ -145,9 +145,6 @@ struct ForwardTransmissionInterfaces
   JointToActuatorEffortInterface   jnt_to_act_eff_cmd;
 };
 
-/**
- * \brief TODO
- */
 struct TransmissionLoaderData
 {
   typedef boost::shared_ptr<Transmission> TransmissionPtr;
@@ -283,15 +280,107 @@ protected:
   }
 };
 
-// TODO: Doc
+/**
+ * \brief Class for loading transmissions from a URDF description into ros_control interfaces.
+ *
+ * This is the entry point for automatic transmission parsing. An instance of this class is initialized with
+ * pointers to hardware and transmission abstraction interfaces, and calling the \c load() methods populates these
+ * interfaces.
+ *
+ * The input information needed for automatically loading transmissions are:
+ *  - A transmission specification (provided in the \c load() methods, e.g., a URDF description).
+ *  - A \c RobotHW instance (provided in the constructor) already populated with the robot's actuator interfaces.
+ *
+ * The output after successful transmission loading is:
+ * - A \c RobotHW instance (provided in the constructor) to which joint interfaces have been added.
+ * - A \c RobotTransmissions instance (provided in the constructor) to which transmission interfaces have been
+ *   added.
+ *
+ * <b>Important note:</b> This class is \e stateful, and stores internally the raw data of the generated joint
+ * interfaces, so keep instances alive as long as these interfaces are used.
+ *
+ * \code
+ * class FooRobot : public hardware_interface::RobotHW
+ * {
+ * public:
+ *   void read(ros::Time time, ros::Duration period);
+ *   void write(ros::Time time, ros::Duration period);
+ *
+ *   bool init()
+ *   {
+ *     // Populate robot_hw with actuator interfaces (e.g., EffortActuatorInterface)
+ *     // This is hardware-specific, and not detailed here
+ *     // ...
+ *
+ *     // Initialize transmission loader
+ *     try
+ *     {
+ *       transmission_loader_.reset(new TransmissionInterfaceLoader(this, &robot_transmissions));
+ *     }
+ *     catch(const std::invalid_argument& ex)
+ *     {
+ *       ROS_ERROR_STREAM("Failed to create transmission interface loader. " << ex.what());
+ *       return false;
+ *     }
+ *     catch(const pluginlib::LibraryLoadException& ex)
+ *     {
+ *       ROS_ERROR_STREAM("Failed to create transmission interface loader. " << ex.what());
+ *       return false;
+ *     }
+ *     catch(...)
+ *     {
+ *       ROS_ERROR_STREAM("Failed to create transmission interface loader. ");
+ *       return false;
+ *     }
+ *
+ *     std::string robot_description;
+ *     // ...load URDF from parameter server or file
+ *
+ *     // Perform actual transmission loading
+ *     if (!transmission_loader_->load(robot_description)) {return false;}
+ *
+ *    // We can now query for any of the created interfaces, for example:
+ *    // robot_transmissions_.get<ActuatorToJointStateInterface>();
+ *    // this->get<JointStateInterface>();
+ *
+ *    return true;
+ *  }
+ *
+ * private:
+ *   RobotTransmissions robot_transmissions_;
+ *   boost::scoped_ptr<TransmissionInterfaceLoader> transmission_loader_;
+ *
+ * };
+ * \endcode
+ */
 class TransmissionInterfaceLoader
 {
 public:
+  /**
+   * \param robot_hw Robot hardware abstraction already populated with actuator interfaces.
+   * \param robot_transmissions Robot transmissions abstraction.
+   */
   TransmissionInterfaceLoader(hardware_interface::RobotHW* robot_hw,
                               RobotTransmissions*          robot_transmissions);
 
+  /**
+   * \brief Load all transmissions in a URDF.
+   *
+   * This method adds new joint and transmission interfaces to the \c RobotHW and \c RobotTransmissions instances
+   * passed in the constructor, respectively.
+   * \param urdf Robot description containing a transmission specification.
+   * \return True if successful.
+   */
   bool load(const std::string& urdf);
 
+  /**
+   * \brief Load a single transmission.
+   *
+   * This method adds new joint and transmission interfaces to the \c RobotHW and \c RobotTransmissions instances
+   * passed in the constructor, respectively.
+   * \param transmission_info Specification of a single transmission.
+   * \return True if successful.
+   */
   bool load(const TransmissionInfo& transmission_info);
 
   TransmissionLoaderData* getData() {return &loader_data_;}

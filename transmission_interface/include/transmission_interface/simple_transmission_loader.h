@@ -37,7 +37,7 @@ namespace transmission_interface
 {
 
 /**
- * \brief TODO
+ * \brief Class for loading a simple transmission instance from configuration data.
  */
 class SimpleTransmissionLoader : public TransmissionLoader
 {

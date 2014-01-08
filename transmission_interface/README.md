@@ -34,9 +34,5 @@ There are three main elements involved in setting up a transmission_interface:
   set up to transform position variables from actuator to joint space for an arm with a four-bar-linkage in the
   shoulder, a differential in the wrist, and simple reducers elsewhere.
 
-### TODO ###
-
-- Read transmission configuration from configuration files.
-
 ### Examples ###
 Please refer to the  [transmission_interface](https://github.com/ros-controls/ros_control/wiki/transmission_interface) wiki page.
