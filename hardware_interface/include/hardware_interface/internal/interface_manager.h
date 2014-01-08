@@ -89,6 +89,15 @@ public:
     return iface;
   }
 
+  /**
+   * \brief Get generic pointer to interface with type_name.
+   *
+   * This is used as a polymorphic lookup for the templated
+   * get() call, which can't be virtual.
+   *
+   * \param type_name The name of the interface type stored.
+   * \return Generic pointer to the interface.
+   */
   virtual void* findInterfaceData(std::string type_name)
   {
     InterfaceMap::iterator it = interfaces_.find(type_name);

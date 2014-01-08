@@ -38,13 +38,11 @@
 namespace hardware_interface
 {
 
-/** \brief Robot Hardware Interface and Resource Manager
+/** \brief Robot Hardware Collection Manager
  *
- * This class provides a standardized interface to a set of robot hardware
- * interfaces to the controller manager. It performs resource conflict checking
- * for a given set of controllers and maintains a map of hardware interfaces.
- * It is meant to be used as a base class for abstracting custom robot
- * hardware.
+ * This class maintains a group of RobotHW, along with its
+ * own registered interfaces, and exposes an interface
+ * identical to RobotHW.
  *
  */
 class RobotHWGroup : public RobotHW
@@ -60,6 +58,16 @@ public:
     hardware_.push_back(hw);
   }
 
+  /**
+   * \brief Get generic pointer to interface with type_name.
+   *
+   * This overloads the base implementation to look across both
+   * local interfaces and interfaces in all registered RobotHW.
+   * This is used by the get() call in the base class.
+   *
+   * \param type_name The name of the interface type stored.
+   * \return Generic pointer to the interface.
+   */
   virtual void* findInterfaceData(std::string type_name)
   {
     // look for interfaces registered here
