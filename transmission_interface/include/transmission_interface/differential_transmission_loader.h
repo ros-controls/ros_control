@@ -40,8 +40,7 @@ namespace transmission_interface
 {
 
 /**
- * \brief TODO
- *
+ * \brief Class for loading a differential transmission instance from configuration data.
  */
 class DifferentialTransmissionLoader : public TransmissionLoader
 {
