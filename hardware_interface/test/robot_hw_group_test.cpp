@@ -63,6 +63,38 @@ protected:
   JointHandle hc1, hc2;
 };
 
+TEST_F(RobotHWGroupTest, GroupTest)
+{
+  // Populate hardware interfaces
+  JointStateInterface state_iface;
+  state_iface.registerHandle(hs1);
+  state_iface.registerHandle(hs2);
+
+  EffortJointInterface eff_cmd_iface;
+  eff_cmd_iface.registerHandle(hc1);
+  eff_cmd_iface.registerHandle(hc2);
+
+  PositionJointInterface pos_cmd_iface;
+  pos_cmd_iface.registerHandle(hc1);
+  pos_cmd_iface.registerHandle(hc2);
+
+  // Register them to different RobotHW instances
+  RobotHW hw1, hw2;
+  RobotHWGroup hw_grp;
+  hw1.registerInterface(&state_iface);
+  hw2.registerInterface(&eff_cmd_iface);
+  hw_grp.registerInterface(&pos_cmd_iface);
+
+  hw_grp.registerHardware(&hw1);
+  hw_grp.registerHardware(&hw2);
+
+  // Get interfaces
+  EXPECT_TRUE(&state_iface   == hw_grp.get<JointStateInterface>());
+  EXPECT_TRUE(&eff_cmd_iface == hw_grp.get<EffortJointInterface>());
+  EXPECT_TRUE(&pos_cmd_iface == hw_grp.get<PositionJointInterface>());
+  EXPECT_FALSE(hw_grp.get<VelocityJointInterface>());
+}
+
 TEST_F(RobotHWGroupTest, InterfaceRegistration)
 {
   // Populate hardware interfaces
@@ -108,12 +140,15 @@ TEST_F(RobotHWGroupTest, InterfaceRewriting)
   RobotHW hw;
   hw.registerInterface(&state1_iface);
 
-  JointStateInterface* state_iface_ptr = hw.get<JointStateInterface>();
+  RobotHWGroup hw_grp;
+  hw_grp.registerHardware(&hw);
+
+  JointStateInterface* state_iface_ptr = hw_grp.get<JointStateInterface>();
   EXPECT_EQ(1, state_iface_ptr->getNames().size());
 
   // Register second interface and verify that it has taken the place of the previously inserted one
-  hw.registerInterface(&state2_iface);
-  state_iface_ptr = hw.get<JointStateInterface>();
+  hw_grp.registerInterface(&state2_iface);
+  state_iface_ptr = hw_grp.get<JointStateInterface>();
   EXPECT_EQ(2, state_iface_ptr->getNames().size());
 }
 
@@ -144,8 +179,8 @@ TEST_F(RobotHWGroupTest, ConflictChecking)
     info_list.push_back(info1);
     info_list.push_back(info2);
 
-    RobotHW hw;
-    EXPECT_FALSE(hw.checkForConflict(info_list));
+    RobotHWGroup hw_grp;
+    EXPECT_FALSE(hw_grp.checkForConflict(info_list));
   }
 
   // Conflict
@@ -154,8 +189,8 @@ TEST_F(RobotHWGroupTest, ConflictChecking)
     info_list.push_back(info1);
     info_list.push_back(info12);
 
-    RobotHW hw;
-    EXPECT_TRUE(hw.checkForConflict(info_list));
+    RobotHWGroup hw_grp;
+    EXPECT_TRUE(hw_grp.checkForConflict(info_list));
   }
 
   // Conflict
@@ -164,8 +199,8 @@ TEST_F(RobotHWGroupTest, ConflictChecking)
     info_list.push_back(info2);
     info_list.push_back(info12);
 
-    RobotHW hw;
-    EXPECT_TRUE(hw.checkForConflict(info_list));
+    RobotHWGroup hw_grp;
+    EXPECT_TRUE(hw_grp.checkForConflict(info_list));
   }
 }
 

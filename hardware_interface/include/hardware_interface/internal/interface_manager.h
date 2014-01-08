@@ -77,11 +77,9 @@ public:
   template<class T>
   T* get()
   {
-    InterfaceMap::iterator it = interfaces_.find(internal::demangledTypeName<T>());
-    if (it == interfaces_.end())
-      return NULL;
+    void* iface_data = findInterfaceData(internal::demangledTypeName<T>());
 
-    T* iface = static_cast<T*>(it->second);
+    T* iface = static_cast<T*>(iface_data);
     if (!iface)
     {
       ROS_ERROR_STREAM("Failed reconstructing type T = '" << internal::demangledTypeName<T>().c_str() <<
@@ -89,6 +87,14 @@ public:
       return NULL;
     }
     return iface;
+  }
+
+  virtual void* findInterfaceData(std::string type_name)
+  {
+    InterfaceMap::iterator it = interfaces_.find(type_name);
+    if (it == interfaces_.end())
+      return NULL;
+    return it->second;
   }
 
 protected:
