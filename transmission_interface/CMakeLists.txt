@@ -66,23 +66,19 @@ target_link_libraries(transmission_interface_loader_plugins transmission_interfa
 ## Install ##
 #############
 
-# Install
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 
-# Mark executables and/or libraries for installation
 install(TARGETS ${PROJECT_NAME}_parser
+                ${PROJECT_NAME}_loader
+                ${PROJECT_NAME}_loader_plugins
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-# Mark cpp header files for installation
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
-  PATTERN ".svn" EXCLUDE
-  )
+install(FILES ros_control_plugins.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 #############
 ## Testing ##
@@ -92,22 +88,23 @@ if(CATKIN_ENABLE_TESTING)
   catkin_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
   catkin_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
   catkin_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
+
   catkin_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
   target_link_libraries(transmission_interface_test ${catkin_LIBRARIES} ${TinyXML_LIBRARIES})
-endif()
 
-catkin_add_gtest(transmission_parser_test test/transmission_parser_test.cpp)
-target_link_libraries(transmission_parser_test ${PROJECT_NAME}_parser)
+  catkin_add_gtest(transmission_parser_test test/transmission_parser_test.cpp)
+  target_link_libraries(transmission_parser_test ${PROJECT_NAME}_parser)
 
-catkin_add_gtest(simple_transmission_loader_test test/simple_transmission_loader_test.cpp)
-target_link_libraries(simple_transmission_loader_test ${PROJECT_NAME}_parser)
+  catkin_add_gtest(simple_transmission_loader_test test/simple_transmission_loader_test.cpp)
+  target_link_libraries(simple_transmission_loader_test ${PROJECT_NAME}_parser)
 
-catkin_add_gtest(differential_transmission_loader_test test/differential_transmission_loader_test.cpp)
-target_link_libraries(differential_transmission_loader_test ${PROJECT_NAME}_parser)
+  catkin_add_gtest(differential_transmission_loader_test test/differential_transmission_loader_test.cpp)
+  target_link_libraries(differential_transmission_loader_test ${PROJECT_NAME}_parser)
 
-catkin_add_gtest(four_bar_linkage_transmission_loader_test test/four_bar_linkage_transmission_loader_test.cpp)
-target_link_libraries(four_bar_linkage_transmission_loader_test ${PROJECT_NAME}_parser)
+  catkin_add_gtest(four_bar_linkage_transmission_loader_test test/four_bar_linkage_transmission_loader_test.cpp)
+  target_link_libraries(four_bar_linkage_transmission_loader_test ${PROJECT_NAME}_parser)
 
-catkin_add_gtest(transmission_interface_loader_test test/transmission_interface_loader_test.cpp)
-target_link_libraries(transmission_interface_loader_test ${PROJECT_NAME}_parser
+  catkin_add_gtest(transmission_interface_loader_test test/transmission_interface_loader_test.cpp)
+  target_link_libraries(transmission_interface_loader_test ${PROJECT_NAME}_parser
                                                           transmission_interface_loader)
+endif()
