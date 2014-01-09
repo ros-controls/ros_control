@@ -78,6 +78,8 @@ public:
   T* get()
   {
     void* iface_data = findInterfaceData(internal::demangledTypeName<T>());
+    if(!iface_data)
+      return NULL;
 
     T* iface = static_cast<T*>(iface_data);
     if (!iface)
