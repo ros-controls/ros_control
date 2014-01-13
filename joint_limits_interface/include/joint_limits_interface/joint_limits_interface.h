@@ -406,11 +406,14 @@ private:
 class VelocityJointSaturationHandle
 {
 public:
-  VelocityJointSaturationHandle () {}
+  VelocityJointSaturationHandle ()
+    : prev_cmd_(0.0)
+  {}
 
   VelocityJointSaturationHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits)
-    : jh_(jh),
-      limits_(limits)
+    : jh_(jh)
+    , limits_(limits)
+    , prev_cmd_(0.0)
   {
     if (!limits.has_velocity_limits)
     {
@@ -437,11 +440,10 @@ public:
     if (limits_.has_acceleration_limits)
     {
       assert(period.toSec() > 0.0);
-      const double vel = jh_.getVelocity();
       const double dt  = period.toSec();
 
-      vel_low  = std::max(vel - limits_.max_acceleration * dt, -limits_.max_velocity);
-      vel_high = std::min(vel + limits_.max_acceleration * dt,  limits_.max_velocity);
+      vel_low  = std::max(prev_cmd_ - limits_.max_acceleration * dt, -limits_.max_velocity);
+      vel_high = std::min(prev_cmd_ + limits_.max_acceleration * dt,  limits_.max_velocity);
     }
     else
     {
@@ -454,11 +456,16 @@ public:
                                     vel_low,
                                     vel_high);
     jh_.setCommand(vel_cmd);
+
+    // Cache variables
+    prev_cmd_ = jh_.getCommand();
   }
 
 private:
   hardware_interface::JointHandle jh_;
   JointLimits limits_;
+
+  double prev_cmd_;
 };
 
 /** \brief A handle used to enforce position, velocity, and acceleration limits of a velocity-controlled joint. */
