@@ -79,6 +79,11 @@ template <class ResourceHandle, class ClaimPolicy = DontClaimResources>
 class HardwareResourceManager : public HardwareInterface, public ResourceManager<ResourceHandle>
 {
 public:
+  // save template class types for reference
+  typedef ResourceHandle handle_type;
+  typedef ClaimPolicy claim_policy;
+  typedef HardwareResourceManager<ResourceHandle, ClaimPolicy> hw_resource_manager;
+
   /** \name Non Real-Time Safe Functions
    *\{*/
 
@@ -105,6 +110,24 @@ public:
     catch(const std::logic_error& e)
     {
       throw HardwareInterfaceException(e.what());
+    }
+  }
+
+  /**
+   * \brief Combine a list of interfaces into one.
+   *
+   * Every registered handle in each of the managers is registered into the result interface
+   * \param managers The list of hardware interfaces to be combined.
+   * \param result The interface where all the handles will be registered.
+   * \return Resource associated to \e name. If the resource name is not found, an exception is thrown.
+   */
+  static void concatManagers(std::vector<hw_resource_manager*>& managers,
+                             hw_resource_manager* result) 
+  {
+    for(typename std::vector<hw_resource_manager*>::iterator it = managers.begin(); 
+        it != managers.end(); ++it) {
+      std::vector<ResourceHandle*> handles = (*it)->getHandles();
+      result->registerHandles(handles);
     }
   }
 

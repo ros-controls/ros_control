@@ -59,29 +59,30 @@ public:
   }
 
   /**
-   * \brief Get generic pointer to interface with type_name.
+   * \brief Get generic pointers to interfaces with type_name.
    *
-   * This overloads the base implementation to look across both
-   * local interfaces and interfaces in all registered RobotHW.
-   * This is used by the get() call in the base class.
-   *
-   * \param type_name The name of the interface type stored.
-   * \return Generic pointer to the interface.
+   * Returns a list of all interfaces registered internally or
+   * registered in one of the registered hardwares.
+   * \param type_name The name of the interface types stored.
+   * \return List of generic pointers to the interfaces found.
    */
-  virtual void* findInterfaceData(std::string type_name)
+  virtual std::vector<void*> findInterfaceData(std::string type_name)
   {
+    std::vector<void*> iface_data;
+
     // look for interfaces registered here
-    void* iface_data = InterfaceManager::findInterfaceData(type_name);
-    if(iface_data != NULL)
-      return iface_data;
+    std::vector<void*> iface_data_cur;
+    iface_data_cur = InterfaceManager::findInterfaceData(type_name);
+    if(iface_data_cur.size() > 0)
+      iface_data.insert(iface_data.end(), iface_data_cur.begin(), iface_data_cur.end());
 
     // look for interfaces registered in the registered hardware
     for(HardwareVector::iterator it = hardware_.begin(); it != hardware_.end(); ++it) {
-      iface_data = (*it)->findInterfaceData(type_name);
-      if(iface_data != NULL)
-        return iface_data;
+      iface_data_cur = (*it)->findInterfaceData(type_name);
+      if(iface_data_cur.size() > 0) 
+        iface_data.insert(iface_data.end(), iface_data_cur.begin(), iface_data_cur.end());
     }
-    return NULL;
+    return iface_data;
   }
 
 protected:

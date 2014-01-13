@@ -63,7 +63,7 @@ protected:
   JointHandle hc1, hc2;
 };
 
-TEST_F(RobotHWGroupTest, GroupTest)
+TEST_F(RobotHWGroupTest, CombineDifferentInterfaces)
 {
   // Populate hardware interfaces
   JointStateInterface state_iface;
@@ -93,6 +93,68 @@ TEST_F(RobotHWGroupTest, GroupTest)
   EXPECT_TRUE(&eff_cmd_iface == hw_grp.get<EffortJointInterface>());
   EXPECT_TRUE(&pos_cmd_iface == hw_grp.get<PositionJointInterface>());
   EXPECT_FALSE(hw_grp.get<VelocityJointInterface>());
+}
+
+TEST_F(RobotHWGroupTest, CombineSameInterfaces)
+{
+  // Populate hardware interfaces
+  JointStateInterface state_iface1;
+  state_iface1.registerHandle(hs1);
+  EffortJointInterface eff_cmd_iface1;
+  eff_cmd_iface1.registerHandle(hc1);
+
+  JointStateInterface state_iface2;
+  state_iface2.registerHandle(hs2);
+  EffortJointInterface eff_cmd_iface2;
+  eff_cmd_iface2.registerHandle(hc2);
+
+  // Register them to different RobotHW instances
+  RobotHW hw1, hw2;
+  RobotHWGroup hw_grp;
+  hw1.registerInterface(&state_iface1);
+  hw1.registerInterface(&eff_cmd_iface1);
+  hw2.registerInterface(&state_iface2);
+  hw2.registerInterface(&eff_cmd_iface2);
+
+  hw_grp.registerHardware(&hw1);
+  hw_grp.registerHardware(&hw2);
+
+  // Get interfaces
+  JointStateInterface* js_combo = hw_grp.get<JointStateInterface>();
+  EffortJointInterface* ej_combo = hw_grp.get<EffortJointInterface>();
+
+  // confirm that the combined interfaces are different from the originals
+  EXPECT_FALSE(&state_iface1   == js_combo);
+  EXPECT_FALSE(&state_iface2   == js_combo);
+  EXPECT_FALSE(&eff_cmd_iface1 == ej_combo);
+  EXPECT_FALSE(&eff_cmd_iface2 == ej_combo);
+  EXPECT_FALSE(hw_grp.get<VelocityJointInterface>());
+
+  // confirm that each RobotHW is still working properly independently
+  EXPECT_TRUE(&state_iface1   == hw1.get<JointStateInterface>());
+  EXPECT_TRUE(&state_iface2   == hw2.get<JointStateInterface>());
+  EXPECT_TRUE(&eff_cmd_iface1 == hw1.get<EffortJointInterface>());
+  EXPECT_TRUE(&eff_cmd_iface2 == hw2.get<EffortJointInterface>());
+
+  // Retrieve all the handles from the combined interfaces
+  JointStateHandle hs1_ret = js_combo->getHandle(name1);
+  JointStateHandle hs2_ret = js_combo->getHandle(name2);
+  JointHandle hc1_ret = ej_combo->getHandle(name1);
+  JointHandle hc2_ret = ej_combo->getHandle(name2);
+
+  // confirm the handles are proper copies
+  EXPECT_TRUE(hs1.getPosition() == hs1_ret.getPosition());
+  EXPECT_TRUE(hs2.getPosition() == hs2_ret.getPosition());
+  hc1.setCommand(3.14);
+  EXPECT_EQ(3.14, hc1_ret.getCommand());
+  hc2.setCommand(6.28);
+  EXPECT_EQ(6.28, hc2_ret.getCommand());
+
+  // check to make sure further calls return the same combined interface objects
+  JointStateInterface* js_combo2 = hw_grp.get<JointStateInterface>();
+  EffortJointInterface* ej_combo2 = hw_grp.get<EffortJointInterface>();
+  EXPECT_TRUE(js_combo == js_combo2);
+  EXPECT_TRUE(ej_combo == ej_combo2);
 }
 
 TEST_F(RobotHWGroupTest, InterfaceRegistration)

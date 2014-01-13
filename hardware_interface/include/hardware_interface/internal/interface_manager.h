@@ -32,6 +32,7 @@
 #define HARDWARE_INTERFACE_INTERFACE_MANAGER_H
 
 #include <map>
+#include <vector>
 #include <string>
 
 #include <ros/console.h>
@@ -40,6 +41,44 @@
 
 namespace hardware_interface
 {
+
+// SFINAE workaround, so that we have reflection inside the template functions
+template <typename T>
+struct check_is_hw_resource_manager {
+  // variable definitions for compiler-time logic
+  typedef struct {} yes;
+  typedef yes no[2];
+
+  // method called if C is a HardwareResourceManager
+  template <typename C>
+  static yes& testHWRM(typename C::hw_resource_manager*);
+ 
+  // method called if C is not a HardwareResourceManager
+  template <typename>
+  static no& testHWRM(...);
+ 
+  // check_is_hw_resource_manager<T>::value == true when T is a HardwareResourceManager
+  static const bool value = (sizeof(testHWRM<T>(0)) == sizeof(yes));
+ 
+  // method called if C is a HardwareResourceManager
+  template <typename C>
+  static yes& callCM(typename std::vector<C*>& managers, C* result, typename C::hw_resource_manager*) 
+  { 
+    std::vector<typename C::hw_resource_manager*> managers_in;
+    // we have to typecase back to base class
+    for(typename std::vector<C*>::iterator it = managers.begin(); it != managers.end(); ++it)
+      managers_in.push_back(static_cast<typename C::hw_resource_manager*>(*it));
+    C::concatManagers(managers_in, result); 
+  }
+ 
+  // method called if C is not a HardwareResourceManager
+  template <typename C>
+  static no& callCM(typename std::vector<C*>& managers, C* result, ...) {}
+
+  // calls HardwareResourceManager::concatManagers if C is a HardwareResourceManager
+  static const void callConcatManagers(typename std::vector<T*>& managers, T* result) 
+  { callCM<T>(managers, result, 0); }
+};
 
 class InterfaceManager
 {
@@ -77,40 +116,80 @@ public:
   template<class T>
   T* get()
   {
-    void* iface_data = findInterfaceData(internal::demangledTypeName<T>());
-    if(!iface_data)
+    std::string type_name = internal::demangledTypeName<T>();
+    std::vector<void*> iface_data = findInterfaceData(type_name);
+    std::vector<T*> iface_list;
+    for(std::vector<void*>::iterator it = iface_data.begin(); it != iface_data.end(); ++it) {
+      T* iface = static_cast<T*>(*it);
+      if (!iface)
+      {
+        ROS_ERROR_STREAM("Failed reconstructing type T = '" << type_name.c_str() <<
+                         "'. This should never happen");
+        return NULL;
+      }
+      iface_list.push_back(iface);
+    }
+
+    if(iface_data.size() == 0)
       return NULL;
 
-    T* iface = static_cast<T*>(iface_data);
-    if (!iface)
-    {
-      ROS_ERROR_STREAM("Failed reconstructing type T = '" << internal::demangledTypeName<T>().c_str() <<
-                       "'. This should never happen");
-      return NULL;
+    if(iface_data.size() == 1)
+      return iface_list.front();
+
+    // if we're here, we have multiple interfaces, and thus we must construct a new
+    // combined interface, or return one already constructed
+    T* iface_combo;
+    InterfaceMap::iterator it_combo = interfaces_combo_.find(type_name);
+    if(it_combo != interfaces_combo_.end()) {
+      // there exists a combined interface
+      iface_combo = static_cast<T*>(it_combo->second);
+    } else {
+      // no existing combined interface
+      if(check_is_hw_resource_manager<T>::value) {
+        // it is a HardwareResourceManager
+
+        // create a new combined interface
+        iface_combo = new T; 
+        // concat all of the hardware resource managers together
+        check_is_hw_resource_manager<T>::callConcatManagers(iface_list, iface_combo);
+        // save the combined interface for if this is called again
+        interfaces_combo_[type_name] = iface_combo; 
+      } else {
+        // it is not a HardwareResourceManager
+        ROS_ERROR("You cannot register multiple interfaces of the same type which are "
+                  "not of type HardwareResourceManager. There is no established protocol "
+                  "for combining them.");
+        iface_combo = NULL;
+      }
     }
-    return iface;
+    return iface_combo;
   }
 
   /**
-   * \brief Get generic pointer to interface with type_name.
+   * \brief Get generic pointers to interfaces with type_name.
    *
    * This is used as a polymorphic lookup for the templated
    * get() call, which can't be virtual.
+   * By default, this method returns a list with the only element the interface
+   * found in the internal variable interfaces_.
+   * Derived classes may return more interfaces.
    *
-   * \param type_name The name of the interface type stored.
-   * \return Generic pointer to the interface.
+   * \param type_name The name of the interface types stored.
+   * \return List of generic pointers to the interfaces found.
    */
-  virtual void* findInterfaceData(std::string type_name)
+  virtual std::vector<void*> findInterfaceData(std::string type_name)
   {
+    std::vector<void*> iface_data;
     InterfaceMap::iterator it = interfaces_.find(type_name);
-    if (it == interfaces_.end())
-      return NULL;
-    return it->second;
+    if (it != interfaces_.end())
+      iface_data.push_back(it->second);
+    return iface_data;
   }
 
 protected:
   typedef std::map<std::string, void*> InterfaceMap;
   InterfaceMap interfaces_;
+  InterfaceMap interfaces_combo_;
 };
 
 } // namespace
