@@ -113,31 +113,6 @@ public:
     return it->second;
   }
 
-  /**
-   * \brief Get a list of all resource handles.
-   * \return Vector of all resource handles.
-   */
-  std::vector<ResourceHandle*> getHandles()
-  {
-    std::vector<ResourceHandle*> ret;
-    for(typename ResourceMap::iterator it = resource_map_.begin(); it != resource_map_.end(); ++it)
-      ret.push_back(&(it->second));
-    return ret;
-  }
-
-  /**
-   * \brief Register a list of new resources.
-   * If the resource name already exists, the previously stored resource value will be replaced with \e val.
-   * \param handles Resource values. Each type should implement a <tt>std::string getName()</tt> method.
-   */
-  void registerHandles(const std::vector<ResourceHandle*>& handles)
-  {
-    for(typename std::vector<ResourceHandle*>::const_iterator it = handles.begin(); 
-        it != handles.end(); ++it) {
-      registerHandle(*(*it));
-    }
-  }
-
   /*\}*/
 
 protected:

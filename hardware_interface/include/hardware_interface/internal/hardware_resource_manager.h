@@ -124,10 +124,13 @@ public:
   static void concatManagers(std::vector<hw_resource_manager*>& managers,
                              hw_resource_manager* result) 
   {
-    for(typename std::vector<hw_resource_manager*>::iterator it = managers.begin(); 
-        it != managers.end(); ++it) {
-      std::vector<ResourceHandle*> handles = (*it)->getHandles();
-      result->registerHandles(handles);
+    for(typename std::vector<hw_resource_manager*>::iterator it_man = managers.begin(); 
+        it_man != managers.end(); ++it_man) {
+      std::vector<std::string> handle_names = (*it_man)->getNames();
+      for(std::vector<std::string>::iterator it_nms = handle_names.begin(); 
+          it_nms != handle_names.end(); ++it_nms) {
+        result->registerHandle((*it_man)->getHandle(*it_nms));
+      }
     }
   }
 
