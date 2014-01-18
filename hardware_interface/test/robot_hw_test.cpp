@@ -258,6 +258,41 @@ TEST_F(RobotHWTest, CombineSameInterfaces)
   EXPECT_TRUE(ej_combo == ej_combo2);
 }
 
+TEST_F(RobotHWTest, IncrementalSameInterfaces)
+{
+  // Populate hardware interfaces
+  JointStateInterface state_iface1;
+  state_iface1.registerHandle(hs1);
+
+  JointStateInterface state_iface2;
+  state_iface2.registerHandle(hs2);
+
+  // Register them to different RobotHW instances
+  RobotHW hw1, hw2;
+  hw1.registerInterface(&state_iface1);
+  hw2.registerInterface(&state_iface2);
+
+  RobotHW hw_grp;
+  hw_grp.registerInterfaceManager(&hw1);
+  JointStateInterface* js_combo1 = hw_grp.get<JointStateInterface>();
+  // only one interface exists, so the combined should be exactly the registered interface object
+  EXPECT_TRUE(&state_iface1 == js_combo1);
+  // check that it contains hs1 handle
+  JointStateHandle hs1_ret1 = js_combo1->getHandle(name1);
+  EXPECT_TRUE(hs1.getPosition() == hs1_ret1.getPosition());
+
+  hw_grp.registerInterfaceManager(&hw2);
+  JointStateInterface* js_combo2 = hw_grp.get<JointStateInterface>();
+  EXPECT_FALSE(&state_iface1 == js_combo2);
+  EXPECT_FALSE(&state_iface2 == js_combo2);
+
+  // check to see if both joint handles are here
+  JointStateHandle hs1_ret2 = js_combo2->getHandle(name1);
+  JointStateHandle hs2_ret = js_combo2->getHandle(name2);
+  EXPECT_TRUE(hs1.getPosition() == hs1_ret2.getPosition());
+  EXPECT_TRUE(hs2.getPosition() == hs2_ret.getPosition());
+}
+
 int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
