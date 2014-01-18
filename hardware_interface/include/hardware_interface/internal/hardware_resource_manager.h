@@ -80,9 +80,8 @@ class HardwareResourceManager : public HardwareInterface, public ResourceManager
 {
 public:
   // save template class types for reference
-  typedef ResourceHandle handle_type;
-  typedef ClaimPolicy claim_policy;
-  typedef HardwareResourceManager<ResourceHandle, ClaimPolicy> hw_resource_manager;
+  typedef ClaimPolicy claim_policy_type;
+  typedef HardwareResourceManager<ResourceHandle, ClaimPolicy> hw_resource_manager_type;
 
   /** \name Non Real-Time Safe Functions
    *\{*/
@@ -110,27 +109,6 @@ public:
     catch(const std::logic_error& e)
     {
       throw HardwareInterfaceException(e.what());
-    }
-  }
-
-  /**
-   * \brief Combine a list of interfaces into one.
-   *
-   * Every registered handle in each of the managers is registered into the result interface
-   * \param managers The list of hardware interfaces to be combined.
-   * \param result The interface where all the handles will be registered.
-   * \return Resource associated to \e name. If the resource name is not found, an exception is thrown.
-   */
-  static void concatManagers(std::vector<hw_resource_manager*>& managers,
-                             hw_resource_manager* result) 
-  {
-    for(typename std::vector<hw_resource_manager*>::iterator it_man = managers.begin(); 
-        it_man != managers.end(); ++it_man) {
-      std::vector<std::string> handle_names = (*it_man)->getNames();
-      for(std::vector<std::string>::iterator it_nms = handle_names.begin(); 
-          it_nms != handle_names.end(); ++it_nms) {
-        result->registerHandle((*it_man)->getHandle(*it_nms));
-      }
     }
   }
 

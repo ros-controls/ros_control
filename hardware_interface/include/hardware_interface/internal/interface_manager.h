@@ -44,30 +44,30 @@ namespace hardware_interface
 
 // SFINAE workaround, so that we have reflection inside the template functions
 template <typename T>
-struct check_is_hw_resource_manager {
+struct CheckIsResourceManager {
   // variable definitions for compiler-time logic
   typedef struct {} yes;
   typedef yes no[2];
 
-  // method called if C is a HardwareResourceManager
+  // method called if C is a ResourceManager
   template <typename C>
-  static yes& testHWRM(typename C::hw_resource_manager*);
+  static yes& testHWRM(typename C::resource_manager_type*);
  
-  // method called if C is not a HardwareResourceManager
+  // method called if C is not a ResourceManager
   template <typename>
   static no& testHWRM(...);
  
-  // check_is_hw_resource_manager<T>::value == true when T is a HardwareResourceManager
+  // CheckIsResourceManager<T>::value == true when T is a ResourceManager
   static const bool value = (sizeof(testHWRM<T>(0)) == sizeof(yes));
  
-  // method called if C is a HardwareResourceManager
+  // method called if C is a ResourceManager
   template <typename C>
-  static yes& callCM(typename std::vector<C*>& managers, C* result, typename C::hw_resource_manager*) 
+  static yes& callCM(typename std::vector<C*>& managers, C* result, typename C::resource_manager_type*) 
   { 
-    std::vector<typename C::hw_resource_manager*> managers_in;
+    std::vector<typename C::resource_manager_type*> managers_in;
     // we have to typecase back to base class
     for(typename std::vector<C*>::iterator it = managers.begin(); it != managers.end(); ++it)
-      managers_in.push_back(static_cast<typename C::hw_resource_manager*>(*it));
+      managers_in.push_back(static_cast<typename C::resource_manager_type*>(*it));
     C::concatManagers(managers_in, result); 
   }
  
@@ -75,7 +75,7 @@ struct check_is_hw_resource_manager {
   template <typename C>
   static no& callCM(typename std::vector<C*>& managers, C* result, ...) {}
 
-  // calls HardwareResourceManager::concatManagers if C is a HardwareResourceManager
+  // calls ResourceManager::concatManagers if C is a ResourceManager
   static const void callConcatManagers(typename std::vector<T*>& managers, T* result) 
   { callCM<T>(managers, result, 0); }
 };
@@ -145,19 +145,19 @@ public:
       iface_combo = static_cast<T*>(it_combo->second);
     } else {
       // no existing combined interface
-      if(check_is_hw_resource_manager<T>::value) {
-        // it is a HardwareResourceManager
+      if(CheckIsResourceManager<T>::value) {
+        // it is a ResourceManager
 
-        // create a new combined interface
+        // create a new combined interface (FIXME: never deallocated)
         iface_combo = new T; 
-        // concat all of the hardware resource managers together
-        check_is_hw_resource_manager<T>::callConcatManagers(iface_list, iface_combo);
+        // concat all of the resource managers together
+        CheckIsResourceManager<T>::callConcatManagers(iface_list, iface_combo);
         // save the combined interface for if this is called again
         interfaces_combo_[type_name] = iface_combo; 
       } else {
-        // it is not a HardwareResourceManager
+        // it is not a ResourceManager
         ROS_ERROR("You cannot register multiple interfaces of the same type which are "
-                  "not of type HardwareResourceManager. There is no established protocol "
+                  "not of type ResourceManager. There is no established protocol "
                   "for combining them.");
         iface_combo = NULL;
       }

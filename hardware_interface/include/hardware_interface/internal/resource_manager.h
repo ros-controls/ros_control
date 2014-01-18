@@ -58,6 +58,9 @@ template <class ResourceHandle>
 class ResourceManager
 {
 public:
+  typedef ResourceHandle resource_handle_type;
+  typedef ResourceManager<ResourceHandle> resource_manager_type;
+
   /** \name Non Real-Time Safe Functions
    *\{*/
 
@@ -111,6 +114,27 @@ public:
     }
 
     return it->second;
+  }
+
+  /**
+   * \brief Combine a list of interfaces into one.
+   *
+   * Every registered handle in each of the managers is registered into the result interface
+   * \param managers The list of resource managers to be combined.
+   * \param result The interface where all the handles will be registered.
+   * \return Resource associated to \e name. If the resource name is not found, an exception is thrown.
+   */
+  static void concatManagers(std::vector<resource_manager_type*>& managers,
+                             resource_manager_type* result) 
+  {
+    for(typename std::vector<resource_manager_type*>::iterator it_man = managers.begin(); 
+        it_man != managers.end(); ++it_man) {
+      std::vector<std::string> handle_names = (*it_man)->getNames();
+      for(std::vector<std::string>::iterator it_nms = handle_names.begin(); 
+          it_nms != handle_names.end(); ++it_nms) {
+        result->registerHandle((*it_man)->getHandle(*it_nms));
+      }
+    }
   }
 
   /*\}*/
