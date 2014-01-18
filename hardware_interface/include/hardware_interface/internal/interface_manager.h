@@ -26,7 +26,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/// \author Wim Meussen, Adolfo Rodriguez Tsouroukdissian
+/// \author Wim Meussen, Adolfo Rodriguez Tsouroukdissian, Kelsey P. Hawkins
 
 #ifndef HARDWARE_INTERFACE_INTERFACE_MANAGER_H
 #define HARDWARE_INTERFACE_INTERFACE_MANAGER_H
@@ -103,6 +103,11 @@ public:
     interfaces_[internal::demangledTypeName<T>()] = iface;
   }
 
+  void registerInterfaceManager(InterfaceManager* iface_man)
+  {
+    interface_managers_.push_back(iface_man);
+  }
+
   /**
    * \brief Get an interface.
    *
@@ -117,12 +122,13 @@ public:
   T* get()
   {
     std::string type_name = internal::demangledTypeName<T>();
-    std::vector<void*> iface_data = findInterfaceData(type_name);
     std::vector<T*> iface_list;
-    for(std::vector<void*>::iterator it = iface_data.begin(); it != iface_data.end(); ++it) {
-      T* iface = static_cast<T*>(*it);
-      if (!iface)
-      {
+
+    // look for interfaces registered here
+    InterfaceMap::iterator it = interfaces_.find(type_name);
+    if (it != interfaces_.end()) {
+      T* iface = static_cast<T*>(it->second);
+      if (!iface) {
         ROS_ERROR_STREAM("Failed reconstructing type T = '" << type_name.c_str() <<
                          "'. This should never happen");
         return NULL;
@@ -130,10 +136,18 @@ public:
       iface_list.push_back(iface);
     }
 
-    if(iface_data.size() == 0)
+    // look for interfaces registered in the registered hardware
+    for(InterfaceManagerVector::iterator it = interface_managers_.begin(); 
+        it != interface_managers_.end(); ++it) {
+      T* iface = (*it)->get<T>();
+      if (iface) 
+        iface_list.push_back(iface);
+    }
+
+    if(iface_list.size() == 0)
       return NULL;
 
-    if(iface_data.size() == 1)
+    if(iface_list.size() == 1)
       return iface_list.front();
 
     // if we're here, we have multiple interfaces, and thus we must construct a new
@@ -165,31 +179,13 @@ public:
     return iface_combo;
   }
 
-  /**
-   * \brief Get generic pointers to interfaces with type_name.
-   *
-   * This is used as a polymorphic lookup for the templated
-   * get() call, which can't be virtual.
-   * By default, this method returns a list with the only element the interface
-   * found in the internal variable interfaces_.
-   * Derived classes may return more interfaces.
-   *
-   * \param type_name The name of the interface types stored.
-   * \return List of generic pointers to the interfaces found.
-   */
-  virtual std::vector<void*> findInterfaceData(std::string type_name)
-  {
-    std::vector<void*> iface_data;
-    InterfaceMap::iterator it = interfaces_.find(type_name);
-    if (it != interfaces_.end())
-      iface_data.push_back(it->second);
-    return iface_data;
-  }
-
 protected:
   typedef std::map<std::string, void*> InterfaceMap;
+  typedef std::vector<InterfaceManager*> InterfaceManagerVector;
+
   InterfaceMap interfaces_;
   InterfaceMap interfaces_combo_;
+  InterfaceManagerVector interface_managers_;
 };
 
 } // namespace
