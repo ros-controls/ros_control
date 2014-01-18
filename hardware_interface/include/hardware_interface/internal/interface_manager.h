@@ -154,8 +154,11 @@ public:
     // combined interface, or return one already constructed
     T* iface_combo;
     InterfaceMap::iterator it_combo = interfaces_combo_.find(type_name);
-    if(it_combo != interfaces_combo_.end()) {
-      // there exists a combined interface
+    if(it_combo != interfaces_combo_.end() && 
+        num_ifaces_registered_[type_name] == iface_list.size()) {
+      // there exists a combined interface with the same number of interfaces combined
+      // (since you cannot unregister interfaces, this will be guaranteed to be the
+      //  same interfaces from previous calls)
       iface_combo = static_cast<T*>(it_combo->second);
     } else {
       // no existing combined interface
@@ -168,6 +171,7 @@ public:
         CheckIsResourceManager<T>::callConcatManagers(iface_list, iface_combo);
         // save the combined interface for if this is called again
         interfaces_combo_[type_name] = iface_combo; 
+        num_ifaces_registered_[type_name] = iface_list.size(); 
       } else {
         // it is not a ResourceManager
         ROS_ERROR("You cannot register multiple interfaces of the same type which are "
@@ -182,10 +186,12 @@ public:
 protected:
   typedef std::map<std::string, void*> InterfaceMap;
   typedef std::vector<InterfaceManager*> InterfaceManagerVector;
+  typedef std::map<std::string, size_t> SizeMap;
 
   InterfaceMap interfaces_;
   InterfaceMap interfaces_combo_;
   InterfaceManagerVector interface_managers_;
+  SizeMap num_ifaces_registered_;
 };
 
 } // namespace
