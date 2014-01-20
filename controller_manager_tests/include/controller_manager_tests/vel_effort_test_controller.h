@@ -41,8 +41,8 @@ namespace controller_manager_tests
 
 
 class VelocityEffortTestController: 
-  public controller_interface::Controller<hardware_interface::VelocityJointInterface,
-                                          hardware_interface::EffortJointInterface>
+  public controller_interface::Controller2<hardware_interface::VelocityJointInterface,
+                                           hardware_interface::EffortJointInterface>
 {
 public:
   VelocityEffortTestController(){}
