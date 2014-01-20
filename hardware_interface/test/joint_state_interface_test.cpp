@@ -39,7 +39,7 @@ TEST(JointStateHandleTest, HandleConstruction)
 {
   string name = "name1";
   double pos, vel, eff;
-  EXPECT_NO_THROW(JointStateHandle(name, &pos, &vel, &eff));
+  EXPECT_NO_THROW(JointStateHandle tmp(name, &pos, &vel, &eff));
   EXPECT_THROW(JointStateHandle(name, 0, &vel, &eff), HardwareInterfaceException);
   EXPECT_THROW(JointStateHandle(name, &pos, 0, &eff), HardwareInterfaceException);
   EXPECT_THROW(JointStateHandle(name, &pos, &vel, 0), HardwareInterfaceException);
