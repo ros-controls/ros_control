@@ -1,0 +1,9 @@
+<launch>
+  <rosparam>
+    multi_controller:
+      type: controller_manager_tests/VelocityEffortTestController
+  </rosparam>
+
+  <node pkg="controller_manager_tests" type="multi_dummy_app" name="multi_dummy_app" output="screen"/>
+  <test test-name="multi_cm_test" pkg="controller_manager_tests" type="multi_cm_test"/>
+</launch>

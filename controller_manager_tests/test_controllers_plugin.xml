@@ -5,6 +5,12 @@
   </description>
   </class>
 
+  <class name="controller_manager_tests/VelocityEffortTestController" type="controller_manager_tests::VelocityEffortTestController" base_class_type="controller_interface::ControllerBase">
+  <description>
+    The velocity/effort test controller expects both a VelocityJointInterface and a EffortJointInterface type of hardware interface.
+  </description>
+  </class>
+
   <class name="controller_manager_tests/MyDummyController" type="controller_manager_tests::MyDummyController" base_class_type="controller_interface::ControllerBase">
   <description>
     This is a stub controller that uses an interface that likely no-one will support

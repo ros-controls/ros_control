@@ -1,3 +1,5 @@
+// Author: Kelsey Hawkins
+// Based on code by:
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2012, hiDOF INC.
 //
@@ -26,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * Author: Wim Meeussen
+ * Author: Wim Meeussen, Kelsey Hawkins
  */
 
 
@@ -35,7 +37,7 @@
 namespace controller_manager_tests
 {
 
-MyRobotHW::MyRobotHW(std::string joint_prefix)
+TypeARobotHW::TypeARobotHW(int id)
 {
   using namespace hardware_interface;
 
@@ -47,14 +49,14 @@ MyRobotHW::MyRobotHW(std::string joint_prefix)
   joint_velocity_command_.resize(2);
   joint_name_.resize(2);
 
-  joint_name_[0] = joint_prefix + "joint1";
+  joint_name_[0] = "hiDOF_joint1";
   joint_position_[0] = 1.0;
   joint_velocity_[0] = 0.0;
   joint_effort_[0] = 0.1;
   joint_effort_command_[0] = 0.0;
   joint_velocity_command_[0] = 0.0;
 
-  joint_name_[1] = joint_prefix + "joint2";
+  joint_name_[1] = "hiDOF_joint2";
   joint_position_[1] = 1.0;
   joint_velocity_[1] = 0.0;
   joint_effort_[1] = 0.1;
@@ -77,12 +79,12 @@ MyRobotHW::MyRobotHW(std::string joint_prefix)
 }
 
 
-void MyRobotHW::read()
+void TypeARobotHW::read()
 {
 
 }
 
-void MyRobotHW::write()
+void TypeARobotHW::write()
 {
 }
 

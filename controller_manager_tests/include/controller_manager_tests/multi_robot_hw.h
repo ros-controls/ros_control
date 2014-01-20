@@ -1,3 +1,5 @@
+// Author: Kelsey Hawkins
+// Based on code by:
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2012, hiDOF INC.
 //
@@ -26,12 +28,12 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * Author: Wim Meeussen
+ * Author: Wim Meeussen, Kelsey Hawkins
  */
 
 
-#ifndef CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
-#define CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
+#ifndef CONTROLLER_MANAGER_TESTS_MULTI_ROBOT_HW_H
+#define CONTROLLER_MANAGER_TESTS_MULTI_ROBOT_HW_H
 
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/robot_hw.h>
@@ -39,10 +41,11 @@
 namespace controller_manager_tests
 {
 
-class MyRobotHW : public hardware_interface::RobotHW
+// Used to test multiple robot hardware mixed together
+class TypeARobotHW : public hardware_interface::RobotHW
 {
 public:
-  MyRobotHW(std::string joint_prefix = "hiDOF_");
+  TypeARobotHW(int id);
 
   void read();
   void write();
@@ -61,14 +64,6 @@ private:
   std::vector<double> joint_effort_;
   std::vector<std::string> joint_name_;
 };
-
-class DerivedMyRobotHW : public MyRobotHW 
-{
-public:
-  DerivedMyRobotHW(std::string joint_prefix = "hiDOF_")
-    : MyRobotHW(joint_prefix + "derived_") {}
-};
-
 }
 
 
