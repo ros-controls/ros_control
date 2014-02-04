@@ -1,0 +1,48 @@
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package rqt_controller_manager
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+0.6.0 (2014-02-05)
+------------------
+* Added controller namespace detection and switching, loadable controller parameter detection and buttons for loading or starting the controller directly from the parameter server.
+* Resources -> Claimed Resources column title
+* Initial commit for rqt controller manager plugin.  Plugin seems functional from first tests.  Allows users to unload/load/start/stop/view available controllers.  No functionality yet exists for loading a controller from scratch.
+* Contributors: Kelsey
+
+0.6.0 (2014-02-05)
+------------------
+* Updated changelogs
+* Added controller namespace detection and switching, loadable controller parameter detection and buttons for loading or starting the controller directly from the parameter server.
+* Resources -> Claimed Resources column title
+* Initial commit for rqt controller manager plugin.  Plugin seems functional from first tests.  Allows users to unload/load/start/stop/view available controllers.  No functionality yet exists for loading a controller from scratch.
+* Contributors: Dave Coleman, Kelsey
+
+0.5.8 (2013-10-11)
+------------------
+
+0.5.7 (2013-07-30)
+------------------
+
+0.5.6 (2013-07-29)
+------------------
+
+0.5.5 (2013-07-23 17:04)
+------------------------
+
+0.5.4 (2013-07-23 14:37)
+------------------------
+
+0.5.3 (2013-07-22 18:06)
+------------------------
+
+0.5.2 (2013-07-22 15:00)
+------------------------
+
+0.5.1 (2013-07-19)
+------------------
+
+0.5.0 (2013-07-16)
+------------------
+
+0.4.0 (2013-06-25)
+------------------

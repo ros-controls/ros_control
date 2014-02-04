@@ -5,6 +5,12 @@ Changelog for package controller_manager
 0.5.6 (2013-07-29)
 ------------------
 
+0.6.0 (2014-02-05)
+------------------
+* Update controller_manager.cpp
+  Postfix to prefix increment operator.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.5.8 (2013-10-11)
 ------------------
 * Fixed additional timeout that was just added

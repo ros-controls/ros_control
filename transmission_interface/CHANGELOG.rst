@@ -2,6 +2,11 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.0 (2014-02-05)
+------------------
+* Add accessors to get transmission configuration.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.5.8 (2013-10-11)
 ------------------
 * Renamed manifest.xml to prevent conflicts with rosdep

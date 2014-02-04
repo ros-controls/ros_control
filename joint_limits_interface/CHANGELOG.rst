@@ -5,6 +5,14 @@ Changelog for package joint_limits_interface
 0.5.6 (2013-07-29)
 ------------------
 
+0.6.0 (2014-02-05)
+------------------
+* Updated the interface list.
+* Added the PositionJointSaturationInterface and VelocitySoftLimitsInterface
+  classes. There are now saturation and soft limit classes for effort-controlled,
+  position-controlled, and velocity-controlled joints.
+* Contributors: Jim Rothrock
+
 0.5.8 (2013-10-11)
 ------------------
 * Merge pull request `#121 <https://github.com/ros-controls/ros_control/issues/121>`_ from pal-robotics/hydro-devel
