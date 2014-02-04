@@ -23,7 +23,7 @@ if(USE_ROSBUILD)
 
 else() # catkin
 
-  find_package(catkin REQUIRED COMPONENTS roscpp rostest)
+  find_package(catkin REQUIRED COMPONENTS roscpp)
 
   include_directories(
     SYSTEM 
@@ -44,6 +44,8 @@ else() # catkin
   )
 
   if(CATKIN_ENABLE_TESTING)
+    find_package(rostest)
+
     catkin_add_gtest(joint_limits_interface_test test/joint_limits_interface_test.cpp)
     target_link_libraries(joint_limits_interface_test ${catkin_LIBRARIES})
 
