@@ -52,7 +52,7 @@ TEST(ForceTorqueSensorHandleTest, HandleConstruction)
   {
     double force[3]  = {1.0, 2.0, 3.0};
     double torque[3] = {-1.0, -2.0, -3.0};
-    ForceTorqueSensorHandle("name_1", "frame_1", force, torque);
+    ForceTorqueSensorHandle tmp("name_1", "frame_1", force, torque);
   }
 }
 
