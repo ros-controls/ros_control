@@ -38,17 +38,10 @@ import rosparam
 
 import rospy, sys
 import os.path
-import getopt
 import yaml
 from controller_manager_msgs.srv import *
 from std_msgs.msg import *
-
-def print_usage(exit_code = 0):
-    print 'spawner [--stopped] [--wait-for=wait_for_topic] [--namespace=robot_namespace] <controller names>'
-    print "  stopped: loads controllers, but doesn't start them"
-    print "  wait-for: doesn't load or start controllers until it hears 'True' on wait_for_topic (Bool)"
-    print "  namespace: namespace of the controller_manager services"
-    sys.exit(exit_code)
+import argparse
 
 loaded = []
 
@@ -82,27 +75,30 @@ def shutdown():
 # Python is horrific at handling scoping for nested functions.  Hate.
 wait_for_topic_result = None
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Controller spawner')
+    parser.add_argument('--stopped', action='store_true',
+                        help='loads controllers, but does not start them')
+    parser.add_argument('--wait-for', metavar='topic', help='does not load or '
+                        'start controllers until it hears "True" on a topic (Bool)')
+    parser.add_argument('--namespace', metavar='ns',
+                        help='namespace of the controller_manager services')
+    parser.add_argument('--timeout', metavar='T', type=int, default=30,
+                        help='how long to wait for controller_manager services [s] (default: 30)')
+    parser.add_argument('controllers', metavar='controller', nargs='+',
+                        help='controllers to load')
+    return parser.parse_args()
+
 def main():
     global unload_controller_service,load_controller_service,switch_controller_service
 
-    opts, args = getopt.gnu_getopt(rospy.myargv()[1:], 'h',
-                                   ['wait-for=', 'stopped','namespace='])
-    wait_for_topic = None
-    autostart = 1
-    robot_namespace = ""
-    for o, a in opts:
-        if o == '-h':
-            print_usage()
-        elif o == '--wait-for':
-            wait_for_topic = a
-        elif o == '--stopped':
-            autostart = 0
-        elif o == '--namespace':
-            robot_namespace = a
+    args = parse_args()
 
-    if not args:
-        print_usage(1)
-        
+    wait_for_topic = args.wait_for
+    autostart = 1 if not args.stopped else 0
+    robot_namespace = args.namespace or ""
+    timeout = args.timeout
+
     rospy.init_node('spawner', anonymous=True)
 
     # add a '/' to the namespace if needed
@@ -117,12 +113,12 @@ def main():
     try:
         # loader
         rospy.loginfo("Controller Spawner: Waiting for service "+load_controller_service)
-        rospy.wait_for_service(load_controller_service, timeout=30)
+        rospy.wait_for_service(load_controller_service, timeout=timeout)
         load_controller = rospy.ServiceProxy(load_controller_service, LoadController)
 
         # switcher
         rospy.loginfo("Controller Spawner: Waiting for service "+switch_controller_service)
-        rospy.wait_for_service(switch_controller_service, timeout=30)
+        rospy.wait_for_service(switch_controller_service, timeout=timeout)
         switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
 
         # unloader
@@ -130,7 +126,7 @@ def main():
         # should be fast. Further, we're interested in knowing if we have a compliant controller manager from
         # early on
         rospy.loginfo("Controller Spawner: Waiting for service "+unload_controller_service)
-        rospy.wait_for_service(unload_controller_service, timeout=30)
+        rospy.wait_for_service(unload_controller_service, timeout=timeout)
 
     except rospy.exceptions.ROSException:
         rospy.logwarn("Controller Spawner couldn't find the expected controller_manager ROS interface.")
@@ -152,7 +148,7 @@ def main():
             if rospy.is_shutdown():
                 return
             if not warned_about_not_hearing_anything:
-                if time.time() - started_waiting > 30.0:
+                if time.time() - started_waiting > timeout:
                     warned_about_not_hearing_anything = True
                     rospy.logwarn("Controller Spawner hasn't heard anything from its \"wait for\" topic (%s)" % \
                                       wait_for_topic)
@@ -166,7 +162,7 @@ def main():
 
     # find yaml files to load
     controllers = []
-    for name in args:
+    for name in args.controllers:
         if os.path.exists(name):
             # load yaml file onto the parameter server, using the namespace specified in the yaml file
             rosparam.set_param("",open(name))
