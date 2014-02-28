@@ -75,7 +75,7 @@ def shutdown():
 # Python is horrific at handling scoping for nested functions.  Hate.
 wait_for_topic_result = None
 
-def parse_args():
+def parse_args(args=None):
     parser = argparse.ArgumentParser(description='Controller spawner')
     parser.add_argument('--stopped', action='store_true',
                         help='loads controllers, but does not start them')
@@ -87,12 +87,12 @@ def parse_args():
                         help='how long to wait for controller_manager services [s] (default: 30)')
     parser.add_argument('controllers', metavar='controller', nargs='+',
                         help='controllers to load')
-    return parser.parse_args()
+    return parser.parse_args(args=args)
 
 def main():
     global unload_controller_service,load_controller_service,switch_controller_service
 
-    args = parse_args()
+    args = parse_args(rospy.myargv()[1:])
 
     wait_for_topic = args.wait_for
     autostart = 1 if not args.stopped else 0
