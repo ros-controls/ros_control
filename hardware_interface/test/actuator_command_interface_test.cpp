@@ -40,8 +40,8 @@ TEST(ActuatorCommandHandleTest, HandleConstruction)
   string name = "name1";
   double pos, vel, eff;
   double cmd;
-  EXPECT_NO_THROW(ActuatorHandle(ActuatorStateHandle(name, &pos, &vel, &eff), &cmd));
-  EXPECT_THROW(ActuatorHandle(ActuatorStateHandle(name, &pos, &vel, &eff), 0), HardwareInterfaceException);
+  EXPECT_NO_THROW(ActuatorHandle tmp(ActuatorStateHandle(name, &pos, &vel, &eff), &cmd));
+  EXPECT_THROW(ActuatorHandle tmp(ActuatorStateHandle(name, &pos, &vel, &eff), 0), HardwareInterfaceException);
 
   // Print error messages
   // Requires manual output inspection, but exception message should be descriptive
