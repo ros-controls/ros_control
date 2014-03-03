@@ -69,12 +69,6 @@ def shutdown():
     except (rospy.ServiceException, rospy.exceptions.ROSException) as exc:
         rospy.logwarn("Controller Spawner couldn't reach controller_manager to take down controllers.")
 
-# At this moment, I am absolutely livid about Python's lack of
-# reasonable scoping mechanisms.  This variable had to be declared
-# completely globally and could not be declared near its use because
-# Python is horrific at handling scoping for nested functions.  Hate.
-wait_for_topic_result = None
-
 def parse_args(args=None):
     parser = argparse.ArgumentParser(description='Controller spawner')
     parser.add_argument('--stopped', action='store_true',
@@ -132,18 +126,23 @@ def main():
         rospy.logwarn("Controller Spawner couldn't find the expected controller_manager ROS interface.")
         return
 
-    global wait_for_topic_result  # Python scoping sucks
     if wait_for_topic:
+        # This has to be a list since Python has a peculiar mecanism to determine
+        # whether a variable is local to a function or not:
+        # if the variable is assigned in the body of the function, then it is
+        # assumed to be local. Modifying a mutable object (like a list)
+        # works around this debatable "design choice".
+        wait_for_topic_result = [None]
+
         def wait_for_topic_cb(msg):
-            global wait_for_topic_result  # Python scoping really really sucks
-            wait_for_topic_result = msg
+            wait_for_topic_result[0] = msg
             rospy.logdebug("Heard from wait-for topic: %s" % str(msg.data))
         rospy.Subscriber(wait_for_topic, Bool, wait_for_topic_cb)
         started_waiting = time.time()
 
         # We might not have receieved any time messages yet
         warned_about_not_hearing_anything = False
-        while not wait_for_topic_result:
+        while not wait_for_topic_result[0]:
             time.sleep(0.01)
             if rospy.is_shutdown():
                 return
@@ -152,7 +151,7 @@ def main():
                     warned_about_not_hearing_anything = True
                     rospy.logwarn("Controller Spawner hasn't heard anything from its \"wait for\" topic (%s)" % \
                                       wait_for_topic)
-        while not wait_for_topic_result.data:
+        while not wait_for_topic_result[0].data:
             time.sleep(0.01)
             if rospy.is_shutdown():
                 return
