@@ -38,6 +38,13 @@ if(CATKIN_ENABLE_TESTING)
 
   catkin_add_gtest(interface_manager_test          test/interface_manager_test.cpp)
   target_link_libraries(interface_manager_test ${catkin_LIBRARIES})
+    
+    catkin_add_gtest(posvel_command_interface_test test/posvel_command_interface_test.cpp)
+    target_link_libraries(posvel_command_interface_test ${catkin_LIBRARIES})
+    
+    catkin_add_gtest(posvelacc_command_interface_test test/posvelacc_command_interface_test.cpp)
+    target_link_libraries(posvelacc_command_interface_test ${catkin_LIBRARIES})
+    
 endif()
 
 # Install
