@@ -2,8 +2,11 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.5.6 (2013-07-29)
-------------------
+Forthcoming
+-----------
+* Add ResourceHandle typedef
+* add name to anonymous objects to avoid cppcheck error
+* Contributors: Daniel Pinyol, Igorec
 
 0.6.0 (2014-02-05)
 ------------------
@@ -35,6 +38,9 @@ Changelog for package hardware_interface
 
 * Updated changelogs
 * Author/maintainer list update.
+
+0.5.6 (2013-07-29)
+------------------
 
 0.5.5 (2013-07-23)
 ------------------

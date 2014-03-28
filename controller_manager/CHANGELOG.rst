@@ -2,8 +2,12 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.5.6 (2013-07-29)
-------------------
+Forthcoming
+-----------
+* Add --timeout option to controller spawner
+* Use argparse instead of getopt
+  It is a much nicer interface
+* Contributors: Paul Mathieu
 
 0.6.0 (2014-02-05)
 ------------------
@@ -39,6 +43,9 @@ Changelog for package controller_manager
   controller_manager.cpp:501: bool controller_manager::ControllerManager::reloadControllerLibrariesSrv(controller_manager_msgs::ReloadControllerLibraries::Request&, controller_manager_msgs::ReloadControllerLibraries::Response&): Assertion `controllers.empty()' failed.
 
 * Updated changelogs
+
+0.5.6 (2013-07-29)
+------------------
 
 0.5.5 (2013-07-23)
 ------------------
