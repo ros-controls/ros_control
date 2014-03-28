@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.0 (2014-03-28)
+------------------
 * Add --timeout option to controller spawner
 * Use argparse instead of getopt
   It is a much nicer interface
