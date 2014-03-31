@@ -2,6 +2,9 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.7.0 (2014-03-28)
 ------------------
 
