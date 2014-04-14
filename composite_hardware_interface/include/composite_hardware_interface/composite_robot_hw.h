@@ -41,9 +41,13 @@
 #include <hardware_interface/robot_hw.h>
 #include <composite_hardware_interface/internal/device_loader.h>
 #include <composite_hardware_interface/device_hw.h>
+#include <boost/bind.hpp>
+#include <boost/range/algorithm.hpp>
+
 
 namespace composite_hardware_interface
 {
+
 
 /** \brief Composite Robot Hardware Interface and Resource Manager
  *
@@ -58,6 +62,12 @@ public:
   CompositeRobotHW(const ros::NodeHandle& nh) :
     node_(nh), configured_(false), started_(false), interfaces_(*this), urdf_model_(nh)
   {
+  }
+
+  virtual ~CompositeRobotHW()
+  {
+    stop();
+    devices_.clear();
   }
 
   virtual bool configure()
@@ -79,13 +89,19 @@ public:
     // Load and configure each device
     loader_.reset(new DeviceLoader<DeviceHW>("composite_hardware_interface", "composite_hardware_interface::DeviceHW"));
 
-    for (XmlRpc::XmlRpcValue::iterator it = device_list.begin(); it != device_list.end(); ++it)
+    for (XmlRpc::XmlRpcValue::iterator cfg_it = device_list.begin(); cfg_it != device_list.end(); ++cfg_it)
     {
       DeviceHwPtr dev;
-      std::string dev_name = it->first;
+      std::string dev_name = cfg_it->first;
+      std::string dev_type;
       ros::NodeHandle dev_node(node_, "device_list/" + dev_name);
 
-      std::string dev_type;
+      if(devices_.count(dev_name))
+      {
+        ROS_ERROR("Several devices have the same name: '%s'.", dev_name.c_str());
+        return false;
+      }
+
       if(!dev_node.getParam("type", dev_type))
       {
         ROS_ERROR("Could not find a type attribute for the '%s' hardware interface.", dev_name.c_str());
@@ -94,7 +110,7 @@ public:
 
       try
       {
-        dev = loader_->createInstance(it->second["type"]);
+        dev = loader_->createInstance(dev_type);
       }
       catch (const std::exception &e)
       {
@@ -102,13 +118,36 @@ public:
         return false;
       }
 
-      if(!dev->configure(interfaces_, resources_, urdf_model_, dev_name, dev_node))
+      // Collect device resources that will be registered at configure step
+      typedef std::set<std::string> s_type;
+      typedef std::pair<s_type::iterator, bool>(s_type::*s_insert)(const s_type::value_type&);
+
+      s_type dev_res;
+      interfaces_.setRegisteredCB(boost::bind(static_cast<s_insert>(&s_type::insert), &dev_res, _1));
+
+      // Configure device
+      if(!dev->configure(interfaces_, data_, urdf_model_, dev_name, dev_node))
       {
         ROS_ERROR("Could not configure '%s' hardware interface.", dev_name.c_str());
         return false;
       }
 
+      // Check that devices does not use the same resource
+      for (ResourceIt dev_it = resources_.begin(); dev_it != resources_.end(); ++dev_it)
+      {
+        std::vector<std::string> conflicts;
+        boost::range::set_intersection(dev_res, dev_it->second, std::back_inserter(conflicts));
+
+        if (!conflicts.empty())
+        {
+          ROS_ERROR("Devices '%s' and '%s' use the same resources: '%s'.",
+                    dev_name.c_str(), dev_it->first.c_str(), boost::join(conflicts, "', '").c_str());
+          return false;
+        }
+      }
+
       devices_[dev_name] = dev;
+      resources_[dev_name] = dev_res;
     }
 
     configured_ = true;
@@ -175,21 +214,52 @@ public:
     }
   }
 
-  virtual ~CompositeRobotHW()
+  virtual bool checkForConflict(const std::list<hardware_interface::ControllerInfo>& info) const
   {
-    stop();
+    typedef std::list<hardware_interface::ControllerInfo> ControllerList;
+
+    for (ResourceMap::const_iterator dev_it = resources_.begin(); dev_it != resources_.end(); ++dev_it)
+    {
+      // Each device checks only controllers that use its resources
+      ControllerList dev_info;
+
+      for (ControllerList::const_iterator ctr_it = info.begin(); ctr_it != info.end(); ++ctr_it)
+      {
+        std::set<std::string> matches;
+        boost::range::set_intersection(ctr_it->resources, dev_it->second, std::inserter(matches, matches.end()));
+
+        if (!matches.empty())
+        {
+          dev_info.push_back(*ctr_it);
+          dev_info.back().resources = matches;
+        }
+      }
+
+      if (!dev_info.empty())
+      {
+        if (!devices_.at(dev_it->first)->checkForConflict(dev_info))
+        {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
 protected:
   typedef std::map<std::string, DeviceHwPtr> DeviceMap;
   typedef DeviceMap::iterator DeviceIt;
+  typedef std::map<std::string, std::set<std::string> > ResourceMap;
+  typedef ResourceMap::iterator ResourceIt;
 
   ros::NodeHandle node_;
   bool configured_;
   bool started_;
   DeviceMap devices_;
+  ResourceMap resources_;
   SharedInterfaceManager interfaces_;
-  SharedResourceManager resources_;
+  SharedDataManager data_;
   SharedUrdfModel urdf_model_;
 
   boost::shared_ptr<DeviceLoaderInterface> loader_;

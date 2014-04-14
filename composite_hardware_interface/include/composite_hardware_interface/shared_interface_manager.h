@@ -55,33 +55,73 @@ public:
   {
   }
 
-  /** \brief Return interface by type.
-   *
-   *  If interface with type \ref T registered in the manager, the function
-   *  returns a pointer to its mapped value.
-   *
-   *  If interface with type \ref T does not registered in the manager, the
-   *  function insert a new interface with that type to the cash, register
-   *  it in the manger and returns a pointer to its mapped value.
-   *
-   * \returns Pointer to the interface
-   */
-  template<class T>
-    T* get()
+  /** \return Vector of resource names registered to interface \ref TIface. */
+  template<class TIface>
+    std::vector<std::string> getNames() const
     {
-      T* iface = manager_.get<T>();
+      if(manager_.get<TIface>() == NULL)
+      {
+        return std::vector<std::string>();
+      }
+
+      return manager_.get<TIface>()->getNames();
+    }
+
+  /**
+   * \brief Register a new resource at interface \ref TIface.
+   *
+   * If interface with type \ref TIface does not exists, the new one will be created and registered in the manger.
+   * If the resource name already exists, the previously stored resource value will be replaced with \e val.
+   *
+   * \param handle Resource value. Its type should implement a <tt>std::string getName()</tt> method.
+   */
+  template<class TIface, class ResourceHandle>
+    bool registerHandle(const ResourceHandle& handle)
+    {
+      TIface* iface = manager_.get<TIface>();
+
       if (iface == NULL)
       {
-        iface = new T();
+        iface = new TIface();
         interfaces_.push_back(static_cast<hardware_interface::HardwareInterface*>(iface));
         manager_.registerInterface(iface);
       }
-      return iface;
+
+      iface->registerHandle(handle);
+
+      if(registered_cb_)
+      {
+        registered_cb_(handle.getName());
+      }
     }
+
+  /**
+   * \brief Get a resource handle by name from interface \ref TIface.
+   * \param name Resource name.
+   * \param handle Returns resource associated to \e name. If the resource name is not found, an exception is thrown.
+   */
+  template<class TIface, class ResourceHandle>
+    void getHandle(const std::string& name, ResourceHandle& handle)
+    {
+      if(manager_.get<TIface>() == NULL)
+      {
+        throw std::logic_error("Could not find resource '" + name + "' in '" +
+                               hardware_interface::internal::demangledTypeName(*this) + "'.");
+      }
+
+      handle = manager_.get<TIface>()->getHandle(name);
+    }
+
+  /** \brief Set callback function that called when a new handle registered. */
+  void setRegisteredCB(boost::function<void(const std::string &res_name)> register_cb)
+  {
+    registered_cb_ = register_cb;
+  }
 
 private:
   hardware_interface::RobotHW& manager_;
   boost::ptr_vector<hardware_interface::HardwareInterface> interfaces_;
+  boost::function<void(const std::string &res_name)> registered_cb_;
 };
 
 }

@@ -32,58 +32,58 @@
 
 /// \author Igor Kalevatykh <kalevatykhia@gmail.com>
 
-#ifndef COMPOSITE_HARDWARE_INTERFACE__SHARED_RESOURCE_MANAGER_H
-#define COMPOSITE_HARDWARE_INTERFACE__SHARED_RESOURCE_MANAGER_H
+#ifndef COMPOSITE_HARDWARE_INTERFACE__SHARED_DATA_MANAGER_H
+#define COMPOSITE_HARDWARE_INTERFACE__SHARED_DATA_MANAGER_H
 
 #include <boost/shared_ptr.hpp>
 
 namespace composite_hardware_interface
 {
 
-/** \brief Resource Cash
+/** \brief Data Cash
  *
- * Collect resources used thru all robot devices.
+ * Collect data items used thru all robot devices.
  */
-class SharedResourceManager
+class SharedDataManager
 {
 public:
 
-  /** \brief Return interface by type.
+  /** \brief Check data item \ref name exists.
    *
-   * \param resource_name Name of the resource
-   * \returns True if cash contain resource
+   * \param name Name of the element
+   * \returns True if cash contains element
    */
-  bool exists(const std::string& resource_name) const
+  bool exists(const std::string& name) const
   {
-    return resources_.count(resource_name);
+    return data_map_.count(name);
   }
 
-  /** \brief Return resource by name.
+  /** \brief Return data item by name.
    *
-   *  If resource_name matches the key of an element in the cash, the function
+   *  If name matches the key of an element in the cash, the function
    *  returns a pointer to its mapped value.
    *
-   *  If resource_name does not match the key of any element in the cash, the
+   *  If name does not match the key of any element in the cash, the
    *  function inserts a new element with that key and returns a pointer to its
    *  mapped value.
    *
-   * \param resource_name Name of the resource
-   * \returns Pinter to the resource
+   * \param resource_name Name of the element
+   * \returns Pointer to the element
    */
   template<class T>
-    T* get(const std::string& resource_name)
+    T* get(const std::string& name)
     {
-      if(!exists(resource_name))
+      if(!exists(name))
       {
-        resources_[resource_name] = boost::shared_ptr<void>(new T, Deleter<T>());
+        data_map_[name] = boost::shared_ptr<void>(new T, Deleter<T>());
       }
 
-      T* res = static_cast<T*>(resources_[resource_name].get());
+      T* res = static_cast<T*>(data_map_[name].get());
       return res;
     }
 
 private:
-  std::map<std::string, boost::shared_ptr<void> > resources_;
+  std::map<std::string, boost::shared_ptr<void> > data_map_;
 
   template<class T>
     struct Deleter

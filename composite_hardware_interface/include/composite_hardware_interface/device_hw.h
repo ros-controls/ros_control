@@ -36,7 +36,7 @@
 #define COMPOSITE_HARDWARE_INTERFACE__DEVICE_HW_H
 
 #include <composite_hardware_interface/shared_interface_manager.h>
-#include <composite_hardware_interface/shared_resource_manager.h>
+#include <composite_hardware_interface/shared_data_manager.h>
 #include <composite_hardware_interface/shared_urdf_model.h>
 #include <boost/shared_ptr.hpp>
 
@@ -63,7 +63,7 @@ public:
    * \returns True on success
    */
   virtual bool configure(SharedInterfaceManager &ifaces,
-                         SharedResourceManager &resources,
+                         SharedDataManager &resources,
                          SharedUrdfModel &urdf_model,
                          const std::string &dev_name,
                          const ros::NodeHandle &dev_node) = 0;
@@ -83,7 +83,7 @@ public:
    *
    * \returns True on success
    */
-  virtual bool read(const ros::Time time, const ros::Duration period) { return true; }
+  virtual bool read(const ros::Time &time, const ros::Duration &period) { return true; }
 
   /** \brief Write data to the device.
    *
@@ -92,7 +92,7 @@ public:
    *
    * \returns True on success
    */
-  virtual bool write(const ros::Time time, const ros::Duration period) { return true; }
+  virtual bool write(const ros::Time &time, const ros::Duration &period) { return true; }
   /*\}*/
 
   /** \brief Stop device hardware. */
@@ -100,6 +100,41 @@ public:
 
   /** \brief Virtual destructor. */
   virtual ~DeviceHW() { }
+
+  /** \name Resource Management
+   *\{*/
+
+  /** Check (in non-realtime) if the given set of controllers is allowed
+   * to run simultaneously.
+   *
+   * This default implementation simply checks if any two controllers use the
+   * same resource.
+   */
+  virtual bool checkForConflict(const std::list<hardware_interface::ControllerInfo>& info) const
+  {
+    // Figure out which resources have multiple users
+    typedef std::map<std::string, std::list<hardware_interface::ControllerInfo> > ResourceMap;
+    ResourceMap resource_map;
+    for (std::list<hardware_interface::ControllerInfo>::const_iterator info_it = info.begin(); info_it != info.end(); ++info_it)
+      for (std::set<std::string>::const_iterator resource_it = info_it->resources.begin(); resource_it != info_it->resources.end(); ++resource_it)
+        resource_map[*resource_it].push_back(*info_it);
+
+    bool in_conflict = false;
+    for (ResourceMap::iterator it = resource_map.begin(); it != resource_map.end(); ++it)
+    {
+      if (it->second.size() > 1)
+      {
+        std::string controller_list;
+        for (std::list<hardware_interface::ControllerInfo>::const_iterator controller_it = it->second.begin(); controller_it != it->second.end(); ++controller_it)
+          controller_list += controller_it->name + ", ";
+        ROS_WARN("Resource conflict on [%s].  Controllers = [%s]", it->first.c_str(), controller_list.c_str());
+        in_conflict = true;
+      }
+    }
+
+    return in_conflict;
+  }
+  /** }*/
 };
 
 typedef boost::shared_ptr<DeviceHW> DeviceHwPtr;
