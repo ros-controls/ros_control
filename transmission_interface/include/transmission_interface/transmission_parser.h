@@ -54,27 +54,15 @@
 namespace transmission_interface
 {
 
+/** \brief Parse all transmissions specified in a URDF. */
 class TransmissionParser
 {
 public:
-  /**
-   * \brief Constructor
-   */
-  TransmissionParser()
-  {
-  }
-
-  /**
-   * \brief Destructor
-   */
-  ~TransmissionParser()
-  {
-  }
 
   /**
    * \brief Parses the tranmission elements of a URDF
-   * \param[in] urdf_string - XML string of a valid URDF file that contains <tt>\<tranmission\></tt> elements
-   * \param[out] transmissions - vector of loaded transmission meta data
+   * \param[in] urdf_string XML string of a valid URDF file that contains <tt>\<tranmission\></tt> elements
+   * \param[out] transmissions vector of loaded transmission meta data
    * \return true if parsing was successful
    */
   static bool parse(const std::string& urdf_string, std::vector<TransmissionInfo>& transmissions);
@@ -82,16 +70,16 @@ public:
 private:
   /**
    * \brief Parses the joint elements within tranmission elements of a URDF
-   * \param[in] trans_it - pointer to the current XML element being parsed
-   * \param[out] joints - resulting list of joints in the transmission
+   * \param[in] trans_it pointer to the current XML element being parsed
+   * \param[out] joints resulting list of joints in the transmission
    * \return true if successful
    */
   static bool parseJoints(TiXmlElement *trans_it, std::vector<JointInfo>& joints);
 
   /**
    * \brief Parses the actuator elements within tranmission elements of a URDF
-   * \param[in] trans_it - pointer to the current XML element being parsed
-   * \param[out] actuators - resulting list of actuators in the transmission
+   * \param[in] trans_it pointer to the current XML element being parsed
+   * \param[out] actuators resulting list of actuators in the transmission
    * \return true if successful
    */
   static bool parseActuators(TiXmlElement *trans_it, std::vector<ActuatorInfo>& actuators);
