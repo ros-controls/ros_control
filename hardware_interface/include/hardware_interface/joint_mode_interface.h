@@ -62,8 +62,8 @@ public:
    * \param mode Which mode to start in
    */
   JointModeHandle(std::string name, int* mode)
-    : name_(name),
-      mode_(mode)
+    : mode_(mode)
+    , name_(name)
   {
     if (!mode_)
     {
