@@ -21,6 +21,7 @@ add_library(${PROJECT_NAME}
   src/my_dummy_controller.cpp
   include/controller_manager_tests/my_dummy_controller.h
   )
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 add_executable(dummy_app src/dummy_app.cpp)
 target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
