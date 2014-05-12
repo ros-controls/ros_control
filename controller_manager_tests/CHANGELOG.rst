@@ -2,6 +2,13 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* controller_manager_tests: fix library linking
+  From patch provided by po1 on hydro-devel.
+* Remove rosbuild artifacts. Fix `#154 <https://github.com/ros-controls/ros_control/issues/154>`_.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.7.2 (2014-04-01)
 ------------------
 

@@ -2,6 +2,12 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix doc typo.
+* Remove rosbuild artifacts. Fix `#154 <https://github.com/ros-controls/ros_control/issues/154>`_.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.7.2 (2014-04-01)
 ------------------
 

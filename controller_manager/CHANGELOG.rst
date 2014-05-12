@@ -2,6 +2,12 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove rosbuild artifacts. Fix `#154 <https://github.com/ros-controls/ros_control/issues/154>`_.
+* Create README.md
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.7.2 (2014-04-01)
 ------------------
 

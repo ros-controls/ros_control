@@ -2,6 +2,67 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add developer documentation.
+* Build script fixes.
+  - Add missing libraries to catkin_package call.
+  - Gate tests with CATKIN_ENABLE_TESTING.
+  - Add missing files to install target.
+* Fix possible memory corruption in tests.
+* Perform sanity checks on members, not parameters.
+  - The result is the same, but this is more uniform with the rest of the code.
+* Enable joint reduction spec for 4-bar linkages.
+  - As in the differential transmission, it's convenient to specify an additional
+  mechanical reduction on the joint output. This is especially convenient for
+  flipping the rotation direction of a joint (negative reduction value).
+  - Update URDF loader.
+  - Update documentation and tests.
+* Trivial, cosmetic fixes.
+* C++11 compatibility fixes.
+* Fix resource check for multi-dof transmisisons.
+* Efficiency fix.
+  - cppcheck flagged a [passedByValue] warning. Using const references instead.
+* Fix compiler warning.
+* Fix license header in some files.
+* Test transmission handle duplication.
+* Use less pointers in transmission loader data.
+  - Only RobotHW and RobotTransmission instances are pointers as they are owned
+  by the robot hardware abstraction. The rest are plain members whose lifetime
+  is bound to the loader struct.
+* Trivial test addition.
+* Remove unnecessary header dependencies.
+* Catkin fixes.
+* Fix bug when adding multiple transmissions.
+  - std::vectors were being used to store raw joint data, and when new transmissions
+  were added, push_back()s would (potentially) reallocate the vectors and
+  invalidate already stored pointers in hardware_interfaces. We now use std::map.
+  - Move plugin implementations to a separate library.
+  - Export link libraries to the outside.
+  - More complete tests.
+* Log message change.
+* Test greceful error-out with unsupported features.
+* Add four-bar-linkage transmission parser.
+* Add differential drive transmission parser.
+* Move common XML parsing code to TransmissionLoader
+  Mechanical reductions, offsets and roles are used by many transmission types.
+  The TransmissionLoader base class exposes convenience methods for parsing these
+  elements.
+* Remove dead code.
+* Update loader test, better log statements.
+* First draft of transmission loading.
+  - Only simple transmission type currently supported.
+  - Can load forward map for act->jnt state and jnt->act pos,vel.eff commands.
+  - Partial testing.
+* Add class for holding transmission interfaces.
+  - Mirrors hardware_interface::RobotHW, but for transmissions.
+* Allow multiple hw interfaces, Fix `#112 <https://github.com/ros-controls/ros_control/issues/112>`_, and test.
+  - Allow to specify multiple hardware interfaces for joints and actuators.
+  - Fix invalid xml_element tag. Contents are now stored as a string.
+  - Unit test parser.
+* Remove rosbuild artifacts. Fix `#154 <https://github.com/ros-controls/ros_control/issues/154>`_.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.7.2 (2014-04-01)
 ------------------
 
