@@ -141,10 +141,12 @@ TEST(PreconditionsTest, AssertionTriggering)
 
 TEST(PreconditionsTest, AccessorValidation)
 {
-  SimpleTransmission trans(1.0, 1.0);
+  SimpleTransmission trans(2.0, -1.0);
 
-  EXPECT_EQ(1, trans.numActuators());
-  EXPECT_EQ(1, trans.numJoints());
+  EXPECT_EQ(1,    trans.numActuators());
+  EXPECT_EQ(1,    trans.numJoints());
+  EXPECT_EQ( 2.0, trans.getActuatorReduction());
+  EXPECT_EQ(-1.0, trans.getJointOffset());
 }
 
 class TransmissionSetup

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+  <name>rqt_controller_manager</name>
+  <version>0.7.2</version>
+  <description>The rqt_controller_manager package</description>
+
+  <maintainer email="kphawkins@gatech.edu">Kelsey Hawkins</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/rqt_controller_manager</url>
+  <url type="bugtracker">https://github.com/ros-controls/ros_control/issues</url>
+  <url type="repository">https://github.com/ros-controls/ros_control</url>
+
+  <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>controller_manager</build_depend>
+  <build_depend>rqt_gui</build_depend>
+
+  <run_depend>controller_manager</run_depend>
+  <run_depend>rqt_gui</run_depend>
+
+  <export>
+    <rqt_gui plugin="${prefix}/plugins/plugin.xml" />
+  </export>
+</package>

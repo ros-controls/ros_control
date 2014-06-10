@@ -2,8 +2,24 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.5.6 (2013-07-29)
+0.7.2 (2014-04-01)
 ------------------
+
+0.7.1 (2014-03-31)
+------------------
+
+0.7.0 (2014-03-28)
+------------------
+* Add --timeout option to controller spawner
+* Use argparse instead of getopt
+  It is a much nicer interface
+* Contributors: Paul Mathieu
+
+0.6.0 (2014-02-05)
+------------------
+* Update controller_manager.cpp
+  Postfix to prefix increment operator.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
 
 0.5.8 (2013-10-11)
 ------------------
@@ -33,6 +49,9 @@ Changelog for package controller_manager
   controller_manager.cpp:501: bool controller_manager::ControllerManager::reloadControllerLibrariesSrv(controller_manager_msgs::ReloadControllerLibraries::Request&, controller_manager_msgs::ReloadControllerLibraries::Response&): Assertion `controllers.empty()' failed.
 
 * Updated changelogs
+
+0.5.6 (2013-07-29)
+------------------
 
 0.5.5 (2013-07-23)
 ------------------

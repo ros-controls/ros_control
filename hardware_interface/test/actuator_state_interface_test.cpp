@@ -103,12 +103,18 @@ TEST_F(ActuatorStateInterfaceTest, ExcerciseApi)
   EXPECT_DOUBLE_EQ(pos1, h1_tmp.getPosition());
   EXPECT_DOUBLE_EQ(vel1, h1_tmp.getVelocity());
   EXPECT_DOUBLE_EQ(eff1, h1_tmp.getEffort());
+  EXPECT_EQ(&pos1, h1_tmp.getPositionPtr());
+  EXPECT_EQ(&vel1, h1_tmp.getVelocityPtr());
+  EXPECT_EQ(&eff1, h1_tmp.getEffortPtr());
 
   ActuatorStateHandle h2_tmp = iface.getHandle(name2);
   EXPECT_EQ(name2, h2_tmp.getName());
   EXPECT_DOUBLE_EQ(pos2, h2_tmp.getPosition());
   EXPECT_DOUBLE_EQ(vel2, h2_tmp.getVelocity());
   EXPECT_DOUBLE_EQ(eff2, h2_tmp.getEffort());
+  EXPECT_EQ(&pos2, h2_tmp.getPositionPtr());
+  EXPECT_EQ(&vel2, h2_tmp.getVelocityPtr());
+  EXPECT_EQ(&eff2, h2_tmp.getEffortPtr());
 
   // This interface does not claim resources
   EXPECT_TRUE(iface.getClaims().empty());

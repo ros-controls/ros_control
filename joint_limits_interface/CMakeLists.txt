@@ -23,13 +23,17 @@ if(USE_ROSBUILD)
 
 else() # catkin
 
-  find_package(catkin REQUIRED COMPONENTS roscpp rostest)
+  find_package(catkin REQUIRED
+    roscpp
+    rostest
+    hardware_interface
+    urdfdom
+  )
 
   include_directories(
     SYSTEM 
     include
     ${catkin_INCLUDE_DIRS}
-    ${urdfdom_INCLUDE_DIRS}
   )
 
   # Declare catkin package
@@ -38,9 +42,9 @@ else() # catkin
       roscpp
     INCLUDE_DIRS
       include
-      ${urdfdom_INCLUDE_DIRS}
+      ${catkin_INCLUDE_DIRS}
     LIBRARIES
-      ${urdfdom_LIBRARIES}
+      ${catkin_LIBRARIES}
   )
 
   if(CATKIN_ENABLE_TESTING)

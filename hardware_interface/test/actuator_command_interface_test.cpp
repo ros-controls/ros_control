@@ -40,8 +40,8 @@ TEST(ActuatorCommandHandleTest, HandleConstruction)
   string name = "name1";
   double pos, vel, eff;
   double cmd;
-  EXPECT_NO_THROW(ActuatorHandle(ActuatorStateHandle(name, &pos, &vel, &eff), &cmd));
-  EXPECT_THROW(ActuatorHandle(ActuatorStateHandle(name, &pos, &vel, &eff), 0), HardwareInterfaceException);
+  EXPECT_NO_THROW(ActuatorHandle tmp(ActuatorStateHandle(name, &pos, &vel, &eff), &cmd));
+  EXPECT_THROW(ActuatorHandle tmp(ActuatorStateHandle(name, &pos, &vel, &eff), 0), HardwareInterfaceException);
 
   // Print error messages
   // Requires manual output inspection, but exception message should be descriptive
@@ -102,6 +102,11 @@ TEST_F(ActuatorCommandInterfaceTest, ExcerciseApi)
   EXPECT_DOUBLE_EQ(vel1, hc1_tmp.getVelocity());
   EXPECT_DOUBLE_EQ(eff1, hc1_tmp.getEffort());
   EXPECT_DOUBLE_EQ(cmd1, hc1_tmp.getCommand());
+  EXPECT_EQ(&pos1, hc1_tmp.getPositionPtr());
+  EXPECT_EQ(&vel1, hc1_tmp.getVelocityPtr());
+  EXPECT_EQ(&eff1, hc1_tmp.getEffortPtr());
+  EXPECT_EQ(&cmd1, hc1_tmp.getCommandPtr());
+
   const double new_cmd_1 = -1.0;
   hc1_tmp.setCommand(new_cmd_1);
   EXPECT_DOUBLE_EQ(new_cmd_1, hc1_tmp.getCommand());
