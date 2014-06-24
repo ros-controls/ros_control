@@ -2,8 +2,8 @@
 Changelog for package rqt_controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.1 (2014-06-24)
+------------------
 * Register plugin under a group. Fixes `#162 <https://github.com/pal-robotics/ros_control/issues/162>`_.
 * Contributors: Adolfo Rodriguez Tsouroukdissian
 

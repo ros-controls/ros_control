@@ -2,8 +2,8 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.1 (2014-06-24)
+------------------
 * Use upstream liburdfdom-dev package.
   Refs `ros/rosdistro#4633 <https://github.com/ros/rosdistro/issues/4633>`_.
 * Contributors: Adolfo Rodriguez Tsouroukdissian
