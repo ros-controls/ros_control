@@ -15,11 +15,11 @@
   <build_depend>rostest</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>hardware_interface</build_depend>
-  <build_depend>urdfdom</build_depend>
+  <build_depend>liburdfdom-dev</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>hardware_interface</run_depend>
-  <run_depend>urdfdom</run_depend>
+  <run_depend>liburdfdom-dev</run_depend>
 
   <export>
     <cpp cflags="-I${prefix}/include"/>
