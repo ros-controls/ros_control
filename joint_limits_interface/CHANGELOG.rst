@@ -2,6 +2,13 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Propagate urdfdom changes to CMakeLists.txt
+  urdfdom is now standalone, so it must be find_package'd independently.
+* Fix rostest, which was not being built correctly.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.8.1 (2014-06-24)
 ------------------
 * Use upstream liburdfdom-dev package.
