@@ -40,6 +40,7 @@ else() # catkin
   catkin_package(
     CATKIN_DEPENDS 
       roscpp
+      hardware_interface
     INCLUDE_DIRS
       include
       ${catkin_INCLUDE_DIRS}
