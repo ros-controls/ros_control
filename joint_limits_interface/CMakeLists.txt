@@ -54,10 +54,11 @@ else() # catkin
     catkin_add_gtest(joint_limits_urdf_test      test/joint_limits_urdf_test.cpp)
     target_link_libraries(joint_limits_urdf_test ${catkin_LIBRARIES})
 
-    catkin_add_gtest(joint_limits_rosparam_test  test/joint_limits_urdf_test.cpp)
+    add_rostest_gtest(joint_limits_rosparam_test
+                      test/joint_limits_rosparam.test
+                      test/joint_limits_rosparam_test.cpp
+    )
     target_link_libraries(joint_limits_rosparam_test ${catkin_LIBRARIES})
-
-    add_rostest(test/joint_limits_rosparam.test)
   endif()
 
   # Install
