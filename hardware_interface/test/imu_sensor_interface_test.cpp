@@ -198,7 +198,7 @@ TEST_F(ImuSensorInterfaceTest, ExcerciseApi)
   EXPECT_TRUE(iface.getClaims().empty());
 
   // Print error message
-  // Requires manual output inspection, but exception message should contain the interface name (not its base clase)
+  // Requires manual output inspection, but exception message should contain the interface name (not its base class)
   try {iface.getHandle("unknown_name");}
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 }

@@ -127,7 +127,7 @@ def main():
         return
 
     if wait_for_topic:
-        # This has to be a list since Python has a peculiar mecanism to determine
+        # This has to be a list since Python has a peculiar mechanism to determine
         # whether a variable is local to a function or not:
         # if the variable is assigned in the body of the function, then it is
         # assumed to be local. Modifying a mutable object (like a list)
@@ -140,7 +140,7 @@ def main():
         rospy.Subscriber(wait_for_topic, Bool, wait_for_topic_cb)
         started_waiting = time.time()
 
-        # We might not have receieved any time messages yet
+        # We might not have received any time messages yet
         warned_about_not_hearing_anything = False
         while not wait_for_topic_result[0]:
             time.sleep(0.01)

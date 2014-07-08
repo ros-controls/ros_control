@@ -50,7 +50,7 @@ TEST(CMTests, spawnTestUnknown)
   ros::NodeHandle nh;
   ros::ServiceClient client = nh.serviceClient<LoadController>("/controller_manager/load_controller");
   LoadController srv;
-  srv.request.name = "nonexistient_controller";
+  srv.request.name = "nonexistent_controller";
   bool call_success = client.call(srv);
   EXPECT_TRUE(call_success);
   EXPECT_FALSE(srv.response.ok);

@@ -6,7 +6,7 @@
 propagating position, velocity and effort variables between actuator and joint spaces.
 
 In the same spirit as the **hardware_interface** package, this package wraps existing raw data (eg. current actuator
-positon, reference joint command, etc.) under a consistent interface. By not imposing a specific layout on the raw data,
+position, reference joint command, etc.) under a consistent interface. By not imposing a specific layout on the raw data,
 it becomes easier to support arbitrary hardware drivers to software control.
 
 ### Structure ###

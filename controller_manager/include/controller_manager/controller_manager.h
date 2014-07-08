@@ -136,7 +136,7 @@ public:
    * started and stopped.  The levels are defined in the
    * controller_manager_msgs/SwitchControllers service as either \c BEST_EFFORT
    * or \c STRICT.  \c BEST_EFFORT means that \ref switchController can still
-   * succeed if a non-existant controller is requested to be stopped or started.
+   * succeed if a non-existent controller is requested to be stopped or started.
    */
   bool switchController(const std::vector<std::string>& start_controllers,
                         const std::vector<std::string>& stop_controllers,
