@@ -103,7 +103,7 @@ namespace transmission_interface
  * - \f$ x \f$, \f$ \dot{x} \f$ and \f$ \tau \f$ are position, velocity and effort variables, respectively.
  * - Subindices \f$ _a \f$ and \f$ _j \f$ are used to represent actuator-space and joint-space variables, respectively.
  * - \f$ x_{off}\f$ represents the offset between motor and joint zeros, expressed in joint position coordinates.
- *   (cf. SimpleTransmission class documentation for a more detailed descrpition of this variable).
+ *   (cf. SimpleTransmission class documentation for a more detailed description of this variable).
  * - \f$ n \f$ represents a transmission ratio (reducers/amplifiers are depicted as timing belts in the figure).
  *   A transmission ratio can take any real value \e except zero. In particular:
  *     - If its absolute value is greater than one, it's a velocity reducer / effort amplifier, while if its absolute

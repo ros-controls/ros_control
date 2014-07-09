@@ -181,7 +181,7 @@ public:
    * \param raw_joint_data_map[out] Structure where the raw data of new joints will reside.  It may already contain data,
    * which will not be overwritten; only new data will be added.
    *
-   * \return true if succesful.
+   * \return true if successful.
    */
   virtual bool updateJointInterfaces(const TransmissionInfo&      transmission_info,
                                      hardware_interface::RobotHW* robot_hw,

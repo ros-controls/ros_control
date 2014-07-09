@@ -625,7 +625,7 @@ TEST_F(AccessorTest, AccessorValidation)
   EXPECT_THROW(trans_iface.getHandle("unregistered_name"), TransmissionInterfaceException);
 
   // Print error message
-  // Requires manual output inspection, but exception message should contain the interface name (not its base clase)
+  // Requires manual output inspection, but exception message should contain the interface name (not its base class)
   try {trans_iface.getHandle("unregistered_name");}
   catch(const TransmissionInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 }

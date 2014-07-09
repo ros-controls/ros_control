@@ -91,7 +91,7 @@ TEST_F(HardwareResourceManagerTest, ExcerciseApi)
   EXPECT_EQ(h2.getName(), h2_tmp.getName());
   EXPECT_EQ(h2.getValue(), h2_tmp.getValue());
 
-  // Trying to get a handle to a non-existant resource should throw
+  // Trying to get a handle to a non-existent resource should throw
   EXPECT_THROW(mgr.getHandle("no_resource"), HardwareInterfaceException);
 }
 
@@ -101,7 +101,7 @@ TEST_F(HardwareResourceManagerTest, HandleRewriting)
   HardwareResourceManager<HandleType> mgr;
   mgr.registerHandle(h1);
 
-  // Check handle velues
+  // Check handle values
   {
     EXPECT_NO_THROW(mgr.getHandle(h1.getName()));
     HandleType h1_tmp = mgr.getHandle(h1.getName());
@@ -166,7 +166,7 @@ TEST_F(HardwareResourceManagerTest, ResourceClaims)
     mgr.registerHandle(h2);
     EXPECT_TRUE(mgr.getClaims().empty());
 
-    // Getting a handle is the resource-claiming operation (which in this case should inded claim resources)
+    // Getting a handle is the resource-claiming operation (which in this case should indeed claim resources)
     mgr.getHandle(h1.getName());
     mgr.getHandle(h2.getName());
     mgr.getHandle(h2.getName()); // Getting twice the same resource, claims list should still be of size 2

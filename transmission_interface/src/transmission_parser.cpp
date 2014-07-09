@@ -114,7 +114,7 @@ bool TransmissionParser::parse(const std::string& urdf, std::vector<Transmission
 
   if( transmissions.empty() )
   {
-    ROS_DEBUG_STREAM_NAMED("parser", "No valid tranmissions found.");
+    ROS_DEBUG_STREAM_NAMED("parser", "No valid transmissions found.");
   }
 
   return true;

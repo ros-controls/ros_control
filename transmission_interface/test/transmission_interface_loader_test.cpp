@@ -253,7 +253,7 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoad)
   std::vector<TransmissionInfo> infos = parseUrdf(urdf_filename);
   ASSERT_EQ(2, infos.size());
 
-  // Get infos for each transmission
+  // Get info for each transmission
   const TransmissionInfo& info_red = infos.front();
   ASSERT_EQ(1, info_red.actuators_.size());
   ASSERT_EQ(1, info_red.joints_.size());
