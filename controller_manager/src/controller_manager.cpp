@@ -567,7 +567,7 @@ bool ControllerManager::listControllersSrv(
     cs.hardware_interface = controllers[i].info.hardware_interface;
     cs.resources.clear();
     cs.resources.reserve(controllers[i].info.resources.size());
-    for (std::set<std::string>::iterator it = controllers[i].info.resources.begin(); it != controllers[i].info.resources.end(); it++)
+    for (std::set<std::string>::iterator it = controllers[i].info.resources.begin(); it != controllers[i].info.resources.end(); ++it)
       cs.resources.push_back(*it);
 
     if (controllers[i].c->isRunning())

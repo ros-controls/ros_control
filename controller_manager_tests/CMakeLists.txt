@@ -10,7 +10,7 @@ if(USE_ROSBUILD)
   set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
   set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-  rosbuild_add_library(${PROJECT_NAME} 
+  rosbuild_add_library(${PROJECT_NAME}
     src/my_robot_hw.cpp
     include/controller_manager_tests/my_robot_hw.h
     src/effort_test_controller.cpp
@@ -40,7 +40,7 @@ else()
     )
 
   #common commands for building c++ executables and libraries
-  add_library(${PROJECT_NAME} 
+  add_library(${PROJECT_NAME}
     src/my_robot_hw.cpp
     include/controller_manager_tests/my_robot_hw.h
     src/effort_test_controller.cpp
@@ -50,6 +50,7 @@ else()
     src/my_dummy_controller.cpp
     include/controller_manager_tests/my_dummy_controller.h
     )
+  target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
   add_executable(dummy_app src/dummy_app.cpp)
   target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})

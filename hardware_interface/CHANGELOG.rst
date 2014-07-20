@@ -2,8 +2,32 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.5.6 (2013-07-29)
+0.7.2 (2014-04-01)
 ------------------
+
+0.7.1 (2014-03-31)
+------------------
+
+0.7.0 (2014-03-28)
+------------------
+* Add ResourceHandle typedef
+* add name to anonymous objects to avoid cppcheck error
+* Contributors: Daniel Pinyol, Igorec
+
+0.6.0 (2014-02-05)
+------------------
+* Update interface_manager.h
+  Trivial doc fix
+* Add raw data accessors to actuators interface.
+  Write access to the raw actuator data will be needed for automatic transmission
+  loading.
+* Fix doc typo.
+* Migrate RobotHW class to use InterfaceManager.
+* Factor out interface management parts of RobotHW.
+  - Interface management is needed in the transmission_interface package as well.
+  - Add new InterfaceManager internal class, with tests.
+  - RobotHW remains untouched.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
 
 0.5.8 (2013-10-11)
 ------------------
@@ -20,6 +44,9 @@ Changelog for package hardware_interface
 
 * Updated changelogs
 * Author/maintainer list update.
+
+0.5.6 (2013-07-29)
+------------------
 
 0.5.5 (2013-07-23)
 ------------------

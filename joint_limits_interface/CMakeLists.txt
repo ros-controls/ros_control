@@ -23,24 +23,29 @@ if(USE_ROSBUILD)
 
 else() # catkin
 
-  find_package(catkin REQUIRED COMPONENTS roscpp rostest)
+  find_package(catkin REQUIRED
+    roscpp
+    rostest
+    hardware_interface
+    urdfdom
+  )
 
   include_directories(
     SYSTEM 
     include
     ${catkin_INCLUDE_DIRS}
-    ${urdfdom_INCLUDE_DIRS}
   )
 
   # Declare catkin package
   catkin_package(
     CATKIN_DEPENDS 
       roscpp
+      hardware_interface
     INCLUDE_DIRS
       include
-      ${urdfdom_INCLUDE_DIRS}
+      ${catkin_INCLUDE_DIRS}
     LIBRARIES
-      ${urdfdom_LIBRARIES}
+      ${catkin_LIBRARIES}
   )
 
   if(CATKIN_ENABLE_TESTING)
@@ -50,10 +55,11 @@ else() # catkin
     catkin_add_gtest(joint_limits_urdf_test      test/joint_limits_urdf_test.cpp)
     target_link_libraries(joint_limits_urdf_test ${catkin_LIBRARIES})
 
-    catkin_add_gtest(joint_limits_rosparam_test  test/joint_limits_urdf_test.cpp)
+    add_rostest_gtest(joint_limits_rosparam_test
+                      test/joint_limits_rosparam.test
+                      test/joint_limits_rosparam_test.cpp
+    )
     target_link_libraries(joint_limits_rosparam_test ${catkin_LIBRARIES})
-
-    add_rostest(test/joint_limits_rosparam.test)
   endif()
 
   # Install

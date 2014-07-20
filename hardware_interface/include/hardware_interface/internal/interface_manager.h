@@ -90,7 +90,7 @@ public:
    * the given pointer.
    *
    * \tparam T The interface type
-   * \param hw A pointer to the interface to store
+   * \param iface A pointer to the interface to store
    */
   template<class T>
   void registerInterface(T* iface)
