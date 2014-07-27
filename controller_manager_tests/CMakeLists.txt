@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(controller_manager_tests)
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rostest controller_manager controller_interface control_toolbox)
+find_package(catkin REQUIRED COMPONENTS controller_manager controller_interface control_toolbox)
 
 include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
@@ -27,6 +27,7 @@ add_executable(dummy_app src/dummy_app.cpp)
 target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
 if(CATKIN_ENABLE_TESTING)
+  find_package(rostest)
   add_executable(cm_test test/cm_test.cpp)
   add_dependencies(tests cm_test)
   target_link_libraries(cm_test ${GTEST_LIBRARIES} ${catkin_LIBRARIES})
