@@ -145,7 +145,5 @@ bool VelocityJointInterfaceProvider::registerTransmission(TransmissionLoaderData
 
 } // namespace
 
-PLUGINLIB_DECLARE_CLASS(hardware_interface,
-                        VelocityJointInterface,
-                        transmission_interface::VelocityJointInterfaceProvider,
-                        transmission_interface::RequisiteProvider)
+PLUGINLIB_EXPORT_CLASS(transmission_interface::VelocityJointInterfaceProvider,
+                       transmission_interface::RequisiteProvider)
