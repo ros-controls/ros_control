@@ -17,6 +17,8 @@ find_package(TinyXML REQUIRED)
 catkin_package(
   LIBRARIES
     ${PROJECT_NAME}_parser
+    ${PROJECT_NAME}_loader
+    ${PROJECT_NAME}_loader_plugins
   INCLUDE_DIRS
     include
   DEPENDS
@@ -41,17 +43,17 @@ target_link_libraries(${PROJECT_NAME}_parser ${catkin_LIBRARIES} ${TinyXML_LIBRA
 
 
 # Transmission loader library
-add_library(transmission_interface_loader
+add_library(${PROJECT_NAME}_loader
   src/transmission_loader.cpp           include/transmission_interface/transmission_loader.h
   src/transmission_interface_loader.cpp include/transmission_interface/transmission_interface_loader.h
 )
-target_link_libraries(transmission_interface_loader
+target_link_libraries(${PROJECT_NAME}_loader
   ${PROJECT_NAME}_parser
   ${catkin_LIBRARIES}
   ${TinyXML_LIBRARIES})
 
 
-add_library(transmission_interface_loader_plugins
+add_library(${PROJECT_NAME}_loader_plugins
   src/simple_transmission_loader.cpp           include/transmission_interface/simple_transmission_loader.h
   src/differential_transmission_loader.cpp     include/transmission_interface/differential_transmission_loader.h
   src/four_bar_linkage_transmission_loader.cpp include/transmission_interface/four_bar_linkage_transmission_loader.h
@@ -59,7 +61,7 @@ add_library(transmission_interface_loader_plugins
   src/position_joint_interface_provider.cpp    include/transmission_interface/position_joint_interface_provider.h
   src/velocity_joint_interface_provider.cpp    include/transmission_interface/velocity_joint_interface_provider.h
   src/effort_joint_interface_provider.cpp      include/transmission_interface/effort_joint_interface_provider.h)
-target_link_libraries(transmission_interface_loader_plugins transmission_interface_loader)
+target_link_libraries(${PROJECT_NAME}_loader_plugins ${PROJECT_NAME}_loader)
 
 
 #############
