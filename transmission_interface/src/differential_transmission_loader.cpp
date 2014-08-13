@@ -244,7 +244,5 @@ bool DifferentialTransmissionLoader::getJointConfig(const TransmissionInfo& tran
 
 } // namespace
 
-PLUGINLIB_DECLARE_CLASS(transmission_interface,
-                        DifferentialTransmission,
-                        transmission_interface::DifferentialTransmissionLoader,
-                        transmission_interface::TransmissionLoader)
+PLUGINLIB_EXPORT_CLASS(transmission_interface::DifferentialTransmissionLoader,
+                       transmission_interface::TransmissionLoader)

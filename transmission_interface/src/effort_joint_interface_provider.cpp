@@ -145,7 +145,5 @@ bool EffortJointInterfaceProvider::registerTransmission(TransmissionLoaderData& 
 
 } // namespace
 
-PLUGINLIB_DECLARE_CLASS(hardware_interface,
-                        EffortJointInterface,
-                        transmission_interface::EffortJointInterfaceProvider,
-                        transmission_interface::RequisiteProvider)
+PLUGINLIB_EXPORT_CLASS(transmission_interface::EffortJointInterfaceProvider,
+                       transmission_interface::RequisiteProvider)

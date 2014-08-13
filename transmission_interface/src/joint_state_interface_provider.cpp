@@ -143,7 +143,5 @@ bool JointStateInterfaceProvider::registerTransmission(TransmissionLoaderData& l
 
 } // namespace
 
-PLUGINLIB_DECLARE_CLASS(hardware_interface,
-                        JointStateInterface,
-                        transmission_interface::JointStateInterfaceProvider,
-                        transmission_interface::RequisiteProvider)
+PLUGINLIB_EXPORT_CLASS(transmission_interface::JointStateInterfaceProvider,
+                       transmission_interface::RequisiteProvider)

@@ -145,7 +145,5 @@ bool PositionJointInterfaceProvider::registerTransmission(TransmissionLoaderData
 
 } // namespace
 
-PLUGINLIB_DECLARE_CLASS(hardware_interface,
-                        PositionJointInterface,
-                        transmission_interface::PositionJointInterfaceProvider,
-                        transmission_interface::RequisiteProvider)
+PLUGINLIB_EXPORT_CLASS(transmission_interface::PositionJointInterfaceProvider,
+                       transmission_interface::RequisiteProvider)

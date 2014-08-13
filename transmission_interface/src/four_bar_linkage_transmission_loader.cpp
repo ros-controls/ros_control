@@ -244,7 +244,5 @@ bool FourBarLinkageTransmissionLoader::getJointConfig(const TransmissionInfo& tr
 
 } // namespace
 
-PLUGINLIB_DECLARE_CLASS(transmission_interface,
-                        FourBarLinkageTransmission,
-                        transmission_interface::FourBarLinkageTransmissionLoader,
-                        transmission_interface::TransmissionLoader)
+PLUGINLIB_EXPORT_CLASS(transmission_interface::FourBarLinkageTransmissionLoader,
+                       transmission_interface::TransmissionLoader)

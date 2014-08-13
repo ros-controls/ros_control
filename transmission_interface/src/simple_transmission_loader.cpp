@@ -85,7 +85,5 @@ SimpleTransmissionLoader::TransmissionPtr SimpleTransmissionLoader::load(const T
 
 } // namespace
 
-PLUGINLIB_DECLARE_CLASS(transmission_interface,
-                        SimpleTransmission,
-                        transmission_interface::SimpleTransmissionLoader,
-                        transmission_interface::TransmissionLoader)
+PLUGINLIB_EXPORT_CLASS(transmission_interface::SimpleTransmissionLoader,
+                       transmission_interface::TransmissionLoader)
