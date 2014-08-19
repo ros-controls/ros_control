@@ -122,8 +122,24 @@ public:
   /** \name Non Real-Time Safe Functions
    *\{*/
 
-  /// Get the name of this controller's hardware interface type
-  virtual std::string getHardwareInterfaceType() const = 0;
+  /// Get the names of the hardware interface types this controller uses
+  virtual std::set<std::string> getHardwareInterfaceTypes() const = 0;
+
+  /// Get the single name of the hardware interface this controller uses
+  virtual std::string getHardwareInterfaceType() 
+  {
+    std::set<std::string> types = getHardwareInterfaceTypes();
+
+    if(types.size() == 0) {
+      ROS_WARN("This controller has no interface type!");
+      return std::string("");
+    }
+
+    if(types.size() > 1)
+      ROS_WARN("This controller has more than one interface type!"
+                  "Use 'getHardwareInterfaceTypes' instead.");
+    return *(types.begin());
+  }
 
   /** \brief Request that the controller be initialized
    *

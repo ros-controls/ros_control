@@ -111,7 +111,7 @@ protected:
     {
       ROS_ERROR("This controller requires a hardware interface of type '%s'."
                 " Make sure this is registered in the hardware_interface::RobotHW class.",
-                getHardwareInterfaceType().c_str());
+                getHardwareInterfaceTypes().begin()->c_str());
       return false;
     }
 
@@ -130,9 +130,11 @@ protected:
     return true;
   }
 
-  virtual std::string getHardwareInterfaceType() const
+  virtual std::set<std::string> getHardwareInterfaceTypes() const
   {
-    return hardware_interface::internal::demangledTypeName<T>();
+    std::set<std::string> ret_types;
+    ret_types.insert(hardware_interface::internal::demangledTypeName<T>());
+    return ret_types;
   }
 
 private:

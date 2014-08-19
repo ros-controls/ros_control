@@ -117,19 +117,19 @@ TEST_F(RobotHWTest, ConflictChecking)
   ControllerInfo info1;
   info1.name = "controller_1";
   info1.type = "type_1";
-  info1.hardware_interface = "interface_1";
+  info1.hardware_interfaces.insert("interface_1");
   info1.resources.insert("resource_1");
 
   ControllerInfo info2;
   info2.name = "controller_2";
   info2.type = "type_2";
-  info2.hardware_interface = "interface_2";
+  info2.hardware_interfaces.insert("interface_2");
   info2.resources.insert("resource_2");
 
   ControllerInfo info12;
   info12.name = "controller_12";
   info12.type = "type_12";
-  info12.hardware_interface = "interface_12";
+  info12.hardware_interfaces.insert("interface_12");
   info12.resources.insert("resource_1");
   info12.resources.insert("resource_2");
 
