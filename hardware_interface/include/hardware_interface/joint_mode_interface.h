@@ -61,7 +61,7 @@ public:
   /**
    * \param mode Which mode to start in
    */
-  JointModeHandle(std::string name, int* mode)
+  JointModeHandle(std::string name, JointCommandModes* mode)
     : mode_(mode)
     , name_(name)
   {
@@ -73,11 +73,11 @@ public:
 
   std::string getName() const {return name_;}
 
-  void setMode(int mode) {assert(mode_); *mode_ = mode;}
+  void setMode(JointCommandModes mode) {assert(mode_); *mode_ = mode;}
   int getMode() const {assert(mode_); return *mode_;}
 
   // Helper function for console messages
-  std::string getModeName(int mode)
+  std::string getModeName(JointCommandModes mode)
   {
     switch(mode)
     {
@@ -94,7 +94,7 @@ public:
   }
 
 private:
-  int* mode_;
+  JointCommandModes* mode_;
   std::string name_;
 };
 
