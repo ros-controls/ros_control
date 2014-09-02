@@ -3,6 +3,7 @@ project(controller_manager_tests)
 
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS controller_manager controller_interface control_toolbox)
+catkin_python_setup()
 
 include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
@@ -32,6 +33,8 @@ if(CATKIN_ENABLE_TESTING)
   add_dependencies(tests cm_test)
   target_link_libraries(cm_test ${GTEST_LIBRARIES} ${catkin_LIBRARIES})
   add_rostest(test/cm_test.test)
+  catkin_add_nosetests(test)
+  add_rostest(test/cm_msgs_utils_rostest.test)
 endif()
 
 # Install
