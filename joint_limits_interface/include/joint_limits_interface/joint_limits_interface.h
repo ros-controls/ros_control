@@ -139,7 +139,7 @@ private:
  * validity without relying on the actual position/velocity values.
  *
  * - Actual position values are \e not used because in some platforms there might be a substantial lag
- *   between sending a command and executing it (propagate comand to hardware, reach control objective,
+ *   between sending a command and executing it (propagate command to hardware, reach control objective,
  *   read from hardware).
  *
  * - Actual velocity values are \e not used because of the above reason, and because some platforms might not expose
@@ -528,7 +528,7 @@ class JointLimitsInterface : public hardware_interface::ResourceManager<HandleTy
 public:
   HandleType getHandle(const std::string& name)
   {
-    // Rethrow exception with a meanungful type
+    // Rethrow exception with a meaningful type
     try
     {
       return this->hardware_interface::ResourceManager<HandleType>::getHandle(name);

@@ -249,7 +249,7 @@ bool ControllerManager::loadController(const std::string& name)
     ROS_ERROR("Initializing controller '%s' failed", name.c_str());
     return false;
   }
-  ROS_DEBUG("Initialized controller '%s' succesful", name.c_str());
+  ROS_DEBUG("Initialized controller '%s' successful", name.c_str());
 
   // Adds the controller to the new list
   to.resize(to.size() + 1);

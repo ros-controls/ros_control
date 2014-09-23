@@ -222,7 +222,7 @@ TEST_F(PositionJointSoftLimitsHandleTest, EnforceVelocityBounds)
   }
 }
 
-// This is a black box test and does not verify against random precomuted values, but rather that the expected
+// This is a black box test and does not verify against random precomputed values, but rather that the expected
 // qualitative behavior is honored
 TEST_F(PositionJointSoftLimitsHandleTest, EnforcePositionBounds)
 {
@@ -441,7 +441,7 @@ TEST_F(JointLimitsInterfaceTest, InterfaceRegistration)
   EXPECT_EQ(name2, h2_tmp.getName());
 
   // Print error message
-  // Requires manual output inspection, but exception message should contain the interface name (not its base clase)
+  // Requires manual output inspection, but exception message should contain the interface name (not its base class)
   try {iface.getHandle("unknown_name");}
   catch(const JointLimitsInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 

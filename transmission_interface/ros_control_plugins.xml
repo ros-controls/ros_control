@@ -1,0 +1,65 @@
+<library path="lib/libtransmission_interface_loader_plugins">
+
+  <!-- Transmission types -->
+  <class name="transmission_interface/SimpleTransmission"
+         type="transmission_interface::SimpleTransmissionLoader"
+         base_class_type="transmission_interface::TransmissionLoader">
+    <description>
+      Load from a URDF description the configuration of a simple transmission.
+    </description>
+  </class>
+
+  <class name="transmission_interface/DifferentialTransmission"
+         type="transmission_interface::DifferentialTransmissionLoader"
+         base_class_type="transmission_interface::TransmissionLoader">
+    <description>
+      Load from a URDF description the configuration of a differential transmission.
+    </description>
+  </class>
+
+  <class name="transmission_interface/FourBarLinkageTransmission"
+         type="transmission_interface::FourBarLinkageTransmissionLoader"
+         base_class_type="transmission_interface::TransmissionLoader">
+    <description>
+      Load from a URDF description the configuration of a four-bar linkage transmission.
+    </description>
+  </class>
+
+  <!-- Hardware interfaces -->
+  <class name="hardware_interface/JointStateInterface"
+         type="transmission_interface::JointStateInterfaceProvider"
+         base_class_type="transmission_interface::RequisiteProvider">
+    <description>
+      Deal with hardware interface specifics when loading a transmission interface from URDF.
+      JointStateInterface specialization.
+    </description>
+  </class>
+
+  <class name="hardware_interface/PositionJointInterface"
+         type="transmission_interface::PositionJointInterfaceProvider"
+         base_class_type="transmission_interface::RequisiteProvider">
+    <description>
+      Deal with hardware interface specifics when loading a transmission interface from URDF.
+      PositionJointInterface specialization.
+    </description>
+  </class>
+
+  <class name="hardware_interface/VelocityJointInterface"
+         type="transmission_interface::VelocityJointInterfaceProvider"
+         base_class_type="transmission_interface::RequisiteProvider">
+    <description>
+      Deal with hardware interface specifics when loading a transmission interface from URDF.
+      VelocityJointInterface specialization.
+    </description>
+  </class>
+
+  <class name="hardware_interface/EffortJointInterface"
+         type="transmission_interface::EffortJointInterfaceProvider"
+         base_class_type="transmission_interface::RequisiteProvider">
+    <description>
+      Deal with hardware interface specifics when loading a transmission interface from URDF.
+      EffortJointInterface specialization.
+    </description>
+  </class>
+
+</library>

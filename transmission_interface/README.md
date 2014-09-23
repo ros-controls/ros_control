@@ -6,7 +6,7 @@
 propagating position, velocity and effort variables between actuator and joint spaces.
 
 In the same spirit as the **hardware_interface** package, this package wraps existing raw data (eg. current actuator
-positon, reference joint command, etc.) under a consistent interface. By not imposing a specific layout on the raw data,
+position, reference joint command, etc.) under a consistent interface. By not imposing a specific layout on the raw data,
 it becomes easier to support arbitrary hardware drivers to software control.
 
 ### Structure ###
@@ -33,10 +33,6 @@ There are three main elements involved in setting up a transmission_interface:
   eg. a single **ActuatorToJointPositionInterface** can be
   set up to transform position variables from actuator to joint space for an arm with a four-bar-linkage in the
   shoulder, a differential in the wrist, and simple reducers elsewhere.
-
-### TODO ###
-
-- Read transmission configuration from configuration files.
 
 ### Examples ###
 Please refer to the  [transmission_interface](https://github.com/ros-controls/ros_control/wiki/transmission_interface) wiki page.

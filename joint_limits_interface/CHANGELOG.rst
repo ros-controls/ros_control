@@ -2,6 +2,24 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.8.2 (2014-06-25)
+------------------
+* Propagate urdfdom changes to CMakeLists.txt
+  urdfdom is now standalone, so it must be find_package'd independently.
+* Fix rostest, which was not being built correctly.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
+0.8.1 (2014-06-24)
+------------------
+* Use upstream liburdfdom-dev package.
+  Refs `ros/rosdistro#4633 <https://github.com/ros/rosdistro/issues/4633>`_.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
+0.8.0 (2014-05-12)
+------------------
+* Remove rosbuild artifacts. Fix `#154 <https://github.com/ros-controls/ros_control/issues/154>`_.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.7.2 (2014-04-01)
 ------------------
 

@@ -59,20 +59,20 @@ namespace transmission_interface
  * </td>
  * <td>
  * \f{eqnarray*}{
- * \tau_{j_1} & = & n_{a_1} \tau_{a_1} \\
- * \tau_{j_2} & = & n_{a_2} \tau_{a_2} - n_{a_1} \tau_{a_1}
+ * \tau_{j_1} & = & n_{j_1} n_{a_1} \tau_{a_1} \\
+ * \tau_{j_2} & = & n_{j_2} (n_{a_2} \tau_{a_2} - n_{j_1} n_{a_1} \tau_{a_1})
  * \f}
  * </td>
  * <td>
  * \f{eqnarray*}{
- * \dot{x}_{j_1} & = & \dot{x}_{a_1} / n_{a_1} \\
- * \dot{x}_{j_2} & = & \dot{x}_{a_2} / n_{a_2} - \dot{x}_{a_1} / n_{a_1}
+ * \dot{x}_{j_1} & = & \frac{ \dot{x}_{a_1} }{ n_{j_1} n_{a_1} } \\
+ * \dot{x}_{j_2} & = & \frac{ \dot{x}_{a_2} / n_{a_2} - \dot{x}_{a_1} / (n_{j_1} n_{a_1}) }{ n_{j_2} }
  * \f}
  * </td>
  * <td>
  * \f{eqnarray*}{
- * x_{j_1} & = & x_{a_1} / n_{a_1} + x_{off_1} \\
- * x_{j_2} & = & x_{a_2} / n_{a_2} - x_{a_1} / n_{a_1} + x_{off_2}
+ * x_{j_1} & = & \frac{ x_{a_1} }{ n_{j_1} n_{a_1} } + x_{off_1} \\
+ * x_{j_2} & = & \frac{ x_{a_2} / n_{a_2} - x_{a_1} / (n_{j_1} n_{a_1}) }{ n_{j_2} } + x_{off_2}
  * \f}
  * </td>
  * </tr>
@@ -81,20 +81,20 @@ namespace transmission_interface
  * </td>
  * <td>
  * \f{eqnarray*}{
- * \tau_{a_1} & = & \tau_{j_1} / n_{a_1} \\
- * \tau_{a_2} & = & (\tau_{j_1} + \tau_{j_2}) / n_{a_2}
+ * \tau_{a_1} & = & \tau_{j_1} / (n_{j_1} n_{a_1}) \\
+ * \tau_{a_2} & = & \frac{ \tau_{j_1} + \tau_{j_2} / n_{j_2} }{ n_{a_2} }
  * \f}
  * </td>
  * <td>
  * \f{eqnarray*}{
- * \dot{x}_{a_1} & = & n_{a_1} \dot{x}_{j_1} \\
- * \dot{x}_{a_2} & = & n_{a_2} (\dot{x}_{j_1} + \dot{x}_{j_2})
+ * \dot{x}_{a_1} & = & n_{j_1} n_{a_1} \dot{x}_{j_1} \\
+ * \dot{x}_{a_2} & = & n_{a_2} (\dot{x}_{j_1} + n_{j_2} \dot{x}_{j_2})
  * \f}
  * </td>
  * <td>
  * \f{eqnarray*}{
- * x_{a_1} & = & n_{a_1} (x_{j_1} - x_{off_1}) \\
- * x_{a_2} & = & n_{a_2} \left[(x_{j_1} - x_{off_1}) + (x_{j_2}  - x_{off_2})\right]
+ * x_{a_1} & = & n_{j_1} n_{a_1} (x_{j_1} - x_{off_1}) \\
+ * x_{a_2} & = & n_{a_2} \left[(x_{j_1} - x_{off_1}) + n_{j_2} (x_{j_2}  - x_{off_2})\right]
  * \f}
  * </td></tr></table>
  * </CENTER>
@@ -103,7 +103,7 @@ namespace transmission_interface
  * - \f$ x \f$, \f$ \dot{x} \f$ and \f$ \tau \f$ are position, velocity and effort variables, respectively.
  * - Subindices \f$ _a \f$ and \f$ _j \f$ are used to represent actuator-space and joint-space variables, respectively.
  * - \f$ x_{off}\f$ represents the offset between motor and joint zeros, expressed in joint position coordinates.
- *   (cf. SimpleTransmission class documentation for a more detailed descrpition of this variable).
+ *   (cf. SimpleTransmission class documentation for a more detailed description of this variable).
  * - \f$ n \f$ represents a transmission ratio (reducers/amplifiers are depicted as timing belts in the figure).
  *   A transmission ratio can take any real value \e except zero. In particular:
  *     - If its absolute value is greater than one, it's a velocity reducer / effort amplifier, while if its absolute
@@ -119,10 +119,12 @@ class FourBarLinkageTransmission : public Transmission
 public:
   /**
    * \param actuator_reduction Reduction ratio of actuators.
+   * \param joint_reduction    Reduction ratio of joints.
    * \param joint_offset       Joint position offset used in the position mappings.
    * \pre Nonzero actuator reduction values.
    */
   FourBarLinkageTransmission(const std::vector<double>& actuator_reduction,
+                             const std::vector<double>& joint_reduction,
                              const std::vector<double>& joint_offset = std::vector<double>(2, 0.0));
 
   /**
@@ -189,26 +191,33 @@ public:
   std::size_t numJoints()    const {return 2;}
 
   const std::vector<double>& getActuatorReduction() const {return act_reduction_;}
+  const std::vector<double>& getJointReduction()    const {return jnt_reduction_;}
   const std::vector<double>& getJointOffset()       const {return jnt_offset_;}
 
 protected:
   std::vector<double>  act_reduction_;
+  std::vector<double>  jnt_reduction_;
   std::vector<double>  jnt_offset_;
 };
 
 inline FourBarLinkageTransmission::FourBarLinkageTransmission(const std::vector<double>& actuator_reduction,
+                                                              const std::vector<double>& joint_reduction,
                                                               const std::vector<double>& joint_offset)
   : Transmission(),
     act_reduction_(actuator_reduction),
+    jnt_reduction_(joint_reduction),
     jnt_offset_(joint_offset)
 {
-  if (2 != actuator_reduction.size() ||
-      2 != jnt_offset_.size())
+  if (numActuators() != act_reduction_.size() ||
+      numJoints()    != jnt_reduction_.size() ||
+      numJoints()    != jnt_offset_.size())
   {
     throw TransmissionInterfaceException("Reduction and offset vectors of a four-bar linkage transmission must have size 2.");
   }
-  if (0.0 == actuator_reduction[0] ||
-      0.0 == actuator_reduction[1])
+  if (0.0 == act_reduction_[0] ||
+      0.0 == act_reduction_[1] ||
+      0.0 == jnt_reduction_[0] ||
+      0.0 == jnt_reduction_[1])
   {
     throw TransmissionInterfaceException("Transmission reduction ratios cannot be zero.");
   }
@@ -221,9 +230,10 @@ inline void FourBarLinkageTransmission::actuatorToJointEffort(const ActuatorData
   assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
 
   std::vector<double>& ar = act_reduction_;
+  std::vector<double>& jr = jnt_reduction_;
 
-  *jnt_data.effort[0] = *act_data.effort[0] * ar[0];
-  *jnt_data.effort[1] = *act_data.effort[1] * ar[1] - *act_data.effort[0] * ar[0];
+  *jnt_data.effort[0] = jr[0] * (*act_data.effort[0] * ar[0]);
+  *jnt_data.effort[1] = jr[1] * (*act_data.effort[1] * ar[1] - *act_data.effort[0] * ar[0] * jr[0]);
 }
 
 inline void FourBarLinkageTransmission::actuatorToJointVelocity(const ActuatorData& act_data,
@@ -233,9 +243,10 @@ inline void FourBarLinkageTransmission::actuatorToJointVelocity(const ActuatorDa
   assert(act_data.velocity[0] && act_data.velocity[1] && jnt_data.velocity[0] && jnt_data.velocity[1]);
 
   std::vector<double>& ar = act_reduction_;
+  std::vector<double>& jr = jnt_reduction_;
 
-  *jnt_data.velocity[0] = *act_data.velocity[0] / ar[0];
-  *jnt_data.velocity[1] = *act_data.velocity[1] / ar[1] - *act_data.velocity[0] / ar[0];
+  *jnt_data.velocity[0] = *act_data.velocity[0] / (jr[0] * ar[0]);
+  *jnt_data.velocity[1] = (*act_data.velocity[1] / ar[1] - *act_data.velocity[0] / (jr[0] * ar[0])) / jr[1];
 }
 
 inline void FourBarLinkageTransmission::actuatorToJointPosition(const ActuatorData& act_data,
@@ -245,9 +256,11 @@ inline void FourBarLinkageTransmission::actuatorToJointPosition(const ActuatorDa
   assert(act_data.position[0] && act_data.position[1] && jnt_data.position[0] && jnt_data.position[1]);
 
   std::vector<double>& ar = act_reduction_;
+  std::vector<double>& jr = jnt_reduction_;
 
-  *jnt_data.position[0] = *act_data.position[0] / ar[0] + jnt_offset_[0];
-  *jnt_data.position[1] = *act_data.position[1] / ar[1] - *act_data.position[0] / ar[0] + jnt_offset_[1];
+  *jnt_data.position[0] = *act_data.position[0] /(jr[0] * ar[0]) + jnt_offset_[0];
+  *jnt_data.position[1] = (*act_data.position[1] / ar[1] - *act_data.position[0] / (jr[0] * ar[0])) / jr[1]
+                          + jnt_offset_[1];
 }
 
 inline void FourBarLinkageTransmission::jointToActuatorEffort(const JointData&    jnt_data,
@@ -257,9 +270,10 @@ inline void FourBarLinkageTransmission::jointToActuatorEffort(const JointData&  
   assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
 
   std::vector<double>& ar = act_reduction_;
+  std::vector<double>& jr = jnt_reduction_;
 
-  *act_data.effort[0] = *jnt_data.effort[0] / ar[0];
-  *act_data.effort[1] = (*jnt_data.effort[0] + *jnt_data.effort[1]) / ar[1];
+  *act_data.effort[0] = *jnt_data.effort[0] / (ar[0] * jr[0]);
+  *act_data.effort[1] = (*jnt_data.effort[0] + *jnt_data.effort[1] / jr[1]) / ar[1];
 }
 
 inline void FourBarLinkageTransmission::jointToActuatorVelocity(const JointData&    jnt_data,
@@ -269,9 +283,10 @@ inline void FourBarLinkageTransmission::jointToActuatorVelocity(const JointData&
   assert(act_data.velocity[0] && act_data.velocity[1] && jnt_data.velocity[0] && jnt_data.velocity[1]);
 
   std::vector<double>& ar = act_reduction_;
+  std::vector<double>& jr = jnt_reduction_;
 
-  *act_data.velocity[0] = *jnt_data.velocity[0] * ar[0];
-  *act_data.velocity[1] = (*jnt_data.velocity[0] + *jnt_data.velocity[1]) * ar[1];
+  *act_data.velocity[0] = *jnt_data.velocity[0] * jr[0] * ar[0];
+  *act_data.velocity[1] = (*jnt_data.velocity[0] + *jnt_data.velocity[1] * jr[1]) * ar[1];
 }
 
 inline void FourBarLinkageTransmission::jointToActuatorPosition(const JointData&    jnt_data,
@@ -281,11 +296,12 @@ inline void FourBarLinkageTransmission::jointToActuatorPosition(const JointData&
   assert(act_data.position[0] && act_data.position[1] && jnt_data.position[0] && jnt_data.position[1]);
 
   std::vector<double>& ar = act_reduction_;
+  std::vector<double>& jr = jnt_reduction_;
 
   double jnt_pos_off[2] = {*jnt_data.position[0] - jnt_offset_[0], *jnt_data.position[1] - jnt_offset_[1]};
 
-  *act_data.position[0] = jnt_pos_off[0] * ar[0];
-  *act_data.position[1] = (jnt_pos_off[0] + jnt_pos_off[1]) * ar[1];
+  *act_data.position[0] = jnt_pos_off[0] * jr[0] * ar[0];
+  *act_data.position[1] = (jnt_pos_off[0] + jnt_pos_off[1] * jr[1]) * ar[1];
 }
 
 } // transmission_interface

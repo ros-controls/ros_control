@@ -33,6 +33,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
+#include <sstream>
 #include <transmission_interface/transmission_parser.h>
 
 namespace transmission_interface
@@ -44,8 +45,7 @@ bool TransmissionParser::parse(const std::string& urdf, std::vector<Transmission
   TiXmlDocument doc;
   if (!doc.Parse(urdf.c_str()) && doc.Error())
   {
-    ROS_ERROR("Could not load the gazebo_ros_control plugin's"
-      " configuration file: %s\n", urdf.c_str());
+    ROS_ERROR("Can't parse transmissions. Invalid robot description.");
     return false;
   }
 
@@ -63,10 +63,15 @@ bool TransmissionParser::parse(const std::string& urdf, std::vector<Transmission
     if(trans_it->Attribute("name"))
     {
       transmission.name_ = trans_it->Attribute("name");
+      if (transmission.name_.empty())
+      {
+        ROS_ERROR_STREAM_NAMED("parser","Empty name attribute specified for transmission.");
+        continue;
+      }
     }
     else
     {
-      ROS_ERROR_STREAM_NAMED("parser","No name attribute for transmission tag!");
+      ROS_ERROR_STREAM_NAMED("parser","No name attribute specified for transmission.");
       continue;
     }
 
@@ -74,31 +79,31 @@ bool TransmissionParser::parse(const std::string& urdf, std::vector<Transmission
     TiXmlElement *type_child = trans_it->FirstChildElement("type");
     if(!type_child)
     {
-      ROS_ERROR_STREAM_NAMED("parser","No type element found for transmission "
-        << transmission.name_);
+      ROS_ERROR_STREAM_NAMED("parser","No type element found in transmission '"
+        << transmission.name_ << "'.");
+      continue;
+    }
+    if (!type_child->GetText())
+    {
+      ROS_ERROR_STREAM_NAMED("parser","Skipping empty type element in transmission '"
+                             << transmission.name_ << "'.");
       continue;
     }
     transmission.type_ = type_child->GetText();
-    if(transmission.type_.empty())
-    {
-      ROS_ERROR_STREAM_NAMED("parser","No type string found for transmission "
-        << transmission.name_);
-      continue;
-    }
 
     // Load joints
     if(!parseJoints(trans_it, transmission.joints_))
     {
-      ROS_ERROR_STREAM_NAMED("parser","Failed to load joints for transmission "
-        << transmission.name_);
+      ROS_ERROR_STREAM_NAMED("parser","Failed to load joints for transmission '"
+        << transmission.name_ << "'.");
       continue;
     }
 
     // Load actuators
     if(!parseActuators(trans_it, transmission.actuators_))
     {
-      ROS_ERROR_STREAM_NAMED("parser","Failed to load actuators for transmission "
-        << transmission.name_);
+      ROS_ERROR_STREAM_NAMED("parser","Failed to load actuators for transmission '"
+        << transmission.name_ << "'.");
       continue;
     }
 
@@ -109,7 +114,7 @@ bool TransmissionParser::parse(const std::string& urdf, std::vector<Transmission
 
   if( transmissions.empty() )
   {
-    ROS_DEBUG_STREAM_NAMED("parser","No tranmissions found.");
+    ROS_DEBUG_STREAM_NAMED("parser", "No valid transmissions found.");
   }
 
   return true;
@@ -125,21 +130,48 @@ bool TransmissionParser::parseJoints(TiXmlElement *trans_it, std::vector<JointIn
     // Create new joint
     transmission_interface::JointInfo joint;
 
-    // Joint xml element
-    joint.xml_element_ = joint_it;
-
     // Joint name
     if(joint_it->Attribute("name"))
     {
       joint.name_ = joint_it->Attribute("name");
+      if (joint.name_.empty())
+      {
+        ROS_ERROR_STREAM_NAMED("parser","Empty name attribute specified for joint.");
+        continue;
+      }
     }
     else
     {
-      ROS_ERROR_STREAM_NAMED("parser","No name attribute for joint");
+      ROS_ERROR_STREAM_NAMED("parser","No name attribute specified for joint.");
       return false;
     }
 
-    // \todo: implement other generic joint properties
+    // Hardware interfaces (required)
+    TiXmlElement *hw_iface_it = NULL;
+    for (hw_iface_it = joint_it->FirstChildElement("hardwareInterface"); hw_iface_it;
+         hw_iface_it = hw_iface_it->NextSiblingElement("hardwareInterface"))
+    {
+      if(!hw_iface_it) {continue;}
+      if (!hw_iface_it->GetText())
+      {
+        ROS_DEBUG_STREAM_NAMED("parser","Skipping empty hardware interface element in joint '"
+                               << joint.name_ << "'.");
+        continue;
+      }
+      const std::string hw_iface_name = hw_iface_it->GetText();
+      joint.hardware_interfaces_.push_back(hw_iface_name);
+    }
+    if (joint.hardware_interfaces_.empty())
+    {
+      ROS_ERROR_STREAM_NAMED("parser","No valid hardware interface element found in joint '"
+        << joint.name_ << "'.");
+      continue;
+    }
+
+    // Joint xml element
+    std::stringstream ss;
+    ss << *joint_it;
+    joint.xml_element_ = ss.str();
 
     // Add joint to vector
     joints.push_back(joint);
@@ -147,7 +179,7 @@ bool TransmissionParser::parseJoints(TiXmlElement *trans_it, std::vector<JointIn
 
   if(joints.empty())
   {
-    ROS_ERROR_STREAM_NAMED("parser","No joint element found");
+    ROS_DEBUG_NAMED("parser","No valid joint element found.");
     return false;
   }
 
@@ -164,37 +196,48 @@ bool TransmissionParser::parseActuators(TiXmlElement *trans_it, std::vector<Actu
     // Create new actuator
     transmission_interface::ActuatorInfo actuator;
 
-    // Actuator xml element
-    actuator.xml_element_ = actuator_it;
-
     // Actuator name
     if(actuator_it->Attribute("name"))
     {
       actuator.name_ = actuator_it->Attribute("name");
+      if (actuator.name_.empty())
+      {
+        ROS_ERROR_STREAM_NAMED("parser","Empty name attribute specified for actuator.");
+        continue;
+      }
     }
     else
     {
-      ROS_ERROR_STREAM_NAMED("parser","No name attribute for actuator");
+      ROS_ERROR_STREAM_NAMED("parser","No name attribute specified for actuator.");
       return false;
     }
 
-    // Hardware interface
-    TiXmlElement *hardware_interface_child = actuator_it->FirstChildElement("hardwareInterface");
-    if(!hardware_interface_child)
+    // Hardware interfaces (optional)
+    TiXmlElement *hw_iface_it = NULL;
+    for (hw_iface_it = actuator_it->FirstChildElement("hardwareInterface"); hw_iface_it;
+         hw_iface_it = hw_iface_it->NextSiblingElement("hardwareInterface"))
     {
-      ROS_ERROR_STREAM_NAMED("parser","No hardware interface element found for actuator '"
-        << actuator.name_ << "'");
-      continue;
+      if(!hw_iface_it) {continue;}
+      if (!hw_iface_it->GetText())
+      {
+        ROS_DEBUG_STREAM_NAMED("parser","Skipping empty hardware interface element in actuator '"
+                               << actuator.name_ << "'.");
+        continue;
+      }
+      const std::string hw_iface_name = hw_iface_it->GetText();
+      actuator.hardware_interfaces_.push_back(hw_iface_name);
     }
-    actuator.hardware_interface_ = hardware_interface_child->GetText();
-    if(actuator.hardware_interface_.empty())
+    if (actuator.hardware_interfaces_.empty())
     {
-      ROS_ERROR_STREAM_NAMED("parser","No hardware interface string found for actuator '"
-        << actuator.name_ << "'");
-      continue;
+      ROS_DEBUG_STREAM_NAMED("parser","No valid hardware interface element found in actuator '"
+        << actuator.name_ << "'.");
+      // continue; // NOTE: Hardware interface is optional, so we keep on going
     }
 
-    // \todo: implement other generic actuator properties
+    // Actuator xml element
+    std::stringstream ss;
+    ss << *actuator_it;
+    actuator.xml_element_ = ss.str();
 
     // Add actuator to vector
     actuators.push_back(actuator);
@@ -202,7 +245,7 @@ bool TransmissionParser::parseActuators(TiXmlElement *trans_it, std::vector<Actu
 
   if(actuators.empty())
   {
-    ROS_ERROR_STREAM_NAMED("parser","No actuator element found");
+    ROS_DEBUG_NAMED("parser","No valid actuator element found.");
     return false;
   }
 
