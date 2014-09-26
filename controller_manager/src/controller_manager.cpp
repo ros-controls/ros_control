@@ -439,6 +439,14 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     start_request_.clear();
     return false;
   }
+  
+  if(!notifyHardwareInterface(info_list))
+  {
+    ROS_ERROR("Could not switch controllers, because switching the HWInterface failed");
+    stop_request_.clear();
+    start_request_.clear();
+    return false;
+  }
 
   // start the atomic controller switching
   switch_strictness_ = strictness;
@@ -457,8 +465,6 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   ROS_DEBUG("Successfully switched controllers");
   return true;
 }
-
-
 
 
 
