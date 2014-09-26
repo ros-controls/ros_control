@@ -72,7 +72,7 @@ namespace joint_limits_interface
  * existing values. Values in \p limits not specified in the parameter server remain unchanged.
  * \return True if a limits specification is found (ie. the \p joint_limits/joint_name parameter exists in \p nh), false otherwise.
  */
-bool getJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, JointLimits& limits)
+inline bool getJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, JointLimits& limits)
 {
   // Node handle scoped where the joint limits are defined
   ros::NodeHandle limits_nh;
