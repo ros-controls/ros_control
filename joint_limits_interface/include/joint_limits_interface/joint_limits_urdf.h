@@ -48,7 +48,7 @@ namespace joint_limits_interface
  * values. Values in \e limits not present in \e urdf_joint remain unchanged.
  * \return True if \e urdf_joint has a valid limits specification, false otherwise.
  */
-bool getJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, JointLimits& limits)
+inline bool getJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, JointLimits& limits)
 {
   if (!urdf_joint || !urdf_joint->limits)
   {
@@ -84,7 +84,7 @@ bool getJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, JointLimits
  * \param[out] soft_limits Where URDF soft joint limit data gets written into.
  * \return True if \e urdf_joint has a valid soft limits specification, false otherwise.
  */
-bool getSoftJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, SoftJointLimits& soft_limits)
+inline bool getSoftJointLimits(boost::shared_ptr<const urdf::Joint> urdf_joint, SoftJointLimits& soft_limits)
 {
   if (!urdf_joint || !urdf_joint->safety)
   {
