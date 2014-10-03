@@ -55,7 +55,7 @@ shutdown_timeout = 30.0
 def shutdown():
     global loaded,unload_controller_service,load_controller_service,switch_controller_service,shutdown_timeout
 
-    rospy.loginfo("Shutting down spawner. Disabling and unloading controllers...")
+    rospy.loginfo("Shutting down spawner. Stopping and unloading controllers...")
     # NOTE: Sleep for one second to avoid race conditions inherent in wait_for_service
     time.sleep(1.0)
 
