@@ -68,7 +68,7 @@ def shutdown():
         switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
         switch_controller.wait_for_service(timeout=shutdown_timeout)
 
-        rospy.loginfo("Disabling all controllers...");
+        rospy.loginfo("Stopping all controllers...");
         switch_controller([], loaded, SwitchControllerRequest.STRICT)
         rospy.loginfo("Unloading all loaded controllers...");
         for name in reversed(loaded):
