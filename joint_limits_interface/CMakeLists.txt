@@ -3,13 +3,12 @@ project(joint_limits_interface)
 
 find_package(urdfdom REQUIRED)
 
-find_package(catkin REQUIRED
+find_package(catkin REQUIRED COMPONENTS
   roscpp
   hardware_interface
 )
 
 include_directories(
-  SYSTEM
   include
   ${catkin_INCLUDE_DIRS}
   ${urdfdom_INCLUDE_DIRS}
@@ -30,7 +29,7 @@ catkin_package(
 )
 
 if(CATKIN_ENABLE_TESTING)
-  find_package(rostest)
+  find_package(rostest REQUIRED)
   catkin_add_gtest(joint_limits_interface_test test/joint_limits_interface_test.cpp)
   target_link_libraries(joint_limits_interface_test
     ${catkin_LIBRARIES}
