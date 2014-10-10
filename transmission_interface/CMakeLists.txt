@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(transmission_interface)
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED
+find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   cmake_modules
   pluginlib
