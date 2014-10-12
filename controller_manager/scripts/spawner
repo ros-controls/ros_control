@@ -89,7 +89,7 @@ def parse_args(args=None):
     parser.add_argument('--timeout', metavar='T', type=float, default=30,
                         help='how long to wait for controller_manager services when starting up [s] (default: 30)')
     parser.add_argument('--shutdown-timeout', metavar='T', type=float, default=30,
-                        help='how long to wait for controller_manager services when shutting down [s] (default: 30)')
+                        help='how long to wait for controller_manager services when shutting down [s] (default: 30). value 0 disables controllers from being unloaded')
     parser.add_argument('controllers', metavar='controller', nargs='+',
                         help='controllers to load')
     return parser.parse_args(args=args)
