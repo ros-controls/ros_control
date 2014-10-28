@@ -2,8 +2,8 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.3 (2014-10-28)
+------------------
 * make rostest in CMakeLists optional.
 * Add hardware_interface to CATKIN_DEPENDS.
 * Fix generation of rostests in catkin.

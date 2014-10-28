@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.3 (2014-10-28)
+------------------
 * Spawner: adding shutdown timeout to prevent deadlocks
 * Create README.md
 * Contributors: Adolfo Rodriguez Tsouroukdissian, Jonathan Bohren

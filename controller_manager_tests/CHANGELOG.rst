@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.3 (2014-10-28)
+------------------
 * make rostest in CMakeLists optional
 * controller_manager_tests: fix library linking
 * Contributors: Lukas Bulwahn, Paul Mathieu
