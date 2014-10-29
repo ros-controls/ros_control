@@ -77,11 +77,11 @@ public:
   template<class T>
   T* get()
   {
-    InterfaceMap::iterator it = interfaces_.find(internal::demangledTypeName<T>());
-    if (it == interfaces_.end())
+    void* iface_data = findInterfaceData(internal::demangledTypeName<T>());
+    if(!iface_data)
       return NULL;
 
-    T* iface = static_cast<T*>(it->second);
+    T* iface = static_cast<T*>(iface_data);
     if (!iface)
     {
       ROS_ERROR_STREAM("Failed reconstructing type T = '" << internal::demangledTypeName<T>().c_str() <<
@@ -89,6 +89,23 @@ public:
       return NULL;
     }
     return iface;
+  }
+
+  /**
+   * \brief Get generic pointer to interface with type_name.
+   *
+   * This is used as a polymorphic lookup for the templated
+   * get() call, which can't be virtual.
+   *
+   * \param type_name The name of the interface type stored.
+   * \return Generic pointer to the interface.
+   */
+  virtual void* findInterfaceData(std::string type_name)
+  {
+    InterfaceMap::iterator it = interfaces_.find(type_name);
+    if (it == interfaces_.end())
+      return NULL;
+    return it->second;
   }
 
 protected:
