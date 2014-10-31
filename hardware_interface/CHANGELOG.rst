@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.0 (2014-10-31)
+------------------
 * Add PosVel and PosVelAcc command interfaces
 * Documentation fixes
 * Contributors: Igorec, shadowmanos

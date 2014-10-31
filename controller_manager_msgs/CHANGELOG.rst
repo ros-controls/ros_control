@@ -2,8 +2,8 @@
 Changelog for package controller_manager_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.0 (2014-10-31)
+------------------
 * Add Python helpers for:
   - Getting all active controller managers.
   - Determining if a namespace contains the controller manager ROS API.

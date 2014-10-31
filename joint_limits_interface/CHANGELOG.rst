@@ -2,8 +2,8 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.0 (2014-10-31)
+------------------
 * Buildsystem and documentation fixes
 * Add inline keyword to free header functions
 * Contributors: Adolfo Rodriguez Tsouroukdissian, Lukas Bulwahn, shadowmanos

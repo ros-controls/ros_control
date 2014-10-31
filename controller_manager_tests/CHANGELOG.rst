@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.0 (2014-10-31)
+------------------
 * Tests for Python helpers added to controller_manager_msgs
 * Buildsystem and documentation fixes
 * Contributors: Adolfo Rodriguez Tsouroukdissian, Lukas Bulwahn, shadowmanos

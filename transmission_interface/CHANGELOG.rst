@@ -2,8 +2,8 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.0 (2014-10-31)
+------------------
 * Buildsystem and documentation fixes
 * Contributors: Adolfo Rodriguez Tsouroukdissian, shadowmanos
 
