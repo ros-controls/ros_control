@@ -2,6 +2,12 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Buildsystem and documentation fixes
+* Add inline keyword to free header functions
+* Contributors: Adolfo Rodriguez Tsouroukdissian, Lukas Bulwahn, shadowmanos
+
 0.8.2 (2014-06-25)
 ------------------
 * Propagate urdfdom changes to CMakeLists.txt
