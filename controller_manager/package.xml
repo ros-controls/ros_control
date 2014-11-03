@@ -2,7 +2,7 @@
   <name>controller_manager</name>
   <version>0.9.0</version>
   <description>The controller manager.</description>
-  <maintainer email="wim@hidof.com">Wim Meeussen</maintainer>
+  <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
 
   <license>BSD</license>
 
