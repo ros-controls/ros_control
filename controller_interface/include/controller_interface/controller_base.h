@@ -36,6 +36,8 @@
 #include <ros/node_handle.h>
 #include <hardware_interface/robot_hw.h>
 
+// forward declaration of controller_manager::ControllerManager
+namespace controller_manager { class ControllerManager; }
 
 namespace controller_interface
 {
@@ -98,6 +100,8 @@ public:
     if (state_ == RUNNING || state_ == INITIALIZED){
       starting(time);
       state_ = RUNNING;
+      skipped_update_cycles_ = 0;
+      total_update_period_ = ros::Duration();
       return true;
     }
     else
@@ -148,10 +152,17 @@ public:
   /// The current execution state of the controller
   enum {CONSTRUCTED, INITIALIZED, RUNNING} state_;
 
-
 private:
   ControllerBase(const ControllerBase &c);
   ControllerBase& operator =(const ControllerBase &c);
+
+  friend class controller_manager::ControllerManager;
+
+  /// The number of cycles skipped since the last update
+  int skipped_update_cycles_;
+
+  /// The total period since the last update
+  ros::Duration total_update_period_;
 
 };
 
