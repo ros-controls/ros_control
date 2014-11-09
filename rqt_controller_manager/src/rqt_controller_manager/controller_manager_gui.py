@@ -282,6 +282,11 @@ class ControllerManagerWidget(QWidget):
         controller_list = resp.controller
         new_ctrlers = {}
         for c in controller_list:
+            if len(c.hardware_interfaces) == 1:
+                hw_iface_name = c.hardware_interfaces[0]
+            else:
+                hw_iface_name = "[" + ",".join(sorted(c.hardware_interfaces)) + "]"
+
             if c.name not in self._ctrlers:
                 # new controller
                 item = QTreeWidgetItem(self.ctrl_list_tree_widget)
@@ -289,7 +294,7 @@ class ControllerManagerWidget(QWidget):
                 ctrler = {'item' : item,
                           'state' : c.state,
                           'type' : c.type,
-                          'hw_iface' : c.hardware_interface,
+                          'hw_iface' : hw_iface_name,
                           'resources' : "[" + ", ".join(c.resources) + "]"}
                 ctrler['item'].setText(self._column_index['name'], c.name)
                 update_type = True
@@ -299,11 +304,11 @@ class ControllerManagerWidget(QWidget):
                 ctrler = self._ctrlers[c.name]
                 update_type = False
                 update_state = False
-                if ctrler['type'] != c.type or ctrler['hw_iface'] != c.hardware_interface:
+                if ctrler['type'] != c.type or ctrler['hw_iface'] != hw_iface_name:
                     # total controller change
                     ctrler['state'] = c.state
                     ctrler['type'] = c.type
-                    ctrler['hw_iface'] = c.hardware_interface
+                    ctrler['hw_iface'] = hw_iface_name
                     ctrler['resources'] = "[" + ", ".join(c.resources) + "]"
                     update_type = True
                 if ctrler['state'] != c.state:

@@ -1,3 +1,5 @@
+// Author: Kelsey Hawkins
+// Based on code by:
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2012, hiDOF INC.
 //
@@ -8,7 +10,7 @@
 //   * Redistributions in binary form must reproduce the above copyright
 //     notice, this list of conditions and the following disclaimer in the
 //     documentation and/or other materials provided with the distribution.
-//   * Neither the name of hiDOF, Inc. nor the names of its
+//   * Neither the name of hiDOF Inc nor the names of its
 //     contributors may be used to endorse or promote products derived from
 //     this software without specific prior written permission.
 //
@@ -25,51 +27,39 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/*
- * Author: Wim Meeussen
- */
+#ifndef CONTROLLER_MANAGER_TESTS_VEL_EFFORT_TEST_CONTROLLER_H
+#define CONTROLLER_MANAGER_TESTS_VEL_EFFORT_TEST_CONTROLLER_H
 
 
-#ifndef CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
-#define CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
-
+#include <controller_interface/multi_controller.h>
 #include <hardware_interface/joint_command_interface.h>
-#include <hardware_interface/robot_hw.h>
+#include <pluginlib/class_list_macros.h>
+
 
 namespace controller_manager_tests
 {
 
-class MyRobotHW : public hardware_interface::RobotHW
+
+class VelocityEffortTestController: 
+  public controller_interface::Controller2<hardware_interface::VelocityJointInterface,
+                                           hardware_interface::EffortJointInterface>
 {
 public:
-  MyRobotHW(std::string joint_prefix = "hiDOF_");
+  VelocityEffortTestController(){}
 
-  void read();
-  void write();
-
-protected:
+  bool init(hardware_interface::VelocityJointInterface* hw_vel, 
+            hardware_interface::EffortJointInterface* hw_eff, 
+            ros::NodeHandle &n);
+  void starting(const ros::Time& time);
+  void update(const ros::Time& time, const ros::Duration& period);
+  void stopping(const ros::Time& time);
 
 private:
-  hardware_interface::JointStateInterface    js_interface_;
-  hardware_interface::EffortJointInterface   ej_interface_;
-  hardware_interface::VelocityJointInterface vj_interface_;
+  std::vector<hardware_interface::JointHandle> joint_velocity_commands_;
+  std::vector<hardware_interface::JointHandle> joint_effort_commands_;
 
-  std::vector<double> joint_effort_command_;
-  std::vector<double> joint_velocity_command_;
-  std::vector<double> joint_position_;
-  std::vector<double> joint_velocity_;
-  std::vector<double> joint_effort_;
-  std::vector<std::string> joint_name_;
-};
-
-class DerivedMyRobotHW : public MyRobotHW 
-{
-public:
-  DerivedMyRobotHW(std::string joint_prefix = "hiDOF_")
-    : MyRobotHW(joint_prefix + "derived_") {}
 };
 
 }
-
 
 #endif

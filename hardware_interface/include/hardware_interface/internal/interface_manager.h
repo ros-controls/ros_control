@@ -26,12 +26,13 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/// \author Wim Meussen, Adolfo Rodriguez Tsouroukdissian
+/// \author Wim Meussen, Adolfo Rodriguez Tsouroukdissian, Kelsey P. Hawkins
 
 #ifndef HARDWARE_INTERFACE_INTERFACE_MANAGER_H
 #define HARDWARE_INTERFACE_INTERFACE_MANAGER_H
 
 #include <map>
+#include <vector>
 #include <string>
 
 #include <ros/console.h>
@@ -40,6 +41,44 @@
 
 namespace hardware_interface
 {
+
+// SFINAE workaround, so that we have reflection inside the template functions
+template <typename T>
+struct CheckIsResourceManager {
+  // variable definitions for compiler-time logic
+  typedef struct {} yes;
+  typedef yes no[2];
+
+  // method called if C is a ResourceManager
+  template <typename C>
+  static yes& testHWRM(typename C::resource_manager_type*);
+ 
+  // method called if C is not a ResourceManager
+  template <typename>
+  static no& testHWRM(...);
+ 
+  // CheckIsResourceManager<T>::value == true when T is a ResourceManager
+  static const bool value = (sizeof(testHWRM<T>(0)) == sizeof(yes));
+ 
+  // method called if C is a ResourceManager
+  template <typename C>
+  static yes& callCM(typename std::vector<C*>& managers, C* result, typename C::resource_manager_type*) 
+  { 
+    std::vector<typename C::resource_manager_type*> managers_in;
+    // we have to typecase back to base class
+    for(typename std::vector<C*>::iterator it = managers.begin(); it != managers.end(); ++it)
+      managers_in.push_back(static_cast<typename C::resource_manager_type*>(*it));
+    C::concatManagers(managers_in, result); 
+  }
+ 
+  // method called if C is not a HardwareResourceManager
+  template <typename C>
+  static no& callCM(typename std::vector<C*>& managers, C* result, ...) {}
+
+  // calls ResourceManager::concatManagers if C is a ResourceManager
+  static const void callConcatManagers(typename std::vector<T*>& managers, T* result) 
+  { callCM<T>(managers, result, 0); }
+};
 
 class InterfaceManager
 {
@@ -64,6 +103,11 @@ public:
     interfaces_[internal::demangledTypeName<T>()] = iface;
   }
 
+  void registerInterfaceManager(InterfaceManager* iface_man)
+  {
+    interface_managers_.push_back(iface_man);
+  }
+
   /**
    * \brief Get an interface.
    *
@@ -77,23 +121,77 @@ public:
   template<class T>
   T* get()
   {
-    InterfaceMap::iterator it = interfaces_.find(internal::demangledTypeName<T>());
-    if (it == interfaces_.end())
+    std::string type_name = internal::demangledTypeName<T>();
+    std::vector<T*> iface_list;
+
+    // look for interfaces registered here
+    InterfaceMap::iterator it = interfaces_.find(type_name);
+    if (it != interfaces_.end()) {
+      T* iface = static_cast<T*>(it->second);
+      if (!iface) {
+        ROS_ERROR_STREAM("Failed reconstructing type T = '" << type_name.c_str() <<
+                         "'. This should never happen");
+        return NULL;
+      }
+      iface_list.push_back(iface);
+    }
+
+    // look for interfaces registered in the registered hardware
+    for(InterfaceManagerVector::iterator it = interface_managers_.begin(); 
+        it != interface_managers_.end(); ++it) {
+      T* iface = (*it)->get<T>();
+      if (iface) 
+        iface_list.push_back(iface);
+    }
+
+    if(iface_list.size() == 0)
       return NULL;
 
-    T* iface = static_cast<T*>(it->second);
-    if (!iface)
-    {
-      ROS_ERROR_STREAM("Failed reconstructing type T = '" << internal::demangledTypeName<T>().c_str() <<
-                       "'. This should never happen");
-      return NULL;
+    if(iface_list.size() == 1)
+      return iface_list.front();
+
+    // if we're here, we have multiple interfaces, and thus we must construct a new
+    // combined interface, or return one already constructed
+    T* iface_combo;
+    InterfaceMap::iterator it_combo = interfaces_combo_.find(type_name);
+    if(it_combo != interfaces_combo_.end() && 
+        num_ifaces_registered_[type_name] == iface_list.size()) {
+      // there exists a combined interface with the same number of interfaces combined
+      // (since you cannot unregister interfaces, this will be guaranteed to be the
+      //  same interfaces from previous calls)
+      iface_combo = static_cast<T*>(it_combo->second);
+    } else {
+      // no existing combined interface
+      if(CheckIsResourceManager<T>::value) {
+        // it is a ResourceManager
+
+        // create a new combined interface (FIXME: never deallocated)
+        iface_combo = new T; 
+        // concat all of the resource managers together
+        CheckIsResourceManager<T>::callConcatManagers(iface_list, iface_combo);
+        // save the combined interface for if this is called again
+        interfaces_combo_[type_name] = iface_combo; 
+        num_ifaces_registered_[type_name] = iface_list.size(); 
+      } else {
+        // it is not a ResourceManager
+        ROS_ERROR("You cannot register multiple interfaces of the same type which are "
+                  "not of type ResourceManager. There is no established protocol "
+                  "for combining them.");
+        iface_combo = NULL;
+      }
     }
-    return iface;
+    return iface_combo;
   }
 
 protected:
   typedef std::map<std::string, void*> InterfaceMap;
+  typedef std::vector<InterfaceManager*> InterfaceManagerVector;
+  typedef std::map<std::string, size_t> SizeMap;
+
   InterfaceMap interfaces_;
+  InterfaceMap interfaces_combo_;
+  InterfaceManagerVector interface_managers_;
+  SizeMap num_ifaces_registered_;
 };
 
 } // namespace

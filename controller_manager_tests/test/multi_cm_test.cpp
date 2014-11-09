@@ -1,3 +1,5 @@
+// Author: Kelsey Hawkins
+// Based on code by:
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2012, hiDOF INC.
 //
@@ -8,7 +10,7 @@
 //   * Redistributions in binary form must reproduce the above copyright
 //     notice, this list of conditions and the following disclaimer in the
 //     documentation and/or other materials provided with the distribution.
-//   * Neither the name of hiDOF, Inc. nor the names of its
+//   * Neither the name of hiDOF Inc nor the names of its
 //     contributors may be used to endorse or promote products derived from
 //     this software without specific prior written permission.
 //
@@ -25,51 +27,38 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/*
- * Author: Wim Meeussen
- */
+//! /author Vijay Pradeep, Kelsey Hawkins
 
+#include <ros/ros.h>
+#include <gtest/gtest.h>
 
-#ifndef CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
-#define CONTROLLER_MANAGER_TESTS_MY_ROBOT_HW_H
+#include <controller_manager_msgs/LoadController.h>
 
-#include <hardware_interface/joint_command_interface.h>
-#include <hardware_interface/robot_hw.h>
+using namespace controller_manager_msgs;
 
-namespace controller_manager_tests
+TEST(CMTests, spawnTestGood)
 {
-
-class MyRobotHW : public hardware_interface::RobotHW
-{
-public:
-  MyRobotHW(std::string joint_prefix = "hiDOF_");
-
-  void read();
-  void write();
-
-protected:
-
-private:
-  hardware_interface::JointStateInterface    js_interface_;
-  hardware_interface::EffortJointInterface   ej_interface_;
-  hardware_interface::VelocityJointInterface vj_interface_;
-
-  std::vector<double> joint_effort_command_;
-  std::vector<double> joint_velocity_command_;
-  std::vector<double> joint_position_;
-  std::vector<double> joint_velocity_;
-  std::vector<double> joint_effort_;
-  std::vector<std::string> joint_name_;
-};
-
-class DerivedMyRobotHW : public MyRobotHW 
-{
-public:
-  DerivedMyRobotHW(std::string joint_prefix = "hiDOF_")
-    : MyRobotHW(joint_prefix + "derived_") {}
-};
-
+  ros::NodeHandle nh;
+  ros::ServiceClient client = nh.serviceClient<LoadController>("/controller_manager/load_controller");
+  LoadController srv;
+  srv.request.name = "multi_controller";
+  bool call_success = client.call(srv);
+  EXPECT_TRUE(call_success);
+  EXPECT_TRUE(srv.response.ok);
 }
 
+int main(int argc, char** argv)
+{
+  testing::InitGoogleTest(&argc, argv);
+  ros::init(argc, argv, "ControllerManagerTestNode");
 
-#endif
+  ros::AsyncSpinner spinner(1);
+
+  // wait for services
+  ROS_INFO("Waiting for service");
+  ros::service::waitForService("/controller_manager/load_controller");
+  ROS_INFO("Start tests");
+  spinner.start();
+
+  return RUN_ALL_TESTS();
+}

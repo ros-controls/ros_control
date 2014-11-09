@@ -45,6 +45,8 @@ else()
     include/controller_manager_tests/my_robot_hw.h
     src/effort_test_controller.cpp
     include/controller_manager_tests/effort_test_controller.h
+    src/vel_effort_test_controller.cpp
+    include/controller_manager_tests/vel_effort_test_controller.h
     src/my_dummy_controller.cpp
     include/controller_manager_tests/my_dummy_controller.h
     )
@@ -52,6 +54,8 @@ else()
 
   add_executable(dummy_app src/dummy_app.cpp)
   target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
+  add_executable(multi_dummy_app src/multi_dummy_app.cpp)
+  target_link_libraries(multi_dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
   if(CATKIN_ENABLE_TESTING)
     find_package(rostest)
@@ -59,6 +63,11 @@ else()
     add_dependencies(tests cm_test)
     target_link_libraries(cm_test ${GTEST_LIBRARIES} ${catkin_LIBRARIES})
     add_rostest(test/cm_test.test)
+
+    add_executable(multi_cm_test test/multi_cm_test.cpp)
+    add_dependencies(tests multi_cm_test)
+    target_link_libraries(multi_cm_test ${GTEST_LIBRARIES} ${catkin_LIBRARIES})
+    add_rostest(test/multi_cm_test.test)
   endif()
 
   # Install

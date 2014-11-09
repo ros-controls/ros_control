@@ -79,6 +79,9 @@ template <class ResourceHandle, class ClaimPolicy = DontClaimResources>
 class HardwareResourceManager : public HardwareInterface, public ResourceManager<ResourceHandle>
 {
 public:
+  // save template class types for reference
+  typedef ClaimPolicy claim_policy_type;
+  typedef HardwareResourceManager<ResourceHandle, ClaimPolicy> hw_resource_manager_type;
   typedef ResourceHandle ResourceHandleType;
 
   /** \name Non Real-Time Safe Functions
