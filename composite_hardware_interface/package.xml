@@ -1,0 +1,29 @@
+<package>
+  <name>composite_hardware_interface</name>
+  <version>0.1.0</version>
+  <description>Composite Hardware Interface class.</description>
+  <maintainer email="kalevatykhia@gmail.com">Igor Kalevatykh</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">https://github.com/ros-controls/ros_control/wiki</url>
+  <url type="bugtracker">https://github.com/ros-controls/ros_control/issues</url>
+  <url type="repository">https://github.com/ros-controls/ros_control</url>
+
+  <author>Igor Kalevatykh</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>roscpp</build_depend> 
+  <build_depend>pluginlib</build_depend> 
+  <build_depend>urdf</build_depend>
+  <build_depend>hardware_interface</build_depend>
+    
+  <run_depend>roscpp</run_depend>
+  <run_depend>pluginlib</run_depend> 
+  <run_depend>urdf</run_depend>
+  <run_depend>hardware_interface</run_depend> 
+
+  <export>
+  </export>
+</package>
