@@ -115,6 +115,13 @@ public:
     prev_cmd_ = cmd;
   }
 
+  /**
+   * \brief Reset state, in case of mode switch or e-stop
+   */
+  void reset(){
+    prev_cmd_ = std::numeric_limits<double>::quiet_NaN();
+  }
+
 private:
   hardware_interface::JointHandle jh_;
   JointLimits limits_;
@@ -237,6 +244,13 @@ public:
 
     // Cache variables
     prev_cmd_ = jh_.getCommand();
+  }
+
+  /**
+   * \brief Reset state, in case of mode switch or e-stop
+   */
+  void reset(){
+    prev_cmd_ = std::numeric_limits<double>::quiet_NaN();
   }
 
 private:
@@ -554,10 +568,38 @@ public:
 };
 
 /** Interface for enforcing limits on a position-controlled joint through saturation. */
-class PositionJointSaturationInterface : public JointLimitsInterface<PositionJointSaturationHandle> {};
+class PositionJointSaturationInterface : public JointLimitsInterface<PositionJointSaturationHandle> {
+public:
+  /** \name Real-Time Safe Functions
+   *\{*/
+  /** \brief Reset all managed handles. */
+  void reset()
+  {
+    typedef hardware_interface::ResourceManager<PositionJointSaturationHandle>::ResourceMap::iterator ItratorType;
+    for (ItratorType it = this->resource_map_.begin(); it != this->resource_map_.end(); ++it)
+    {
+      it->second.reset();
+    }
+  }
+  /*\}*/
+};
 
 /** Interface for enforcing limits on a position-controlled joint with soft position limits. */
-class PositionJointSoftLimitsInterface : public JointLimitsInterface<PositionJointSoftLimitsHandle> {};
+class PositionJointSoftLimitsInterface : public JointLimitsInterface<PositionJointSoftLimitsHandle> {
+public:
+  /** \name Real-Time Safe Functions
+   *\{*/
+  /** \brief Reset all managed handles. */
+  void reset()
+  {
+    typedef hardware_interface::ResourceManager<PositionJointSoftLimitsHandle>::ResourceMap::iterator ItratorType;
+    for (ItratorType it = this->resource_map_.begin(); it != this->resource_map_.end(); ++it)
+    {
+      it->second.reset();
+    }
+  }
+  /*\}*/
+};
 
 /** Interface for enforcing limits on an effort-controlled joint through saturation. */
 class EffortJointSaturationInterface : public JointLimitsInterface<EffortJointSaturationHandle> {};
