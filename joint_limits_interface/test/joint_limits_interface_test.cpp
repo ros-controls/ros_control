@@ -454,6 +454,59 @@ TEST_F(JointLimitsInterfaceTest, InterfaceRegistration)
   EXPECT_GT(cmd_handle2.getPosition(), cmd_handle2.getCommand());
 }
 
+TEST_F(JointLimitsHandleTest, ResetSaturationInterface)
+{
+  // Populate interface
+  PositionJointSaturationHandle limits_handle1(cmd_handle, limits);
+
+  PositionJointSaturationInterface iface;
+  iface.registerHandle(limits_handle1);
+
+  iface.enforceLimits(period); // initialize limit handles
+
+  const double max_increment = period.toSec() * limits.max_velocity;
+
+  cmd_handle.setCommand(limits.max_position);
+  iface.enforceLimits(period);
+
+  EXPECT_NEAR(cmd_handle.getCommand(),  max_increment, EPS);
+
+  iface.reset();
+  pos = limits.max_position;
+  cmd_handle.setCommand(limits.max_position);
+  iface.enforceLimits(period);
+
+  EXPECT_NEAR(cmd_handle.getCommand(),  limits.max_position, EPS);
+
+}
+
+
+TEST_F(JointLimitsHandleTest, ResetSoftLimitsInterface)
+{
+  // Populate interface
+  PositionJointSoftLimitsHandle limits_handle1(cmd_handle, limits, soft_limits);
+
+  PositionJointSoftLimitsInterface iface;
+  iface.registerHandle(limits_handle1);
+
+  iface.enforceLimits(period); // initialize limit handles
+
+  const double max_increment = period.toSec() * limits.max_velocity;
+
+  cmd_handle.setCommand(limits.max_position);
+  iface.enforceLimits(period);
+
+  EXPECT_NEAR(cmd_handle.getCommand(),  max_increment, EPS);
+
+  iface.reset();
+  pos = limits.max_position;
+  cmd_handle.setCommand(soft_limits.max_position);
+  iface.enforceLimits(period);
+
+  EXPECT_NEAR(cmd_handle.getCommand(),  soft_limits.max_position, EPS);
+
+}
+
 int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
