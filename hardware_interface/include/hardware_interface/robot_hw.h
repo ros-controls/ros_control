@@ -94,6 +94,18 @@ public:
 
     return in_conflict;
   }
+/** \name Mode Switching
+   *\{*/
+
+  /**
+   * Check (in non-realtime) if given controller to be started can be switched from the current state of the RobotHW
+   */
+  virtual bool canStart(const ControllerInfo &info) const {return true;}
+
+  /**
+   * actually start and stop internal command handling (in non-realtime)
+   */
+  virtual void doSwitch(const std::list<ControllerInfo> &start_list, const std::list<ControllerInfo> &stop_list) {}
 };
 
 }
