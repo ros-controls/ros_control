@@ -409,6 +409,8 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
 
   // Do the resource management checking
   std::list<hardware_interface::ControllerInfo> info_list;
+  std::list<hardware_interface::ControllerInfo> stop_list;
+  std::list<hardware_interface::ControllerInfo> start_list;
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
@@ -422,11 +424,38 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
       in_start_list = in_start_list || (start_request_[j] == controllers[i].c.get());
 
     bool add_to_list = controllers[i].c->isRunning();
-    if (in_stop_list)
+    if (in_stop_list){
+      // add to stop_list if it is running and not to be restarted
+      if(add_to_list && !in_start_list) stop_list.push_back(controllers[i].info);
       add_to_list = false;
-    if (in_start_list)
+    }
+    if (in_start_list){
       add_to_list = true;
+      if(!controllers[i].c->isRunning()){ // if not already running
+        if(!robot_hw_->canStart(controllers[i].info)){
+          if (strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
+            ROS_ERROR("Cannot start controller with name %s because hardware is not ready to switch",
+                      controllers[i].info.name.c_str());
+            stop_request_.clear();
+            start_request_.clear();
+            return false;
+          }else{
+            ROS_DEBUG("Will not start controller with name %s because hardware is not ready to switch",
+                      controllers[i].info.name.c_str());
+            add_to_list = false;
 
+            // remove from start_request_
+            for(std::vector<controller_interface::ControllerBase*>::iterator it = start_request_.begin(); it != start_request_.end(); ++it)
+              if(*it == controllers[i].c.get()){
+                 start_request_.erase(it);
+                 break;
+              }
+          }
+        }else{
+          start_list.push_back(controllers[i].info);
+        }
+      }
+    }
     if (add_to_list)
       info_list.push_back(controllers[i].info);
   }
@@ -439,7 +468,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     start_request_.clear();
     return false;
   }
-
+  robot_hw_->doSwitch(start_list, stop_list);
   // start the atomic controller switching
   switch_strictness_ = strictness;
   please_switch_ = true;
