@@ -94,6 +94,21 @@ public:
 
     return in_conflict;
   }
+/** \name Hardware Interface Switching
+   *\{*/
+
+  /**
+   * Check (in non-realtime) if given controllers could be started and stopped from the current state of the RobotHW
+   * with regard to necessary hardware interface switches. Start and stop list are disjoint.
+   * This is just a check, the actual switch is done in doSwitch()
+   */
+  virtual bool canSwitch(const std::list<ControllerInfo> &start_list, const std::list<ControllerInfo> &stop_list) const { return true; }
+
+  /**
+   * Perform (in non-realtime) all necessary hardware interface switches in order to start and stop the given controllers.
+   * Start and stop list are disjoint. The feasability was checked in canSwitch() beforehand.
+   */
+  virtual void doSwitch(const std::list<ControllerInfo> &start_list, const std::list<ControllerInfo> &stop_list) {}
 };
 
 }
