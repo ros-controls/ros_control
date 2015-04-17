@@ -26,6 +26,17 @@ if(catkin_EXPORTED_TARGETS)
   add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 endif()
 
+if(CATKIN_ENABLE_TESTING)
+
+  find_package(rostest REQUIRED)
+  add_rostest_gtest(controller_manager_hwi_switch_test
+    test/hwi_switch_test.test
+    test/hwi_switch_test.cpp
+  )
+  target_link_libraries(controller_manager_hwi_switch_test ${PROJECT_NAME} ${catkin_LIBRARIES})
+
+endif()
+
 # Install
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

@@ -1,0 +1,29 @@
+group_pos:
+    type: DummyPositionJointInterfaceController
+    joints: [j_pv, j_pe]
+
+another_group_pos:
+    type: DummyPositionJointInterfaceController
+    joints: [j_pv, j_pe]
+
+group_vel:
+    type: DummyVelocityJointInterfaceController
+    joints: [j_pv, j_ve]
+
+group_eff:
+    type: DummyEffortJointInterfaceController
+    joints: [j_ve, j_pe]
+
+single_eff:
+    type: DummyEffortJointInterfaceController
+    joints: [j_pe]
+
+single_pos:
+    type: DummyPositionJointInterfaceController
+    joints: [j_pe]
+
+
+invalid_group_pos:
+    type: DummyPositionJointInterfaceController
+    joints: [j_ve, j_pe]
+

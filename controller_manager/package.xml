@@ -11,6 +11,7 @@
   <url type="repository">https://github.com/ros-controls/ros_control</url>
 
   <author>Wim Meeussen</author>
+  <author>Mathias Lüdtke</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 

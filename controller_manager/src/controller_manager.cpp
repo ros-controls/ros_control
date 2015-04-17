@@ -408,7 +408,8 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   ROS_DEBUG("Start request vector has size %i", (int)start_request_.size());
 
   // Do the resource management checking
-  std::list<hardware_interface::ControllerInfo> info_list;
+  std::list<hardware_interface::ControllerInfo> info_list, start_list, stop_list;
+  
   std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
@@ -422,13 +423,44 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
       in_start_list = in_start_list || (start_request_[j] == controllers[i].c.get());
 
     bool add_to_list = controllers[i].c->isRunning();
+    hardware_interface::ControllerInfo &info = controllers[i].info;
+
+    if(!add_to_list && in_stop_list){ // check for double stop
+      if(strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
+        ROS_ERROR_STREAM("Could not stop controller '" << info.name << "' since it is not running");
+        stop_request_.clear();
+        start_request_.clear();
+        return false;
+      } else {
+        in_stop_list = false;
+      }
+    }
+
+    if(add_to_list && !in_stop_list && in_start_list){ // check for doubled start
+      if(strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
+        ROS_ERROR_STREAM("Controller '" << info.name << "' is already running");
+        stop_request_.clear();
+        start_request_.clear();
+        return false;
+      } else {
+        in_start_list = false;
+      }
+    }
+
+    if(add_to_list && in_stop_list && !in_start_list){ // running and real stop
+      stop_list.push_back(info);
+    }
+    else if(!in_stop_list && in_start_list){ // start, but no restart
+      start_list.push_back(info);
+     }
+
     if (in_stop_list)
       add_to_list = false;
     if (in_start_list)
       add_to_list = true;
 
     if (add_to_list)
-      info_list.push_back(controllers[i].info);
+      info_list.push_back(info);
   }
 
   bool in_conflict = robot_hw_->checkForConflict(info_list);
@@ -439,6 +471,16 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     start_request_.clear();
     return false;
   }
+
+  if (!robot_hw_->canSwitch(start_list, stop_list))
+  {
+    ROS_ERROR("Could not switch controllers. The hardware interface combination for the requested controllers is unfeasible.");
+    stop_request_.clear();
+    start_request_.clear();
+    return false;
+  }
+
+  robot_hw_->doSwitch(start_list, stop_list);
 
   // start the atomic controller switching
   switch_strictness_ = strictness;
