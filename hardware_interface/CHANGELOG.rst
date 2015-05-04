@@ -2,6 +2,11 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add HW interface switch feature
+* Contributors: Mathias Lüdtke
+
 0.9.1 (2014-11-03)
 ------------------
 * Update package maintainers
