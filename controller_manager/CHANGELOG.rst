@@ -2,6 +2,11 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* controller_manager: Add missing rostest dep
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.9.2 (2015-05-04)
 ------------------
 * Add HW interface switch feature
