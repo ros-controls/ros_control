@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.3 (2015-05-05)
+------------------
 * controller_manager: Add missing rostest dep
 * Contributors: Adolfo Rodriguez Tsouroukdissian
 
