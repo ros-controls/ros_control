@@ -27,7 +27,8 @@
 
 import rospy
 from controller_manager_tests import ControllerManagerDummy
-from controller_manager_msgs.msg import ControllerState
+from controller_manager_msgs.msg import ControllerState as CtrlState
+from controller_manager_msgs.msg import HardwareInterfaceResources
 from controller_manager_msgs.srv import ListControllersResponse, LoadController
 
 if __name__ == '__main__':
@@ -39,20 +40,27 @@ if __name__ == '__main__':
     cm_foo2 = ControllerManagerDummy('/foo/robot/controller_manager2')
     cm_default = ControllerManagerDummy()
 
-    c_foo = ControllerState()
-    c_foo.name = 'foo_controller'
-    c_foo.type = 'foo_base/foo'
-    c_foo.state = 'running'
-    c_foo.hardware_interface='hardware_interface::FooInterface'
-
-    c_bar = ControllerState()
-    c_bar.name = 'bar_controller'
-    c_bar.type = 'bar_base/bar'
-    c_bar.state = 'stopped'
-    c_bar.hardware_interface='hardware_interface::BarInterface'
+    ctrl_list = [
+    CtrlState(name='foo_controller',
+              state='running',
+              type='foo_base/foo',
+              claimed_resources=[
+                  HardwareInterfaceResources(
+                      hardware_interface='hardware_interface::FooInterface',
+                      resources=['one', 'two', 'three'])
+              ]),
+    CtrlState(name='bar_controller',
+              state='running',
+              type='bar_base/bar',
+              claimed_resources=[
+                  HardwareInterfaceResources(
+                      hardware_interface='hardware_interface::BarInterface',
+                      resources=['four'])
+              ])
+    ]
 
     resp = ListControllersResponse()
-    resp.controller = [c_foo, c_bar]
+    resp.controller = ctrl_list
     cm_default.list_ctrl_resp = resp
 
     # Partial controller manager ROS API: missing service

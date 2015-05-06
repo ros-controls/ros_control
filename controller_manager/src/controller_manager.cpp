@@ -225,7 +225,7 @@ bool ControllerManager::loadController(const std::string& name)
   // Initializes the controller
   ROS_DEBUG("Initializing controller '%s'", name.c_str());
   bool initialized;
-  std::set<std::string> claimed_resources; // Gets populated during initRequest call
+  controller_interface::ControllerBase::ClaimedResources claimed_resources; // Gets populated during initRequest call
   try{
     initialized = c->initRequest(robot_hw_, root_nh_, c_nh, claimed_resources);
   }
@@ -248,9 +248,8 @@ bool ControllerManager::loadController(const std::string& name)
   // Adds the controller to the new list
   to.resize(to.size() + 1);
   to[to.size()-1].info.type = type;
-  to[to.size()-1].info.hardware_interface = c->getHardwareInterfaceType();
   to[to.size()-1].info.name = name;
-  to[to.size()-1].info.resources = claimed_resources;
+  to[to.size()-1].info.claimed_resources = claimed_resources;
   to[to.size()-1].c = c;
 
   // Destroys the old controllers list when the realtime thread is finished with it.
@@ -604,13 +603,20 @@ bool ControllerManager::listControllersSrv(
   for (size_t i = 0; i < controllers.size(); ++i)
   {
     controller_manager_msgs::ControllerState& cs = resp.controller[i];
-    cs.name               = controllers[i].info.name;
-    cs.type               = controllers[i].info.type;
-    cs.hardware_interface = controllers[i].info.hardware_interface;
-    cs.resources.clear();
-    cs.resources.reserve(controllers[i].info.resources.size());
-    for (std::set<std::string>::iterator it = controllers[i].info.resources.begin(); it != controllers[i].info.resources.end(); ++it)
-      cs.resources.push_back(*it);
+    cs.name = controllers[i].info.name;
+    cs.type = controllers[i].info.type;
+
+    cs.claimed_resources.clear();
+    typedef std::vector<hardware_interface::InterfaceResources> ClaimedResVec;
+    typedef ClaimedResVec::const_iterator ClaimedResIt;
+    const ClaimedResVec& c_res = controllers[i].info.claimed_resources;
+    for (ClaimedResIt c_res_it = c_res.begin(); c_res_it != c_res.end(); ++c_res_it)
+    {
+      controller_manager_msgs::HardwareInterfaceResources iface_res;
+      iface_res.hardware_interface = c_res_it->hardware_interface;
+      std::copy(c_res_it->resources.begin(), c_res_it->resources.end(), std::back_inserter(iface_res.resources));
+      cs.claimed_resources.push_back(iface_res);
+    }
 
     if (controllers[i].c->isRunning())
       cs.state = "running";

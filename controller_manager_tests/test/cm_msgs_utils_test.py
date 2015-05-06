@@ -25,25 +25,46 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from controller_manager_msgs.msg import ControllerState
+from controller_manager_msgs.msg import ControllerState as CtrlState
+from controller_manager_msgs.msg import HardwareInterfaceResources
 from controller_manager_msgs.utils import *
 
 ctrl_list = [
-    ControllerState(name='foo_controller',
-                    state='running',
-                    type='foo_base/foo',
-                    hardware_interface='hardware_interface::FooInterface',
-                    resources=['one', 'two', 'three']),
-    ControllerState(name='bar_controller',
-                    state='running',
-                    type='bar_base/bar',
-                    hardware_interface='hardware_interface::BarInterface',
-                    resources=['four']),
-    ControllerState(name='foobar_controller',
-                    state='stopped',
-                    type='foobar_base/foobar',
-                    hardware_interface='hardware_interface::FooBarInterface',
-                    resources=['one'])
+    CtrlState(name='foo_controller',
+              state='running',
+              type='foo_base/foo',
+              claimed_resources=[
+                  HardwareInterfaceResources(
+                      hardware_interface='hardware_interface::FooInterface',
+                      resources=['one', 'two', 'three'])
+              ]),
+    CtrlState(name='bar_controller',
+              state='running',
+              type='bar_base/bar',
+              claimed_resources=[
+                  HardwareInterfaceResources(
+                      hardware_interface='hardware_interface::BarInterface',
+                      resources=['four'])
+              ]),
+    CtrlState(name='foobar_controller',
+              state='stopped',
+              type='foobar_base/foobar',
+              claimed_resources=[
+                  HardwareInterfaceResources(
+                      hardware_interface='hardware_interface::FooBarInterface',
+                      resources=['one'])
+              ]),
+    CtrlState(name='foobaz_controller',
+              state='running',
+              type='foobaz_base/foobaz',
+              claimed_resources=[
+                  HardwareInterfaceResources(
+                      hardware_interface='hardware_interface::FooInterface',
+                      resources=['one']),
+                  HardwareInterfaceResources(
+                      hardware_interface='hardware_interface::BazInterface',
+                      resources=['one', 'two'])
+                   ])
 ]
 
 
@@ -63,9 +84,10 @@ def filter_by_name_test():
     assert(out[0].name == 'foo_controller')
 
     out = filter_by_name(ctrl_list, 'foo', match_substring=True)
-    assert(2 == len(out))
+    assert(3 == len(out))
     assert(out[0].name == 'foo_controller')
     assert(out[1].name == 'foobar_controller')
+    assert(out[2].name == 'foobaz_controller')
 
 
 def filter_by_state_test():
@@ -84,9 +106,10 @@ def filter_by_state_test():
     assert(out[0].name == 'foobar_controller')
 
     out = filter_by_state(ctrl_list, 'run', match_substring=True)
-    assert(2 == len(out))
+    assert(3 == len(out))
     assert(out[0].name == 'foo_controller')
     assert(out[1].name == 'bar_controller')
+    assert(out[2].name == 'foobaz_controller')
 
 
 def filter_by_type_test():
@@ -105,9 +128,10 @@ def filter_by_type_test():
     assert(out[0].name == 'foo_controller')
 
     out = filter_by_type(ctrl_list, 'foo', match_substring=True)
-    assert(2 == len(out))
+    assert(3 == len(out))
     assert(out[0].name == 'foo_controller')
     assert(out[1].name == 'foobar_controller')
+    assert(out[2].name == 'foobaz_controller')
 
 
 def filter_by_hardware_interface_test():
@@ -122,41 +146,90 @@ def filter_by_hardware_interface_test():
     # Existing, full match
     out = filter_by_hardware_interface(ctrl_list,
                                        'hardware_interface::FooInterface')
-    assert(1 == len(out))
+    assert(2 == len(out))
     assert(out[0].name == 'foo_controller')
+    assert(out[1].name == 'foobaz_controller')
 
     # Existing, substring match
     out = filter_by_hardware_interface(ctrl_list,
-                                       'hardware_interface::FooInterface',
+                                       'hardware_interface::BazInterface',
                                        match_substring=True)
     assert(1 == len(out))
-    assert(out[0].name == 'foo_controller')
+    assert(out[0].name == 'foobaz_controller')
 
     out = filter_by_hardware_interface(ctrl_list,
-                                       'FooInterface',
+                                       'BazInterface',
                                        match_substring=True)
     assert(1 == len(out))
-    assert(out[0].name == 'foo_controller')
+    assert(out[0].name == 'foobaz_controller')
 
 
 def filter_by_resources_test():
-    # Non-existing
+    # Non-existing resource. Consider all hardware interfaces
     assert(not filter_by_resources(ctrl_list, ['null'], match_any=False))
     assert(not filter_by_resources(ctrl_list, ['null'], match_any=True))
 
-    # Existing, full match
-    res = ctrl_list[0].resources
+    # Non-existing resource. Consider only specified hardware interfaces
+    assert(not filter_by_resources(
+        ctrl_list,
+        hardware_interface='hardware_interface::FooInterface',
+        resources=['null'],
+        match_any=False))
+
+    assert(not filter_by_resources(
+        ctrl_list,
+        hardware_interface='hardware_interface::FooInterface',
+        resources=['null'],
+        match_any=True))
+
+    # Non-existing resource in specified interface, but existing in other
+    # interfaces
+    assert(not filter_by_resources(
+        ctrl_list,
+        hardware_interface='hardware_interface::FooInterface',
+        resources=['four'],
+        match_any=False))
+
+    assert(not filter_by_resources(
+        ctrl_list,
+        hardware_interface='hardware_interface::FooInterface',
+        resources=['four'],
+        match_any=True))
+
+    # Existing, full match. Consider all hardware interfaces
+    res = ctrl_list[0].claimed_resources[0].resources
     out = filter_by_resources(ctrl_list, res)
     assert(1 == len(out))
     assert(out[0].name == 'foo_controller')
 
-    # Existing, partial match
-    out = filter_by_resources(ctrl_list, res, match_any=True)
-    assert(2 == len(out))
+    # Existing, full match. Consider only specified hardware interfaces
+    out = filter_by_resources(
+        ctrl_list,
+        hardware_interface='hardware_interface::FooInterface',
+        resources=res)
+    assert(1 == len(out))
     assert(out[0].name == 'foo_controller')
-    assert(out[1].name == 'foobar_controller')
 
-    out = filter_by_resources(ctrl_list, ['one'], match_any=True)
+    out = filter_by_resources(
+        ctrl_list,
+        hardware_interface='hardware_interface::FooInterface',
+        resources=['one'])
     assert(2 == len(out))
     assert(out[0].name == 'foo_controller')
+    assert(out[1].name == 'foobaz_controller')
+
+    # Existing, partial match. Consider all hardware interfaces
+    out = filter_by_resources(ctrl_list, res, match_any=True)
+    assert(3 == len(out))
+    assert(out[0].name == 'foo_controller')
     assert(out[1].name == 'foobar_controller')
+    assert(out[2].name == 'foobaz_controller')
+
+    # Existing, partial match. Consider only specified hardware interfaces
+    out = filter_by_resources(
+        ctrl_list,
+        hardware_interface='hardware_interface::BazInterface',
+        resources=['one'],
+        match_any=True)
+    assert(1 == len(out))
+    assert(out[0].name == 'foobaz_controller')
