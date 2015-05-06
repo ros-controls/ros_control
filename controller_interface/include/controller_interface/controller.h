@@ -96,8 +96,9 @@ protected:
    *
    */
   virtual bool initRequest(hardware_interface::RobotHW* robot_hw,
-                           ros::NodeHandle& root_nh, ros::NodeHandle &controller_nh,
-                           std::set<std::string> &claimed_resources)
+                           ros::NodeHandle&             root_nh,
+                           ros::NodeHandle&             controller_nh,
+                           ClaimedResourcesType&        claimed_resources)
   {
     // check if construction finished cleanly
     if (state_ != CONSTRUCTED){
@@ -122,7 +123,8 @@ protected:
       ROS_ERROR("Failed to initialize the controller");
       return false;
     }
-    claimed_resources = hw->getClaims();
+    hardware_interface::InterfaceResources iface_res(getHardwareInterfaceType(), hw->getClaims());
+    claimed_resources.assign(1, iface_res);
     hw->clearClaims();
 
     // success
