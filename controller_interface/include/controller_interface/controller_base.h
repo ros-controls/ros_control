@@ -126,10 +126,7 @@ public:
   /** \name Non Real-Time Safe Functions
    *\{*/
 
-  /// Get the name of this controller's hardware interface type
-  virtual std::string getHardwareInterfaceType() const = 0;
-
-  typedef std::vector<hardware_interface::InterfaceResources> ClaimedResourcesType;
+  typedef std::vector<hardware_interface::InterfaceResources> ClaimedResources;
 
   /** \brief Request that the controller be initialized
    *
@@ -150,7 +147,7 @@ public:
   virtual bool initRequest(hardware_interface::RobotHW* robot_hw,
                            ros::NodeHandle&             root_nh,
                            ros::NodeHandle&             controller_nh,
-                           ClaimedResourcesType&        claimed_resources) = 0;
+                           ClaimedResources&            claimed_resources) = 0;
 
   /*\}*/
 

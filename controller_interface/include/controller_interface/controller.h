@@ -98,7 +98,7 @@ protected:
   virtual bool initRequest(hardware_interface::RobotHW* robot_hw,
                            ros::NodeHandle&             root_nh,
                            ros::NodeHandle&             controller_nh,
-                           ClaimedResourcesType&        claimed_resources)
+                           ClaimedResources&            claimed_resources)
   {
     // check if construction finished cleanly
     if (state_ != CONSTRUCTED){
@@ -132,7 +132,8 @@ protected:
     return true;
   }
 
-  virtual std::string getHardwareInterfaceType() const
+  /// Get the name of this controller's hardware interface type
+  std::string getHardwareInterfaceType() const
   {
     return hardware_interface::internal::demangledTypeName<T>();
   }
