@@ -91,6 +91,18 @@ public:
     return iface;
   }
 
+  /** \return Vector of interface names registered to this instance. */
+  std::vector<std::string> getNames() const
+  {
+    std::vector<std::string> out;
+    out.reserve(interfaces_.size());
+    for(InterfaceMap::const_iterator it = interfaces_.begin(); it != interfaces_.end(); ++it)
+    {
+      out.push_back(it->first);
+    }
+    return out;
+  }
+
 protected:
   typedef std::map<std::string, void*> InterfaceMap;
   InterfaceMap interfaces_;
