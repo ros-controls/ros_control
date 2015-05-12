@@ -4,8 +4,43 @@
       type: controller_manager_tests/EffortTestController
     my_controller2:
       type: controller_manager_tests/EffortTestController
-    dummy_controller:
+    non_existent_interface_controller:
       type: controller_manager_tests/MyDummyController
+    vel_eff_controller:
+      type: controller_manager_tests/VelEffController
+      velocity_joints:
+      - hiDOF_joint1
+      - hiDOF_joint2
+      effort_joints:
+      - hiDOF_joint3
+    non_existent_resource_controller:
+      type: controller_manager_tests/VelEffController
+      velocity_joints:
+      - hiDOF_joint1
+      - hiDOF_joint2
+      effort_joints:
+      - nonexistent_resource
+    self_conflict_controller:
+      type: controller_manager_tests/VelEffController
+      velocity_joints:
+      - hiDOF_joint1
+      - hiDOF_joint2
+      effort_joints:
+      - hiDOF_joint1
+    optional_interfaces_controller:
+      type: controller_manager_tests/PosEffOptController
+      position_joints:
+      - hiDOF_joint1
+      - hiDOF_joint2
+      effort_joints:
+      - hiDOF_joint1
+    non_existing_multi_interface_controller:
+      type: controller_manager_tests/PosEffController
+      position_joints:
+      - hiDOF_joint1
+      - hiDOF_joint2
+      effort_joints:
+      - hiDOF_joint1
   </rosparam>
 
   <node pkg="controller_manager_tests" type="dummy_app" name="dummy_app" />
