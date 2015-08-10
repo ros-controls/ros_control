@@ -374,6 +374,16 @@ public:
   bool load(const std::string& urdf);
 
   /**
+   * \brief Load all transmissions contained in a vector of \c TransmissionInfo instances.
+   *
+   * This method adds new joint and transmission interfaces to the \c RobotHW and \c RobotTransmissions instances
+   * passed in the constructor, respectively.
+   * \param transmission_info_vec Vector of \c TransmissionInfo instances.
+   * \return True if successful.
+   */
+  bool load(const std::vector<TransmissionInfo>& transmission_info_vec);
+
+  /**
    * \brief Load a single transmission.
    *
    * This method adds new joint and transmission interfaces to the \c RobotHW and \c RobotTransmissions instances

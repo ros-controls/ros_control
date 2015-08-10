@@ -118,7 +118,12 @@ bool TransmissionInterfaceLoader::load(const std::string& urdf)
     return false;
   }
 
-  BOOST_FOREACH(const TransmissionInfo& info, infos)
+  return load(infos);
+}
+
+bool TransmissionInterfaceLoader::load(const std::vector<TransmissionInfo>& transmission_info_vec)
+{
+  BOOST_FOREACH(const TransmissionInfo& info, transmission_info_vec)
   {
     if (!load(info)) {return false;}
   }
