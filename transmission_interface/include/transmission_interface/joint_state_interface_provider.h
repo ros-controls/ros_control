@@ -50,17 +50,17 @@ protected:
                          const RawJointDataMap&  raw_joint_data_map,
                          JointData&              jnt_state_data);
 
-  bool getJointCommandData(const TransmissionInfo& transmission_info,
-                           const RawJointDataMap&  raw_joint_data_map,
-                           JointData&              jnt_cmd_data) {return true;}
+  bool getJointCommandData(const TransmissionInfo& /*transmission_info*/,
+                           const RawJointDataMap&  /*raw_joint_data_map*/,
+                           JointData&              /*jnt_cmd_data*/) {return true;}
 
   bool getActuatorStateData(const TransmissionInfo&      transmission_info,
                             hardware_interface::RobotHW* robot_hw,
                             ActuatorData&                act_state_data);
 
-  bool getActuatorCommandData(const TransmissionInfo&      transmission_info,
-                              hardware_interface::RobotHW* robot_hw,
-                              ActuatorData&                act_cmd_data) {return true;}
+  bool getActuatorCommandData(const TransmissionInfo&      /*transmission_info*/,
+                              hardware_interface::RobotHW* /*robot_hw*/,
+                              ActuatorData&                /*act_cmd_data*/) {return true;}
 
   bool registerTransmission(TransmissionLoaderData& loader_data,
                             TransmissionHandleData& handle_data);

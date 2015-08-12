@@ -60,7 +60,7 @@ public:
    *
    * \param time The current time
    */
-  virtual void starting(const ros::Time& time) {};
+  virtual void starting(const ros::Time& /*time*/) {};
 
   /** \brief This is called periodically by the realtime thread when the controller is running
    *
@@ -74,7 +74,7 @@ public:
    *
    * \param time The current time
    */
-  virtual void stopping(const ros::Time& time) {};
+  virtual void stopping(const ros::Time& /*time*/) {};
 
   /** \brief Check if the controller is running
    * \returns true if the controller is running

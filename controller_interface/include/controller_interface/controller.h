@@ -68,7 +68,7 @@ public:
    * \returns True if initialization was successful and the controller
    * is ready to be started.
    */
-  virtual bool init(T* hw, ros::NodeHandle &controller_nh) {return true;};
+  virtual bool init(T* /*hw*/, ros::NodeHandle& /*controller_nh*/) {return true;};
 
   /** \brief The init function is called to initialize the controller from a
    * non-realtime thread with a pointer to the hardware interface, itself,
@@ -85,7 +85,7 @@ public:
    * \returns True if initialization was successful and the controller
    * is ready to be started.
    */
-  virtual bool init(T* hw, ros::NodeHandle& root_nh, ros::NodeHandle &controller_nh) {return true;};
+  virtual bool init(T* /*hw*/, ros::NodeHandle& /*root_nh*/, ros::NodeHandle& /*controller_nh*/) {return true;};
 
 
 protected:

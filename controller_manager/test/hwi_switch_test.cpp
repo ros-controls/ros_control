@@ -223,8 +223,10 @@ class DummyControllerLoader: public controller_manager::ControllerLoaderInterfac
         const std::string type_name;
     public:
         DummyController(const std::string &name) : type_name(name) {}
-        virtual void update(const ros::Time& time, const ros::Duration& period) {}
-        virtual bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle &controller_nh,
+        virtual void update(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
+        virtual bool initRequest(hardware_interface::RobotHW* /*hw*/,
+                                 ros::NodeHandle& /*root_nh*/,
+                                 ros::NodeHandle &controller_nh,
                                  std::set<std::string>& claimed_resources)
         {
             std::vector<std::string> joints;
