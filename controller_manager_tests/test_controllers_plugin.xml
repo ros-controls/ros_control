@@ -31,4 +31,10 @@
   </description>
   </class>
 
+  <class name="controller_manager_tests/PubPeriodController" type="controller_manager_tests::PubPeriodController" base_class_type="controller_interface::ControllerBase">
+  <description>
+    Controller that publishes its update period to a ROS topic.
+  </description>
+  </class>
+
 </library>

@@ -27,6 +27,8 @@ add_library(${PROJECT_NAME}
   include/controller_manager_tests/pos_eff_opt_controller.h
   src/my_dummy_controller.cpp
   include/controller_manager_tests/my_dummy_controller.h
+  src/pub_period_controller.cpp
+  include/controller_manager_tests/pub_period_controller.h
   )
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 

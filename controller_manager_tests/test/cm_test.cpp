@@ -30,6 +30,7 @@
 
 #include <ros/ros.h>
 #include <gtest/gtest.h>
+#include <std_msgs/Duration.h>
 
 #include <controller_manager_msgs/ListControllers.h>
 #include <controller_manager_msgs/ListControllerTypes.h>
@@ -494,6 +495,88 @@ TEST(CMTests, listControllers)
     unload_client.call(srv);
     srv.request.name = "vel_eff_controller";
     unload_client.call(srv);
+  }
+}
+
+TEST(CMTests, customPeriodControllerOk)
+{
+  ros::NodeHandle nh;
+  ros::ServiceClient load_client   = nh.serviceClient<LoadController>("/controller_manager/load_controller");
+  ros::ServiceClient unload_client = nh.serviceClient<UnloadController>("/controller_manager/unload_controller");
+  ros::ServiceClient switch_client = nh.serviceClient<SwitchController>("/controller_manager/switch_controller");
+
+  const std::string ctrl = "half_freq_controller";
+  // Load controllers
+  {
+    LoadController srv;
+    srv.request.name = ctrl;
+    bool call_success = load_client.call(srv);
+    ASSERT_TRUE(call_success);
+    EXPECT_TRUE(srv.response.ok);
+  }
+
+  // Start controller updating at half the controller_manager frequency
+  {
+    SwitchController srv;
+    srv.request.start_controllers.push_back(ctrl);
+    srv.request.strictness = srv.request.STRICT;
+    bool call_success = switch_client.call(srv);
+    ASSERT_TRUE(call_success);
+    EXPECT_TRUE(srv.response.ok);
+  }
+
+  // Wait for controller period to be published
+  ros::NodeHandle ctrl_nh(ctrl);
+  ros::Duration timeout(4.0);
+  boost::shared_ptr<const std_msgs::Duration> msg = ros::topic::waitForMessage<std_msgs::Duration>("period",
+                                                                                                   ctrl_nh,
+                                                                                                   timeout);
+  ASSERT_TRUE(msg);
+  const double cm_period_2x = 2.0; // NOTE: Controller manager period is 1s
+  const double diff = std::abs(msg->data.toSec() - cm_period_2x);
+  EXPECT_GT(0.1, diff);
+
+  // Stop running controller
+  {
+    SwitchController srv;
+    srv.request.stop_controllers.push_back(ctrl);
+    srv.request.strictness = srv.request.STRICT;
+    bool call_success = switch_client.call(srv);
+    ASSERT_TRUE(call_success);
+    EXPECT_TRUE(srv.response.ok);
+  }
+
+  // Unload controllers
+  {
+    UnloadController srv;
+    srv.request.name = ctrl;
+    bool call_success = unload_client.call(srv);
+    ASSERT_TRUE(call_success);
+    EXPECT_TRUE(srv.response.ok);
+  }
+}
+
+TEST(CMTests, customPeriodControllerKo)
+{
+  ros::NodeHandle nh;
+  ros::ServiceClient load_client   = nh.serviceClient<LoadController>("/controller_manager/load_controller");
+
+  // Frequency divider < 1
+  {
+    LoadController srv;
+    srv.request.name = "invalid_value_freq_controller";
+    bool call_success = load_client.call(srv);
+    ASSERT_TRUE(call_success);
+    EXPECT_FALSE(srv.response.ok);
+  }
+
+  // Frequency divider type not a number
+  {
+    LoadController srv;
+    srv.request.name = "invalid_type_freq_controller";
+    bool call_success = load_client.call(srv);
+    ASSERT_TRUE(call_success);
+    EXPECT_FALSE(srv.response.ok);
   }
 }
 

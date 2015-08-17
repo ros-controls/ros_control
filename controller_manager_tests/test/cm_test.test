@@ -6,6 +6,7 @@
       type: controller_manager_tests/EffortTestController
     non_existent_interface_controller:
       type: controller_manager_tests/MyDummyController
+
     vel_eff_controller:
       type: controller_manager_tests/VelEffController
       velocity_joints:
@@ -41,6 +42,16 @@
       - hiDOF_joint2
       effort_joints:
       - hiDOF_joint1
+
+    half_freq_controller:
+      type: controller_manager_tests/PubPeriodController
+      update_freq_divider: 2
+    invalid_value_freq_controller:
+      type: controller_manager_tests/PubPeriodController
+      update_freq_divider: 0
+    invalid_type_freq_controller:
+      type: controller_manager_tests/PubPeriodController
+      update_freq_divider: two
   </rosparam>
 
   <node pkg="controller_manager_tests" type="dummy_app" name="dummy_app" />
