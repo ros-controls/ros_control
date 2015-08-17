@@ -37,6 +37,31 @@
 #include <controller_manager/controller_loader.h>
 #include <controller_manager_msgs/ControllerState.h>
 
+namespace
+{
+int getFrequencyDivider(const ros::NodeHandle& nh)
+{
+  int divider = 1;
+  const std::string param_name = "update_freq_divider";
+  if (nh.hasParam(param_name))
+  {
+    if (nh.getParam(param_name, divider))
+    {
+       if (divider < 1)
+       {
+         throw std::runtime_error("The '" + param_name + "' parameter cannot be zero or negative.");
+       }
+    }
+    else
+    {
+      throw std::runtime_error("The '" + param_name + "' parameter is not an integer.");
+    }
+  }
+  return divider;
+}
+
+}
+
 namespace controller_manager{
 
 
@@ -241,29 +266,18 @@ bool ControllerManager::loadController(const std::string& name)
   }
 
   // Configure controller update frequency divider parameter
-  int update_freq_divider = 1;
-  if (c_nh.hasParam("update_freq_divider"))
+  int update_freq_divider;
+  try
   {
-    if (c_nh.getParam("update_freq_divider", update_freq_divider))
-    {
-      if (update_freq_divider > 1) {
-        ROS_DEBUG("Controller '%s' of type '%s' will only be updated every %d cycles.",
-                  name.c_str(), type.c_str(), update_freq_divider);
-      }
-      else if (update_freq_divider < 1) {
-        ROS_ERROR("Could not load controller '%s' because the 'update_freq_divider' parameter cannot be zero or negative.",
-                  name.c_str());
-        to.clear();
-        return false;
-      }
-    }
-    else
-    {
-      ROS_ERROR("Could not load controller '%s' because the 'update_freq_divider' parameter is not an integer.",
-                name.c_str());
-      to.clear();
-      return false;
-    }
+    update_freq_divider = getFrequencyDivider(c_nh);
+    ROS_DEBUG("Controller '%s' of type '%s' will only be updated every %d cycles.",
+              name.c_str(), type.c_str(), update_freq_divider);
+  }
+  catch (const std::runtime_error& ex)
+  {
+    ROS_ERROR("Could not load controller '%s'. %s", name.c_str(), ex.what());
+    to.clear();
+    return false;
   }
 
   // Initializes the controller
