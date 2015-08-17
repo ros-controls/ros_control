@@ -240,14 +240,17 @@ bool ControllerManager::loadController(const std::string& name)
     return false;
   }
 
-  // Configure update_freq_divider parameter
+  // Configure controller update frequency divider parameter
   int update_freq_divider = 1;
   if (c_nh.getParam("update_freq_divider", update_freq_divider))
   {
     if (update_freq_divider > 1) {
-      ROS_DEBUG("Controller '%s' of type '%s' will only be updated in steps of %d cycles.", name.c_str(), type.c_str(), update_freq_divider);
-    } else if (update_freq_divider < 1) {
-      ROS_ERROR("Could not load controller '%s' because the 'update_freq_divider' parameter cannot be zero or negative.", name.c_str());
+      ROS_DEBUG("Controller '%s' of type '%s' will only be updated every %d cycles.",
+                name.c_str(), type.c_str(), update_freq_divider);
+    }
+    else if (update_freq_divider < 1) {
+      ROS_ERROR("Could not load controller '%s' because the 'update_freq_divider' parameter cannot be zero or negative.",
+                name.c_str());
       to.clear();
       return false;
     }
