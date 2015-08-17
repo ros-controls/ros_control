@@ -108,7 +108,7 @@ public:
       starting(time);
       state_ = RUNNING;
       skipped_update_cycles_ = 0;
-      total_update_period_ = ros::Duration();
+      time_since_last_update_ = ros::Duration();
       return true;
     }
     else
@@ -167,11 +167,11 @@ private:
 
   friend class controller_manager::ControllerManager;
 
-  /// The number of cycles skipped since the last update
+  /// The number of controller manager cycles skipped since the last controller update
   int skipped_update_cycles_;
 
-  /// The total period since the last update
-  ros::Duration total_update_period_;
+  /// The duration since the last controller update
+  ros::Duration time_since_last_update_;
 
 };
 

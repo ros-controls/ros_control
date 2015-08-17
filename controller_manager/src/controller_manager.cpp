@@ -92,7 +92,7 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
     const ControllerSpec& spec = controllers[i];
 
     // update period accumulator and skipped_update_cycles counter
-    spec.c->total_update_period_ += period;
+    spec.c->time_since_last_update_ += period;
     spec.c->skipped_update_cycles_++;
 
     // skip cycle if skipped_update_cycles < update_freq_divider
@@ -101,10 +101,10 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
       continue;
     }
 
-    spec.c->updateRequest(time, spec.c->total_update_period_);
+    spec.c->updateRequest(time, spec.c->time_since_last_update_);
 
     // reset period accumulator and skipped_update_cycles counter
-    spec.c->total_update_period_ = ros::Duration();
+    spec.c->time_since_last_update_ = ros::Duration();
     spec.c->skipped_update_cycles_ = 0;
   }
 
