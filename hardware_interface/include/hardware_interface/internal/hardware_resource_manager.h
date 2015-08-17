@@ -121,7 +121,7 @@ struct ClaimResources
 
 struct DontClaimResources
 {
-  static void claim(HardwareInterface* hw, const std::string& name) {}
+  static void claim(HardwareInterface* /*hw*/, const std::string& /*name*/) {}
 };
 /** \endcond */
 

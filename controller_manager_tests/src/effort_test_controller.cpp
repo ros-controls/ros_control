@@ -30,7 +30,7 @@
 
 using namespace controller_manager_tests;
 
-bool EffortTestController::init(hardware_interface::EffortJointInterface* hw, ros::NodeHandle &n)
+bool EffortTestController::init(hardware_interface::EffortJointInterface* hw, ros::NodeHandle& /*n*/)
 {
   // get all joint states from the hardware interface
   // const std::vector<std::string>& joint_names = hw->getJointNames();
@@ -46,12 +46,12 @@ bool EffortTestController::init(hardware_interface::EffortJointInterface* hw, ro
   return true;
 }
 
-void EffortTestController::starting(const ros::Time& time)
+void EffortTestController::starting(const ros::Time& /*time*/)
 {
   ROS_INFO("Starting JointState Controller");
 }
 
-void EffortTestController::update(const ros::Time& time, const ros::Duration& period)
+void EffortTestController::update(const ros::Time& /*time*/, const ros::Duration& /*period*/)
 {
   for (unsigned int i=0; i < joint_effort_commands_.size(); i++)
   {
@@ -59,7 +59,7 @@ void EffortTestController::update(const ros::Time& time, const ros::Duration& pe
   }
 }
 
-void EffortTestController::stopping(const ros::Time& time)
+void EffortTestController::stopping(const ros::Time& /*time*/)
 {
   ROS_INFO("Stopping JointState Controller");
 }
