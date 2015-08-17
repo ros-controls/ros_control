@@ -95,9 +95,9 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
     spec.c->total_update_period_ += period;
     spec.c->skipped_update_cycles_++;
 
-    // skip cycle if skipped_update_cycles < update_every_n_cycles
-    //    (always update if update_every_n_cycles <= 1)
-    if (spec.c->skipped_update_cycles_ < spec.update_every_n_cycles) {
+    // skip cycle if skipped_update_cycles < update_freq_divider
+    //    (always update if update_freq_divider <= 1)
+    if (spec.c->skipped_update_cycles_ < spec.update_freq_divider) {
       continue;
     }
 
@@ -240,14 +240,14 @@ bool ControllerManager::loadController(const std::string& name)
     return false;
   }
 
-  // Configure update_every_n_cycles parameter
-  int update_every_n_cycles = 1;
-  if (c_nh.getParam("update_every_n_cycles", update_every_n_cycles))
+  // Configure update_freq_divider parameter
+  int update_freq_divider = 1;
+  if (c_nh.getParam("update_freq_divider", update_freq_divider))
   {
-    if (update_every_n_cycles > 1) {
-      ROS_DEBUG("Controller '%s' of type '%s' will only be updated in steps of %d cycles.", name.c_str(), type.c_str(), update_every_n_cycles);
-    } else if (update_every_n_cycles < 1) {
-      ROS_ERROR("Could not load controller '%s' because the 'update_every_n_cycles' parameter cannot be zero or negative.", name.c_str());
+    if (update_freq_divider > 1) {
+      ROS_DEBUG("Controller '%s' of type '%s' will only be updated in steps of %d cycles.", name.c_str(), type.c_str(), update_freq_divider);
+    } else if (update_freq_divider < 1) {
+      ROS_ERROR("Could not load controller '%s' because the 'update_freq_divider' parameter cannot be zero or negative.", name.c_str());
       to.clear();
       return false;
     }
@@ -282,7 +282,7 @@ bool ControllerManager::loadController(const std::string& name)
   to[to.size()-1].info.name = name;
   to[to.size()-1].info.claimed_resources = claimed_resources;
   to[to.size()-1].c = c;
-  to[to.size()-1].update_every_n_cycles = update_every_n_cycles;
+  to[to.size()-1].update_freq_divider = update_freq_divider;
 
   // Destroys the old controllers list when the realtime thread is finished with it.
   int former_current_controllers_list_ = current_controllers_list_;

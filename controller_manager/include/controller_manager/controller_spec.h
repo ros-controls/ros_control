@@ -55,7 +55,7 @@ struct ControllerSpec
 {
   hardware_interface::ControllerInfo info;
   boost::shared_ptr<controller_interface::ControllerBase> c;
-  int update_every_n_cycles;        //! If greater than 0, this controller will only be updated every n-th cycle
+  int update_freq_divider; ///< If > 0, this controller will only be updated every n-th cycle
 };
 
 }
