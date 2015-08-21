@@ -12,3 +12,8 @@ install(FILES plugin.xml
 install(DIRECTORY resource
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
+install(PROGRAMS
+  scripts/rqt_controller_manager
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
