@@ -301,60 +301,84 @@ def filter_by_state(ctrl_list, ctrl_state, match_substring=False):
     return _filter_by_attr(ctrl_list, 'state', ctrl_state, match_substring)
 
 
-def filter_by_hardware_interface(ctrl_list, hw_iface, match_substring=False):
+def filter_by_hardware_interface(ctrl_list,
+                                 hardware_interface,
+                                 match_substring=False):
     """
     Filter controller state list by controller hardware interface.
 
     @param ctrl_list: Controller state list
     @type ctrl_list: [controller_manager_msgs/ControllerState]
-    @param hw_iface: Controller hardware interface
-    @type hw_iface: str
+    @param hardware_interface: Controller hardware interface
+    @type hardware_interface: str
     @param match_substring: Set to True to allow substring matching
     @type match_substring: bool
     @return: Controllers matching the specified hardware interface
     @rtype: [controller_manager_msgs/ControllerState]
     """
-    return _filter_by_attr(ctrl_list,
-                           'hardware_interface',
-                           hw_iface,
-                           match_substring)
+    list_out = []
+    for ctrl in ctrl_list:
+        for resource_set in ctrl.claimed_resources:
+            if match_substring:
+                if hardware_interface in resource_set.hardware_interface:
+                    list_out.append(ctrl)
+                    break
+            else:
+                if resource_set.hardware_interface == hardware_interface:
+                    list_out.append(ctrl)
+                    break
+    return list_out
 
 
-def filter_by_resources(ctrl_list, resources, match_any=False):
-    # NOTE: This method will most likely change when controllers are allowed
-    # to have multiple hardware interfaces, as each hardware interface will
-    # have a separate list of claimed resources
+def filter_by_resources(ctrl_list,
+                        resources,
+                        hardware_interface=None,
+                        match_any=False):
     """
     Filter controller state list by claimed resources.
 
     @param ctrl_list: Controller state list
     @type ctrl_list: [controller_manager_msgs/ControllerState]
-    @param resources: Resources
-    @type resources: str
+    @param resources: Controller resources
+    @type resources: [str]
+    @param hardware_interface Controller hardware interface where to look for
+    resources. If specified, the requested resources will only be searched for
+    in this interface. If unspecified, all controller hardware interfaces will
+    be searched for; i.e., if a controller claims resources from multiple
+    interfaces, the method will succeed if _any_ interface contains the
+    requested resources (any or all, depending on the value of C{match_any}).
+    Specifying this parameter allows finer control over determining which
+    interfaces claim specific resources.
     @param match_any: If set to False, all elements in C{resources} must
-    be claimed by a controller for a positive match (note that the controller
-    resource list can be contain additional entries than those in
-    C{resources}).
-    If set to True, at least one element in C{resources} must be claimed by a
-    controller for a positive match.
+    be claimed by the interface specified in C{hardware_interface} (or _any_
+    interface, if C{hardware_interface} is unspecified) for a positive match.
+    Note that a controller's resources can contain additional entries than
+    those in C{resources}).
+    If set to True, at least one element in C{resources} must be claimed by
+    the interface specified in C{hardware_interface} (or _any_ interface, if
+    C{hardware_interface} is unspecified) for a positive match.
     @type match_any: bool
     @return: Controllers matching the specified hardware interface
     @rtype: [controller_manager_msgs/ControllerState]
     """
     list_out = []
     for ctrl in ctrl_list:
-        for res in resources:
-            add_ctrl = not match_any  # Initial flag value
-            if res in ctrl.resources:
-                if match_any:  # One hit: enough to accept controller
-                    add_ctrl = True
+        for resource_set in ctrl.claimed_resources:
+            if (hardware_interface is None or
+                hardware_interface == resource_set.hardware_interface):
+                for res in resources:
+                    add_ctrl = not match_any  # Initial flag value
+                    if res in resource_set.resources:
+                        if match_any:  # One hit: enough to accept controller
+                            add_ctrl = True
+                            break
+                    else:
+                        if not match_any:  # One miss: enough to discard controller
+                            add_ctrl = False
+                            break
+                if add_ctrl:
+                    list_out.append(ctrl)
                     break
-            else:
-                if not match_any:  # One miss: enough to discard controller
-                    add_ctrl = False
-                    break
-        if add_ctrl:
-            list_out.append(ctrl)
     return list_out
 
 
@@ -371,3 +395,46 @@ def _filter_by_attr(list_in, attr_name, attr_val, match_substring=False):
             if getattr(val, attr_name) == attr_val:
                 list_out.append(val)
     return list_out
+
+###############################################################################
+#
+# Convenience methods for finding potential controller configurations
+#
+###############################################################################
+
+def get_rosparam_controller_names(namespace='/'):
+    """
+    Get list of ROS parameter names that potentially represent a controller
+    configuration.
+
+    Example usage:
+      - Assume the following parameters exist in the ROS parameter:
+        server:
+          - C{/foo/type}
+          - C{/xxx/type/xxx}
+          - C{/ns/bar/type}
+          - C{/ns/yyy/type/yyy}
+      - The potential controllers found by this method are:
+
+      >>> names    = get_rosparam_controller_names()      # returns ['foo']
+      >>> names_ns = get_rosparam_controller_names('/ns') # returns ['bar']
+
+    @param namespace: Namespace where to look for controllers.
+    @type namespace: str
+    @return: Sorted list of ROS parameter names.
+    @rtype: [str]
+    """
+    import rosparam
+    list_out = []
+    all_params = rosparam.list_params(namespace)
+    for param in all_params:
+        # Remove namespace from parameter string
+        if not namespace or namespace[-1] != '/':
+            namespace += '/'
+        param_no_ns = param.split(namespace, 1)[1]
+
+        # Check if parameter corresponds to a controller configuration
+        param_split = param_no_ns.split('/')
+        if (len(param_split) == 2 and param_split[1] == 'type'):
+            list_out.append(param_split[0]) # It does!
+    return sorted(list_out)

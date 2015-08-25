@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2012, hiDOF, INC and Willow Garage, Inc
+// Copyright (C) 2015, PAL Robotics S.L.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -8,7 +8,7 @@
 //   * Redistributions in binary form must reproduce the above copyright
 //     notice, this list of conditions and the following disclaimer in the
 //     documentation and/or other materials provided with the distribution.
-//   * Neither the name of Willow Garage Inc, hiDOF Inc, nor the names of its
+//   * Neither the names of PAL Robotics S.L. nor the names of its
 //     contributors may be used to endorse or promote products derived from
 //     this software without specific prior written permission.
 //
@@ -25,35 +25,51 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include <controller_manager_tests/pos_eff_controller.h>
 
-#ifndef HARDWARE_INTERFACE_CONTROLLER_INFO_H
-#define HARDWARE_INTERFACE_CONTROLLER_INFO_H
+using namespace controller_manager_tests;
 
-#include <string>
-#include <vector>
-
-#include <hardware_interface/interface_resources.h>
-
-namespace hardware_interface
+bool PosEffController::init(hardware_interface::RobotHW* robot_hw, ros::NodeHandle &n)
 {
+  std::vector<std::string> pos_joints;
+  if (!n.getParam("position_joints", pos_joints)) {return false;}
 
-/** \brief Controller Information
- *
- * This struct contains information about a given controller.
- *
- */
-struct ControllerInfo
-{
-  /** Controller name. */
-  std::string name;
+  std::vector<std::string> eff_joints;
+  if (!n.getParam("effort_joints", eff_joints)) {return false;}
 
-  /** Controller type. */
-  std::string type;
+  typedef std::vector<std::string>::const_iterator NamesIterator;
+  typedef hardware_interface::PositionJointInterface PosIface;
+  typedef hardware_interface::EffortJointInterface EffIface;
 
-  /** Claimed resources, grouped by the hardware interface they belong to. */
-  std::vector<InterfaceResources> claimed_resources;
-};
+  // should not fail, as initRequest should have checked interface existence
+  PosIface* pos_iface = robot_hw->get<PosIface>();
+  EffIface* eff_iface = robot_hw->get<EffIface>();
 
+  // populate command handles (claimed resources)
+  for (NamesIterator it = pos_joints.begin(); it != pos_joints.end(); it++)
+  {
+    pos_cmd_.push_back(pos_iface->getHandle(*it));
+  }
+
+  for (NamesIterator it = eff_joints.begin(); it != eff_joints.end(); it++)
+  {
+    eff_cmd_.push_back(eff_iface->getHandle(*it));
+  }
+
+  return true;
 }
 
-#endif
+void PosEffController::starting(const ros::Time& /*time*/)
+{
+  ROS_INFO("Starting PosEffController");
+}
+
+void PosEffController::update(const ros::Time& /*time*/, const ros::Duration& /*period*/)
+{}
+
+void PosEffController::stopping(const ros::Time& /*time*/)
+{
+  ROS_INFO("Stopping PosEffController");
+}
+
+PLUGINLIB_EXPORT_CLASS(controller_manager_tests::PosEffController, controller_interface::ControllerBase)

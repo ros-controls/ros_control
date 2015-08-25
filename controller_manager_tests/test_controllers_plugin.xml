@@ -7,7 +7,27 @@
 
   <class name="controller_manager_tests/MyDummyController" type="controller_manager_tests::MyDummyController" base_class_type="controller_interface::ControllerBase">
   <description>
-    This is a stub controller that uses an interface that likely no-one will support
+    This is a stub controller that uses an interface that likely no-one will support.
+  </description>
+  </class>
+
+  <class name="controller_manager_tests/VelEffController" type="controller_manager_tests::VelEffController" base_class_type="controller_interface::ControllerBase">
+  <description>
+    This is a multi-interface controller claiming resources from two required interfaces.
+  </description>
+  </class>
+
+  <class name="controller_manager_tests/PosEffController" type="controller_manager_tests::PosEffController" base_class_type="controller_interface::ControllerBase">
+  <description>
+    This is a multi-interface controller claiming resources from two required interfaces.
+    One of the interfaces is not exposed by the robot in this test suite.
+  </description>
+  </class>
+
+  <class name="controller_manager_tests/PosEffOptController" type="controller_manager_tests::PosEffOptController" base_class_type="controller_interface::ControllerBase">
+  <description>
+    This is a multi-interface controller claiming resources from two required interfaces. Interfaces are not required,
+    but optional.
   </description>
   </class>
 

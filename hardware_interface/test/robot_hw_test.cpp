@@ -114,30 +114,62 @@ TEST_F(RobotHWTest, InterfaceRewriting)
 
 TEST_F(RobotHWTest, ConflictChecking)
 {
+  // Controller with one interface claiming one resource
   ControllerInfo info1;
   info1.name = "controller_1";
   info1.type = "type_1";
-  info1.hardware_interface = "interface_1";
-  info1.resources.insert("resource_1");
+  std::set<string> resources_1;
+  resources_1.insert("resource_1");
+  InterfaceResources ir_1("interface_1", resources_1);
+  info1.claimed_resources.push_back(ir_1);
 
+  // Controller with one interface claiming one resource
   ControllerInfo info2;
   info2.name = "controller_2";
   info2.type = "type_2";
-  info2.hardware_interface = "interface_2";
-  info2.resources.insert("resource_2");
+  std::set<string> resources_2;
+  resources_2.insert("resource_2");
+  InterfaceResources ir_2("interface_2", resources_2);
+  info2.claimed_resources.push_back(ir_2);
 
+  // Controller with one interface claiming two resources
   ControllerInfo info12;
   info12.name = "controller_12";
   info12.type = "type_12";
-  info12.hardware_interface = "interface_12";
-  info12.resources.insert("resource_1");
-  info12.resources.insert("resource_2");
+  std::set<string> resources_12;
+  resources_12.insert("resource_1");
+  resources_12.insert("resource_2");
+  InterfaceResources ir_12("interface_1", resources_12);
+  info12.claimed_resources.push_back(ir_12);
+
+  // Controller with two interfaces claiming one resource each
+  ControllerInfo info12_multi_iface;
+  info12_multi_iface.name = "controller_12_multi_iface";
+  info12_multi_iface.type = "type_12_multi_iface";
+  info12_multi_iface.claimed_resources.push_back(ir_1);
+  info12_multi_iface.claimed_resources.push_back(ir_2);
+
+  // Controller with two interfaces claiming one or more resources
+  ControllerInfo info12_multi_iface_dup;
+  info12_multi_iface_dup.name = "controller_12_multi_iface_dup";
+  info12_multi_iface_dup.type = "type_12_multi_iface";
+  info12_multi_iface_dup.claimed_resources.push_back(ir_1);
+  info12_multi_iface_dup.claimed_resources.push_back(ir_12);
 
   // No conflict
   {
     list<ControllerInfo> info_list;
     info_list.push_back(info1);
     info_list.push_back(info2);
+
+    RobotHW hw;
+    EXPECT_FALSE(hw.checkForConflict(info_list));
+  }
+
+  // No conflict
+  {
+    list<ControllerInfo> info_list;
+    info_list.push_back(info12_multi_iface);
 
     RobotHW hw;
     EXPECT_FALSE(hw.checkForConflict(info_list));
@@ -158,6 +190,35 @@ TEST_F(RobotHWTest, ConflictChecking)
     list<ControllerInfo> info_list;
     info_list.push_back(info2);
     info_list.push_back(info12);
+
+    RobotHW hw;
+    EXPECT_TRUE(hw.checkForConflict(info_list));
+  }
+
+  // Conflict
+  {
+    list<ControllerInfo> info_list;
+    info_list.push_back(info1);
+    info_list.push_back(info12_multi_iface);
+
+    RobotHW hw;
+    EXPECT_TRUE(hw.checkForConflict(info_list));
+  }
+
+  // Conflict
+  {
+    list<ControllerInfo> info_list;
+    info_list.push_back(info2);
+    info_list.push_back(info12_multi_iface);
+
+    RobotHW hw;
+    EXPECT_TRUE(hw.checkForConflict(info_list));
+  }
+
+  // Conflict: Single controller claims same resource in more than one interface
+  {
+    list<ControllerInfo> info_list;
+    info_list.push_back(info12_multi_iface_dup);
 
     RobotHW hw;
     EXPECT_TRUE(hw.checkForConflict(info_list));

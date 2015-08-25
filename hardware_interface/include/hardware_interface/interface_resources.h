@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2012, hiDOF, INC and Willow Garage, Inc
+// Copyright (C) 2015, PAL Robotics S.L.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -8,7 +8,7 @@
 //   * Redistributions in binary form must reproduce the above copyright
 //     notice, this list of conditions and the following disclaimer in the
 //     documentation and/or other materials provided with the distribution.
-//   * Neither the name of Willow Garage Inc, hiDOF Inc, nor the names of its
+//   * Neither the name of PAL Robotics S.L. nor the names of its
 //     contributors may be used to endorse or promote products derived from
 //     this software without specific prior written permission.
 //
@@ -26,32 +26,34 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
-#ifndef HARDWARE_INTERFACE_CONTROLLER_INFO_H
-#define HARDWARE_INTERFACE_CONTROLLER_INFO_H
+#ifndef HARDWARE_INTERFACE_INTERFACE_RESOURCES_H
+#define HARDWARE_INTERFACE_INTERFACE_RESOURCES_H
 
+#include <set>
 #include <string>
 #include <vector>
-
-#include <hardware_interface/interface_resources.h>
 
 namespace hardware_interface
 {
 
-/** \brief Controller Information
- *
- * This struct contains information about a given controller.
- *
+/**
+ * \brief Structure for storing resource identifiers belonging to a specific
+ * hardware interface.
  */
-struct ControllerInfo
+struct InterfaceResources
 {
-  /** Controller name. */
-  std::string name;
+  InterfaceResources() {}
 
-  /** Controller type. */
-  std::string type;
+  InterfaceResources(const std::string& hw_iface, const std::set<std::string>& res)
+    : hardware_interface(hw_iface),
+      resources(res)
+  {}
 
-  /** Claimed resources, grouped by the hardware interface they belong to. */
-  std::vector<InterfaceResources> claimed_resources;
+  /** Hardware interface type. */
+  std::string hardware_interface;
+
+  /** Resources belonging to the hardware interface. */
+  std::set<std::string> resources;
 };
 
 }

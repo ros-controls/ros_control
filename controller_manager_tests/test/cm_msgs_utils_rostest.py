@@ -118,6 +118,37 @@ class TestUtils(unittest.TestCase):
         list_controllers_ns = ControllerLister('/foo')
         self.assertEqual(0, len(list_controllers_ns()))
 
+    def test_rosparam_controller_names(self):
+        # Default namespace
+        names_def = get_rosparam_controller_names()
+        self.assertEqual(2, len(names_def))
+        self.assertIn('foo_controller', names_def)
+        self.assertIn('bar_controller', names_def)
+
+        # Root namespace
+        names_root = get_rosparam_controller_names('/')
+        self.assertEqual(2, len(names_root))
+        self.assertIn('foo_controller', names_root)
+        self.assertIn('bar_controller', names_root)
+
+        # Empty namespace
+        names_empty = get_rosparam_controller_names('')
+        self.assertEqual(2, len(names_empty))
+        self.assertIn('foo_controller', names_empty)
+        self.assertIn('bar_controller', names_empty)
+
+        # Custom namespace
+        names_ns  = get_rosparam_controller_names('/ns')
+        self.assertEqual(2, len(names_ns))
+        self.assertIn('baz_controller', names_ns)
+        self.assertIn('qux_controller', names_ns)
+
+        # Custom namespace, trailing slash
+        names_nss  = get_rosparam_controller_names('/ns/')
+        self.assertEqual(2, len(names_nss))
+        self.assertIn('baz_controller', names_nss)
+        self.assertIn('qux_controller', names_nss)
+
 if __name__ == '__main__':
     import rostest
     rostest.rosrun('controller_manager_msgs',

@@ -19,6 +19,12 @@ add_library(${PROJECT_NAME}
   include/controller_manager_tests/my_robot_hw.h
   src/effort_test_controller.cpp
   include/controller_manager_tests/effort_test_controller.h
+  src/vel_eff_controller.cpp
+  include/controller_manager_tests/vel_eff_controller.h
+  src/pos_eff_controller.cpp
+  include/controller_manager_tests/pos_eff_controller.h
+  src/pos_eff_opt_controller.cpp
+  include/controller_manager_tests/pos_eff_opt_controller.h
   src/my_dummy_controller.cpp
   include/controller_manager_tests/my_dummy_controller.h
   )

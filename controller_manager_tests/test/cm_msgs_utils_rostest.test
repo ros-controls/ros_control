@@ -1,4 +1,5 @@
 <launch>
+  <rosparam command="load" file="$(find controller_manager_tests)/test/controller_params.yaml" />
   <node pkg="controller_manager_tests" type="multi_cm_dummy.py" name="multi_cm_dummy" />
   <test pkg="controller_manager_tests" type="cm_msgs_utils_rostest.py" test-name="cm_msgs_utils_rostest" />
 </launch>

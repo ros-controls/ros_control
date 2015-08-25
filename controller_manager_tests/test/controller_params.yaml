@@ -1,0 +1,28 @@
+# Root namespace controllers
+foo_controller:
+  type: "FooType"
+
+bar_controller:
+  type: "BarType2"
+
+non_controller_1:
+  type:
+    extra_ns: "NonType"
+
+type:
+  non_controller_2: "NonType"
+
+# Namespaced controllers
+ns:
+  baz_controller:
+    type: "BazType"
+
+  qux_controller:
+    type: "QuxType"
+
+  non_controller_3:
+    type:
+      extra_ns: "NonType"
+
+  type:
+    non_controller_4: "NonType"

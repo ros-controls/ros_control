@@ -5,6 +5,7 @@
   <description>The rqt_controller_manager package</description>
 
   <maintainer email="kphawkins@gatech.edu">Kelsey Hawkins</maintainer>
+  <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodríguez Tsouroukdissian</maintainer>
 
   <license>BSD</license>
 
@@ -13,6 +14,7 @@
   <url type="repository">https://github.com/ros-controls/ros_control</url>
 
   <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
+  <author email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodríguez Tsouroukdissian</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
@@ -23,6 +25,6 @@
   <run_depend>rqt_gui</run_depend>
 
   <export>
-    <rqt_gui plugin="${prefix}/plugins/plugin.xml" />
+    <rqt_gui plugin="${prefix}/plugin.xml" />
   </export>
 </package>
