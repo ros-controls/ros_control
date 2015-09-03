@@ -79,6 +79,8 @@ int main(int argc, char** argv)
   ros::service::waitForService("/controller_manager/load_controller");
   ROS_INFO("Start tests");
   spinner.start();
-
-  return RUN_ALL_TESTS();
+  int ret = RUN_ALL_TESTS();
+  spinner.stop();
+  ros::shutdown();
+  return ret;
 }
