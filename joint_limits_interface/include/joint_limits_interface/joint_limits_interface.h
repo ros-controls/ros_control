@@ -111,6 +111,27 @@ public:
     }
 
     const double cmd = internal::saturate(jh_.getCommand(), min_pos, max_pos);
+
+    // Optional helper code for debugging, not realtime safe ----------
+#define USE_JOINT_LIMIT_DEBUG 0 // Set to 1 to enable debug output
+#if USE_JOINT_LIMIT_DEBUG
+    if (cmd != jh_.getCommand())
+    {
+      // Determine if velocity or position is what limited us
+      if (min_pos != min_pos_limit_ || max_pos != max_pos_limit_)
+        std::cout << "VELOCITY LIMIT ";
+      else
+        std::cout << "POSITION LIMIT ";
+
+      // Limit violation details
+      std::cout << jh_.getName() << " position - original: " << jh_.getCommand() << " new: " << cmd
+                << " diff: " << jh_.getCommand() - cmd
+                << " vel_pos_delta: " << (limits_.max_velocity * period.toSec())
+                << std::endl;
+    }
+#endif
+    // ----------------------------------------------------
+
     jh_.setCommand(cmd);
     prev_cmd_ = cmd;
   }

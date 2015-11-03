@@ -50,6 +50,26 @@ struct JointLimits
       angle_wraparound(false)
   {}
 
+public:
+
+  // Helper function for debuggging, not realtime safe
+  void print()
+  {
+    std::cout << "min_position " << min_position << std::endl;
+    std::cout << "max_position " << max_position << std::endl;
+    std::cout << "max_velocity " << max_velocity << std::endl;
+    std::cout << "max_acceleration " << max_acceleration << std::endl;
+    std::cout << "max_jerk " << max_jerk << std::endl;
+    std::cout << "max_effort " << max_effort << std::endl;
+
+    std::cout << "has_position_limits " << has_position_limits << std::endl;
+    std::cout << "has_velocity_limits " << has_velocity_limits << std::endl;
+    std::cout << "has_acceleration_limits " << has_acceleration_limits << std::endl;
+    std::cout << "has_jerk_limits " << has_jerk_limits << std::endl;
+    std::cout << "has_effort_limits " << has_effort_limits << std::endl;
+    std::cout << "angle_wraparound " << angle_wraparound << std::endl;
+  }
+
   double min_position;
   double max_position;
   double max_velocity;
