@@ -113,8 +113,8 @@ public:
     const double cmd = internal::saturate(jh_.getCommand(), min_pos, max_pos);
 
     // Optional helper code for debugging, not realtime safe ----------
-#define USE_JOINT_LIMIT_DEBUG 0 // Set to 1 to enable debug output
-#if USE_JOINT_LIMIT_DEBUG
+#define USE_JOINT_LIMIT_DEBUG // Show warnings when joint limits exceeded
+#ifdef USE_JOINT_LIMIT_DEBUG
     if (cmd != jh_.getCommand())
     {
       // Determine if velocity or position is what limited us
