@@ -103,20 +103,23 @@ public:
    * This is just a check, the actual switch is done in doSwitch()
    * @deprecated: Implement prepareSwitch() instead
    */
-  virtual bool canSwitch(const std::list<ControllerInfo>& /*start_list*/, const std::list<ControllerInfo>& /*stop_list*/) const { return true; }
+  virtual bool canSwitch(const std::list<ControllerInfo>& /*start_list*/,
+                         const std::list<ControllerInfo>& /*stop_list*/) const { return true; }
 
   /**
    * Check (in non-realtime) if given controllers could be started and stopped from the current state of the RobotHW
    * with regard to necessary hardware interface switches and prepare the switching. Start and stop list are disjoint.
    * This handles the check and preparation, the actual switch is commited in doSwitch()
    */
-  virtual bool prepareSwitch(const std::list<ControllerInfo>& start_list, const std::list<ControllerInfo>& stop_list) { return canSwitch(start_list, stop_list); }
+  virtual bool prepareSwitch(const std::list<ControllerInfo>& start_list,
+                             const std::list<ControllerInfo>& stop_list) { return canSwitch(start_list, stop_list); }
 
   /**
    * Perform (in non-realtime) all necessary hardware interface switches in order to start and stop the given controllers.
    * Start and stop list are disjoint. The feasability was checked in canSwitch() beforehand.
    */
-  virtual void doSwitch(const std::list<ControllerInfo>& /*start_list*/, const std::list<ControllerInfo>& /*stop_list*/) {}
+  virtual void doSwitch(const std::list<ControllerInfo>& /*start_list*/,
+                        const std::list<ControllerInfo>& /*stop_list*/) {}
 };
 
 }
