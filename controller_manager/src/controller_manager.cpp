@@ -472,7 +472,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     return false;
   }
 
-  if (!robot_hw_->canSwitch(start_list, stop_list))
+  if (!robot_hw_->prepareSwitch(start_list, stop_list))
   {
     ROS_ERROR("Could not switch controllers. The hardware interface combination for the requested controllers is unfeasible.");
     stop_request_.clear();
