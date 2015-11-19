@@ -86,7 +86,7 @@ class SwitchBot : public hardware_interface::RobotHW
             if(can_switch) interfaces_.insert(hardware_interface::internal::demangledTypeName<Interface>() );
             iface.registerHandle(typename Interface::ResourceHandleType(jsh_, &dummy_));
         }
-        bool canSwitch(const std::string &n) const
+        bool prepareSwitch(const std::string &n)
         {
             if(interfaces_.find(n) == interfaces_.end()) return false;
             return n >= current_;
@@ -135,11 +135,11 @@ public:
 
     }
 
-    virtual bool canSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
-                           const std::list<hardware_interface::ControllerInfo>& stop_list) const
+    virtual bool prepareSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
+                               const std::list<hardware_interface::ControllerInfo>& stop_list)
     {
 
-        if(!RobotHW::canSwitch(start_list, stop_list))
+        if(!RobotHW::prepareSwitch(start_list, stop_list))
         {
             ROS_ERROR("Something is wrong with RobotHW");
             return false;
@@ -171,7 +171,7 @@ public:
                 // per joint check
                 try
                 {
-                    if(!joints_.at(*res_it)->canSwitch(iface_res.hardware_interface))
+                    if(!joints_.at(*res_it)->prepareSwitch(iface_res.hardware_interface))
                     {
                         ROS_ERROR_STREAM("Cannot switch " << *res_it << " to " << iface_res.hardware_interface);
                         return false;
