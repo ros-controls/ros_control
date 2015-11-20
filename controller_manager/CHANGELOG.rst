@@ -2,6 +2,21 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix doSwitch execution point
+  The doSwitch method needs to be executed in the update() method,  that is, in
+  the real-time path, which is where controller switching actually takes place.
+* Introduce prepareSwitch, replacement of canSwitch
+* Deprecate RobotHW::canSwitch
+* Multi-interface controllers
+  - C++ API break.
+  - Make controller_manager aware of controllers that claim resources from more
+  than one hardware interface.
+  - Update and extend the corresponding test suite.
+* Address -Wunused-parameter warnings
+* Contributors: Adolfo Rodriguez Tsouroukdissian, Mathias Lüdtke
+
 0.9.3 (2015-05-05)
 ------------------
 * controller_manager: Add missing rostest dep

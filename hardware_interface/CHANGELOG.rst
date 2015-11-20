@@ -2,6 +2,27 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix doSwitch execution point
+  The doSwitch method needs to be executed in the update() method,  that is, in
+  the real-time path, which is where controller switching actually takes place.
+  It was previously done in the switchController callback, which is non real-time.
+* Introduce prepareSwitch, replacement of canSwitch
+* Add InterfaceManager::getNames
+  Add new method that allows to query the names of all interfaces managed by
+  an InterfaceManager instance.
+* Multi-interface controllers
+  - C++ API break.
+  - Modify ControllerInfo class to allow controllers to claim resources from
+  multiple hardware interfaces.
+  - Propagate changes to RobotHW::checkForConflict: Default resource ownsership
+  policy is aware of controllers claiming resources from  multiple hardware
+  interfaces.
+  - Update and extend the corresponding test suite.
+* Address -Wunused-parameter warnings
+* Contributors: Adolfo Rodriguez Tsouroukdissian, Mathias Lüdtke
+
 0.9.3 (2015-05-05)
 ------------------
 

@@ -2,6 +2,19 @@
 Changelog for package rqt_controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Allow running as standalone application
+* Multi-interface controllers, UI revamp
+  - Make the rqt_controller_manager aware of multi-interface controllers.
+  - Reduce the amount of screen real-estate used by the plugin.
+  - Make main view read-only.
+  - Show uninitialized controllers (fetched from parameter server) in the same
+  list as stopped and running controllers.
+  - Make less assumptions when finding running controller managers. Use
+  existing helpers on controller_mamager_msgs.utils Python module.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.9.3 (2015-05-05)
 ------------------
 

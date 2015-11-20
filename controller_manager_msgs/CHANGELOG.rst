@@ -2,6 +2,20 @@
 Changelog for package controller_manager_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add helper to query rosparam controller configs
+  There is no way to identify uninitialized controllers other than by inspecting
+  the ROS parameter server, and looking for the required controller config
+  structure, which is the existence of the <ctrl_name>/type parameter.
+* Multi-interface controllers
+  - Breaks ROS API and (internal) Python API.
+  - Modify and extend ROS message definitions to allow for controllers that
+  claim resources from more than one hardware interface.
+  - Modify Python helpers and update the corresponding test suite to take into
+  account above changes.
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.9.3 (2015-05-05)
 ------------------
 
