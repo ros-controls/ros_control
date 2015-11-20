@@ -1,6 +1,6 @@
 <package>
   <name>controller_manager_msgs</name>
-  <version>0.9.3</version>
+  <version>0.10.0</version>
   <description>Messages and services for the controller manager.</description>
   <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
 

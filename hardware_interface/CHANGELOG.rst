@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.10.0 (2015-11-20)
+-------------------
 * Fix doSwitch execution point
   The doSwitch method needs to be executed in the update() method,  that is, in
   the real-time path, which is where controller switching actually takes place.

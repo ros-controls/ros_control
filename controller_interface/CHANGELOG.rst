@@ -2,8 +2,8 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.10.0 (2015-11-20)
+-------------------
 * Add MultiInterfaceController.
   - Subclass of ControllerBase which allows to claim resources from up to four
   different hardware interfaces.

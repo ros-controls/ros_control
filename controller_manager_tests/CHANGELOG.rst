@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.10.0 (2015-11-20)
+-------------------
 * Cleaner test exit
 * Extend test suite
   - Exercise much more of the controller_manager ROS API.
