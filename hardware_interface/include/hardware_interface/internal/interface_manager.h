@@ -26,7 +26,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/// \author Wim Meussen, Adolfo Rodriguez Tsouroukdissian, Kelsey P. Hawkins
+/// \author Wim Meussen, Adolfo Rodriguez Tsouroukdissian, Kelsey P. Hawkins, Toni Oliver
 
 #ifndef HARDWARE_INTERFACE_INTERFACE_MANAGER_H
 #define HARDWARE_INTERFACE_INTERFACE_MANAGER_H
@@ -79,6 +79,22 @@ struct CheckIsResourceManager {
   // calls ResourceManager::concatManagers if C is a ResourceManager
   static const void callConcatManagers(typename std::vector<T*>& managers, T* result)
   { callCM<T>(managers, result, 0); }
+
+
+  // method called if C is a ResourceManager
+  template <typename C>
+  static std::vector<std::string> callGR(C* iface, typename C::resource_manager_type*)
+  {
+    return iface->getNames();
+  }
+
+  // method called if C is not a ResourceManager
+  template <typename C>
+  static std::vector<std::string> callGR(T* iface, ...) {}
+
+  // calls ResourceManager::concatManagers if C is a ResourceManager
+  static std::vector<std::string> callGetResources(T* iface)
+  { return callGR<T>(iface, 0); }
 };
 
 class InterfaceManager
@@ -101,7 +117,15 @@ public:
     {
       ROS_WARN_STREAM("Replacing previously registered interface '" << iface_name << "'.");
     }
-    interfaces_[internal::demangledTypeName<T>()] = iface;
+    interfaces_[iface_name] = iface;
+
+    std::vector<std::string> resources;
+    if(CheckIsResourceManager<T>::value)
+    {
+      // it is a ResourceManager. Get the names of the resources
+      resources = CheckIsResourceManager<T>::callGetResources(iface);
+    }
+    resources_[iface_name] = resources;
   }
 
   void registerInterfaceManager(InterfaceManager* iface_man)
@@ -198,16 +222,37 @@ public:
     return out;
   }
 
+  /**
+   * \brief Get the resource names registered to an interface, specified by type
+   * (as this class only stores one interface per type)
+   *
+   * \param iface_type A string with the demangled type name of the interface
+   * \return A vector of resource names registered to this interface
+   */
+  std::vector<std::string> getInterfaceResources(std::string iface_type) const
+  {
+    std::vector<std::string> out;
+    ResourceMap::const_iterator it = resources_.find(iface_type);
+    if(it != resources_.end())
+    {
+      out = it->second;
+    }
+    return out;
+  }
+
 protected:
   typedef std::map<std::string, void*> InterfaceMap;
   typedef std::vector<InterfaceManager*> InterfaceManagerVector;
   typedef std::map<std::string, size_t> SizeMap;
+  typedef std::map<std::string, std::vector<std::string> > ResourceMap;
 
   InterfaceMap interfaces_;
   InterfaceMap interfaces_combo_;
   InterfaceManagerVector interface_managers_;
   SizeMap num_ifaces_registered_;
   boost::ptr_vector<ResourceManagerBase> interface_destruction_list_;
+  /// This will allow us to check the resources based on the demangled type name of the interface
+  ResourceMap resources_;
 };
 
 } // namespace
