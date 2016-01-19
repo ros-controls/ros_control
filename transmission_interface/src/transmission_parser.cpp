@@ -229,7 +229,7 @@ bool TransmissionParser::parseActuators(TiXmlElement *trans_it, std::vector<Actu
     }
     if (actuator.hardware_interfaces_.empty())
     {
-      ROS_DEBUG_STREAM_NAMED("parser","No valid hardware interface element found in actuator '"
+      ROS_DEBUG_STREAM_NAMED("parser","Optional: No valid hardware interface element found in actuator '"
         << actuator.name_ << "'.");
       // continue; // NOTE: Hardware interface is optional, so we keep on going
     }
