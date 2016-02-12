@@ -2,6 +2,23 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix doSwitch execution point
+  The doSwitch method needs to be executed in the update() method,  that is, in
+  the real-time path, which is where controller switching actually takes place.
+  It was previously done in the switchController callback, which is non real-time.
+  In this method controller switching is scheduled, but not actually executed.
+  This changeset fixes a bug in which hardware interface  modes could switch
+  before controllers, leading to undefined behavior.
+* Introduce prepareSwitch, replacement of canSwitch
+  RobotHW::prepareSwitch is intended as a substitute for RobotHW::canSwitch.
+  The main reasons for the change are a non-const signature to allow
+  changing state and a more descriptive name.
+  RobotHW::canSwitch will be deprecated in a later ROS distro.
+* Address -Wunused-parameter warnings
+* Contributors: Adolfo Rodriguez Tsouroukdissian, Mathias Lüdtke
+
 0.9.3 (2015-05-05)
 ------------------
 * controller_manager: Add missing rostest dep

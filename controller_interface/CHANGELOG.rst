@@ -2,6 +2,11 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Address -Wunused-parameter warnings
+* Contributors: Adolfo Rodriguez Tsouroukdissian
+
 0.9.3 (2015-05-05)
 ------------------
 
