@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rqt_controller_manager</name>
-  <version>0.9.3</version>
+  <version>0.9.4</version>
   <description>The rqt_controller_manager package</description>
 
   <maintainer email="kphawkins@gatech.edu">Kelsey Hawkins</maintainer>

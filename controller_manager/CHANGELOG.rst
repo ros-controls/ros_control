@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.4 (2016-02-12)
+------------------
 * Fix doSwitch execution point
   The doSwitch method needs to be executed in the update() method,  that is, in
   the real-time path, which is where controller switching actually takes place.

@@ -1,6 +1,6 @@
 <package>
   <name>ros_control</name>
-  <version>0.9.3</version>
+  <version>0.9.4</version>
   <description>A set of packages that include controller interfaces, controller managers, transmissions, hardware_interfaces and the control_toolbox.</description>
 
   <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>

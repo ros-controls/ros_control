@@ -2,8 +2,8 @@
 Changelog for package rqt_controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.4 (2016-02-12)
+------------------
 * Added standalone rqt_controller_manager script
 * Contributors: Marco Esposito
 
