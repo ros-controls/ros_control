@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 2.8.3)
 project(controller_manager_tests)
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS controller_manager controller_interface control_toolbox)
+find_package(catkin REQUIRED COMPONENTS controller_manager controller_interface)
 catkin_python_setup()
 
 include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
 catkin_package(
-  CATKIN_DEPENDS controller_manager controller_interface control_toolbox
+  CATKIN_DEPENDS controller_manager controller_interface
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
   )
