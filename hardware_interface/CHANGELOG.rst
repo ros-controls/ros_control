@@ -2,6 +2,11 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix rosconsole errors from test build
+* Contributors: Bence Magyar
+
 0.10.0 (2015-11-20)
 -------------------
 * Fix doSwitch execution point
