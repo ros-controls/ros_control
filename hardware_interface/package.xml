@@ -16,6 +16,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend> 
   <run_depend>roscpp</run_depend> 
+  <test_depend>rosconsole</test_depend> 
 
   <export>
     <cpp cflags="-I${prefix}/include"/>

@@ -12,6 +12,10 @@ catkin_package(
   )
 
 if(CATKIN_ENABLE_TESTING)
+
+  find_package(catkin REQUIRED COMPONENTS rosconsole) 
+  include_directories(${catkin_INCLUDE_DIRS})
+
   catkin_add_gtest(hardware_resource_manager_test  test/hardware_resource_manager_test.cpp)
   target_link_libraries(hardware_resource_manager_test ${catkin_LIBRARIES})
 
