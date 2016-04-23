@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.10.1 (2016-04-23)
+-------------------
 * Fix rosconsole errors from test build
 * Contributors: Bence Magyar
 

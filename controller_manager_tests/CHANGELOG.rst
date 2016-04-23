@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.10.1 (2016-04-23)
+-------------------
 * Add missing test dependency on rosservice
 * Remove control_toolbox dependency. Fix thread linking error coming from removal of dependency.
 * Contributors: Bence Magyar
