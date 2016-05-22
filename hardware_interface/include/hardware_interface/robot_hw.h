@@ -36,6 +36,7 @@
 #include <hardware_interface/hardware_interface.h>
 #include <hardware_interface/controller_info.h>
 #include <ros/console.h>
+#include <ros/node_handle.h>
 
 namespace hardware_interface
 {
@@ -60,6 +61,23 @@ public:
   {
 
   }
+
+  virtual ~RobotHW()
+  {
+
+  }
+
+  /** \brief The init function is called to initialize the RobotHW from a
+   * non-realtime thread.
+   *
+   * \param root_nh A NodeHandle in the root of the caller namespace.
+   *
+   * \param robot_hw_nh A NodeHandle in the namespace from which the RobotHW
+   * should read its configuration.
+   *
+   * \returns True if initialization was successful
+   */
+  virtual bool init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh) {return true;}
 
   /** \name Resource Management
    *\{*/
@@ -128,6 +146,22 @@ public:
    */
   virtual void doSwitch(const std::list<ControllerInfo>& /*start_list*/,
                         const std::list<ControllerInfo>& /*stop_list*/) {}
+
+  /**
+   * Reads data from the robot HW
+   *
+   * \param time The current time
+   * \param period The time passed since the last call to \ref read
+   */
+  virtual void read(const ros::Time& time, const ros::Duration& period) {}
+
+  /**
+   * Writes data to the robot HW
+   *
+   * \param time The current time
+   * \param period The time passed since the last call to \ref write
+   */
+  virtual void write(const ros::Time& time, const ros::Duration& period) {}
 };
 
 }

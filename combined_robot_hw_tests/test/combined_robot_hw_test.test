@@ -1,0 +1,25 @@
+<launch>
+  <rosparam>
+    robot_hardware:
+    - my_robot_hw_1
+    - my_robot_hw_2
+    - my_robot_hw_3
+    - my_robot_hw_4
+    my_robot_hw_1:
+      type: combined_robot_hw_tests/MyRobotHW1
+    my_robot_hw_2:
+      type: combined_robot_hw_tests/MyRobotHW2
+      joints:
+      - test_joint4
+      - test_joint5
+    my_robot_hw_3:
+      type: combined_robot_hw_tests/MyRobotHW3
+      robot_description: robot_description
+      joint_name_filter: right_arm
+    my_robot_hw_4:
+      type: combined_robot_hw_tests/MyRobotHW4
+  </rosparam>
+
+  <test test-name="combined_robot_hw_tests" pkg="combined_robot_hw_tests" type="combined_robot_hw_test"/>
+  
+</launch>

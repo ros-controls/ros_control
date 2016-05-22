@@ -45,6 +45,17 @@ namespace hardware_interface
 {
 
 /**
+ * \brief Non-templated Base Class that contains a virtual destructor.
+ *
+ * This will allow to destroy the templated children without having to know the template type.
+ */
+class ResourceManagerBase
+{
+public:
+  virtual ~ResourceManagerBase() {}
+};
+
+/**
  * \brief Class for handling named resources.
  *
  * Resources are encapsulated inside handle instances, and this class allows to register and get them by name.
@@ -55,9 +66,10 @@ namespace hardware_interface
  *  \endcode
  */
 template <class ResourceHandle>
-class ResourceManager
+class ResourceManager : public ResourceManagerBase
 {
 public:
+  typedef ResourceManager<ResourceHandle> resource_manager_type;
   /** \name Non Real-Time Safe Functions
    *\{*/
 
@@ -111,6 +123,27 @@ public:
     }
 
     return it->second;
+  }
+
+  /**
+   * \brief Combine a list of interfaces into one.
+   *
+   * Every registered handle in each of the managers is registered into the result interface
+   * \param managers The list of resource managers to be combined.
+   * \param result The interface where all the handles will be registered.
+   * \return Resource associated to \e name. If the resource name is not found, an exception is thrown.
+   */
+  static void concatManagers(std::vector<resource_manager_type*>& managers,
+                             resource_manager_type* result)
+  {
+    for(typename std::vector<resource_manager_type*>::iterator it_man = managers.begin();
+        it_man != managers.end(); ++it_man) {
+      std::vector<std::string> handle_names = (*it_man)->getNames();
+      for(std::vector<std::string>::iterator it_nms = handle_names.begin();
+          it_nms != handle_names.end(); ++it_nms) {
+        result->registerHandle((*it_man)->getHandle(*it_nms));
+      }
+    }
   }
 
   /*\}*/
