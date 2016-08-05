@@ -98,7 +98,7 @@ std::string enumerateElements(const T& val,
  * #include <controller_interface/multi_interface_controller.h>
  * #include <hardware_interface/joint_command_interface.h>
  *
- * using namespace hardawre_interface;
+ * using namespace hardware_interface;
  * class VelEffController : public
  *       controller_interface::MultiInterfaceController<VelocityJointInterface,
  *                                                      EffortJointInterface>
@@ -113,8 +113,8 @@ std::string enumerateElements(const T& val,
  *     // hardware interfaces
  *
  *     // v and e below are guarranteed to be valid
- *     VelocityJointInterface* v = robot_hw->get<VelocityJointInterface>;
- *     EffortJointInterface*   e = robot_hw->get<EffortJointInterface>;
+ *     VelocityJointInterface* v = robot_hw->get<VelocityJointInterface>();
+ *     EffortJointInterface*   e = robot_hw->get<EffortJointInterface>();
  *
  *     // Fetch resources from interfaces, perform rest of initialization
  *     //...
@@ -152,7 +152,7 @@ std::string enumerateElements(const T& val,
  *     // robot exposes them
  *
  *     // v is a required interface
- *     VelocityJointInterface* v = robot_hw->get<VelocityJointInterface>;
+ *     VelocityJointInterface* v = robot_hw->get<VelocityJointInterface>();
  *     if (!v)
  *     {
  *       return false;
@@ -161,7 +161,7 @@ std::string enumerateElements(const T& val,
  *     // e is an optional interface. If present, additional features are enabled.
  *     // Controller can still function if interface or some of its resources are
  *     // absent
- *     EffortJointInterface* e = robot_hw->get<EffortJointInterface>;
+ *     EffortJointInterface* e = robot_hw->get<EffortJointInterface>();
  *
  *     // Fetch resources from interfaces, perform rest of initialization
  *     //...
