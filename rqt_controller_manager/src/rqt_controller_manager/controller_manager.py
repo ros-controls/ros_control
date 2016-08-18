@@ -32,10 +32,10 @@ import rospy
 from python_qt_binding import loadUi
 from python_qt_binding.QtCore import QAbstractTableModel, QModelIndex, Qt,\
                                      QTimer, QVariant, Signal
-from python_qt_binding.QtGui import QCursor, QFont, QFormLayout, QHeaderView,\
-                                    QIcon, QMenu, QStandardItem,\
-                                    QStandardItemModel, QStyledItemDelegate,\
-                                    QWidget
+from python_qt_binding.QtWidgets import QWidget, QFormLayout, QHeaderView,\
+					QMenu, QStyledItemDelegate
+from python_qt_binding.QtGui import QCursor, QFont, QIcon, QStandardItem,\
+                                    QStandardItemModel
 from qt_gui.plugin import Plugin
 
 from controller_manager_msgs.msg import ControllerState
@@ -112,7 +112,7 @@ class ControllerManager(Plugin):
         table_view.doubleClicked.connect(self._on_ctrl_info)
 
         header = table_view.horizontalHeader()
-        header.setResizeMode(QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(QHeaderView.ResizeToContents)
         header.setContextMenuPolicy(Qt.CustomContextMenu)
         header.customContextMenuRequested.connect(self._on_header_menu)
 
@@ -317,9 +317,9 @@ class ControllerManager(Plugin):
         # Evaluate user action
         if action is action_toggle_auto_resize:
             if header.resizeMode(0) == QHeaderView.ResizeToContents:
-                header.setResizeMode(QHeaderView.Interactive)
+                header.setSectionResizeMode(QHeaderView.Interactive)
             else:
-                header.setResizeMode(QHeaderView.ResizeToContents)
+                header.setSectionResizeMode(QHeaderView.ResizeToContents)
 
     def _load_controller(self, name):
         self._load_srv.call(LoadControllerRequest(name=name))
