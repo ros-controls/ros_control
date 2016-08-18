@@ -2,6 +2,11 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix the example in the comments in multi_interface_controller.h.
+* Contributors: Miguel Prada
+
 0.11.0 (2016-05-23)
 -------------------
 
