@@ -64,7 +64,7 @@ int main(int argc, char** argv)
   // Populate (soft) joint limits from URDF
   // Limits specified in URDF overwrite existing values in 'limits' and 'soft_limits'
   // Limits not specified in URDF preserve their existing values
-  boost::shared_ptr<const urdf::Joint> urdf_joint = urdf->getJoint("foo_joint");
+  urdf::JointConstSharedPtr urdf_joint = urdf->getJoint("foo_joint");
   const bool urdf_limits_ok = getJointLimits(urdf_joint, limits);
   const bool urdf_soft_limits_ok = getSoftJointLimits(urdf_joint, soft_limits);
 
