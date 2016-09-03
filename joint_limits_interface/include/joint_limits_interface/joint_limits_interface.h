@@ -36,8 +36,6 @@
 #include <cmath>
 #include <limits>
 
-#include <boost/shared_ptr.hpp>
-
 #include <ros/duration.h>
 
 #include <hardware_interface/internal/resource_manager.h>
