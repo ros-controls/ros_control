@@ -58,9 +58,9 @@ public:
   }
 
 protected:
-  boost::shared_ptr<urdf::JointLimits> urdf_limits;
-  boost::shared_ptr<urdf::JointSafety> urdf_safety;
-  boost::shared_ptr<urdf::Joint> urdf_joint;
+  urdf::JointLimitsSharedPtr urdf_limits;
+  urdf::JointSafetySharedPtr urdf_safety;
+  urdf::JointSharedPtr urdf_joint;
 };
 
 TEST_F(JointLimitsUrdfTest, GetJointLimits)
@@ -68,14 +68,14 @@ TEST_F(JointLimitsUrdfTest, GetJointLimits)
   // Unset URDF joint
   {
     JointLimits limits;
-    boost::shared_ptr<urdf::Joint> urdf_joint_bad;
+    urdf::JointSharedPtr urdf_joint_bad;
     EXPECT_FALSE(getJointLimits(urdf_joint_bad, limits));
   }
 
   // Unset URDF limits
   {
     JointLimits limits;
-    boost::shared_ptr<urdf::Joint> urdf_joint_bad(new urdf::Joint);
+    urdf::JointSharedPtr urdf_joint_bad(new urdf::Joint);
     EXPECT_FALSE(getJointLimits(urdf_joint_bad, limits));
   }
 
@@ -160,14 +160,14 @@ TEST_F(JointLimitsUrdfTest, GetSoftJointLimits)
   // Unset URDF joint
   {
     SoftJointLimits soft_limits;
-    boost::shared_ptr<urdf::Joint> urdf_joint_bad;
+    urdf::JointSharedPtr urdf_joint_bad;
     EXPECT_FALSE(getSoftJointLimits(urdf_joint_bad, soft_limits));
   }
 
   // Unset URDF limits
   {
     SoftJointLimits soft_limits;
-    boost::shared_ptr<urdf::Joint> urdf_joint_bad(new urdf::Joint);
+    urdf::JointSharedPtr urdf_joint_bad(new urdf::Joint);
     EXPECT_FALSE(getSoftJointLimits(urdf_joint_bad, soft_limits));
   }
 
