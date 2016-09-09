@@ -133,6 +133,12 @@ public:
   void actuatorToJointPosition(const ActuatorData& act_data,
                                      JointData&    jnt_data);
 
+  void actuatorToJointAbsolutePosition(const ActuatorData& act_data,
+                                             JointData&    jnt_data);
+
+  void actuatorToJointTorqueSensor(const ActuatorData& act_data,
+                                             JointData&    jnt_data);
+
   /**
    * \brief Transform \e effort variables from joint to actuator space.
    * \param[in]  jnt_data Joint-space variables.
@@ -212,6 +218,25 @@ inline void SimpleTransmission::actuatorToJointPosition(const ActuatorData& act_
 
   *jnt_data.position[0] = *act_data.position[0] / reduction_ + jnt_offset_;
 }
+
+inline void SimpleTransmission::actuatorToJointAbsolutePosition(const ActuatorData& act_data,
+                                           JointData&    jnt_data){
+
+  assert(numActuators() == act_data.absolute_position.size() && numJoints() == jnt_data.absolute_position.size());
+  assert(act_data.absolute_position[0] && jnt_data.absolute_position[0]);
+
+  *jnt_data.absolute_position[0] = *act_data.absolute_position[0] / reduction_ + jnt_offset_;
+}
+
+inline void SimpleTransmission::actuatorToJointTorqueSensor(const ActuatorData& act_data,
+                                           JointData&    jnt_data){
+
+  assert(numActuators() == act_data.torque_sensor.size() && numJoints() == jnt_data.torque_sensor.size());
+  assert(act_data.torque_sensor[0] && jnt_data.torque_sensor[0]);
+
+  *jnt_data.torque_sensor[0] = *act_data.torque_sensor[0] * reduction_;
+}
+
 
 inline void SimpleTransmission::jointToActuatorEffort(const JointData&    jnt_data,
                                                             ActuatorData& act_data)

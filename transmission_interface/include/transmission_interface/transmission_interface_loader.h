@@ -110,7 +110,11 @@ struct RawJointData
       effort(std::numeric_limits<double>::quiet_NaN()),
       position_cmd(std::numeric_limits<double>::quiet_NaN()),
       velocity_cmd(std::numeric_limits<double>::quiet_NaN()),
-      effort_cmd(std::numeric_limits<double>::quiet_NaN())
+      effort_cmd(std::numeric_limits<double>::quiet_NaN()),
+      absolute_position(std::numeric_limits<double>::quiet_NaN()),
+      torque_sensor(std::numeric_limits<double>::quiet_NaN()),
+      hasAbsolutePosition(true),
+      hasTorqueSensor(true)
   {}
 
   double position;
@@ -119,6 +123,12 @@ struct RawJointData
   double position_cmd;
   double velocity_cmd;
   double effort_cmd;
+
+  double absolute_position;
+  double torque_sensor;
+
+  bool hasAbsolutePosition;
+  bool hasTorqueSensor;
 };
 
 typedef std::map<std::string, RawJointData> RawJointDataMap;
