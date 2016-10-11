@@ -210,13 +210,14 @@ public:
     transmission_->actuatorToJointVelocity(actuator_data_, joint_data_);
     transmission_->actuatorToJointEffort(actuator_data_, joint_data_);
 
-    //if(!actuator_data_.absolute_position.empty() && transmission_->hasActuatorToJointAbsolutePosition()){
-    if(!actuator_data_.absolute_position.empty()){
-      transmission_->actuatorToJointAbsolutePosition(actuator_data_, joint_data_);
+    if(!actuator_data_.absolute_position.empty() && transmission_->hasActuatorToJointAbsolutePosition())
+    {
+       transmission_->actuatorToJointAbsolutePosition(actuator_data_, joint_data_);
     }
-    //    if(!actuator_data_.torque_sensor.empty() && transmission_->hasActuatorToJointTorqueSensor()){
-    if(!actuator_data_.torque_sensor.empty()){
-      transmission_->actuatorToJointTorqueSensor(actuator_data_, joint_data_);
+
+    if(!actuator_data_.torque_sensor.empty() && transmission_->hasActuatorToJointTorqueSensor())
+    {
+       transmission_->actuatorToJointTorqueSensor(actuator_data_, joint_data_);
     }
   }
   /*\}*/

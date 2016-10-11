@@ -37,7 +37,11 @@
 namespace hardware_interface
 {
 
-/** A handle used to read the state of a single joint. */
+/** 
+ * \brief A handle used to read the state of a single joint.
+ * Currently, position, velocity and effort fields are required 
+ * while absolute position and torque sensors are optional.
+ */
 class JointStateHandle
 {
 public:
@@ -49,82 +53,6 @@ public:
    * \param vel A pointer to the storage for this joint's velocity
    * \param eff A pointer to the storage for this joint's effort (force or torque)
    */
-
-  JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff,
-                   const double* absolute_pos, const double *torque_sensor)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(absolute_pos), torque_sensor_(torque_sensor)
-  {
-
-    if (!pos)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Position data pointer is null.");
-    }
-    if (!vel)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Velocity data pointer is null.");
-    }
-    if (!eff)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
-    }
-    if (!absolute_pos)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Absolute data pointer is null.");
-    }
-    if (!torque_sensor)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Torque sensor data pointer is null.");
-    }
-  }
-
-  JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff,
-                   const double* absolute_pos)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(absolute_pos), torque_sensor_(0)
-  {
-
-    if (!pos)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Position data pointer is null.");
-    }
-    if (!vel)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Velocity data pointer is null.");
-    }
-    if (!eff)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
-    }
-    if (!absolute_pos)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Absolute data pointer is null.");
-    }
-  }
-
-
-  JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff,
-                   const double *torque_sensor, bool )
-    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(0), torque_sensor_(torque_sensor)
-  {
-
-    if (!pos)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Position data pointer is null.");
-    }
-    if (!vel)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Velocity data pointer is null.");
-    }
-    if (!eff)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
-    }
-    if (!torque_sensor)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Torque sensor data pointer is null.");
-    }
-  }
-
-
   JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
     : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(0), torque_sensor_(0)
   {
@@ -140,7 +68,99 @@ public:
     {
       throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
     }
+  }
 
+  /**
+   * \param name The name of the joint
+   * \param pos A pointer to the storage for this joint's position
+   * \param vel A pointer to the storage for this joint's velocity
+   * \param eff A pointer to the storage for this joint's effort (force or torque)
+   * \param absolute_pos A pointer to the storage for this joint's absolute position encoder
+   * \param torque_sensor A pointer to the storage for this joint's torque sensor
+   */
+  JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff,
+                   const double* absolute_pos, const double* torque_sensor)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(absolute_pos), torque_sensor_(torque_sensor)
+  {
+    if (!pos)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Position data pointer is null.");
+    }
+    if (!vel)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Velocity data pointer is null.");
+    }
+    if (!eff)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
+    }
+    if (!absolute_pos)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Absolute data pointer is null.");
+    }
+    if (!torque_sensor)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Torque sensor data pointer is null.");
+    }
+  }
+
+  /**
+   * \param name The name of the joint
+   * \param pos A pointer to the storage for this joint's position
+   * \param vel A pointer to the storage for this joint's velocity
+   * \param eff A pointer to the storage for this joint's effort (force or torque)
+   * \param absolute_pos A pointer to the storage for this joint's absolute position encoder
+   */
+  JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff,
+                   const double* absolute_pos)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(absolute_pos), torque_sensor_(0)
+  {
+    if (!pos)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Position data pointer is null.");
+    }
+    if (!vel)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Velocity data pointer is null.");
+    }
+    if (!eff)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
+    }
+    if (!absolute_pos)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Absolute data pointer is null.");
+    }
+  }
+
+  /**
+   * \param name The name of the joint
+   * \param pos A pointer to the storage for this joint's position
+   * \param vel A pointer to the storage for this joint's velocity
+   * \param eff A pointer to the storage for this joint's effort (force or torque)
+   * \param torque_sensor A pointer to the storage for this joint's torque sensor
+   * \param bool Dummy parameter to differentiate from absolute encoder constructor
+   */
+  JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff,
+                   const double* torque_sensor, bool)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(0), torque_sensor_(torque_sensor)
+  {
+    if (!pos)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Position data pointer is null.");
+    }
+    if (!vel)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Velocity data pointer is null.");
+    }
+    if (!eff)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
+    }
+    if (!torque_sensor)
+    {
+      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Torque sensor data pointer is null.");
+    }
   }
 
   std::string getName() const {return name_;}
@@ -148,44 +168,54 @@ public:
   double getVelocity()  const {assert(vel_); return *vel_;}
   double getEffort()    const {assert(eff_); return *eff_;}
 
-  double getAbsolutePosition() const {
-    assert(absolute_pos_);
-    if(!hasAbsolutePosition()){
+  double getAbsolutePosition() const 
+  {
+    if(!hasAbsolutePosition())
+    {
       throw std::runtime_error("Joint state handle does not contain absolute encoder position information");
     }
     return *absolute_pos_;
   }
-  double getTorqueSensor() const {
-    assert(torque_sensor_);
-    if(!hasTorqueSensor()){
+
+  double getTorqueSensor() const 
+  {
+    if(!hasTorqueSensor())
+    {
       throw std::runtime_error("Joint state handle does not contain torque sensor information");
     }
     return *torque_sensor_;
   }
 
-  bool hasAbsolutePosition() const {
-    if(absolute_pos_){
-      return true;
+  const double* getPositionPtr() const {return pos_;}
+  const double* getVelocityPtr() const {return vel_;}
+  const double* getEffortPtr()   const {return eff_;}
+
+  const double* getAbsolutePositionPtr() const
+  {
+    if(!hasAbsolutePosition())
+    {
+      throw std::runtime_error("Joint state handle does not contain torque sensor information");
     }
-    return false;
+    return absolute_pos_;
   }
 
-  bool hasTorqueSensor() const
+  const double* getTorqueSensorPtr() const 
   {
-    if(torque_sensor_){
-      return true;
+    if(!hasTorqueSensor())
+    {
+      throw std::runtime_error("Joint state handle does not contain torque sensor information");
     }
-    else{
-      return false;
-    }
+    return torque_sensor_;
   }
+
+  bool hasAbsolutePosition()  const {return absolute_pos_;}
+  bool hasTorqueSensor()      const {return torque_sensor_;}
 
 private:
   std::string name_;
   const double* pos_;
   const double* vel_;
   const double* eff_;
-
   const double* absolute_pos_;
   const double* torque_sensor_;
 };

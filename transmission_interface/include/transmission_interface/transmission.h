@@ -126,15 +126,20 @@ public:
   virtual void actuatorToJointPosition(const ActuatorData& act_data,
                                              JointData&    jnt_data) = 0;
 
-  virtual void actuatorToJointAbsolutePosition(const ActuatorData& act_data,
-                                             JointData&){
+  virtual void actuatorToJointAbsolutePosition(const ActuatorData&,
+                                                     JointData&)
+  {
     throw std::runtime_error("transmission does not support actuator to joint absolute position");
   }
 
-  virtual void actuatorToJointTorqueSensor(const ActuatorData& act_data,
-                                             JointData&){
+  virtual void actuatorToJointTorqueSensor(const ActuatorData&,
+                                                 JointData&)
+  {
     throw std::runtime_error("transmission does not support actuator to joint torque sensor");
   }
+
+  virtual bool hasActuatorToJointAbsolutePosition() const {return false;}
+  virtual bool hasActuatorToJointTorqueSensor()     const {return false;}
 
   /**
    * \brief Transform \e effort variables from joint to actuator space.
@@ -173,7 +178,7 @@ public:
   virtual std::size_t numActuators() const = 0;
 
   /** \return Number of joints managed by transmission, ie. the dimension of the joint space. */
-  virtual std::size_t numJoints()    const = 0;
+  virtual std::size_t numJoints() const = 0;
 };
 
 typedef std::shared_ptr<Transmission> TransmissionSharedPtr;

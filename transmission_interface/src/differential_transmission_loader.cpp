@@ -53,9 +53,11 @@ DifferentialTransmissionLoader::load(const TransmissionInfo& transmission_info)
 
   std::vector<double> jnt_reduction;
   std::vector<double> jnt_offset;
+  bool ignore_transmission_for_absolute_encoders;
   const bool jnt_config_ok = getJointConfig(transmission_info,
                                             jnt_reduction,
-                                            jnt_offset);
+                                            jnt_offset,
+                                            ignore_transmission_for_absolute_encoders);
 
   if (!jnt_config_ok) {return TransmissionSharedPtr();}
 
@@ -64,6 +66,7 @@ DifferentialTransmissionLoader::load(const TransmissionInfo& transmission_info)
   {
     TransmissionSharedPtr transmission(new DifferentialTransmission(act_reduction,
                                                                     jnt_reduction,
+                                                                    ignore_transmission_for_absolute_encoders,
                                                                     jnt_offset));
     return transmission;
   }
@@ -117,8 +120,8 @@ bool DifferentialTransmissionLoader::getActuatorConfig(const TransmissionInfo& t
   if (act_roles[0] == act_roles[1])
   {
     ROS_ERROR_STREAM_NAMED("parser", "Actuators '" << act_names[0] << "' and '" << act_names[1] <<
-                           "' of transmission '" << transmission_info.name_ <<
-                           "' must have different roles. Both specify '" << act_roles[0] << "'.");
+                                                                      "' of transmission '" << transmission_info.name_ <<
+                                                                      "' must have different roles. Both specify '" << act_roles[0] << "'.");
     return false;
   }
 
@@ -154,7 +157,8 @@ bool DifferentialTransmissionLoader::getActuatorConfig(const TransmissionInfo& t
 
 bool DifferentialTransmissionLoader::getJointConfig(const TransmissionInfo& transmission_info,
                                                     std::vector<double>&    joint_reduction,
-                                                    std::vector<double>&    joint_offset)
+                                                    std::vector<double>&    joint_offset,
+                                                    bool& ignore_transmission_for_absolute_encoders)
 {
   const std::string JOINT1_ROLE = "joint1";
   const std::string JOINT2_ROLE = "joint2";
@@ -194,8 +198,8 @@ bool DifferentialTransmissionLoader::getJointConfig(const TransmissionInfo& tran
   if (jnt_roles[0] == jnt_roles[1])
   {
     ROS_ERROR_STREAM_NAMED("parser", "Joints '" << jnt_names[0] << "' and '" << jnt_names[1] <<
-                           "' of transmission '" << transmission_info.name_ <<
-                           "' must have different roles. Both specify '" << jnt_roles[0] << "'.");
+                                                                   "' of transmission '" << transmission_info.name_ <<
+                                                                   "' must have different roles. Both specify '" << jnt_roles[0] << "'.");
     return false;
   }
 
@@ -237,6 +241,14 @@ bool DifferentialTransmissionLoader::getJointConfig(const TransmissionInfo& tran
                                                      false, // Optional
                                                      joint_offset[i]);
     if (offset_status == BAD_TYPE) {return false;}
+  }
+
+  // Parse if transmision has to be ignored for absolute encoders
+  ignore_transmission_for_absolute_encoders = true;
+  for (unsigned int i = 0; i < 2; ++i)
+  {
+    const TiXmlElement* role_el = jnt_elements[i].FirstChildElement("ignoreTransmissionAbsoluteEncoder");
+    ignore_transmission_for_absolute_encoders &= (role_el != nullptr);
   }
 
   return true;

@@ -53,7 +53,8 @@ private:
 
   static bool getJointConfig(const TransmissionInfo& transmission_info,
                              std::vector<double>&    joint_reduction,
-                             std::vector<double>&    joint_offset);
+                             std::vector<double>&    joint_offset,
+                             bool&                   ignore_transmission_for_absolute_encoders);
 };
 
 } // namespace
