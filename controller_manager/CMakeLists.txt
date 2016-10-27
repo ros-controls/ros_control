@@ -4,11 +4,13 @@ project(controller_manager)
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS controller_interface controller_manager_msgs hardware_interface realtime_tools pluginlib)
 
+find_package(Boost REQUIRED COMPONENTS thread)
+
 include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
 # Declare catkin package
 catkin_package(
-  DEPENDS boost
+  DEPENDS Boost
   CATKIN_DEPENDS controller_interface controller_manager_msgs hardware_interface realtime_tools pluginlib
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
