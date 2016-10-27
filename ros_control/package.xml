@@ -24,6 +24,8 @@
   <run_depend>hardware_interface</run_depend>
   <run_depend>controller_manager_tests</run_depend>
   <run_depend>controller_manager_msgs</run_depend>
+  <run_depend>combined_robot_hw</run_depend>
+  <run_depend>combined_robot_hw_tests</run_depend>
 
   <export>
     <metapackage/>
