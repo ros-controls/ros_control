@@ -21,7 +21,4 @@
   <depend>pluginlib</depend>
   <depend>realtime_tools</depend>
   <test_depend>rostest</test_depend>
-  <export>
-    <cpp lflags="-L${prefix}/lib -lcontroller_manager" cflags="-I${prefix}/include"/>
-  </export>
 </package>

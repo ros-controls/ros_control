@@ -25,7 +25,6 @@
   <test_depend>resource_retriever</test_depend>
 
   <export>
-    <cpp cflags="-I${prefix}/include"/>
     <rosdoc config="rosdoc.yaml"/>
     <transmission_interface plugin="${prefix}/ros_control_plugins.xml" />
   </export>
