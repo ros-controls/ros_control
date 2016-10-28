@@ -3,6 +3,8 @@
   <version>0.11.1</version>
   <description>Interface base class for controllers</description>
   <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
+  <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
+  <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
 
   <license>BSD</license>
 
