@@ -1,4 +1,4 @@
-<package>
+<package format="2">
   <name>controller_manager</name>
   <version>0.11.1</version>
   <description>The controller manager.</description>
@@ -15,18 +15,12 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>controller_interface</build_depend> 
-  <build_depend>controller_manager_msgs</build_depend> 
-  <build_depend>hardware_interface</build_depend>
-  <build_depend>pluginlib</build_depend>
-  <build_depend>realtime_tools</build_depend>
-  <build_depend>rostest</build_depend>            <!--Tests-only!-->
-  <run_depend>controller_interface</run_depend>
-  <run_depend>controller_manager_msgs</run_depend> 
-  <run_depend>hardware_interface</run_depend> 
-  <run_depend>pluginlib</run_depend> 
-  <run_depend>realtime_tools</run_depend>
-  <run_depend>rostest</run_depend>                <!--Tests-only!-->
+  <depend>controller_interface</depend>
+  <depend>controller_manager_msgs</depend>
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>realtime_tools</depend>
+  <test_depend>rostest</test_depend>
   <export>
     <cpp lflags="-L${prefix}/lib -lcontroller_manager" cflags="-I${prefix}/include"/>
   </export>

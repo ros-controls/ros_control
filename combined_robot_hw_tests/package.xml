@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>combined_robot_hw_tests</name>
   <version>0.11.1</version>
   <description>The combined_robot_hw_tests package</description>
@@ -12,20 +12,15 @@
   <url type="repository">https://github.com/ros-controls/ros_control</url>
 
   <author>Toni Oliver</author>
-  
+
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>combined_robot_hw</build_depend>
-  <build_depend>controller_manager</build_depend>
-  <build_depend>controller_manager_tests</build_depend>
-  <build_depend>hardware_interface</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>rostest</build_depend>
-  <run_depend>combined_robot_hw</run_depend>
-  <run_depend>controller_manager</run_depend>
-  <run_depend>controller_manager_tests</run_depend>
-  <run_depend>hardware_interface</run_depend>
-  <run_depend>roscpp</run_depend>
-  <run_depend>rostest</run_depend>
+  <depend>combined_robot_hw</depend>
+  <depend>controller_manager</depend>
+  <depend>controller_manager_tests</depend>
+  <depend>hardware_interface</depend>
+  <depend>roscpp</depend>
+
+  <test_depend>rostest</test_depend>
 
   <export>
     <hardware_interface plugin="${prefix}/test_robot_hw_plugin.xml"/>

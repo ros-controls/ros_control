@@ -1,4 +1,4 @@
-<package>
+<package format="2">
   <name>joint_limits_interface</name>
   <version>0.11.1</version>
   <description>Interface for enforcing joint limits.</description>
@@ -12,14 +12,11 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>rostest</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>hardware_interface</build_depend>
-  <build_depend>liburdfdom-dev</build_depend>
+  <depend>roscpp</depend>
+  <depend>hardware_interface</depend>
+  <depend>liburdfdom-dev</depend>
 
-  <run_depend>roscpp</run_depend>
-  <run_depend>hardware_interface</run_depend>
-  <run_depend>liburdfdom-dev</run_depend>
+  <test_depend>rostest</test_depend>
 
   <export>
     <cpp cflags="-I${prefix}/include"/>

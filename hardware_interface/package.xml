@@ -1,4 +1,4 @@
-<package>
+<package format="2">
   <name>hardware_interface</name>
   <version>0.11.1</version>
   <description>Hardware Interface base class.</description>
@@ -14,9 +14,8 @@
   <author>Adolfo Rodriguez Tsouroukdissian</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>roscpp</build_depend> 
-  <run_depend>roscpp</run_depend> 
-  <test_depend>rosconsole</test_depend> 
+  <depend>roscpp</depend>
+  <test_depend>rosconsole</test_depend>
 
   <export>
     <cpp cflags="-I${prefix}/include"/>

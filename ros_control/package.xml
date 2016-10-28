@@ -1,4 +1,4 @@
-<package>
+<package format="2">
   <name>ros_control</name>
   <version>0.11.1</version>
   <description>A set of packages that include controller interfaces, controller managers, transmissions and hardware_interfaces.</description>
@@ -16,16 +16,16 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>joint_limits_interface</run_depend>
-  <run_depend>transmission_interface</run_depend>
-  <run_depend>realtime_tools</run_depend>
-  <run_depend>controller_manager</run_depend>
-  <run_depend>controller_interface</run_depend>
-  <run_depend>hardware_interface</run_depend>
-  <run_depend>controller_manager_tests</run_depend>
-  <run_depend>controller_manager_msgs</run_depend>
-  <run_depend>combined_robot_hw</run_depend>
-  <run_depend>combined_robot_hw_tests</run_depend>
+  <exec_depend>joint_limits_interface</exec_depend>
+  <exec_depend>transmission_interface</exec_depend>
+  <exec_depend>realtime_tools</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>controller_interface</exec_depend>
+  <exec_depend>hardware_interface</exec_depend>
+  <exec_depend>controller_manager_tests</exec_depend>
+  <exec_depend>controller_manager_msgs</exec_depend>
+  <exec_depend>combined_robot_hw</exec_depend>
+  <exec_depend>combined_robot_hw_tests</exec_depend>
 
   <export>
     <metapackage/>
