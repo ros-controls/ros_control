@@ -13,7 +13,7 @@
   <url type="bugtracker">https://github.com/ros-controls/ros_control/issues</url>
   <url type="repository">https://github.com/ros-controls/ros_control</url>
 
-  <author>Toni Oliver</author>
+  <author email="toni@shadowrobot.com">Toni Oliver</author>
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>hardware_interface</depend>
