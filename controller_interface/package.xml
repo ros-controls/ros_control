@@ -1,8 +1,10 @@
-<package>
+<package format="2">
   <name>controller_interface</name>
   <version>0.11.1</version>
   <description>Interface base class for controllers</description>
   <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
+  <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
+  <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
 
   <license>BSD</license>
 
@@ -14,14 +16,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>roscpp</build_depend> 
-  <build_depend>hardware_interface</build_depend> 
-  <build_depend>pluginlib</build_depend> 
-  <run_depend>roscpp</run_depend> 
-  <run_depend>hardware_interface</run_depend> 
-  <run_depend>pluginlib</run_depend> 
-
-  <export>
-    <cpp cflags="-I${prefix}/include"/>
-  </export>
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>roscpp</depend>
 </package>

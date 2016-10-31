@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>combined_robot_hw</name>
   <version>0.11.1</version>
   <description>Combined Robot HW class.</description>
   <maintainer email="toni@shadowrobot.com">Toni Oliver</maintainer>
+  <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
+  <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
 
   <license>BSD</license>
 
@@ -11,17 +13,10 @@
   <url type="bugtracker">https://github.com/ros-controls/ros_control/issues</url>
   <url type="repository">https://github.com/ros-controls/ros_control</url>
 
-  <author>Toni Oliver</author>
-  
+  <author email="toni@shadowrobot.com">Toni Oliver</author>
+
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>hardware_interface</build_depend>
-  <build_depend>pluginlib</build_depend>
-  <build_depend>roscpp</build_depend>
-  <run_depend>hardware_interface</run_depend>
-  <run_depend>pluginlib</run_depend>
-  <run_depend>roscpp</run_depend>
-
-
-  <export>
-  </export>
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>roscpp</depend>
 </package>
