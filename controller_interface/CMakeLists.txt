@@ -6,7 +6,6 @@ find_package(catkin REQUIRED COMPONENTS roscpp hardware_interface pluginlib)
 
 # Declare catkin package
 catkin_package(
-  DEPENDS boost
   CATKIN_DEPENDS roscpp hardware_interface pluginlib
   INCLUDE_DIRS include
   )
