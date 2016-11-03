@@ -250,10 +250,10 @@ bool ControllerManager::loadController(const std::string& name)
 
   // Adds the controller to the new list
   to.resize(to.size() + 1);
-  to[to.size()-1].info.type = type;
-  to[to.size()-1].info.name = name;
-  to[to.size()-1].info.claimed_resources = claimed_resources;
-  to[to.size()-1].c = c;
+  to.back().info.type = type;
+  to.back().info.name = name;
+  to.back().info.claimed_resources = claimed_resources;
+  to.back().c = c;
 
   // Destroys the old controllers list when the realtime thread is finished with it.
   int former_current_controllers_list_ = current_controllers_list_;
