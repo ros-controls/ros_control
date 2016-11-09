@@ -34,11 +34,10 @@
 
 /* Author: Dave Coleman
    Desc:   This interface is for switching a hardware interface between different controller modes
-           i.e. position, velocity, force
+           i.e. position, velocity, effort
 */
 
-#ifndef HARDWARE_INTERFACE_JOINT_MODE_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_MODE_INTERFACE_H
+#pragma once
 
 #include <cassert>
 #include <hardware_interface/internal/hardware_resource_manager.h>
@@ -46,64 +45,74 @@
 namespace hardware_interface
 {
 
-enum JointCommandModes {
-  MODE_POSITION = 1,
-  MODE_VELOCITY = 2,
-  MODE_EFFORT = 3,
-  MODE_OTHER = 4
-};
-
-/** \brief A handle used to read and mode a single joint. */
-class JointModeHandle
-{
-public:
-
-  /**
-   * \param mode Which mode to start in
-   */
-  JointModeHandle(std::string name, JointCommandModes* mode)
-    : mode_(mode)
-    , name_(name)
+  enum class JointCommandModes
   {
-    if (!mode_)
-    {
-      throw HardwareInterfaceException("Cannot create mode interface. Mode data pointer is null.");
-    }
-  }
+    BEGIN = -1,
+    MODE_POSITION = 0,
+    MODE_VELOCITY = 1,
+    MODE_EFFORT = 2,
+    NOMODE = 3,
+    EMERGENCY_STOP = 4,
+    SWITCHING = 5,
+    ERROR = 6
+  };
 
-  std::string getName() const {return name_;}
+  /** \brief A handle used to read and mode a single joint. */
+  class JointModeHandle
+  {
+  public:
+
+    JointModeHandle():
+      name_(), mode_(0){}
+
+    /** \param mode Which mode to start in */
+    JointModeHandle(std::string name, JointCommandModes* mode)
+      : mode_(mode)
+      , name_(name)
+    {
+      if (!mode_)
+      {
+        throw HardwareInterfaceException("Cannot create mode interface. Mode data pointer is null.");
+      }
+    }
+
+    std::string getName() const {return name_;}
 
     void setMode(JointCommandModes mode) {assert(mode_); *mode_ = mode;}
-    int getMode() const {assert(mode_); return *mode_;}
-    const int* getModePtr() const {assert(mode_); return mode_;}
+    JointCommandModes getMode() const {assert(mode_); return *mode_;}
+    const JointCommandModes* getModePtr() const {assert(mode_); return mode_;}
 
-  // Helper function for console messages
-  std::string getModeName(JointCommandModes mode)
-  {
-    switch(mode)
+    // Helper function for console messages
+    std::string getModeName(JointCommandModes mode) const
     {
-      case MODE_POSITION:
-        return "position";
-      case MODE_VELOCITY:
-        return "velocity";
-      case MODE_EFFORT:
-        return "effort";
-      case MODE_OTHER:
-        return "other";
+      switch(mode)
+      {
+        case JointCommandModes::BEGIN:
+          return "not_operational";
+        case JointCommandModes::MODE_POSITION:
+          return "position";
+        case JointCommandModes::MODE_VELOCITY:
+          return "velocity";
+        case JointCommandModes::MODE_EFFORT:
+          return "effort";
+        case JointCommandModes::NOMODE:
+          return "other";
+        case JointCommandModes::EMERGENCY_STOP:
+          return "emergency_stop";
+        case JointCommandModes::SWITCHING:
+          return "switching";
+        case JointCommandModes::ERROR:
+          return "error";
+      }
+      return "unknown";
     }
-    return "unknown";
-  }
 
-private:
-  JointCommandModes* mode_;
-  std::string name_;
-};
+  private:
+    JointCommandModes* mode_;
+    std::string name_;
+  };
 
-/** \brief Hardware interface to support changing between control modes
- *
- */
-class JointModeInterface : public HardwareResourceManager<JointModeHandle, ClaimResources> {};
+  /** \brief Hardware interface to support changing between control modes */
+  class JointModeInterface : public HardwareResourceManager<JointModeHandle, DontClaimResources> {};
 
 } // namespace
-
-#endif
