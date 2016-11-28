@@ -2,6 +2,11 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add Enrique and Bence to maintainer list
+* Contributors: Bence Magyar
+
 0.11.1 (2016-08-18)
 -------------------
 

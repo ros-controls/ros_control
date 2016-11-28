@@ -2,6 +2,13 @@
 Changelog for package ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add Enrique and Bence to maintainer list
+* Convert to format2, fix dependency in cmake
+* Add combined_robot_hw to metapackage & system figure
+* Contributors: Bence Magyar
+
 0.11.1 (2016-08-18)
 -------------------
 
