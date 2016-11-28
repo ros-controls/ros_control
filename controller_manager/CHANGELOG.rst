@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.11.2 (2016-11-28)
+-------------------
 * to[to.size-1] to to.back()
 * Remove boost from depends declaration to fix cmake warning
 * Add Enrique and Bence to maintainer list

@@ -2,8 +2,8 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.11.2 (2016-11-28)
+-------------------
 * Add Enrique and Bence to maintainer list
 * Clean up export leftovers from rosbuild
 * Convert to format2, fix dependency in cmake

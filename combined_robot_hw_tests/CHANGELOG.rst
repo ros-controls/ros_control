@@ -2,8 +2,8 @@
 Changelog for package combined_robot_hw_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.11.2 (2016-11-28)
+-------------------
 * Add Toni's email to the author fields too
 * Add Enrique and Bence to maintainer list
 * Convert to format2, fix dependency in cmake
