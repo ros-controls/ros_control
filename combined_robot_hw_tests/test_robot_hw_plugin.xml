@@ -1,0 +1,25 @@
+<library path="lib/libcombined_robot_hw_tests">
+  <class name="combined_robot_hw_tests/MyRobotHW1" type="combined_robot_hw_tests::MyRobotHW1" base_class_type="hardware_interface::RobotHW">
+  <description>
+    A type of RobotHW
+  </description>
+  </class>
+  
+  <class name="combined_robot_hw_tests/MyRobotHW2" type="combined_robot_hw_tests::MyRobotHW2" base_class_type="hardware_interface::RobotHW">
+  <description>
+    A type of RobotHW
+  </description>
+  </class>
+  
+  <class name="combined_robot_hw_tests/MyRobotHW3" type="combined_robot_hw_tests::MyRobotHW3" base_class_type="hardware_interface::RobotHW">
+  <description>
+    A type of RobotHW
+  </description>
+  </class>
+  
+  <class name="combined_robot_hw_tests/MyRobotHW4" type="combined_robot_hw_tests::MyRobotHW4" base_class_type="hardware_interface::RobotHW">
+  <description>
+    A type of RobotHW
+  </description>
+  </class>
+</library>
