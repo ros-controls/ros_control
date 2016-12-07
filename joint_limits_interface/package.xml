@@ -16,6 +16,7 @@
 
   <depend>roscpp</depend>
   <depend>hardware_interface</depend>
+  <depend>urdf</depend>
   <depend>liburdfdom-dev</depend>
 
   <test_depend>rostest</test_depend>
