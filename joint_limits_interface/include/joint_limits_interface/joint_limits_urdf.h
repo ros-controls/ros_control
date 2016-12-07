@@ -31,11 +31,8 @@
 #define JOINT_LIMITS_INTERFACE_JOINT_LIMITS_URDF_H
 
 #include <ros/common.h>
-#if ROS_VERSION_MINIMUM(1, 9, 0) // TODO: Deprecate this conditional when Fuerte support is EOL'd
-  #include <urdf_model/joint.h> // Fuerte.
-#else
-  #include <urdf_interface/joint.h> // Groovy and later
-#endif
+#include <urdf_model/joint.h>
+#include <urdf/urdfdom_compatibility.h>
 #include <joint_limits_interface/joint_limits.h>
 
 namespace joint_limits_interface
