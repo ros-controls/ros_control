@@ -2,6 +2,9 @@
 Changelog for package combined_robot_hw
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.11.2 (2016-11-28)
 -------------------
 * Add Toni's email to the author fields too
