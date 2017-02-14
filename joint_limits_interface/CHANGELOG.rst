@@ -2,6 +2,9 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.11.3 (2016-12-07)
 -------------------
 * Add urdf compatibility header

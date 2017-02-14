@@ -2,6 +2,9 @@
 Changelog for package combined_robot_hw_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.11.3 (2016-12-07)
 -------------------
 
