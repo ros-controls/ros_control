@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.11.4 (2017-02-14)
+-------------------
 * controller_manager: drop unused inclusion of tinyxml.h
 * Contributors: Dmitry Rozhkov
 
