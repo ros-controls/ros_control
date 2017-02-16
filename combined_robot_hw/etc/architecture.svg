@@ -1529,7 +1529,7 @@
            x="64.35582"
            y="206.76733"
            style="font-size:8px;font-weight:normal;-inkscape-font-specification:Sans"
-           id="tspan3135-66">e.g. msg joint_trajectopryl)</tspan></tspan></text>
+           id="tspan3135-66">e.g. JointTrajectory msg</tspan></tspan></text>
     <rect
        style="fill:#00a8aa;fill-opacity:1;stroke:#000000;stroke-width:0.9103089;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect4963-47-7"
@@ -1566,7 +1566,7 @@
            x="64.201012"
            y="249.12073"
            style="font-size:8px;font-weight:normal;-inkscape-font-specification:Sans"
-           id="tspan3135-66-5">e.g. msg joint_trajectopryl)</tspan></tspan></text>
+           id="tspan3135-66-5">e.g. JointTrajectory msg</tspan></tspan></text>
     <rect
        style="fill:#00a8aa;fill-opacity:1;stroke:#000000;stroke-width:0.9103089;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect4963-47-6"
@@ -1603,7 +1603,7 @@
            x="64.071022"
            y="291.25613"
            style="font-size:8px;font-weight:normal;-inkscape-font-specification:Sans"
-           id="tspan3135-66-51">e.g. msg joint_trajectopryl)</tspan></tspan></text>
+           id="tspan3135-66-51">e.g. JointTrajectory msg</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
