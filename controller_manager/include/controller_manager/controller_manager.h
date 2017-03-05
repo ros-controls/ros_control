@@ -142,6 +142,12 @@ public:
                         const std::vector<std::string>& stop_controllers,
                         const int strictness);
 
+  /** \brief Notification for switching HW-Interfaces.
+   *
+   * \param info_list A list containing ControlInfo about the controllers to be started (containing the HW-Interfaces requested by the resources)
+   */
+  virtual bool notifyHardwareInterface(const std::list<hardware_interface::ControllerInfo> &info_list) {return true;}
+
   /** \brief Get a controller by name.
    *
    * \param name The name of a controller
