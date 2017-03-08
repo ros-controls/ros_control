@@ -89,7 +89,7 @@ def parse_args(args=None):
     parser.add_argument('--timeout', metavar='T', type=float, default=30,
                         help='how long to wait for controller_manager services when starting up [s] (default: 30)')
     parser.add_argument('--shutdown-timeout', metavar='T', type=float, default=30,
-                        help='how long to wait for controller_manager services when shutting down [s] (default: 30)')
+                        help='how long to wait for controller_manager services when shutting down [s] (default: 30). value 0 disables controllers from being unloaded')
     parser.add_argument('controllers', metavar='controller', nargs='+',
                         help='controllers to load')
     return parser.parse_args(args=args)
@@ -168,8 +168,9 @@ def main():
             if rospy.is_shutdown():
                 return
 
-    # hook for unloading controllers on shutdown
-    rospy.on_shutdown(shutdown)
+    # hook for unloading controllers on shutdown. do not use if shutdown timeout is set to 0
+    if shutdown_timeout:
+        rospy.on_shutdown(shutdown)
 
     # find yaml files to load
     controllers = []
