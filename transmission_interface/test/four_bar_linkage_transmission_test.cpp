@@ -47,20 +47,32 @@ TEST(PreconditionsTest, ExceptionThrowing)
   vector<double> offset_good(2, 1.0);
 
   // Invalid instance creation: Transmission cannot have zero reduction
-  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad1), TransmissionInterfaceException);
-  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad2), TransmissionInterfaceException);
-  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad3), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_bad1, reduction_good), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_bad2, reduction_good), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_bad3, reduction_good), TransmissionInterfaceException);
+
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, reduction_bad1), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, reduction_bad2), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, reduction_bad3), TransmissionInterfaceException);
+
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_bad1, reduction_good, offset_good), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_bad2, reduction_good, offset_good), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_bad3, reduction_good, offset_good), TransmissionInterfaceException);
+
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, reduction_bad1, offset_good), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, reduction_bad2, offset_good), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, reduction_bad3, offset_good), TransmissionInterfaceException);
 
   // Invalid instance creation: Wrong parameter sizes
   vector<double> reduction_bad_size(1, 1.0);
   vector<double>& offset_bad_size = reduction_bad_size;
-  EXPECT_THROW(FourBarLinkageTransmission trans(reduction_bad_size),        TransmissionInterfaceException);
-  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, offset_bad_size), TransmissionInterfaceException);
-  EXPECT_THROW(FourBarLinkageTransmission(reduction_bad_size, offset_good), TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_bad_size, reduction_good),              TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, reduction_bad_size),              TransmissionInterfaceException);
+  EXPECT_THROW(FourBarLinkageTransmission(reduction_good, reduction_good, offset_bad_size), TransmissionInterfaceException);
 
   // Valid instance creation
-  EXPECT_NO_THROW(FourBarLinkageTransmission trans(reduction_good));
-  EXPECT_NO_THROW(FourBarLinkageTransmission(reduction_good, offset_good));
+  EXPECT_NO_THROW(FourBarLinkageTransmission(reduction_good, reduction_good));
+  EXPECT_NO_THROW(FourBarLinkageTransmission(reduction_good, reduction_good, offset_good));
 }
 
 #ifndef NDEBUG // NOTE: This test validates assertion triggering, hence only gets compiled in debug mode
@@ -102,7 +114,8 @@ TEST(PreconditionsTest, AssertionTriggering)
   JointData    j_bad_size;
 
   // Transmission instance
-  FourBarLinkageTransmission trans(vector<double>(2, 1.0));
+  FourBarLinkageTransmission trans(vector<double>(2, 1.0),
+                                   vector<double>(2, 1.0));
 
   // Data with invalid pointers should trigger an assertion
   EXPECT_DEATH(trans.actuatorToJointEffort(a_bad_data,  j_bad_data),  ".*");
@@ -162,17 +175,24 @@ TEST(PreconditionsTest, AccessorValidation)
   act_reduction[0] =  2.0;
   act_reduction[1] = -2.0;
 
+  std::vector<double> jnt_reduction(2);
+  jnt_reduction[0] =  4.0;
+  jnt_reduction[1] = -4.0;
+
   std::vector<double> jnt_offset(2);
   jnt_offset[0] =  1.0;
   jnt_offset[1] = -1.0;
 
   FourBarLinkageTransmission trans(act_reduction,
+                                   jnt_reduction,
                                    jnt_offset);
 
   EXPECT_EQ(2, trans.numActuators());
   EXPECT_EQ(2, trans.numJoints());
   EXPECT_EQ( 2.0, trans.getActuatorReduction()[0]);
   EXPECT_EQ(-2.0, trans.getActuatorReduction()[1]);
+  EXPECT_EQ( 4.0, trans.getJointReduction()[0]);
+  EXPECT_EQ(-4.0, trans.getJointReduction()[1]);
   EXPECT_EQ( 1.0, trans.getJointOffset()[0]);
   EXPECT_EQ(-1.0, trans.getJointOffset()[1]);
 }
@@ -271,6 +291,7 @@ protected:
       try
       {
         FourBarLinkageTransmission trans(randomVector(2, rand_gen),
+                                         randomVector(2, rand_gen),
                                          randomVector(2, rand_gen));
         out.push_back(trans);
       }
@@ -310,9 +331,10 @@ class WhiteBoxTest : public TransmissionSetup {};
 TEST_F(WhiteBoxTest, DontMoveJoints)
 {
   vector<double> actuator_reduction(2, 10.0);
+  vector<double> joint_reduction(2, 2.0);
   vector<double> joint_offset(2, 1.0);
 
-  FourBarLinkageTransmission trans(actuator_reduction, joint_offset);
+  FourBarLinkageTransmission trans(actuator_reduction, joint_reduction, joint_offset);
 
   // Actuator input (used for effort, velocity and position)
   *a_vec[0] = 0.0;
@@ -361,14 +383,14 @@ TEST_F(WhiteBoxTest, DontMoveJoints)
 TEST_F(WhiteBoxTest, MoveFirstJointOnly)
 {
   vector<double> actuator_reduction(2, 10.0);
-  FourBarLinkageTransmission trans(actuator_reduction);
-
-  // Actuator input (used for effort, velocity and position)
-  *a_vec[0] = 10.0;
-  *a_vec[1] = 10.0;
+  vector<double> joint_reduction(2, 2.0);
+  FourBarLinkageTransmission trans(actuator_reduction, joint_reduction);
 
   // Effort interface
   {
+    *a_vec[0] =  5.0;
+    *a_vec[1] = 10.0;
+
     ActuatorData a_data;
     a_data.effort = a_vec;
 
@@ -382,6 +404,9 @@ TEST_F(WhiteBoxTest, MoveFirstJointOnly)
 
   // Velocity interface
   {
+    *a_vec[0] = 10.0;
+    *a_vec[1] =  5.0;
+
     ActuatorData a_data;
     a_data.velocity = a_vec;
 
@@ -389,12 +414,15 @@ TEST_F(WhiteBoxTest, MoveFirstJointOnly)
     j_data.velocity = j_vec;
 
     trans.actuatorToJointVelocity(a_data, j_data);
-    EXPECT_NEAR(1.0, *j_data.velocity[0], EPS);
+    EXPECT_NEAR(0.5, *j_data.velocity[0], EPS);
     EXPECT_NEAR(0.0, *j_data.velocity[1], EPS);
   }
 
   // Position interface
   {
+    *a_vec[0] = 10.0;
+    *a_vec[1] =  5.0;
+
     ActuatorData a_data;
     a_data.position = a_vec;
 
@@ -402,7 +430,7 @@ TEST_F(WhiteBoxTest, MoveFirstJointOnly)
     j_data.position = j_vec;
 
     trans.actuatorToJointPosition(a_data, j_data);
-    EXPECT_NEAR(1.0, *j_data.position[0], EPS);
+    EXPECT_NEAR(0.5, *j_data.position[0], EPS);
     EXPECT_NEAR(0.0, *j_data.position[1], EPS);
   }
 }
@@ -410,7 +438,8 @@ TEST_F(WhiteBoxTest, MoveFirstJointOnly)
 TEST_F(WhiteBoxTest, MoveSecondJointOnly)
 {
   vector<double> actuator_reduction(2, 10.0);
-  FourBarLinkageTransmission trans(actuator_reduction);
+  vector<double> joint_reduction(2, 2.0);
+  FourBarLinkageTransmission trans(actuator_reduction, joint_reduction);
 
   // Actuator input (used for effort, velocity and position)
   *a_vec[0] =   0.0;
@@ -426,7 +455,7 @@ TEST_F(WhiteBoxTest, MoveSecondJointOnly)
 
     trans.actuatorToJointEffort(a_data, j_data);
     EXPECT_NEAR(0.0, *j_data.effort[0], EPS);
-    EXPECT_NEAR(100.0, *j_data.effort[1], EPS);
+    EXPECT_NEAR(200.0, *j_data.effort[1], EPS);
   }
 
   // Velocity interface
@@ -439,7 +468,7 @@ TEST_F(WhiteBoxTest, MoveSecondJointOnly)
 
     trans.actuatorToJointVelocity(a_data, j_data);
     EXPECT_NEAR(0.0, *j_data.velocity[0], EPS);
-    EXPECT_NEAR(1.0, *j_data.velocity[1], EPS);
+    EXPECT_NEAR(0.5, *j_data.velocity[1], EPS);
   }
 
   // Position interface
@@ -452,7 +481,7 @@ TEST_F(WhiteBoxTest, MoveSecondJointOnly)
 
     trans.actuatorToJointPosition(a_data, j_data);
     EXPECT_NEAR(0.0, *j_data.position[0], EPS);
-    EXPECT_NEAR(1.0, *j_data.position[1], EPS);
+    EXPECT_NEAR(0.5, *j_data.position[1], EPS);
   }
 }
 
@@ -465,11 +494,15 @@ TEST_F(WhiteBoxTest, MoveBothJoints)
   actuator_reduction[0] =  10.0;
   actuator_reduction[1] = -20.0;
 
+  vector<double> joint_reduction(2);
+  joint_reduction[0] = -2.0;
+  joint_reduction[1] =  4.0;
+
   vector<double> joint_offset(2);
   joint_offset[0] = -2.0;
   joint_offset[1] =  4.0;
 
-  FourBarLinkageTransmission trans(actuator_reduction, joint_offset);
+  FourBarLinkageTransmission trans(actuator_reduction, joint_reduction, joint_offset);
 
   // Actuator input (used for effort, velocity and position)
   *a_vec[0] = 3.0;
@@ -484,8 +517,8 @@ TEST_F(WhiteBoxTest, MoveBothJoints)
     j_data.effort = j_vec;
 
     trans.actuatorToJointEffort(a_data, j_data);
-    EXPECT_NEAR(  30.0, *j_data.effort[0], EPS);
-    EXPECT_NEAR(-130.0, *j_data.effort[1], EPS);
+    EXPECT_NEAR( -60.0, *j_data.effort[0], EPS);
+    EXPECT_NEAR(-160.0, *j_data.effort[1], EPS);
   }
 
   // Velocity interface
@@ -497,8 +530,8 @@ TEST_F(WhiteBoxTest, MoveBothJoints)
     j_data.velocity = j_vec;
 
     trans.actuatorToJointVelocity(a_data, j_data);
-    EXPECT_NEAR( 0.30, *j_data.velocity[0], EPS);
-    EXPECT_NEAR(-0.55, *j_data.velocity[1], EPS);
+    EXPECT_NEAR(-0.15, *j_data.velocity[0], EPS);
+    EXPECT_NEAR(-0.025, *j_data.velocity[1], EPS);
   }
 
   // Position interface
@@ -510,8 +543,8 @@ TEST_F(WhiteBoxTest, MoveBothJoints)
     j_data.position = j_vec;
 
     trans.actuatorToJointPosition(a_data, j_data);
-    EXPECT_NEAR(-1.70, *j_data.position[0], EPS);
-    EXPECT_NEAR( 3.45, *j_data.position[1], EPS);
+    EXPECT_NEAR(-2.15,  *j_data.position[0], EPS);
+    EXPECT_NEAR( 3.975, *j_data.position[1], EPS);
   }
 }
 
