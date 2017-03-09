@@ -73,7 +73,7 @@ private:
  * classes like \ref EffortActuatorInterface etc.
  *
  */
-class ActuatorCommandInterface : public HardwareResourceManager<ActuatorHandle> {};
+class ActuatorCommandInterface : public HardwareResourceManager<ActuatorHandle, ClaimResources> {};
 
 /// \ref ActuatorCommandInterface for commanding effort-based actuators
 class EffortActuatorInterface : public ActuatorCommandInterface {};
