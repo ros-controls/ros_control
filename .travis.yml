@@ -18,7 +18,7 @@ env:
     - ROSINSTALL_FILENAME=ros_control.rosinstall
     - ROS_PARALLEL_TEST_JOBS=-j1
   matrix:
-    - ROS_DISTRO=jade    ROS_REPO=ros
+    - ROS_DISTRO=jade    ROS_REPO=ros UPSTREAM_WORKSPACE=debian
     - ROS_DISTRO=kinetic ROS_REPO=ros
     - ROS_DISTRO=kinetic ROS_REPO=ros-shadow-fixed
     - ROS_DISTRO=lunar   ROS_REPO=ros-shadow-fixed
