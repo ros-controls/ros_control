@@ -16,6 +16,7 @@ env:
   global:
     - UPSTREAM_WORKSPACE=file
     - ROSINSTALL_FILENAME=ros_control.rosinstall
+    - ROS_PARALLEL_TEST_JOBS=-j1
   matrix:
     - ROS_DISTRO=jade    ROS_REPO=ros
     - ROS_DISTRO=kinetic ROS_REPO=ros
