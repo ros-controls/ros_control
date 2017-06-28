@@ -2,6 +2,11 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix misspelling revise message
+* Contributors: Dave Coleman
+
 0.11.4 (2017-02-14)
 -------------------
 * controller_manager: drop unused inclusion of tinyxml.h

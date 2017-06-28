@@ -2,6 +2,11 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Throw error if EffortJointSaturationHandle is missing effort or velocity limits
+* Contributors: Bence Magyar, Dave Coleman
+
 0.11.4 (2017-02-14)
 -------------------
 
