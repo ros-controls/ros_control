@@ -62,4 +62,31 @@
     </description>
   </class>
 
+  <class name="hardware_interface/BiDirectionalPositionJointInterface"
+         type="transmission_interface::BiDirectionalPositionJointInterfaceProvider"
+         base_class_type="transmission_interface::RequisiteProvider">
+    <description>
+      Deal with hardware interface specifics when loading a transmission interface from URDF.
+      BiDirectionalPositionJointInterface specialization.
+    </description>
+  </class>
+
+  <class name="hardware_interface/BiDirectionalVelocityJointInterface"
+         type="transmission_interface::BiDirectionalVelocityJointInterfaceProvider"
+         base_class_type="transmission_interface::RequisiteProvider">
+    <description>
+      Deal with hardware interface specifics when loading a transmission interface from URDF.
+      BiDirectionalVelocityJointInterface specialization.
+    </description>
+  </class>
+
+  <class name="hardware_interface/BiDirectionalEffortJointInterface"
+         type="transmission_interface::BiDirectionalEffortJointInterfaceProvider"
+         base_class_type="transmission_interface::RequisiteProvider">
+    <description>
+      Deal with hardware interface specifics when loading a transmission interface from URDF.
+      BiDirectionalEffortJointInterface specialization.
+    </description>
+  </class>
+
 </library>
