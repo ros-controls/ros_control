@@ -145,6 +145,14 @@ struct ForwardTransmissionInterfaces
   JointToActuatorEffortInterface   jnt_to_act_eff_cmd;
 };
 
+struct InverseTransmissionInterfaces
+{
+  JointToActuatorStateInterface    jnt_to_act_state;
+  ActuatorToJointPositionInterface act_to_jnt_pos_cmd;
+  ActuatorToJointVelocityInterface act_to_jnt_vel_cmd;
+  ActuatorToJointEffortInterface   act_to_jnt_eff_cmd;
+};
+
 struct TransmissionLoaderData
 {
   typedef boost::shared_ptr<Transmission> TransmissionPtr;
@@ -159,6 +167,7 @@ struct TransmissionLoaderData
   JointInterfaces               joint_interfaces;
   RawJointDataMap               raw_joint_data_map;
   ForwardTransmissionInterfaces transmission_interfaces;
+  InverseTransmissionInterfaces inverse_transmission_interfaces;
   std::vector<TransmissionPtr>  transmission_data;
 };
 
