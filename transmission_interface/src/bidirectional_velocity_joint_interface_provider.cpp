@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2013, PAL Robotics S.L.
+// Copyright (C) 2017, PAL Robotics S.L.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -34,56 +34,46 @@
 namespace transmission_interface
 {
 
-    bool BiDirectionalVelocityJointInterfaceProvider::registerTransmission(TransmissionLoaderData &loader_data, TransmissionHandleData &handle_data)
+bool BiDirectionalVelocityJointInterfaceProvider::registerTransmission(TransmissionLoaderData &loader_data,
+                                                                       TransmissionHandleData &handle_data)
+{
+  if(!VelocityJointInterfaceProvider::registerTransmission(loader_data,handle_data))
+  {
+    return false;
+  }
+
+  if(!hasResource(handle_data.name, loader_data.inverse_transmission_interfaces.jnt_to_act_state))
+  {
+    if(!loader_data.robot_transmissions->get<JointToActuatorStateInterface>())
     {
-        // Setup joint state interface first (if not yet done)
-        if(!hasResource(handle_data.name, loader_data.transmission_interfaces.act_to_jnt_state))
-        {
-            if(!JointStateInterfaceProvider::registerTransmission(loader_data, handle_data))
-            {
-                return false;
-            }
-        }
-
-        if(!hasResource(handle_data.name, loader_data.inverse_transmission_interfaces.jnt_to_act_state))
-        {
-            if(!loader_data.robot_transmissions->get<transmission_interface::JointToActuatorStateInterface>())
-            {
-                loader_data.robot_transmissions->registerInterface(&loader_data.inverse_transmission_interfaces.jnt_to_act_state);
-            }
-
-            transmission_interface::JointToActuatorStateInterface &interface = *(loader_data.robot_transmissions->get<transmission_interface::JointToActuatorStateInterface>());
-
-            // Update transmission interface
-            transmission_interface::JointToActuatorStateHandle handle(handle_data.name, handle_data.transmission.get(), handle_data.act_state_data, handle_data.jnt_state_data);
-            interface.registerHandle(handle);
-        }
-
-        // If command interface does not yet exist in the robot transmissions, add it and use internal data structures
-        if(!loader_data.robot_transmissions->get<transmission_interface::JointToActuatorVelocityInterface>())
-        {
-            loader_data.robot_transmissions->registerInterface(&loader_data.transmission_interfaces.jnt_to_act_vel_cmd);
-        }
-
-        if(!loader_data.robot_transmissions->get<transmission_interface::ActuatorToJointVelocityInterface>())
-        {
-            loader_data.robot_transmissions->registerInterface(&loader_data.inverse_transmission_interfaces.act_to_jnt_vel_cmd);
-        }
-
-        transmission_interface::JointToActuatorVelocityInterface &interface = *(loader_data.robot_transmissions->get<transmission_interface::JointToActuatorVelocityInterface>());
-
-        transmission_interface::ActuatorToJointVelocityInterface &reverse_interface = *(loader_data.robot_transmissions->get<transmission_interface::ActuatorToJointVelocityInterface>());
-
-        // Setup command interface
-        transmission_interface::JointToActuatorVelocityHandle handle(handle_data.name, handle_data.transmission.get(), handle_data.act_cmd_data, handle_data.jnt_cmd_data);
-        interface.registerHandle(handle);
-
-        transmission_interface::ActuatorToJointVelocityHandle reverse_handle(handle_data.name, handle_data.transmission.get(), handle_data.act_cmd_data, handle_data.jnt_cmd_data);
-        reverse_interface.registerHandle(reverse_handle);
-
-        return true;
+      loader_data.robot_transmissions->registerInterface(&loader_data.inverse_transmission_interfaces.jnt_to_act_state);
     }
+
+    JointToActuatorStateInterface &interface = *(loader_data.robot_transmissions->get<JointToActuatorStateInterface>());
+
+    // Update transmission interface
+    JointToActuatorStateHandle handle(handle_data.name, 
+                                      handle_data.transmission.get(), 
+                                      handle_data.act_state_data, 
+                                      handle_data.jnt_state_data);
+    interface.registerHandle(handle);
+  }
+
+  if(!loader_data.robot_transmissions->get<ActuatorToJointVelocityInterface>())
+  {
+    loader_data.robot_transmissions->registerInterface(&loader_data.inverse_transmission_interfaces.act_to_jnt_vel_cmd);
+  }
+
+  ActuatorToJointVelocityInterface &interface = *(loader_data.robot_transmissions->get<ActuatorToJointVelocityInterface>());
+
+  ActuatorToJointVelocityHandle handle(handle_data.name, 
+                                       handle_data.transmission.get(), 
+                                       handle_data.act_cmd_data, 
+                                       handle_data.jnt_cmd_data);
+  interface.registerHandle(handle);
+  return true;
+}
 } // namespace
 
-PLUGINLIB_EXPORT_CLASS(transmission_interface::BiDirectionalVelocityJointInterfaceProvider, transmission_interface::RequisiteProvider
-)
+PLUGINLIB_EXPORT_CLASS(transmission_interface::BiDirectionalVelocityJointInterfaceProvider, 
+                       transmission_interface::RequisiteProvider)

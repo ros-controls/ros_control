@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2013, PAL Robotics S.L.
+// Copyright (C) 2017, Houston Mechatronics Inc.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -8,7 +8,7 @@
 //   * Redistributions in binary form must reproduce the above copyright
 //     notice, this list of conditions and the following disclaimer in the
 //     documentation and/or other materials provided with the distribution.
-//   * Neither the name of PAL Robotics S.L. nor the names of its
+//   * Neither the name of Houston Mechatronics Inc. nor the names of its
 //     contributors may be used to endorse or promote products derived from
 //     this software without specific prior written permission.
 //
@@ -35,15 +35,14 @@
 
 namespace transmission_interface
 {
-    class BiDirectionalEffortJointInterfaceProvider : public EffortJointInterfaceProvider
-    {
-    protected:
-      
-        bool registerTransmission(TransmissionLoaderData& loader_data, 
-                                  TransmissionHandleData& handle_data);
-    };
+class BiDirectionalEffortJointInterfaceProvider : public EffortJointInterfaceProvider
+{
+protected:
+  
+  bool registerTransmission(TransmissionLoaderData& loader_data, 
+                            TransmissionHandleData& handle_data);
+};
 
 } // namespace
-
 
 #endif // header guard

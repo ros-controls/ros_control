@@ -516,17 +516,17 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoadReversible)
 
   act_to_jnt_state->propagate();
 
-  EXPECT_NEAR( 1.5, pos_jnt_handle_red.getPosition(),   EPS);
-  EXPECT_NEAR( 1.5, pos_jnt_handle_diff1.getPosition(), EPS);
-  EXPECT_NEAR( 0.5, pos_jnt_handle_diff2.getPosition(), EPS);
+  EXPECT_NEAR(1.5, pos_jnt_handle_red.getPosition(),   EPS);
+  EXPECT_NEAR(1.5, pos_jnt_handle_diff1.getPosition(), EPS);
+  EXPECT_NEAR(0.5, pos_jnt_handle_diff2.getPosition(), EPS);
 
   EXPECT_NEAR(-1.0, pos_jnt_handle_red.getVelocity(),   EPS);
   EXPECT_NEAR(-1.0, pos_jnt_handle_diff1.getVelocity(), EPS);
   EXPECT_NEAR( 0.0, pos_jnt_handle_diff2.getVelocity(), EPS);
 
-  EXPECT_NEAR( 50.0, pos_jnt_handle_red.getEffort(),     EPS);
+  EXPECT_NEAR(50.0, pos_jnt_handle_red.getEffort(),     EPS);
   EXPECT_NEAR(100.0, pos_jnt_handle_diff1.getEffort(),  EPS);
-  EXPECT_NEAR(  0.0, pos_jnt_handle_diff2.getEffort(),   EPS);
+  EXPECT_NEAR(0.0, pos_jnt_handle_diff2.getEffort(),    EPS);
 
   // Propagate position commands forward
   pos_jnt_handle_red.setCommand(1.5);
@@ -557,7 +557,7 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoadReversible)
 
   jnt_to_act_eff_cmd->propagate();
 
-  EXPECT_NEAR(1.0, act_eff_cmd_handle_red.getEffort(), EPS);
+  EXPECT_NEAR(1.0, act_eff_cmd_handle_red.getEffort(),   EPS);
   EXPECT_NEAR(1.0, act_eff_cmd_handle_diff1.getEffort(), EPS);
   EXPECT_NEAR(1.0, act_eff_cmd_handle_diff2.getEffort(), EPS);
 
@@ -567,31 +567,31 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoadReversible)
   joint_data_map->operator[]("bar_joint").position = 1.5;
   joint_data_map->operator[]("baz_joint").position = 0.5;
 
-  joint_data_map->operator[]("foo_joint").velocity = -1.;
-  joint_data_map->operator[]("bar_joint").velocity = -1.;
-  joint_data_map->operator[]("baz_joint").velocity = -2.;
+  joint_data_map->operator[]("foo_joint").velocity = -1.0;
+  joint_data_map->operator[]("bar_joint").velocity = -1.0;
+  joint_data_map->operator[]("baz_joint").velocity = -2.0;
 
-  joint_data_map->operator[]("foo_joint").effort = 5.;
-  joint_data_map->operator[]("bar_joint").effort = 10.;
-  joint_data_map->operator[]("baz_joint").effort = -5.;
+  joint_data_map->operator[]("foo_joint").effort = 5.0;
+  joint_data_map->operator[]("bar_joint").effort = 10.0;
+  joint_data_map->operator[]("baz_joint").effort = -5.0;
 
   jnt_to_act_state->propagate();
 
-  EXPECT_NEAR(50., act_state_handle_red.getPosition(),   EPS);
-  EXPECT_NEAR(50., act_state_handle_diff1.getPosition(), EPS);
-  EXPECT_NEAR(50., act_state_handle_diff2.getPosition(), EPS);
+  EXPECT_NEAR(50.0, act_state_handle_red.getPosition(),   EPS);
+  EXPECT_NEAR(50.0, act_state_handle_diff1.getPosition(), EPS);
+  EXPECT_NEAR(50.0, act_state_handle_diff2.getPosition(), EPS);
 
-  EXPECT_NEAR(-50.,  act_state_handle_red.getVelocity(),   EPS);
-  EXPECT_NEAR(-150., act_state_handle_diff1.getVelocity(), EPS);
-  EXPECT_NEAR( 50.,  act_state_handle_diff2.getVelocity(), EPS);
+  EXPECT_NEAR(-50.0,  act_state_handle_red.getVelocity(),   EPS);
+  EXPECT_NEAR(-150.0, act_state_handle_diff1.getVelocity(), EPS);
+  EXPECT_NEAR( 50.0,  act_state_handle_diff2.getVelocity(), EPS);
 
   EXPECT_NEAR(0.1,  act_state_handle_red.getEffort(),   EPS);
   EXPECT_NEAR(0.05, act_state_handle_diff1.getEffort(), EPS);
   EXPECT_NEAR(0.15, act_state_handle_diff2.getEffort(), EPS);
 
-  act_pos_cmd_handle_red.setCommand(3.);
-  act_pos_cmd_handle_diff1.setCommand(3.);
-  act_pos_cmd_handle_diff2.setCommand(3.);
+  act_pos_cmd_handle_red.setCommand(3.0);
+  act_pos_cmd_handle_diff1.setCommand(3.0);
+  act_pos_cmd_handle_diff2.setCommand(3.0);
 
     // reverse propegate position commands
   act_to_jnt_pos_cmd->propagate();
@@ -618,9 +618,9 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoadReversible)
 
   act_to_jnt_eff_cmd->propagate();
 
-  EXPECT_NEAR(2500., joint_data_map->operator[]("foo_joint").effort_cmd, EPS);
-  EXPECT_NEAR(50.,  joint_data_map->operator[]("bar_joint").effort_cmd, EPS);
-  EXPECT_NEAR(50.,  joint_data_map->operator[]("baz_joint").effort_cmd, EPS);
+  EXPECT_NEAR(2500.0, joint_data_map->operator[]("foo_joint").effort_cmd, EPS);
+  EXPECT_NEAR(50.0, joint_data_map->operator[]("bar_joint").effort_cmd,   EPS);
+  EXPECT_NEAR(50.0, joint_data_map->operator[]("baz_joint").effort_cmd,   EPS);
 }
 
 int main(int argc, char** argv)
