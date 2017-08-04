@@ -390,6 +390,239 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoad)
   EXPECT_NEAR(1.0, act_eff_cmd_handle_diff2.getEffort(), EPS);
 }
 
+TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoadReversible)
+{
+  // Parse transmission info
+  const std::string urdf_filename = "test/urdf/transmission_interface_loader_bidirectional_valid.urdf";
+  std::string urdf;
+  ASSERT_TRUE(readFile(urdf_filename, urdf));
+
+  std::vector<TransmissionInfo> infos = parseUrdf(urdf_filename);
+  ASSERT_EQ(2, infos.size());
+
+  // Get info for each transmission
+  const TransmissionInfo& info_red = infos.front();
+  ASSERT_EQ(1, info_red.actuators_.size());
+  ASSERT_EQ(1, info_red.joints_.size());
+
+  const TransmissionInfo& info_diff = infos.back();
+  ASSERT_EQ(2, info_diff.actuators_.size());
+  ASSERT_EQ(2, info_diff.joints_.size());
+
+  // Load transmissions
+  TransmissionInterfaceLoader trans_iface_loader(&robot_hw, &robot_transmissions);
+  ASSERT_TRUE(trans_iface_loader.load(urdf)); // NOTE: Using URDF loader
+
+  using namespace hardware_interface;
+
+  // Actuator interfaces
+  PositionActuatorInterface* act_pos_cmd_iface = robot_hw.get<PositionActuatorInterface>();
+  VelocityActuatorInterface* act_vel_cmd_iface = robot_hw.get<VelocityActuatorInterface>();
+  EffortActuatorInterface*   act_eff_cmd_iface = robot_hw.get<EffortActuatorInterface>();
+  ActuatorStateInterface*    act_state_iface   = robot_hw.get<ActuatorStateInterface>();
+  ASSERT_TRUE(0 != act_pos_cmd_iface);
+  ASSERT_TRUE(0 != act_vel_cmd_iface);
+  ASSERT_TRUE(0 != act_eff_cmd_iface);
+  ASSERT_TRUE(0 != act_state_iface);
+
+  // Joint interfaces
+  PositionJointInterface* pos_jnt_iface = robot_hw.get<PositionJointInterface>();
+  VelocityJointInterface* vel_jnt_iface = robot_hw.get<VelocityJointInterface>();
+  EffortJointInterface*   eff_jnt_iface = robot_hw.get<EffortJointInterface>();
+  JointStateInterface*    state_jnt_iface = robot_hw.get<JointStateInterface>();
+  ASSERT_TRUE(0 != pos_jnt_iface);
+  ASSERT_TRUE(0 != vel_jnt_iface);
+  ASSERT_TRUE(0 != eff_jnt_iface);
+
+  // Forward Transmission interfaces
+  ActuatorToJointStateInterface*    act_to_jnt_state   = robot_transmissions.get<ActuatorToJointStateInterface>();
+  JointToActuatorPositionInterface* jnt_to_act_pos_cmd = robot_transmissions.get<JointToActuatorPositionInterface>();
+  JointToActuatorVelocityInterface* jnt_to_act_vel_cmd = robot_transmissions.get<JointToActuatorVelocityInterface>();
+  JointToActuatorEffortInterface*   jnt_to_act_eff_cmd = robot_transmissions.get<JointToActuatorEffortInterface>();
+
+  // Inverse Transmission interfaces
+  JointToActuatorStateInterface*    jnt_to_act_state   = robot_transmissions.get<JointToActuatorStateInterface>();
+  ActuatorToJointPositionInterface* act_to_jnt_pos_cmd = robot_transmissions.get<ActuatorToJointPositionInterface>();
+  ActuatorToJointVelocityInterface* act_to_jnt_vel_cmd = robot_transmissions.get<ActuatorToJointVelocityInterface>();
+  ActuatorToJointEffortInterface*   act_to_jnt_eff_cmd = robot_transmissions.get<ActuatorToJointEffortInterface>();
+
+  ASSERT_TRUE(0 != act_to_jnt_state);
+  ASSERT_TRUE(0 != jnt_to_act_pos_cmd);
+  ASSERT_TRUE(0 != jnt_to_act_vel_cmd);
+  ASSERT_TRUE(0 != jnt_to_act_eff_cmd);
+
+  ASSERT_TRUE(0 != jnt_to_act_state);
+  ASSERT_TRUE(0 != act_to_jnt_pos_cmd);
+  ASSERT_TRUE(0 != act_to_jnt_vel_cmd);
+  ASSERT_TRUE(0 != act_to_jnt_eff_cmd);
+
+  // Actuator handles
+  ASSERT_NO_THROW(act_pos_cmd_iface->getHandle(info_red.actuators_.front().name_));
+  ASSERT_NO_THROW(act_vel_cmd_iface->getHandle(info_red.actuators_.front().name_));
+  ASSERT_NO_THROW(act_eff_cmd_iface->getHandle(info_red.actuators_.front().name_));
+  ASSERT_NO_THROW(act_state_iface->getHandle(info_red.actuators_.front().name_));
+  ActuatorHandle act_pos_cmd_handle_red = act_pos_cmd_iface->getHandle(info_red.actuators_.front().name_);
+  ActuatorHandle act_vel_cmd_handle_red = act_vel_cmd_iface->getHandle(info_red.actuators_.front().name_);
+  ActuatorHandle act_eff_cmd_handle_red = act_eff_cmd_iface->getHandle(info_red.actuators_.front().name_);
+
+  ActuatorStateHandle act_state_handle_red = act_state_iface->getHandle(info_red.actuators_.front().name_);
+
+  ASSERT_NO_THROW(act_pos_cmd_iface->getHandle(info_diff.actuators_.front().name_));
+  ASSERT_NO_THROW(act_vel_cmd_iface->getHandle(info_diff.actuators_.front().name_));
+  ASSERT_NO_THROW(act_eff_cmd_iface->getHandle(info_diff.actuators_.front().name_));
+  ASSERT_NO_THROW(act_state_iface->getHandle(info_diff.actuators_.front().name_));
+  ASSERT_NO_THROW(act_pos_cmd_iface->getHandle(info_diff.actuators_.back().name_));
+  ASSERT_NO_THROW(act_vel_cmd_iface->getHandle(info_diff.actuators_.back().name_));
+  ASSERT_NO_THROW(act_eff_cmd_iface->getHandle(info_diff.actuators_.back().name_));
+  ASSERT_NO_THROW(act_state_iface->getHandle(info_diff.actuators_.front().name_));
+  ActuatorHandle act_pos_cmd_handle_diff1 = act_pos_cmd_iface->getHandle(info_diff.actuators_.front().name_);
+  ActuatorHandle act_vel_cmd_handle_diff1 = act_vel_cmd_iface->getHandle(info_diff.actuators_.front().name_);
+  ActuatorHandle act_eff_cmd_handle_diff1 = act_eff_cmd_iface->getHandle(info_diff.actuators_.front().name_);
+  ActuatorHandle act_pos_cmd_handle_diff2 = act_pos_cmd_iface->getHandle(info_diff.actuators_.back().name_);
+  ActuatorHandle act_vel_cmd_handle_diff2 = act_vel_cmd_iface->getHandle(info_diff.actuators_.back().name_);
+  ActuatorHandle act_eff_cmd_handle_diff2 = act_eff_cmd_iface->getHandle(info_diff.actuators_.back().name_);
+
+  ActuatorStateHandle act_state_handle_diff1 = act_state_iface->getHandle(info_diff.actuators_.front().name_);
+  ActuatorStateHandle act_state_handle_diff2 = act_state_iface->getHandle(info_diff.actuators_.back().name_);
+
+  // Joint handles
+  ASSERT_NO_THROW(pos_jnt_iface->getHandle(info_red.joints_.front().name_));
+  ASSERT_NO_THROW(vel_jnt_iface->getHandle(info_red.joints_.front().name_));
+  ASSERT_NO_THROW(eff_jnt_iface->getHandle(info_red.joints_.front().name_));
+  ASSERT_NO_THROW(state_jnt_iface->getHandle(info_red.joints_.front().name_));
+  JointHandle pos_jnt_handle_red = pos_jnt_iface->getHandle(info_red.joints_.front().name_);
+  JointHandle vel_jnt_handle_red = vel_jnt_iface->getHandle(info_red.joints_.front().name_);
+  JointHandle eff_jnt_handle_red = eff_jnt_iface->getHandle(info_red.joints_.front().name_);
+
+  JointStateHandle state_jnt_handle_red = state_jnt_iface->getHandle(info_red.joints_.front().name_);
+
+  ASSERT_NO_THROW(pos_jnt_iface->getHandle(info_diff.joints_.front().name_));
+  ASSERT_NO_THROW(vel_jnt_iface->getHandle(info_diff.joints_.front().name_));
+  ASSERT_NO_THROW(eff_jnt_iface->getHandle(info_diff.joints_.front().name_));
+  ASSERT_NO_THROW(pos_jnt_iface->getHandle(info_diff.joints_.back().name_));
+  ASSERT_NO_THROW(vel_jnt_iface->getHandle(info_diff.joints_.back().name_));
+  ASSERT_NO_THROW(eff_jnt_iface->getHandle(info_diff.joints_.back().name_));
+  JointHandle pos_jnt_handle_diff1 = pos_jnt_iface->getHandle(info_diff.joints_.front().name_);
+  JointHandle vel_jnt_handle_diff1 = vel_jnt_iface->getHandle(info_diff.joints_.front().name_);
+  JointHandle eff_jnt_handle_diff1 = eff_jnt_iface->getHandle(info_diff.joints_.front().name_);
+  JointHandle pos_jnt_handle_diff2 = pos_jnt_iface->getHandle(info_diff.joints_.back().name_);
+  JointHandle vel_jnt_handle_diff2 = vel_jnt_iface->getHandle(info_diff.joints_.back().name_);
+  JointHandle eff_jnt_handle_diff2 = eff_jnt_iface->getHandle(info_diff.joints_.back().name_);
+
+  // Propagate state forward
+  act_pos.assign(3,  50.0);
+  act_vel.assign(3, -50.0);
+  act_eff.assign(3,   1.0);
+
+  act_to_jnt_state->propagate();
+
+  EXPECT_NEAR(1.5, pos_jnt_handle_red.getPosition(),   EPS);
+  EXPECT_NEAR(1.5, pos_jnt_handle_diff1.getPosition(), EPS);
+  EXPECT_NEAR(0.5, pos_jnt_handle_diff2.getPosition(), EPS);
+
+  EXPECT_NEAR(-1.0, pos_jnt_handle_red.getVelocity(),   EPS);
+  EXPECT_NEAR(-1.0, pos_jnt_handle_diff1.getVelocity(), EPS);
+  EXPECT_NEAR( 0.0, pos_jnt_handle_diff2.getVelocity(), EPS);
+
+  EXPECT_NEAR(50.0, pos_jnt_handle_red.getEffort(),     EPS);
+  EXPECT_NEAR(100.0, pos_jnt_handle_diff1.getEffort(),  EPS);
+  EXPECT_NEAR(0.0, pos_jnt_handle_diff2.getEffort(),    EPS);
+
+  // Propagate position commands forward
+  pos_jnt_handle_red.setCommand(1.5);
+  pos_jnt_handle_diff1.setCommand(1.5);
+  pos_jnt_handle_diff2.setCommand(0.5);
+
+  jnt_to_act_pos_cmd->propagate();
+
+  EXPECT_NEAR(50.0, act_pos_cmd_handle_red.getPosition(),   EPS);
+  EXPECT_NEAR(50.0, act_pos_cmd_handle_diff1.getPosition(), EPS);
+  EXPECT_NEAR(50.0, act_pos_cmd_handle_diff2.getPosition(), EPS);
+
+  // Propagate velocity commands forward
+  vel_jnt_handle_red.setCommand(1.0);
+  vel_jnt_handle_diff1.setCommand(1.0);
+  vel_jnt_handle_diff2.setCommand(0.0);
+
+  jnt_to_act_vel_cmd->propagate();
+
+  EXPECT_NEAR(-50.0, act_vel_cmd_handle_red.getVelocity(),   EPS);
+  EXPECT_NEAR(-50.0, act_vel_cmd_handle_diff1.getVelocity(), EPS);
+  EXPECT_NEAR(-50.0, act_vel_cmd_handle_diff2.getVelocity(), EPS);
+
+  // Propagate effort commands forward
+  eff_jnt_handle_red.setCommand(50.0);
+  eff_jnt_handle_diff1.setCommand(100.0);
+  eff_jnt_handle_diff2.setCommand( 0.0);
+
+  jnt_to_act_eff_cmd->propagate();
+
+  EXPECT_NEAR(1.0, act_eff_cmd_handle_red.getEffort(),   EPS);
+  EXPECT_NEAR(1.0, act_eff_cmd_handle_diff1.getEffort(), EPS);
+  EXPECT_NEAR(1.0, act_eff_cmd_handle_diff2.getEffort(), EPS);
+
+  // Now propegate things in the reverse direction
+  RawJointDataMap* joint_data_map = &trans_iface_loader.getData()->raw_joint_data_map;
+  joint_data_map->operator[]("foo_joint").position = 1.5;
+  joint_data_map->operator[]("bar_joint").position = 1.5;
+  joint_data_map->operator[]("baz_joint").position = 0.5;
+
+  joint_data_map->operator[]("foo_joint").velocity = -1.0;
+  joint_data_map->operator[]("bar_joint").velocity = -1.0;
+  joint_data_map->operator[]("baz_joint").velocity = -2.0;
+
+  joint_data_map->operator[]("foo_joint").effort = 5.0;
+  joint_data_map->operator[]("bar_joint").effort = 10.0;
+  joint_data_map->operator[]("baz_joint").effort = -5.0;
+
+  jnt_to_act_state->propagate();
+
+  EXPECT_NEAR(50.0, act_state_handle_red.getPosition(),   EPS);
+  EXPECT_NEAR(50.0, act_state_handle_diff1.getPosition(), EPS);
+  EXPECT_NEAR(50.0, act_state_handle_diff2.getPosition(), EPS);
+
+  EXPECT_NEAR(-50.0,  act_state_handle_red.getVelocity(),   EPS);
+  EXPECT_NEAR(-150.0, act_state_handle_diff1.getVelocity(), EPS);
+  EXPECT_NEAR( 50.0,  act_state_handle_diff2.getVelocity(), EPS);
+
+  EXPECT_NEAR(0.1,  act_state_handle_red.getEffort(),   EPS);
+  EXPECT_NEAR(0.05, act_state_handle_diff1.getEffort(), EPS);
+  EXPECT_NEAR(0.15, act_state_handle_diff2.getEffort(), EPS);
+
+  act_pos_cmd_handle_red.setCommand(3.0);
+  act_pos_cmd_handle_diff1.setCommand(3.0);
+  act_pos_cmd_handle_diff2.setCommand(3.0);
+
+    // reverse propegate position commands
+  act_to_jnt_pos_cmd->propagate();
+
+  EXPECT_NEAR(0.56, joint_data_map->operator[]("foo_joint").position_cmd, EPS);
+  EXPECT_NEAR(0.56, joint_data_map->operator[]("bar_joint").position_cmd, EPS);
+  EXPECT_NEAR(0.5,  joint_data_map->operator[]("baz_joint").position_cmd, EPS);
+
+  // Propagate velocity commands forward
+  act_vel_cmd_handle_red.setCommand(1.0);
+  act_vel_cmd_handle_diff1.setCommand(1.0);
+  act_vel_cmd_handle_diff2.setCommand(0.0);
+
+  act_to_jnt_vel_cmd->propagate();
+
+  EXPECT_NEAR(0.02, joint_data_map->operator[]("foo_joint").velocity_cmd, EPS);
+  EXPECT_NEAR(0.01, joint_data_map->operator[]("bar_joint").velocity_cmd, EPS);
+  EXPECT_NEAR(0.01, joint_data_map->operator[]("baz_joint").velocity_cmd, EPS);
+
+   // Propagate effort commands forward
+  act_eff_cmd_handle_red.setCommand(50.0);
+  act_eff_cmd_handle_diff1.setCommand(1.0);
+  act_eff_cmd_handle_diff2.setCommand( 0.0);
+
+  act_to_jnt_eff_cmd->propagate();
+
+  EXPECT_NEAR(2500.0, joint_data_map->operator[]("foo_joint").effort_cmd, EPS);
+  EXPECT_NEAR(50.0, joint_data_map->operator[]("bar_joint").effort_cmd,   EPS);
+  EXPECT_NEAR(50.0, joint_data_map->operator[]("baz_joint").effort_cmd,   EPS);
+}
+
 int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);

@@ -52,13 +52,16 @@ target_link_libraries(${PROJECT_NAME}_loader
 
 
 add_library(${PROJECT_NAME}_loader_plugins
-  src/simple_transmission_loader.cpp           include/transmission_interface/simple_transmission_loader.h
-  src/differential_transmission_loader.cpp     include/transmission_interface/differential_transmission_loader.h
-  src/four_bar_linkage_transmission_loader.cpp include/transmission_interface/four_bar_linkage_transmission_loader.h
-  src/joint_state_interface_provider.cpp       include/transmission_interface/joint_state_interface_provider.h
-  src/position_joint_interface_provider.cpp    include/transmission_interface/position_joint_interface_provider.h
-  src/velocity_joint_interface_provider.cpp    include/transmission_interface/velocity_joint_interface_provider.h
-  src/effort_joint_interface_provider.cpp      include/transmission_interface/effort_joint_interface_provider.h)
+  src/simple_transmission_loader.cpp                      include/transmission_interface/simple_transmission_loader.h
+  src/differential_transmission_loader.cpp                include/transmission_interface/differential_transmission_loader.h
+  src/four_bar_linkage_transmission_loader.cpp            include/transmission_interface/four_bar_linkage_transmission_loader.h
+  src/joint_state_interface_provider.cpp                  include/transmission_interface/joint_state_interface_provider.h
+  src/position_joint_interface_provider.cpp               include/transmission_interface/position_joint_interface_provider.h
+  src/velocity_joint_interface_provider.cpp               include/transmission_interface/velocity_joint_interface_provider.h
+  src/effort_joint_interface_provider.cpp                 include/transmission_interface/effort_joint_interface_provider.h
+  src/bidirectional_position_joint_interface_provider.cpp include/transmission_interface/bidirectional_position_joint_interface_provider.h
+  src/bidirectional_velocity_joint_interface_provider.cpp include/transmission_interface/bidirectional_velocity_joint_interface_provider.h
+  src/bidirectional_effort_joint_interface_provider.cpp   include/transmission_interface/bidirectional_effort_joint_interface_provider.h)
 target_link_libraries(${PROJECT_NAME}_loader_plugins ${PROJECT_NAME}_loader)
 
 
