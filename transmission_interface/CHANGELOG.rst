@@ -2,8 +2,8 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.12.0 (2017-08-05)
+-------------------
 * Add unit tests for new bidirectional joint interface providers
 * Add bidirectional joint interface providers
 * Add inverse transmission interfaces to TransmissionLoaderData
