@@ -51,6 +51,17 @@ public:
    */
   ForceTorqueSensorHandle(const std::string& name,
                           const std::string& frame_id,
+                          const double* force,
+                          const double* torque)
+    : name_(name),
+      frame_id_(frame_id),
+      force_(force),
+      torque_(torque)
+  {}
+
+  // keep non-const version for binary compatibility
+  ForceTorqueSensorHandle(const std::string& name,
+                          const std::string& frame_id,
                           double* force,
                           double* torque)
     : name_(name),
@@ -67,8 +78,8 @@ public:
 private:
   std::string name_;
   std::string frame_id_;
-  double* force_;
-  double* torque_;
+  const double* force_;
+  const double* torque_;
 };
 
 /** \brief Hardware interface to support reading the state of a force-torque sensor. */

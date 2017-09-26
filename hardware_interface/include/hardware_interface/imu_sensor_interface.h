@@ -77,6 +77,26 @@ public:
       linear_acceleration_covariance_(data.linear_acceleration_covariance)
   {}
 
+  ImuSensorHandle(
+        const std::string& name,                      ///< The name of the sensor
+        const std::string& frame_id,                  ///< The reference frame to which this sensor is associated
+        const double* orientation,                    ///< A pointer to the storage of the orientation value: a quaternion (x,y,z,w)
+        const double* orientation_covariance,         ///< A pointer to the storage of the orientation covariance value: a row major 3x3 matrix about (x,y,z)
+        const double* angular_velocity,               ///< A pointer to the storage of the angular velocity value: a triplet (x,y,z)
+        const double* angular_velocity_covariance,    ///< A pointer to the storage of the angular velocity covariance value: a row major 3x3 matrix about (x,y,z)
+        const double* linear_acceleration,            ///< A pointer to the storage of the linear acceleration value: a triplet (x,y,z)
+        const double* linear_acceleration_covariance  ///< A pointer to the storage of the linear acceleration covariance value: a row major 3x3 matrix about (x,y,z)
+    )
+    : name_(name),
+      frame_id_(frame_id),
+      orientation_(orientation),
+      orientation_covariance_(orientation_covariance),
+      angular_velocity_(angular_velocity),
+      angular_velocity_covariance_(angular_velocity_covariance),
+      linear_acceleration_(linear_acceleration),
+      linear_acceleration_covariance_(linear_acceleration_covariance)
+  {}
+
   std::string getName()                           const {return name_;}
   std::string getFrameId()                        const {return frame_id_;}
   const double* getOrientation()                  const {return orientation_;}
@@ -90,12 +110,12 @@ private:
   std::string name_;
   std::string frame_id_;
 
-  double* orientation_;
-  double* orientation_covariance_;
-  double* angular_velocity_;
-  double* angular_velocity_covariance_;
-  double* linear_acceleration_;
-  double* linear_acceleration_covariance_;
+  const double* orientation_;
+  const double* orientation_covariance_;
+  const double* angular_velocity_;
+  const double* angular_velocity_covariance_;
+  const double* linear_acceleration_;
+  const double* linear_acceleration_covariance_;
 };
 
 /** \brief Hardware interface to support reading the state of an IMU sensor. */
