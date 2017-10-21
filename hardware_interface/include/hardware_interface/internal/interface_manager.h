@@ -63,7 +63,7 @@ struct CheckIsResourceManager {
 
   // method called if C is a ResourceManager
   template <typename C>
-  static yes& callCM(typename std::vector<C*>& managers, C* result, typename C::resource_manager_type*)
+  static void callCM(typename std::vector<C*>& managers, C* result, typename C::resource_manager_type*)
   {
     std::vector<typename C::resource_manager_type*> managers_in;
     // we have to typecase back to base class
@@ -74,7 +74,7 @@ struct CheckIsResourceManager {
 
   // method called if C is not a ResourceManager
   template <typename C>
-  static no& callCM(typename std::vector<C*>& managers, C* result, ...) {}
+  static void callCM(typename std::vector<C*>& managers, C* result, ...) {}
 
   // calls ResourceManager::concatManagers if C is a ResourceManager
   static const void callConcatManagers(typename std::vector<T*>& managers, T* result)
@@ -83,18 +83,18 @@ struct CheckIsResourceManager {
 
   // method called if C is a ResourceManager
   template <typename C>
-  static std::vector<std::string> callGR(C* iface, typename C::resource_manager_type*)
+  static void callGR(std::vector<std::string> &resources, C* iface, typename C::resource_manager_type*)
   {
-    return iface->getNames();
+    resources = iface->getNames();
   }
 
   // method called if C is not a ResourceManager
   template <typename C>
-  static std::vector<std::string> callGR(T* iface, ...) {}
+  static void callGR(std::vector<std::string> &resources, T* iface, ...) { }
 
   // calls ResourceManager::concatManagers if C is a ResourceManager
-  static std::vector<std::string> callGetResources(T* iface)
-  { return callGR<T>(iface, 0); }
+  static void callGetResources(std::vector<std::string> &resources, T* iface)
+  { return callGR<T>(resources, iface, 0); }
 };
 
 class InterfaceManager
@@ -118,14 +118,7 @@ public:
       ROS_WARN_STREAM("Replacing previously registered interface '" << iface_name << "'.");
     }
     interfaces_[iface_name] = iface;
-
-    std::vector<std::string> resources;
-    if(CheckIsResourceManager<T>::value)
-    {
-      // it is a ResourceManager. Get the names of the resources
-      resources = CheckIsResourceManager<T>::callGetResources(iface);
-    }
-    resources_[iface_name] = resources;
+    CheckIsResourceManager<T>::callGetResources(resources_[iface_name], iface);
   }
 
   void registerInterfaceManager(InterfaceManager* iface_man)
