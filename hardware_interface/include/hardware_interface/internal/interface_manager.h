@@ -95,6 +95,31 @@ struct CheckIsResourceManager {
   // calls ResourceManager::concatManagers if C is a ResourceManager
   static void callGetResources(std::vector<std::string> &resources, T* iface)
   { return callGR<T>(resources, iface, 0); }
+
+  template <typename C>
+  static T* newCI(boost::ptr_vector<ResourceManagerBase> &guards, typename C::resource_manager_type*)
+  {
+    T* iface_combo = new T;
+    // save the new interface pointer to allow for its correct destruction
+    guards.push_back(static_cast<ResourceManagerBase*>(iface_combo));
+    return iface_combo;
+  }
+
+  // method called if C is not a ResourceManager
+  template <typename C>
+  static T* newCI(boost::ptr_vector<ResourceManagerBase> &guards, ...) {
+    // it is not a ResourceManager
+    ROS_ERROR("You cannot register multiple interfaces of the same type which are "
+              "not of type ResourceManager. There is no established protocol "
+              "for combining them.");
+    return NULL;
+  }
+
+  static T* newCombinedInterface(boost::ptr_vector<ResourceManagerBase> &guards)
+  {
+    return newCI<T>(guards, 0);
+  }
+
 };
 
 class InterfaceManager
@@ -180,13 +205,8 @@ public:
       iface_combo = static_cast<T*>(it_combo->second);
     } else {
       // no existing combined interface
-      if(CheckIsResourceManager<T>::value) {
-        // it is a ResourceManager
-
-        // create a new combined interface
-        iface_combo = new T;
-        // save the new interface pointer to allow for its correct destruction
-        interface_destruction_list_.push_back(reinterpret_cast<ResourceManagerBase*>(iface_combo));
+      iface_combo = CheckIsResourceManager<T>::newCombinedInterface(interface_destruction_list_);
+      if(iface_combo) {
         // concat all of the resource managers together
         CheckIsResourceManager<T>::callConcatManagers(iface_list, iface_combo);
         // save the combined interface for if this is called again
