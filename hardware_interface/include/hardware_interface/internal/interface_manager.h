@@ -46,21 +46,6 @@ namespace hardware_interface
 // SFINAE workaround, so that we have reflection inside the template functions
 template <typename T>
 struct CheckIsResourceManager {
-  // variable definitions for compiler-time logic
-  typedef char yes[1];
-  typedef char no[2];
-
-  // method called if C is a ResourceManager
-  template <typename C>
-  static yes& testRM(typename C::resource_manager_type*);
-
-  // method called if C is not a ResourceManager
-  template <typename>
-  static no& testRM(...);
-
-  // CheckIsResourceManager<T>::value == true when T is a ResourceManager
-  static const bool value = (sizeof(testRM<T>(0)) == sizeof(yes));
-
   // method called if C is a ResourceManager
   template <typename C>
   static void callCM(typename std::vector<C*>& managers, C* result, typename C::resource_manager_type*)
