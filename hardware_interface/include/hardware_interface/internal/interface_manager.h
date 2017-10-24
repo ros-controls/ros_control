@@ -43,6 +43,10 @@
 
 namespace hardware_interface
 {
+
+namespace internal
+{
+
 // SFINAE workaround, so that we have reflection inside the template functions
 template <typename T>
 struct CheckIsResourceManager {
@@ -107,6 +111,8 @@ struct CheckIsResourceManager {
 
 };
 
+} // namespace internal
+
 class InterfaceManager
 {
 public:
@@ -128,7 +134,7 @@ public:
       ROS_WARN_STREAM("Replacing previously registered interface '" << iface_name << "'.");
     }
     interfaces_[iface_name] = iface;
-    CheckIsResourceManager<T>::callGetResources(resources_[iface_name], iface);
+    internal::CheckIsResourceManager<T>::callGetResources(resources_[iface_name], iface);
   }
 
   void registerInterfaceManager(InterfaceManager* iface_man)
@@ -190,10 +196,10 @@ public:
       iface_combo = static_cast<T*>(it_combo->second);
     } else {
       // no existing combined interface
-      iface_combo = CheckIsResourceManager<T>::newCombinedInterface(interface_destruction_list_);
+      iface_combo = internal::CheckIsResourceManager<T>::newCombinedInterface(interface_destruction_list_);
       if(iface_combo) {
         // concat all of the resource managers together
-        CheckIsResourceManager<T>::callConcatManagers(iface_list, iface_combo);
+        internal::CheckIsResourceManager<T>::callConcatManagers(iface_list, iface_combo);
         // save the combined interface for if this is called again
         interfaces_combo_[type_name] = iface_combo;
         num_ifaces_registered_[type_name] = iface_list.size();
