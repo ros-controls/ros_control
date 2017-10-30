@@ -31,49 +31,42 @@
 #
 # Author: Stuart Glaser
 
-import time
 import sys
-import getopt
-
 import rospy
 from controller_manager_msgs.srv import *
 
-
-switch_controller = rospy.ServiceProxy('controller_manager/switch_controller', SwitchController)
-list_controllers = rospy.ServiceProxy('controller_manager/list_controllers', ListControllers)
-
 def main():
-    inhibited_controllers = []
-    try:
-        rospy.init_node("inhibit", anonymous=True, disable_signals=True)
-        list_controllers.wait_for_service()
-        switch_controller.wait_for_service()
+    rospy.init_node("unspawner", anonymous=True)
 
-        to_inhibit = rospy.myargv()
-        inhibited = set()
+    switch_controller = rospy.ServiceProxy('controller_manager/switch_controller', SwitchController)
+    list_controllers = rospy.ServiceProxy('controller_manager/list_controllers', ListControllers)
+    inhibited = set()
 
-        # Repeatedly check what controllers are up and inhibit the ones that shouldn't be up
-        while True:
-            to_stop = []
-            listed = list_controllers()
-            for controller_state in listed.controller:
-                if controller_state.name in to_inhibit and controller_state.state == 'running':
-                    to_stop.append(controller_state.name)
+    switch_controller.wait_for_service()
+    list_controllers.wait_for_service()
 
-            if to_stop:
-                rospy.logout("Inhibiting controllers: %s" % ', '.join(to_stop))
-                switch_controller(strictness = SwitchControllerRequest.BEST_EFFORT,
-                                  stop_controllers = to_stop)
-                inhibited.update(to_stop)
+    to_inhibit = set(rospy.myargv())
 
-            time.sleep(3.0)
+    def stop_controllers(*argc):
+        to_stop = to_inhibit & set(cs.name for cs in list_controllers().controller if cs.state == 'running')
 
-    finally:
+        if to_stop:
+            rospy.logout("Inhibiting controllers: %s" % ', '.join(to_stop))
+            switch_controller(strictness = SwitchControllerRequest.BEST_EFFORT,
+                              stop_controllers = list(to_stop))
+            inhibited.update(to_stop)
+
+    stop_controllers()
+    timer = rospy.Timer(rospy.Duration(3), stop_controllers)
+
+    def restart_controllers():
+        timer.shutdown()
         # Re-starts inhibited controllers
         switch_controller(strictness = SwitchControllerRequest.BEST_EFFORT,
                           start_controllers = list(inhibited))
 
-
+    rospy.on_shutdown(restart_controllers)
+    rospy.spin()
 
 def print_help():
     print './unspawner name1 name2 name3'
@@ -85,10 +78,4 @@ if __name__ == '__main__':
     if len(sys.argv) == 1 or sys.argv[1] == '-h' or sys.argv[1] == '--help':
         print_help()
         sys.exit(1)
-
-    try:
-        main()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        rospy.signal_shutdown("interrupted")
+    main()
