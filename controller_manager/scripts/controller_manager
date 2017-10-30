@@ -37,9 +37,7 @@ if __name__ == '__main__':
     elif args[1] == 'lc' or args[1] == 'list':
         controller_manager_interface.list_controllers()
     elif args[1] == 'reload-libraries':
-        print "ARGS", args, args[2:]
         if '--restore' in args[2:]:
-            print "RE1"
             controller_manager_interface.reload_libraries(True, restore = True)
         else:
             controller_manager_interface.reload_libraries(True)
