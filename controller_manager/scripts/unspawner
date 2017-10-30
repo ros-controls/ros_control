@@ -35,7 +35,6 @@ import time
 import sys
 import getopt
 
-import roslib; roslib.load_manifest('controller_manager')
 import rospy
 from controller_manager_msgs.srv import *
 

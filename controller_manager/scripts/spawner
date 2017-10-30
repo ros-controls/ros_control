@@ -32,8 +32,7 @@
 #
 # Author: Stuart Glaser
 
-import roslib, time
-roslib.load_manifest('controller_manager')
+import time
 import rosparam
 
 import rospy, sys
