@@ -96,10 +96,11 @@ def main():
     autostart = 1 if not args.stopped else 0
     robot_namespace = args.namespace or ""
     timeout = args.timeout
-    if args.shutdown_timeout is not None:
-      rospy.logwarn("DEPRECATION warning: --shutdown-timeout has no effect.")
 
     rospy.init_node('spawner', anonymous=True)
+
+    if args.shutdown_timeout is not None:
+      rospy.logwarn("DEPRECATION warning: --shutdown-timeout has no effect.")
 
     # add a '/' to the namespace if needed
     if robot_namespace and robot_namespace[-1] != '/':
