@@ -1,9 +1,6 @@
 #! /usr/bin/env python
 # Provides quick access to the services exposed by controller_manager_msgs
 
-import roslib, time
-roslib.load_manifest('controller_manager')
-
 import rospy, sys
 from controller_manager import controller_manager_interface
 
@@ -11,7 +8,7 @@ from controller_manager import controller_manager_interface
 class Tracker:
     def __init__(self, topic, Msg):
         self.sub = rospy.Subscriber(topic, Msg, self.callback)
-        self.msg = None #Msg()
+        self.msg = None
 
     def callback(self, msg):
         self.msg = msg

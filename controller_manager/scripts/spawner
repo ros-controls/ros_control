@@ -32,8 +32,7 @@
 #
 # Author: Stuart Glaser
 
-import roslib, time
-roslib.load_manifest('controller_manager')
+import time
 import rosparam
 
 import rospy, sys
@@ -50,23 +49,17 @@ load_controller_service = ""
 switch_controller_service = ""
 unload_controller_service = ""
 
-shutdown_timeout = 30.0
-
 def shutdown():
-    global loaded,unload_controller_service,load_controller_service,switch_controller_service,shutdown_timeout
+    global loaded,unload_controller_service,load_controller_service,switch_controller_service
 
     rospy.loginfo("Shutting down spawner. Stopping and unloading controllers...")
-    # NOTE: Sleep for one second to avoid race conditions inherent in wait_for_service
-    time.sleep(1.0)
 
     try:
         # unloader
         unload_controller = rospy.ServiceProxy(unload_controller_service, UnloadController)
-        unload_controller.wait_for_service(timeout=shutdown_timeout)
 
         # switcher
         switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
-        switch_controller.wait_for_service(timeout=shutdown_timeout)
 
         rospy.loginfo("Stopping all controllers...");
         switch_controller([], loaded, SwitchControllerRequest.STRICT)
@@ -76,7 +69,7 @@ def shutdown():
             unload_controller(name)
             rospy.logout("Succeeded in unloading %s" % name)
     except (rospy.ServiceException, rospy.exceptions.ROSException) as exc:
-        rospy.logwarn("Controller Spawner couldn't reach controller_manager to take down controllers. Waited for %g second(s)."  % (shutdown_timeout))
+        rospy.logwarn("Controller Spawner error while taking down controllers: %s"  % (exc))
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser(description='Controller spawner')
@@ -88,14 +81,14 @@ def parse_args(args=None):
                         help='namespace of the controller_manager services')
     parser.add_argument('--timeout', metavar='T', type=float, default=30,
                         help='how long to wait for controller_manager services when starting up [s] (default: 30)')
-    parser.add_argument('--shutdown-timeout', metavar='T', type=float, default=30,
-                        help='how long to wait for controller_manager services when shutting down [s] (default: 30)')
+    parser.add_argument('--shutdown-timeout',
+                        help='DEPRECATED: this argument has no effect.')
     parser.add_argument('controllers', metavar='controller', nargs='+',
                         help='controllers to load')
     return parser.parse_args(args=args)
 
 def main():
-    global unload_controller_service,load_controller_service,switch_controller_service,shutdown_timeout
+    global unload_controller_service,load_controller_service,switch_controller_service
 
     args = parse_args(rospy.myargv()[1:])
 
@@ -103,9 +96,11 @@ def main():
     autostart = 1 if not args.stopped else 0
     robot_namespace = args.namespace or ""
     timeout = args.timeout
-    shutdown_timeout = args.shutdown_timeout
 
     rospy.init_node('spawner', anonymous=True)
+
+    if args.shutdown_timeout is not None:
+      rospy.logwarn("DEPRECATION warning: --shutdown-timeout has no effect.")
 
     # add a '/' to the namespace if needed
     if robot_namespace and robot_namespace[-1] != '/':

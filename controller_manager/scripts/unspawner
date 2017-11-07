@@ -35,7 +35,6 @@ import time
 import sys
 import getopt
 
-import roslib; roslib.load_manifest('controller_manager')
 import rospy
 from controller_manager_msgs.srv import *
 
@@ -47,8 +46,8 @@ def main():
     inhibited_controllers = []
     try:
         rospy.init_node("inhibit", anonymous=True, disable_signals=True)
-        rospy.wait_for_service('controller_manager/list_controllers')
-        rospy.wait_for_service('controller_manager/switch_controller')
+        list_controllers.wait_for_service()
+        switch_controller.wait_for_service()
 
         to_inhibit = rospy.myargv()
         inhibited = set()
