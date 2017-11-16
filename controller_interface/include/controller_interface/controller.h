@@ -49,7 +49,7 @@ namespace controller_interface
  * control.
  */
 template <class T>
-class Controller: public ControllerBase
+class Controller: public virtual ControllerBase
 {
 public:
   Controller()  {state_ = CONSTRUCTED;}

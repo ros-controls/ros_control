@@ -191,7 +191,7 @@ std::string enumerateElements(const T& val,
  * types.
  */
 template <class T1, class T2 = void, class T3 = void, class T4 = void>
-class MultiInterfaceController: public ControllerBase
+class MultiInterfaceController: public virtual ControllerBase
 {
 public:
   /**
