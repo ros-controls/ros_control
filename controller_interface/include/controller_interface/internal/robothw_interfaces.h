@@ -56,14 +56,14 @@ inline std::string enumerateElements(const T&           val,
   const std::string sdp = suffix+delimiter+prefix;
   std::stringstream ss;
   ss << prefix;
-  std::copy(val.begin(), val.end(), std::ostream_iterator<typename T::value_type>(ss, sdp.c_str()));
+  std::copy(val.begin(), val.end(), std::ostream_iterator<class T::value_type>(ss, sdp.c_str()));
   ret = ss.str();
   if (!ret.empty()) {ret.erase(ret.size() - delimiter.size() - prefix.size());}
   return ret;
 }
 
 
-template <typename T>
+template <class T>
 inline bool hasInterfaces(hardware_interface::RobotHW* robot_hw)
 {
   T* hw = robot_hw->get<T>();
@@ -78,14 +78,14 @@ inline bool hasInterfaces(hardware_interface::RobotHW* robot_hw)
   return true;
 }
 
-template <typename T1, typename T2, typename... More>
+template <class T1, class T2, class... More>
 inline bool hasInterfaces(hardware_interface::RobotHW* robot_hw)
 {
   return hasInterfaces<T1>(robot_hw) && hasInterfaces<T2, More...>(robot_hw);
 }
 
 
-template <typename T>
+template <class T>
 void clearClaims(hardware_interface::RobotHW* robot_hw)
 {
   T* hw = robot_hw->get<T>();
@@ -95,7 +95,7 @@ void clearClaims(hardware_interface::RobotHW* robot_hw)
   }
 }
 
-template <typename T1, typename T2, typename... More>
+template <class T1, class T2, class... More>
 void clearClaims(hardware_interface::RobotHW* robot_hw)
 {
   clearClaims<T1>(robot_hw);
@@ -103,7 +103,7 @@ void clearClaims(hardware_interface::RobotHW* robot_hw)
 }
 
 
-template <typename T>
+template <class T>
 inline void extractInterfaceResources(hardware_interface::RobotHW* robot_hw_in,
                                       hardware_interface::RobotHW* robot_hw_out)
 {
@@ -111,7 +111,7 @@ inline void extractInterfaceResources(hardware_interface::RobotHW* robot_hw_in,
   if (hw) {robot_hw_out->registerInterface(hw);}
 }
 
-template <typename T1, typename T2, typename... More>
+template <class T1, class T2, class... More>
 inline void extractInterfaceResources(hardware_interface::RobotHW* robot_hw_in,
                                       hardware_interface::RobotHW* robot_hw_out)
 {
@@ -120,7 +120,24 @@ inline void extractInterfaceResources(hardware_interface::RobotHW* robot_hw_in,
 }
 
 
-template <typename T>
+template <class T>
+inline void populateInterfaces(hardware_interface::RobotHW* robot_hw, T hw)
+{
+  if (hw)
+  {
+    robot_hw->registerInterface(hw);
+  }
+}
+
+template <class T, class... More>
+inline void populateInterfaces(hardware_interface::RobotHW* robot_hw, T hw, More... more)
+{
+  populateInterfaces(robot_hw, hw);
+  populateInterfaces(robot_hw, more...);
+}
+
+
+template <class T>
 inline void populateClaimedResources(hardware_interface::RobotHW*      robot_hw,
                                      ControllerBase::ClaimedResources& claimed_resources)
 {
@@ -134,7 +151,7 @@ inline void populateClaimedResources(hardware_interface::RobotHW*      robot_hw,
   }
 }
 
-template <typename T1, typename T2, typename... More>
+template <class T1, class T2, class... More>
 inline void populateClaimedResources(hardware_interface::RobotHW*      robot_hw,
                                      ControllerBase::ClaimedResources& claimed_resources)
 {
