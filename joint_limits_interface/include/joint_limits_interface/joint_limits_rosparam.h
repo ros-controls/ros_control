@@ -212,29 +212,23 @@ inline bool getSoftJointLimits(const std::string& joint_name, const ros::NodeHan
   }
 
   // Soft position limits
-  double soft_lower_limit;
-  if (soft_limits_nh.getParam("soft_lower_limit", soft_lower_limit))
+  if (soft_limits_nh.hasParam("soft_lower_limit"))
   {
-    soft_limits.min_position = soft_lower_limit;
+    soft_limits_nh.getParam("soft_lower_limit", soft_limits.min_position);
   }
-  double soft_upper_limit;
-  if (soft_limits_nh.getParam("soft_upper_limit", soft_upper_limit))
+  if (soft_limits_nh.hasParam("soft_upper_limit"))
   {
-    soft_limits.max_position = soft_upper_limit;
+    soft_limits_nh.getParam("soft_upper_limit", soft_limits.max_position);
   }
 
-  // Safety k_position
-  double k_position;
-  if (soft_limits_nh.getParam("k_position", k_position))
+  // Safety gains
+  if (soft_limits_nh.hasParam("k_position"))
   {
-    soft_limits.k_position = k_position;
+    soft_limits_nh.getParam("k_position", soft_limits.k_position);
   }
-
-  // Safety k_velocity
-  double k_velocity;
-  if (soft_limits_nh.getParam("k_velocity", k_velocity))
+  if (soft_limits_nh.hasParam("k_velocity"))
   {
-    soft_limits.k_velocity = k_velocity;
+    soft_limits_nh.getParam("k_velocity", soft_limits.k_velocity);
   }
 
   return true;
