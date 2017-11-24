@@ -41,6 +41,13 @@
       - hiDOF_joint2
       effort_joints:
       - hiDOF_joint1
+    extensible_controller:
+      type: controller_manager_tests/ExtensibleController
+      velocity_joint: hiDOF_joint1
+    derived_controller:
+      type: controller_manager_tests/DerivedController
+      velocity_joint: hiDOF_joint1
+      effort_joint: hiDOF_joint2
   </rosparam>
 
   <node pkg="controller_manager_tests" type="dummy_app" name="dummy_app" />
