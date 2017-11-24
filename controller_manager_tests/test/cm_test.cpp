@@ -222,7 +222,6 @@ TEST(CMTests, switchController)
     ASSERT_TRUE(call_success);
     EXPECT_TRUE(srv.response.ok);
   }
-
   // Unsuccessful STRICT start
   {
     SwitchController srv;
@@ -493,6 +492,84 @@ TEST(CMTests, listControllers)
     srv.request.name = "my_controller";
     unload_client.call(srv);
     srv.request.name = "vel_eff_controller";
+    unload_client.call(srv);
+  }
+}
+
+TEST(CMTests, extensibleControllers)
+{
+  ros::NodeHandle nh;
+  ros::ServiceClient load_client   = nh.serviceClient<LoadController>("/controller_manager/load_controller");
+  ros::ServiceClient unload_client = nh.serviceClient<UnloadController>("/controller_manager/unload_controller");
+  ros::ServiceClient switch_client = nh.serviceClient<SwitchController>("/controller_manager/switch_controller");
+  ros::ServiceClient list_client   = nh.serviceClient<ListControllers>("/controller_manager/list_controllers");
+
+  // Load controllers.
+  {
+    LoadController srv;
+    srv.request.name = "extensible_controller";
+    load_client.call(srv);
+    srv.request.name = "derived_controller";
+    load_client.call(srv);
+  }
+
+  // Start the base controller.
+  {
+    SwitchController srv;
+    srv.request.start_controllers.push_back("extensible_controller");
+    srv.request.strictness = srv.request.STRICT;
+    ASSERT_TRUE(switch_client.call(srv));
+    ASSERT_TRUE(srv.response.ok);
+  }
+
+  // Validate the controller is running and claimed one resource.
+  {
+    ListControllers srv;
+    ASSERT_TRUE(list_client.call(srv));
+    ASSERT_EQ(srv.response.controller.size(), 2);
+    ControllerState state = srv.response.controller[0].name == "extensible_controller" ?
+        srv.response.controller[0] : srv.response.controller[1];
+    EXPECT_EQ("extensible_controller", state.name);
+    EXPECT_EQ("running", state.state);
+    ASSERT_EQ(1, state.claimed_resources.size());
+  }
+
+  // Start the the derived controller instead.
+  {
+    SwitchController srv;
+    srv.request.stop_controllers.push_back("extensible_controller");
+    srv.request.start_controllers.push_back("derived_controller");
+    srv.request.strictness = srv.request.STRICT;
+    ASSERT_TRUE(switch_client.call(srv));
+    ASSERT_TRUE(srv.response.ok);
+  }
+
+  // Validate the controller is running and claimed two resources.
+  {
+    ListControllers srv;
+    ASSERT_TRUE(list_client.call(srv));
+    ASSERT_EQ(srv.response.controller.size(), 2);
+    ControllerState state = srv.response.controller[0].name == "derived_controller" ?
+        srv.response.controller[0] : srv.response.controller[1];
+    EXPECT_EQ("derived_controller", state.name);
+    EXPECT_EQ("running", state.state);
+    ASSERT_EQ(2, state.claimed_resources.size());
+  }
+
+  // Stop controller.
+  {
+    SwitchController srv;
+    srv.request.stop_controllers.push_back("derived_controller");
+    srv.request.strictness = srv.request.STRICT;
+    switch_client.call(srv);
+  }
+
+  // Unload controllers.
+  {
+    UnloadController srv;
+    srv.request.name = "extensible_controller";
+    unload_client.call(srv);
+    srv.request.name = "derived_controller";
     unload_client.call(srv);
   }
 }

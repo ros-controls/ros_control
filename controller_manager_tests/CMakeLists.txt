@@ -16,6 +16,7 @@ catkin_package(
 #common commands for building c++ executables and libraries
 add_library(${PROJECT_NAME}
   src/effort_test_controller.cpp
+  src/extensible_controllers.cpp
   src/my_dummy_controller.cpp
   src/my_robot_hw.cpp
   src/pos_eff_controller.cpp

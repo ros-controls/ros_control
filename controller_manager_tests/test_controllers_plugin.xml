@@ -31,4 +31,15 @@
   </description>
   </class>
 
+  <class name="controller_manager_tests/ExtensibleController" type="controller_manager_tests::ExtensibleController" base_class_type="controller_interface::ControllerBase">
+  <description>
+    This is a base controller with a virtual method to enable extending. It requires a single velocity interface.
+  </description>
+  </class>
+
+  <class name="controller_manager_tests/DerivedController" type="controller_manager_tests::DerivedController" base_class_type="controller_interface::ControllerBase">
+  <description>
+    This controller extends ExtensibleController, overriding the supplied virtual method and also requiring an additional effort interface.
+  </description>
+  </class>
 </library>
