@@ -15,18 +15,12 @@ catkin_package(
 
 #common commands for building c++ executables and libraries
 add_library(${PROJECT_NAME}
-  src/my_robot_hw.cpp
-  include/controller_manager_tests/my_robot_hw.h
   src/effort_test_controller.cpp
-  include/controller_manager_tests/effort_test_controller.h
-  src/vel_eff_controller.cpp
-  include/controller_manager_tests/vel_eff_controller.h
-  src/pos_eff_controller.cpp
-  include/controller_manager_tests/pos_eff_controller.h
-  src/pos_eff_opt_controller.cpp
-  include/controller_manager_tests/pos_eff_opt_controller.h
   src/my_dummy_controller.cpp
-  include/controller_manager_tests/my_dummy_controller.h
+  src/my_robot_hw.cpp
+  src/pos_eff_controller.cpp
+  src/pos_eff_opt_controller.cpp
+  src/vel_eff_controller.cpp
   )
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
