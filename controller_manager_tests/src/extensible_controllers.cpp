@@ -26,6 +26,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <controller_manager_tests/extensible_controllers.h>
+#include <pluginlib/class_list_macros.h>
 
 using namespace controller_manager_tests;
 
