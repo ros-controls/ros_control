@@ -526,7 +526,7 @@ TEST(CMTests, extensibleControllers)
   {
     ListControllers srv;
     ASSERT_TRUE(list_client.call(srv));
-    ASSERT_EQ(srv.response.controller.size(), 2);
+    ASSERT_EQ(2, srv.response.controller.size());
     ControllerState state = srv.response.controller[0].name == "extensible_controller" ?
         srv.response.controller[0] : srv.response.controller[1];
     EXPECT_EQ("extensible_controller", state.name);
@@ -534,7 +534,7 @@ TEST(CMTests, extensibleControllers)
     ASSERT_EQ(1, state.claimed_resources.size());
   }
 
-  // Start the the derived controller instead.
+  // Start the derived controller instead.
   {
     SwitchController srv;
     srv.request.stop_controllers.push_back("extensible_controller");
@@ -548,9 +548,9 @@ TEST(CMTests, extensibleControllers)
   {
     ListControllers srv;
     ASSERT_TRUE(list_client.call(srv));
-    ASSERT_EQ(srv.response.controller.size(), 2);
-    ControllerState state = srv.response.controller[0].name == "derived_controller" ?
-        srv.response.controller[0] : srv.response.controller[1];
+    ASSERT_EQ(2, srv.response.controller.size());
+    ControllerState state = srv.response.controller[
+      srv.response.controller[0].name == "derived_controller" ? 0 : 1];
     EXPECT_EQ("derived_controller", state.name);
     EXPECT_EQ("running", state.state);
     ASSERT_EQ(2, state.claimed_resources.size());
