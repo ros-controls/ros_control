@@ -177,7 +177,7 @@ public:
    * \param period The time passed since the last call to \ref write
    */
   virtual void write(const ros::Time& time, const ros::Duration& period) {}
-  };
+};
 
 }
 
