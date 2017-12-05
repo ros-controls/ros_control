@@ -154,6 +154,41 @@ TEST(JointLimitsRosParamTest, GetJointLimits)
   }
 }
 
+TEST(JointLimitsRosParamTest, GetSoftJointLimits)
+{
+  using namespace joint_limits_interface;
+
+  ros::NodeHandle nh("test");
+
+  // Invalid specification
+  {
+    SoftJointLimits soft_limits;
+    EXPECT_FALSE(getSoftJointLimits("~bad_joint", nh, soft_limits));
+    EXPECT_FALSE(getSoftJointLimits("unknown_joint", nh, soft_limits));
+  }
+
+  // Get full specification from parameter server
+  {
+    SoftJointLimits soft_limits;
+    EXPECT_TRUE(getSoftJointLimits("foo_joint", nh, soft_limits));
+
+    EXPECT_EQ(10.0, soft_limits.k_position);
+    EXPECT_EQ(20.0, soft_limits.k_velocity);
+    EXPECT_EQ(0.1, soft_limits.min_position);
+    EXPECT_EQ(0.9, soft_limits.max_position);
+  }
+
+  // Incomplete soft limits specification does not get loaded
+  {
+    SoftJointLimits soft_limits, soft_limits_ref;
+    EXPECT_FALSE(getSoftJointLimits("foobar_joint", nh, soft_limits));
+    EXPECT_EQ(soft_limits.k_position, soft_limits_ref.k_position);
+    EXPECT_EQ(soft_limits.k_velocity, soft_limits_ref.k_velocity);
+    EXPECT_EQ(soft_limits.min_position, soft_limits_ref.min_position);
+    EXPECT_EQ(soft_limits.max_position, soft_limits_ref.max_position);
+  }
+}
+
 int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
