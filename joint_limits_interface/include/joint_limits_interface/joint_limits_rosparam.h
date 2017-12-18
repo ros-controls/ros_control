@@ -171,8 +171,8 @@ inline bool getJointLimits(const std::string& joint_name, const ros::NodeHandle&
 /**
  * \brief Populate a SoftJointLimits instance from the ROS parameter server.
  *
- * It is assumed that the following parameter structure is followed on the provided NodeHandle. Unspecified parameters
- * are simply not added to the joint limits specification.
+ * It is assumed that the following parameter structure is followed on the provided NodeHandle. Only completely specified soft
+ * joint limits specifications will be considered valid.
  * \code
  * joint_limits:
  *   foo_joint:
@@ -187,8 +187,9 @@ inline bool getJointLimits(const std::string& joint_name, const ros::NodeHandle&
  * \param[in] joint_name Name of joint whose limits are to be fetched.
  * \param[in] nh NodeHandle where the joint limits are specified.
  * \param[out] soft_limits Where soft joint limit data gets written into. Limits specified in the parameter server will overwrite
- * existing values. Values in \p soft_limits not specified in the parameter server remain unchanged.
- * \return True if a limits specification is found (ie. the \p joint_limits/joint_name/k_velocity parameter exists in \p nh),
+ * existing values.
+ * \return True if a complete soft limits specification is found (ie. if all \p k_position, \p k_velocity, \p soft_lower_limit and
+ * \p soft_upper_limit exist in \p joint_limits/joint_name namespace),
  * false otherwise.
  */
 inline bool getSoftJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, SoftJointLimits& soft_limits)
