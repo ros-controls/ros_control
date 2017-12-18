@@ -168,6 +168,67 @@ inline bool getJointLimits(const std::string& joint_name, const ros::NodeHandle&
   return true;
 }
 
+/**
+ * \brief Populate a SoftJointLimits instance from the ROS parameter server.
+ *
+ * It is assumed that the following parameter structure is followed on the provided NodeHandle. Only completely specified soft
+ * joint limits specifications will be considered valid.
+ * \code
+ * joint_limits:
+ *   foo_joint:
+ *     soft_lower_limit: 0.0
+ *     soft_upper_limit: 1.0
+ *     k_position: 10.0
+ *     k_velocity: 10.0
+ * \endcode
+ *
+ * This specification is similar to the specification of the safety_controller tag in the URDF, adapted to the parameter server.
+ *
+ * \param[in] joint_name Name of joint whose limits are to be fetched.
+ * \param[in] nh NodeHandle where the joint limits are specified.
+ * \param[out] soft_limits Where soft joint limit data gets written into. Limits specified in the parameter server will overwrite
+ * existing values.
+ * \return True if a complete soft limits specification is found (ie. if all \p k_position, \p k_velocity, \p soft_lower_limit and
+ * \p soft_upper_limit exist in \p joint_limits/joint_name namespace), false otherwise.
+ */
+inline bool getSoftJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, SoftJointLimits& soft_limits)
+{
+  // Node handle scoped where the soft joint limits are defined
+  ros::NodeHandle limits_nh;
+  try
+  {
+    const std::string limits_namespace = "joint_limits/" + joint_name;
+    if (!nh.hasParam(limits_namespace))
+    {
+      ROS_DEBUG_STREAM("No soft joint limits specification found for joint '" << joint_name <<
+                       "' in the parameter server (namespace " << nh.getNamespace() + "/" + limits_namespace << ").");
+      return false;
+    }
+    limits_nh = ros::NodeHandle(nh, limits_namespace);
+  }
+  catch(const ros::InvalidNameException& ex)
+  {
+    ROS_ERROR_STREAM(ex.what());
+    return false;
+  }
+
+  // Override soft limits if complete specification is found
+  bool has_soft_limits;
+  if(limits_nh.getParam("has_soft_limits", has_soft_limits))
+  {
+    if(has_soft_limits && limits_nh.hasParam("k_position") && limits_nh.hasParam("k_velocity") && limits_nh.hasParam("soft_lower_limit") && limits_nh.hasParam("soft_upper_limit"))
+    {
+      limits_nh.getParam("k_position", soft_limits.k_position);
+      limits_nh.getParam("k_velocity", soft_limits.k_velocity);
+      limits_nh.getParam("soft_lower_limit", soft_limits.min_position);
+      limits_nh.getParam("soft_upper_limit", soft_limits.max_position);
+      return true;
+    }
+  }
+
+  return false;
+}
+
 }
 
 #endif
