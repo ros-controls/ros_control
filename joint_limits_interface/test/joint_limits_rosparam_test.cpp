@@ -178,10 +178,20 @@ TEST(JointLimitsRosParamTest, GetSoftJointLimits)
     EXPECT_EQ(0.9, soft_limits.max_position);
   }
 
-  // Incomplete soft limits specification does not get loaded
+  // Skip parsing soft limits if has_soft_limits is false
   {
     SoftJointLimits soft_limits, soft_limits_ref;
     EXPECT_FALSE(getSoftJointLimits("foobar_joint", nh, soft_limits));
+    EXPECT_EQ(soft_limits.k_position, soft_limits_ref.k_position);
+    EXPECT_EQ(soft_limits.k_velocity, soft_limits_ref.k_velocity);
+    EXPECT_EQ(soft_limits.min_position, soft_limits_ref.min_position);
+    EXPECT_EQ(soft_limits.max_position, soft_limits_ref.max_position);
+  }
+
+  // Incomplete soft limits specification does not get loaded
+  {
+    SoftJointLimits soft_limits, soft_limits_ref;
+    EXPECT_FALSE(getSoftJointLimits("barbaz_joint", nh, soft_limits));
     EXPECT_EQ(soft_limits.k_position, soft_limits_ref.k_position);
     EXPECT_EQ(soft_limits.k_velocity, soft_limits_ref.k_velocity);
     EXPECT_EQ(soft_limits.min_position, soft_limits_ref.min_position);

@@ -189,8 +189,7 @@ inline bool getJointLimits(const std::string& joint_name, const ros::NodeHandle&
  * \param[out] soft_limits Where soft joint limit data gets written into. Limits specified in the parameter server will overwrite
  * existing values.
  * \return True if a complete soft limits specification is found (ie. if all \p k_position, \p k_velocity, \p soft_lower_limit and
- * \p soft_upper_limit exist in \p joint_limits/joint_name namespace),
- * false otherwise.
+ * \p soft_upper_limit exist in \p joint_limits/joint_name namespace), false otherwise.
  */
 inline bool getSoftJointLimits(const std::string& joint_name, const ros::NodeHandle& nh, SoftJointLimits& soft_limits)
 {
@@ -214,13 +213,17 @@ inline bool getSoftJointLimits(const std::string& joint_name, const ros::NodeHan
   }
 
   // Override soft limits if complete specification is found
-  if(limits_nh.hasParam("k_position") && limits_nh.hasParam("k_velocity") && limits_nh.hasParam("soft_lower_limit") && limits_nh.hasParam("soft_upper_limit"))
+  bool has_soft_limits;
+  if(limits_nh.getParam("has_soft_limits", has_soft_limits))
   {
-    limits_nh.getParam("k_position", soft_limits.k_position);
-    limits_nh.getParam("k_velocity", soft_limits.k_velocity);
-    limits_nh.getParam("soft_lower_limit", soft_limits.min_position);
-    limits_nh.getParam("soft_upper_limit", soft_limits.max_position);
-    return true;
+    if(has_soft_limits && limits_nh.hasParam("k_position") && limits_nh.hasParam("k_velocity") && limits_nh.hasParam("soft_lower_limit") && limits_nh.hasParam("soft_upper_limit"))
+    {
+      limits_nh.getParam("k_position", soft_limits.k_position);
+      limits_nh.getParam("k_velocity", soft_limits.k_velocity);
+      limits_nh.getParam("soft_lower_limit", soft_limits.min_position);
+      limits_nh.getParam("soft_upper_limit", soft_limits.max_position);
+      return true;
+    }
   }
 
   return false;
