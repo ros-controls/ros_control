@@ -17,7 +17,7 @@ The Journal of Open Source Software, 2017. ([PDF](http://www.theoj.org/joss-pape
 
 ```
 @article{ros_control,
-author = {Chitta, Sachin and Marder-Eppstein, Eitan and Meeussen, Wim and Pradeep, Vijay and Tsouroukdissian, Adolfo Rodr{\'\i}guez and Bohren, Jonathan and Coleman, David and Magyar, Bence and Raiola, Gennaro and L{\"u}dtke, Mathias and Perdomo Fern{\'a}ndez, Enrique},
+author = {Chitta, Sachin and Marder-Eppstein, Eitan and Meeussen, Wim and Pradeep, Vijay and Rodr{\'i}guez Tsouroukdissian, Adolfo  and Bohren, Jonathan and Coleman, David and Magyar, Bence and Raiola, Gennaro and L{\"u}dtke, Mathias and Fern{\'a}ndez Perdomo, Enrique},
 title = {ros\_control: A generic and simple control framework for ROS},
 journal = {The Journal of Open Source Software},
 year = {2017},
