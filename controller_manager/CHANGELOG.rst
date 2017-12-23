@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.0 (2017-12-23)
+-------------------
 * Several spawner-related fixes:
 * Remove shutdown_timeout & add deprecation note
 * Remove roslib import

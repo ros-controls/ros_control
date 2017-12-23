@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.0 (2017-12-23)
+-------------------
 * move CheckIsResourceManager into internal namespace
 * remove unused CheckIsResourceManager::value
 * do not require default constructors for HardwareInterface classes

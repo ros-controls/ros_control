@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.0 (2017-12-23)
+-------------------
 * Drop includes from CMake library build.
 * Contributors: Mike Purvis
 
