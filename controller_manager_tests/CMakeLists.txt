@@ -35,6 +35,7 @@ if(CATKIN_ENABLE_TESTING)
   add_rostest(test/cm_test.test)
   catkin_add_nosetests(test)
   add_rostest(test/cm_msgs_utils_rostest.test)
+  add_rostest(test/controller_manager_scripts.test)
 endif()
 
 # Install
@@ -48,4 +49,3 @@ install(TARGETS ${PROJECT_NAME} dummy_app
 
 install(FILES test_controllers_plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-
