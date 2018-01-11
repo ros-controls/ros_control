@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(controller_manager_tests)
 
+set_directory_properties(PROPERTIES COMPILE_OPTIONS "-std=c++11")
+
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS controller_manager controller_interface)
 catkin_python_setup()
