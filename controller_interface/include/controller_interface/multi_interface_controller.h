@@ -30,10 +30,8 @@
 #ifndef CONTROLLER_INTERFACE_MULTI_INTERFACE_CONTROLLER_H
 #define CONTROLLER_INTERFACE_MULTI_INTERFACE_CONTROLLER_H
 
-#include <algorithm>
-#include <sstream>
-
 #include <controller_interface/controller_base.h>
+#include <controller_interface/internal/robothw_interfaces.h>
 #include <hardware_interface/internal/demangle_symbol.h>
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/hardware_interface.h>
@@ -41,34 +39,6 @@
 
 namespace controller_interface
 {
-
-/** \cond HIDDEN_SYMBOLS */
-namespace internal
-{
-
-template <class T>
-bool hasInterface(hardware_interface::RobotHW* robot_hw);
-
-template <class T>
-void clearClaims(hardware_interface::RobotHW* robot_hw);
-
-template <class T>
-void extractInterfaceResources(hardware_interface::RobotHW* robot_hw_in,
-                               hardware_interface::RobotHW* robot_hw_out);
-
-template <class T>
-void populateClaimedResources(hardware_interface::RobotHW*      robot_hw,
-                              ControllerBase::ClaimedResources& claimed_resources);
-
-template <class T>
-std::string enumerateElements(const T& val,
-                              const std::string& delimiter = ", ",
-                              const std::string& prefix = "",
-                              const std::string& suffix = "");
-
-} // namespace
-/** \endcond */
-
 
 /**
  * \brief %Controller able to claim resources from multiple hardware interfaces.
@@ -172,25 +142,10 @@ std::string enumerateElements(const T& val,
  * };
  * \endcode
  *
- * \tparam T1 Hardware interface type.
+ * \tparam T... Hardware interface types.
  * This parameter is \e required.
- *
- * \tparam T2 Hardware interface type.
- * This parameter is \e optional. Leave unspecified if controller only claims
- * resources from a \e single hardware interface.
- *
- * \tparam T3 Hardware interface type.
- * This parameter is \e optional. Leave unspecified if controller only claims
- * resources from \e two hardware interfaces.
- *
- * \tparam T4 Hardware interface type.
- * This parameter is \e optional. Leave unspecified if controller only claims
- * resources from \e three hardware interfaces.
- *
- * \pre When specified, template parameters \c T1 to \c T4 must be different
- * types.
  */
-template <class T1, class T2 = void, class T3 = void, class T4 = void>
+template <typename... T>
 class MultiInterfaceController: public virtual ControllerBase
 {
 public:
@@ -339,11 +294,7 @@ protected:
    */
   static bool hasRequiredInterfaces(hardware_interface::RobotHW* robot_hw)
   {
-    using internal::hasInterface;
-    return hasInterface<T1>(robot_hw) &&
-           hasInterface<T2>(robot_hw) &&
-           hasInterface<T3>(robot_hw) &&
-           hasInterface<T4>(robot_hw);
+    return internal::hasInterfaces<T...>(robot_hw);
   }
 
   /**
@@ -353,11 +304,7 @@ protected:
    */
   static void clearClaims(hardware_interface::RobotHW* robot_hw)
   {
-    using internal::clearClaims;
-    clearClaims<T1>(robot_hw);
-    clearClaims<T2>(robot_hw);
-    clearClaims<T3>(robot_hw);
-    clearClaims<T4>(robot_hw);
+    internal::clearClaims<T...>(robot_hw);
   }
 
   /**
@@ -371,11 +318,7 @@ protected:
   static void extractInterfaceResources(hardware_interface::RobotHW* robot_hw_in,
                                         hardware_interface::RobotHW* robot_hw_out)
   {
-    using internal::extractInterfaceResources;
-    extractInterfaceResources<T1>(robot_hw_in, robot_hw_out);
-    extractInterfaceResources<T2>(robot_hw_in, robot_hw_out);
-    extractInterfaceResources<T3>(robot_hw_in, robot_hw_out);
-    extractInterfaceResources<T4>(robot_hw_in, robot_hw_out);
+    internal::extractInterfaceResources<T...>(robot_hw_in, robot_hw_out);
   }
 
   /**
@@ -389,11 +332,7 @@ protected:
   static void populateClaimedResources(hardware_interface::RobotHW* robot_hw,
                                        ClaimedResources&            claimed_resources)
   {
-    using internal::populateClaimedResources;
-    populateClaimedResources<T1>(robot_hw, claimed_resources);
-    populateClaimedResources<T2>(robot_hw, claimed_resources);
-    populateClaimedResources<T3>(robot_hw, claimed_resources);
-    populateClaimedResources<T4>(robot_hw, claimed_resources);
+    internal::populateClaimedResources<T...>(robot_hw, claimed_resources);
   }
 
   /** Robot hardware abstraction containing only the subset of interfaces requested by the controller. */
@@ -406,92 +345,6 @@ private:
   MultiInterfaceController(const MultiInterfaceController& c);
   MultiInterfaceController& operator =(const MultiInterfaceController& c);
 };
-
-
-namespace internal
-{
-
-template <class T>
-inline bool hasInterface(hardware_interface::RobotHW* robot_hw)
-{
-  T* hw = robot_hw->get<T>();
-  if (!hw)
-  {
-    const std::string hw_name = hardware_interface::internal::demangledTypeName<T>();
-    ROS_ERROR_STREAM("This controller requires a hardware interface of type '" << hw_name << "', " <<
-                     "but is not exposed by the robot. Available interfaces in robot:\n" <<
-                     enumerateElements(robot_hw->getNames(), "\n", "- '", "'")); // delimiter, prefix, suffux
-    return false;
-  }
-  return true;
-}
-
-// Specialization for unused template parameters defaulting to void
-template <>
-inline bool hasInterface<void>(hardware_interface::RobotHW* /*robot_hw*/) {return true;}
-
-template <class T>
-void clearClaims(hardware_interface::RobotHW* robot_hw)
-{
-  T* hw = robot_hw->get<T>();
-  if (hw) {hw->clearClaims();}
-}
-
-// Specialization for unused template parameters defaulting to void
-template <>
-inline void clearClaims<void>(hardware_interface::RobotHW* /*robot_hw*/) {}
-
-template <class T>
-inline void extractInterfaceResources(hardware_interface::RobotHW* robot_hw_in,
-                                      hardware_interface::RobotHW* robot_hw_out)
-{
-  T* hw = robot_hw_in->get<T>();
-  if (hw) {robot_hw_out->registerInterface(hw);}
-}
-
-// Specialization for unused template parameters defaulting to void
-template <>
-inline void extractInterfaceResources<void>(hardware_interface::RobotHW* /*robot_hw_in*/,
-                                            hardware_interface::RobotHW* /*robot_hw_out*/) {}
-
-template <class T>
-inline void populateClaimedResources(hardware_interface::RobotHW*      robot_hw,
-                                     ControllerBase::ClaimedResources& claimed_resources)
-{
-  T* hw = robot_hw->get<T>();
-  if (hw)
-  {
-    hardware_interface::InterfaceResources iface_res;
-    iface_res.hardware_interface = hardware_interface::internal::demangledTypeName<T>();
-    iface_res.resources = hw->getClaims();
-    claimed_resources.push_back(iface_res);
-  }
-}
-
-// Specialization for unused template parameters defaulting to void
-template <>
-inline void populateClaimedResources<void>(hardware_interface::RobotHW*      /*robot_hw*/,
-                                           ControllerBase::ClaimedResources& /*claimed_resources*/) {}
-
-template <class T>
-inline std::string enumerateElements(const T&           val,
-                                     const std::string& delimiter,
-                                     const std::string& prefix,
-                                     const std::string& suffix)
-{
-  std::string ret;
-  if (val.empty()) {return ret;}
-
-  const std::string sdp = suffix+delimiter+prefix;
-  std::stringstream ss;
-  ss << prefix;
-  std::copy(val.begin(), val.end(), std::ostream_iterator<typename T::value_type>(ss, sdp.c_str()));
-  ret = ss.str();
-  if (!ret.empty()) {ret.erase(ret.size() - delimiter.size() - prefix.size());}
-  return ret;
-}
-
-} // namespace
 
 } // namespace
 
