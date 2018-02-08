@@ -14,3 +14,8 @@ catkin_package(
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 
+if(CATKIN_ENABLE_TESTING)
+  include_directories(include ${catkin_INCLUDE_DIRS})
+  set_directory_properties(PROPERTIES COMPILE_OPTIONS "-std=c++11")
+  catkin_add_gtest(composite_controller_test test/composite_controller_test.cpp)
+endif()

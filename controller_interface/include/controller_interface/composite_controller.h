@@ -38,6 +38,56 @@
 namespace controller_interface
 {
 
+/**
+ * \brief Merge together two ClaimedResources vectors, detecting whether the
+ * any of the merged-in resources were already present. The merge will be
+ * fully executed even if the function returns false (eg, indicating a conflict).
+ *
+ * \param[out] target ClaimedResources to merge resources into.
+ *
+ * \param source ClaimedResources to draw resources from.
+ *
+ * \return true if no resources were duplicated between the target and source.
+ */
+static bool mergeClaimedResources(ControllerBase::ClaimedResources& target,
+                                  const ControllerBase::ClaimedResources& source)
+{
+  bool conflict = false;
+  for (const auto& claimed : source)
+  {
+    // Check if there's a ClaimedResource of this interface type already in the target.
+    bool resource_in_target = false;
+    for (auto& target_claimed : target)
+    {
+      if (target_claimed.hardware_interface == claimed.hardware_interface)
+      {
+        resource_in_target = true;
+
+        size_t size_before = target_claimed.resources.size();
+        target_claimed.resources.insert(claimed.resources.begin(),
+                                        claimed.resources.end());
+
+        // Since it's a set, if the resulting size isn't big enough, we know that
+        // one or more of the inserted items was already present.
+        if (target_claimed.resources.size() < size_before + claimed.resources.size())
+        {
+          conflict = true;
+        }
+
+        break;
+      }
+    }
+
+    if (!resource_in_target)
+    {
+      // There isn't, so append the whole ClaimedResource to the vector.
+      target.push_back(claimed);
+    }
+  }
+  return !conflict;
+}
+
+
 template <typename... Controllers>
 class CompositeController: public virtual ControllerBase, public Controllers...
 {
@@ -193,8 +243,8 @@ private:
                         ros::NodeHandle&             controller_nh,
                         ClaimedResources&            all_claimed_resources)
   {
-    ClaimedResources cr;
-    bool ret = Controller::initRequest(robot_hw, root_nh, controller_nh, cr);
+    ClaimedResources claimed_resources;
+    bool ret = Controller::initRequest(robot_hw, root_nh, controller_nh, claimed_resources);
     if (state_ != INITIALIZED)
     {
       return false;
@@ -204,8 +254,15 @@ private:
     // and can also initialize themselves.
     state_ = CONSTRUCTED;
 
-    // Add the resources claimed by this specific controller to the overall list.
-    all_claimed_resources.insert(std::end(all_claimed_resources), std::begin(cr), std::end(cr));
+    // Add the resources claimed by this specific controller to the overall list, checking
+    // first that they aren't already in there (as that would be a conflict).
+    if (!mergeClaimedResources(all_claimed_resources, claimed_resources))
+    {
+      ROS_ERROR_STREAM("Unable to initialize composed controller; one or more resources "
+                       "claimed by multiple sub-controllers.");
+      return false;
+    }
+
     return ret;
   }
 
