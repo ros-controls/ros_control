@@ -35,6 +35,7 @@
 #include <sstream>
 
 #include <controller_interface/controller_base.h>
+#include <hardware_interface/internal/demangle_symbol.h>
 #include <hardware_interface/robot_hw.h>
 
 namespace controller_interface
@@ -86,6 +87,23 @@ inline bool hasInterfaces(hardware_interface::RobotHW* robot_hw)
 
 
 template <typename T>
+inline void populateInterfaces(hardware_interface::RobotHW* robot_hw, T hw)
+{
+  if (hw)
+  {
+    robot_hw->registerInterface(hw);
+  }
+}
+
+template <typename T, typename... More>
+inline void populateInterfaces(hardware_interface::RobotHW* robot_hw, T hw, More... more)
+{
+  populateInterfaces(robot_hw, hw);
+  populateInterfaces(robot_hw, more...);
+}
+
+
+template <typename T>
 void clearClaims(hardware_interface::RobotHW* robot_hw)
 {
   T* hw = robot_hw->get<T>();
@@ -100,23 +118,6 @@ void clearClaims(hardware_interface::RobotHW* robot_hw)
 {
   clearClaims<T1>(robot_hw);
   clearClaims<T2, More...>(robot_hw);
-}
-
-
-template <typename T>
-inline void extractInterfaceResources(hardware_interface::RobotHW* robot_hw_in,
-                                      hardware_interface::RobotHW* robot_hw_out)
-{
-  T* hw = robot_hw_in->get<T>();
-  if (hw) {robot_hw_out->registerInterface(hw);}
-}
-
-template <typename T1, typename T2, typename... More>
-inline void extractInterfaceResources(hardware_interface::RobotHW* robot_hw_in,
-                                      hardware_interface::RobotHW* robot_hw_out)
-{
-  extractInterfaceResources<T1>(robot_hw_in, robot_hw_out);
-  extractInterfaceResources<T2, More...>(robot_hw_in, robot_hw_out);
 }
 
 
