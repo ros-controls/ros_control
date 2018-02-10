@@ -32,6 +32,7 @@
 #ifndef CONTROLLER_INTERFACE_CONTROLLER_H
 #define CONTROLLER_INTERFACE_CONTROLLER_H
 
+#include <boost/config.hpp>
 #include <controller_interface/controller_base.h>
 #include <controller_interface/internal/robothw_interfaces.h>
 #include <hardware_interface/robot_hw.h>
@@ -300,7 +301,9 @@ private:
    */
   Controller& operator =(const Controller& c);
 
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
   static_assert(sizeof...(Interfaces) >= 1, "Controller must have at least one hardware interface.");
+#endif  // BOOST_NO_VARIADIC_TEMPLATES
 };
 
 } // namespace

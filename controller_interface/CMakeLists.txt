@@ -4,10 +4,13 @@ project(controller_interface)
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS roscpp hardware_interface pluginlib)
 
+find_package(Boost REQUIRED)
+
 # Declare catkin package
 catkin_package(
   CATKIN_DEPENDS roscpp hardware_interface pluginlib
   INCLUDE_DIRS include
+  DEPENDS BOOST
   )
 
 # Install
