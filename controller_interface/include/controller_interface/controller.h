@@ -243,7 +243,7 @@ protected:
   {
     // Check if construction finished cleanly.
     if (state_ != CONSTRUCTED){
-      ROS_ERROR("Cannot initialize this controller because it failed to be constructed");
+      ROS_ERROR("Cannot initialize this controller because it failed to be constructed.");
       return false;
     }
 
@@ -258,7 +258,7 @@ protected:
     if (!init(robot_hw->get<T>()..., controller_nh) ||
         !init(robot_hw->get<T>()..., root_nh, controller_nh))
     {
-      ROS_ERROR("Failed to initialize the controller");
+      ROS_ERROR("Failed to initialize the controller.");
       return false;
     }
 
@@ -273,6 +273,15 @@ protected:
     // Initialization has succeeded.
     state_ = INITIALIZED;
     return true;
+  }
+
+  /**
+   * This is provided for compatibility with Controller from when it only took a single hardware
+   * interface. It can't be used when Controller has more than on interface type.
+   */
+  ROS_DEPRECATED std::string getHardwareInterfaceType() const
+  {
+    return hardware_interface::internal::demangledTypeName<T...>();
   }
 
   /*\}*/
