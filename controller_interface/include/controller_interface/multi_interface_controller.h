@@ -72,9 +72,8 @@ private:
   bool init(T*... interfaces,
             ros::NodeHandle& controller_nh) override
   {
-    hardware_interface::RobotHW robot_hw;
-    internal::populateInterfaces(&robot_hw, interfaces...);
-    return init(&robot_hw, controller_nh);
+    internal::populateInterfaces(&robot_hw_ctrl_, interfaces...);
+    return init(&robot_hw_ctrl_, controller_nh);
   }
 
   /**
@@ -85,13 +84,14 @@ private:
             ros::NodeHandle& root_nh,
             ros::NodeHandle& controller_nh) override
   {
-    hardware_interface::RobotHW robot_hw;
-    internal::populateInterfaces(&robot_hw, interfaces...);
-    return init(&robot_hw, root_nh, controller_nh);
+    internal::populateInterfaces(&robot_hw_ctrl_, interfaces...);
+    return init(&robot_hw_ctrl_, root_nh, controller_nh);
   }
+
   /**
    * Robot hardware abstraction containing only the subset of interfaces requested by the controller.
    */
+  hardware_interface::RobotHW robot_hw_ctrl_;
 };
 
 } // namespace
