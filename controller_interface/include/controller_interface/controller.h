@@ -299,6 +299,8 @@ private:
    * Construction by assignment prohibited. Controllers are not copyable.
    */
   Controller& operator =(const Controller& c);
+
+  static_assert(sizeof...(T) >= 1, "Controller must have at least one hardware interface.");
 };
 
 } // namespace
