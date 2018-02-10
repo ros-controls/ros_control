@@ -135,7 +135,7 @@ namespace controller_interface
  * \tparam T... Hardware interface types.
  * This parameter is \e required.
  */
-template <typename... T>
+template <class... Interfaces>
 class Controller: public virtual ControllerBase
 {
 public:
@@ -175,7 +175,7 @@ public:
    * \returns True if initialization was successful and the controller
    * is ready to be started.
    */
-  virtual bool init(T*... /*interfaces*/,
+  virtual bool init(Interfaces*... /*interfaces*/,
                     ros::NodeHandle& /*controller_nh*/)
   {
     return true;
@@ -205,7 +205,7 @@ public:
    * \returns True if initialization was successful and the controller
    * is ready to be started.
    */
-  virtual bool init(T*... /*interfaces*/,
+  virtual bool init(Interfaces*... /*interfaces*/,
                     ros::NodeHandle& /*root_nh*/,
                     ros::NodeHandle& /*controller_nh*/)
   {
@@ -248,15 +248,15 @@ protected:
     }
 
     // Check for required hardware interfaces.
-    if (!allow_optional_interfaces_ && !internal::hasInterfaces<T...>(robot_hw))
+    if (!allow_optional_interfaces_ && !internal::hasInterfaces<Interfaces...>(robot_hw))
     {
       // Error message has already been sent by the checking function.
       return false;
     }
 
     // Custom controller initialization.
-    if (!init(robot_hw->get<T>()..., controller_nh) ||
-        !init(robot_hw->get<T>()..., root_nh, controller_nh))
+    if (!init(robot_hw->get<Interfaces>()..., controller_nh) ||
+        !init(robot_hw->get<Interfaces>()..., root_nh, controller_nh))
     {
       ROS_ERROR("Failed to initialize the controller.");
       return false;
@@ -264,8 +264,8 @@ protected:
 
     // Populate claimed resources.
     claimed_resources.clear();
-    internal::populateClaimedResources<T...>(robot_hw, claimed_resources);
-    internal::clearClaims<T...>(robot_hw);
+    internal::populateClaimedResources<Interfaces...>(robot_hw, claimed_resources);
+    internal::clearClaims<Interfaces...>(robot_hw);
     // NOTE: Above, claims are cleared since we only want to know what they are and report them back
     // as an output parameter. Actual resource claiming by the controller is done when the controller
     // is start()ed
@@ -281,7 +281,7 @@ protected:
    */
   ROS_DEPRECATED std::string getHardwareInterfaceType() const
   {
-    return hardware_interface::internal::demangledTypeName<T...>();
+    return hardware_interface::internal::demangledTypeName<Interfaces...>();
   }
 
   /*\}*/
@@ -300,7 +300,7 @@ private:
    */
   Controller& operator =(const Controller& c);
 
-  static_assert(sizeof...(T) >= 1, "Controller must have at least one hardware interface.");
+  static_assert(sizeof...(Interfaces) >= 1, "Controller must have at least one hardware interface.");
 };
 
 } // namespace

@@ -42,11 +42,11 @@ namespace controller_interface
 /**
  * \brief Adapter class providing the old MultiInterfaceController API.
  */
-template <typename... T>
-class MultiInterfaceController: public Controller<T...>
+template <class... Interfaces>
+class MultiInterfaceController: public Controller<Interfaces...>
 {
 public:
-  using Controller<T...>::Controller;
+  using Controller<Interfaces...>::Controller;
 
   /** \name Non Real-Time Safe Functions
    *\{*/
@@ -69,7 +69,7 @@ private:
    * \brief Overrides the new-API init function in the base class,
    * and calls through to the virtual method with the old API.
    */
-  bool init(T*... interfaces,
+  bool init(Interfaces*... interfaces,
             ros::NodeHandle& controller_nh) override
   {
     internal::populateInterfaces(&robot_hw_ctrl_, interfaces...);
@@ -80,7 +80,7 @@ private:
    * \brief Overrides the new-API init function in the base class,
    * and calls through to the virtual method with the old API.
    */
-  bool init(T*... interfaces,
+  bool init(Interfaces*... interfaces,
             ros::NodeHandle& root_nh,
             ros::NodeHandle& controller_nh) override
   {
