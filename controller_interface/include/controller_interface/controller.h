@@ -27,7 +27,11 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-/** \author Adolfo Rodríguez Tsouroukdissian */
+/**
+ * \author Wim Meeussen
+ * \author Adolfo Rodríguez Tsouroukdissian
+ * \author Mike Purvis
+ * */
 
 #ifndef CONTROLLER_INTERFACE_CONTROLLER_H
 #define CONTROLLER_INTERFACE_CONTROLLER_H
@@ -45,8 +49,8 @@ namespace controller_interface
 /**
  * \brief %Controller is able to claim resources from multiple hardware interfaces.
  *
- * This particular controller implementation allows to claim resources from one
- * or more different hardware interfaces. The types of these hardware interfaces
+ * This controller implementation allows to claim resources from one or
+ * more different hardware interfaces. The types of these hardware interfaces
  * are specified as template parameters.
  *
  * An example multi-interface controller could claim, for instance, resources
@@ -218,10 +222,9 @@ protected:
   /**
    * \brief Initialize the controller from a RobotHW pointer.
    *
-   * This calls \ref init with a RobotHW that is a subset of the input
-   * \c robot_hw parameter, containing only the requested hardware interfaces
-   * (all or some, depending on the value of \c allow_optional_interfaces passed
-   * to the constructor).
+   * This calls the user-supplied \ref init method with the hardware interfaces
+   * from the \c robot_hw pointer, some or all of which may be NULL, depending
+   * on the value of \c allow_optional_interfaces passed to the constructor.
    *
    * \param robot_hw The robot hardware abstraction.
    *
@@ -302,6 +305,9 @@ private:
   Controller& operator =(const Controller& c);
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
+  // Everything other than this line actually compiles just fine under gcc without -std=c++11,
+  // barring warnings about varidic templates being unsupported. This guard can be removed in Melodic
+  // when the compiler is c++14 by default.
   static_assert(sizeof...(Interfaces) >= 1, "Controller must have at least one hardware interface.");
 #endif  // BOOST_NO_VARIADIC_TEMPLATES
 };
