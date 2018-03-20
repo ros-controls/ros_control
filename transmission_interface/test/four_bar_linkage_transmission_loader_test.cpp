@@ -30,7 +30,7 @@
 #include <string>
 #include <boost/foreach.hpp>
 #include <gtest/gtest.h>
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 #include <transmission_interface/four_bar_linkage_transmission.h>
 #include <transmission_interface/transmission_loader.h>
 #include "read_file.h"

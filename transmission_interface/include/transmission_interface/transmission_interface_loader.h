@@ -46,7 +46,7 @@
 #include <ros/console.h>
 
 // pluginlib
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 
 // ros_control
 #include <hardware_interface/actuator_state_interface.h>

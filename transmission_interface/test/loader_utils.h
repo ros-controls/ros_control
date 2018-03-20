@@ -28,7 +28,7 @@
 /// \author Daniel Pinyol
 
 #include <boost/scoped_ptr.hpp>
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 #include <transmission_interface/simple_transmission.h>
 #include <transmission_interface/transmission_loader.h>
 #include "read_file.h"

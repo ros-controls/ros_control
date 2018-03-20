@@ -35,7 +35,7 @@
 #include <hardware_interface/internal/interface_manager.h>
 #include <hardware_interface/hardware_interface.h>
 #include <hardware_interface/robot_hw.h>
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 #include <ros/console.h>
 #include <ros/node_handle.h>
 
