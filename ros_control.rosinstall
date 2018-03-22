@@ -4,3 +4,4 @@
 - git: {local-name: control_toolbox, uri: 'https://github.com/ros-controls/control_toolbox.git', version: kinetic-devel}
 - git: {local-name: control_msgs, uri: 'https://github.com/ros-controls/control_msgs.git', version: kinetic-devel}
 - git: {local-name: urdf_geometry_parser, uri: 'https://github.com/ros-controls/urdf_geometry_parser.git', version: kinetic-devel}
+- git: {local-name: four_wheel_steering_msgs, uri: 'https://github.com/ros-drivers/four_wheel_steering_msgs.git', version: master}
