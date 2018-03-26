@@ -2,6 +2,9 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.9.4 (2016-02-12)
 ------------------
 * Clarify that hardwareInterface element is optional for actuators

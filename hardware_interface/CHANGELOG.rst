@@ -2,6 +2,9 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.9.4 (2016-02-12)
 ------------------
 * Fix doSwitch execution point

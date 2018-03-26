@@ -2,6 +2,11 @@
 Changelog for package rqt_controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add install rule for standalone executable
+* Contributors: Bence Magyar
+
 0.9.4 (2016-02-12)
 ------------------
 * Added standalone rqt_controller_manager script
