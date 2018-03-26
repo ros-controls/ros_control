@@ -2,6 +2,12 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add tests for controller_manager scripts and nodes
+* return 0 in dummy_app main
+* Contributors: Mathias Lüdtke
+
 0.13.0 (2017-12-23)
 -------------------
 * Drop includes from CMake library build.

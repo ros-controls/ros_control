@@ -2,6 +2,9 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.13.0 (2017-12-23)
 -------------------
 * Add method to populate SoftJointLimits from ROS parameter server. (`#292 <https://github.com/ros-controls/ros_control/issues/292>`_)
