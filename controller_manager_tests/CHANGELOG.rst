@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.14.0 (2018-03-26)
+-------------------
 * Copyright blocks.
 * Tests for extensible controllers.
 * migrate to new class list macros header

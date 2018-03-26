@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.14.0 (2018-03-26)
+-------------------
 * migrate classloader headers
 * refactored controller_manager unspawner
 * fix controller_manager list: migrated to new ControllerState with claimed_resources
