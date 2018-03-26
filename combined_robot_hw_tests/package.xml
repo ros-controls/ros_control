@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>combined_robot_hw_tests</name>
-  <version>0.13.0</version>
+  <version>0.13.1</version>
   <description>The combined_robot_hw_tests package</description>
   <maintainer email="toni@shadowrobot.com">Toni Oliver</maintainer>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>

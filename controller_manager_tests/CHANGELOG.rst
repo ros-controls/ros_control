@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.1 (2018-03-26)
+-------------------
 * add tests for controller_manager scripts and nodes
 * return 0 in dummy_app main
 * Contributors: Mathias Lüdtke
