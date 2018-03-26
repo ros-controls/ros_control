@@ -2,6 +2,14 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Copyright blocks.
+* Tests for extensible controllers.
+* migrate to new class list macros header
+* add tests for controller_manager scripts and nodes
+* Contributors: Mathias Lüdtke, Mike Purvis
+
 0.13.0 (2017-12-23)
 -------------------
 * Drop includes from CMake library build.
