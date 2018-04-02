@@ -36,15 +36,12 @@ def reload_libraries(force_kill, restore = False):
         result = False
 
     if restore:
-        for c in originally.controllers:
-            load_srv(c)
-        to_start = []
-        for c, s in zip(originally.controllers, originally.state):
-            if s == 'running':
-                to_start.append(c)
-        switch_srv(start_controllers = to_start,
-                   stop_controllers = [],
-                   strictness = SwitchControllerRequest.BEST_EFFORT)
+        for c in originally.controller:
+            load_srv(c.name)
+        to_start = [c.name for c in originally.controller if c.state == 'running']
+        switch_srv(start_controllers=to_start,
+                   stop_controllers=[],
+                   strictness=SwitchControllerRequest.BEST_EFFORT)
         print "Controllers restored to original state"
     return result
 
@@ -93,7 +90,7 @@ def stop_controller(name):
     return start_stop_controllers([name], False)
 
 def stop_controllers(names):
-    return start_stop_controllers(name, False)
+    return start_stop_controllers(names, False)
 
 def start_stop_controllers(names, st):
     rospy.wait_for_service('controller_manager/switch_controller')
@@ -108,9 +105,9 @@ def start_stop_controllers(names, st):
     resp = s.call(SwitchControllerRequest(start, stop, strictness))
     if resp.ok == 1:
         if st:
-            print "Started %s successfully" % names
+            print "Started {} successfully".format(names)
         else:
-            print "Stopped %s successfully" % names
+            print "Stopped {} successfully".format(names)
         return True
     else:
         if st:
