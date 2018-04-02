@@ -30,15 +30,19 @@
 
 using namespace controller_manager_tests;
 
-bool EffortTestController::init(hardware_interface::EffortJointInterface* hw, ros::NodeHandle& /*n*/)
+bool EffortTestController::init(hardware_interface::EffortJointInterface* hw, ros::NodeHandle& n)
 {
   // get all joint states from the hardware interface
   // const std::vector<std::string>& joint_names = hw->getJointNames();
   // for (unsigned i=0; i<joint_names.size(); i++)
   //  ROS_INFO("Got joint %s", joint_names[i].c_str());
   std::vector<std::string> joint_names;
-  joint_names.push_back("hiDOF_joint1");
-  joint_names.push_back("hiDOF_joint2");
+
+  if (!n.getParam("joints", joint_names))
+  {
+    joint_names.push_back("hiDOF_joint1");
+    joint_names.push_back("hiDOF_joint2");
+  }
 
   for (unsigned i=0; i<joint_names.size(); i++)
     joint_effort_commands_.push_back(hw->getHandle(joint_names[i]));
