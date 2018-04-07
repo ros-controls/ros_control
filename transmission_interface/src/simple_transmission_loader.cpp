@@ -29,7 +29,7 @@
 #include <ros/console.h>
 
 // Pluginlib
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.hpp>
 
 // ros_control
 #include <hardware_interface/internal/demangle_symbol.h>
