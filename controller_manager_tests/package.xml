@@ -17,12 +17,11 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>rostest</build_depend>
   <build_depend>controller_manager</build_depend>
   <build_depend>controller_interface</build_depend>
-  <run_depend>rostest</run_depend>
   <run_depend>controller_manager</run_depend>
   <run_depend>controller_interface</run_depend>
+  <test_depend>rostest</test_depend>
   <test_depend>rosservice</test_depend>
   <test_depend>rosbash</test_depend>
   <test_depend>rosnode</test_depend>

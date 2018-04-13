@@ -14,7 +14,7 @@ catkin_package(
   CATKIN_DEPENDS controller_interface controller_manager_msgs hardware_interface pluginlib
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  )
+)
 
 add_library(${PROJECT_NAME}
   src/controller_manager.cpp
