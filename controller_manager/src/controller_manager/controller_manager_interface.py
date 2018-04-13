@@ -1,10 +1,4 @@
 #! /usr/bin/env python
-# Wrappers around the services provided by MechanismControlNode
-
-import roslib; roslib.load_manifest('controller_manager')
-
-import sys
-
 import rospy
 from controller_manager_msgs.srv import *
 
