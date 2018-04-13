@@ -3,8 +3,8 @@ project(transmission_interface)
 
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS
-  hardware_interface
   cmake_modules
+  hardware_interface
   pluginlib
   roscpp
 )
@@ -20,10 +20,11 @@ catkin_package(
     ${PROJECT_NAME}_loader_plugins
   INCLUDE_DIRS
     include
-  DEPENDS
-    TinyXML
+  CATKIN_DEPENDS
     pluginlib
     roscpp
+  DEPENDS
+    TinyXML
 )
 
 ###########
@@ -92,16 +93,16 @@ if(CATKIN_ENABLE_TESTING)
   find_package(Boost REQUIRED COMPONENTS system thread)
   find_package(catkin REQUIRED COMPONENTS resource_retriever roscpp)
 
-  catkin_add_gtest(simple_transmission_test           test/simple_transmission_test.cpp)
+  catkin_add_gtest(simple_transmission_test test/simple_transmission_test.cpp)
   target_link_libraries(simple_transmission_test ${Boost_LIBRARIES})
 
-  catkin_add_gtest(differential_transmission_test     test/differential_transmission_test.cpp)
+  catkin_add_gtest(differential_transmission_test test/differential_transmission_test.cpp)
   target_link_libraries(differential_transmission_test ${Boost_LIBRARIES})
 
   catkin_add_gtest(four_bar_linkage_transmission_test test/four_bar_linkage_transmission_test.cpp)
   target_link_libraries(four_bar_linkage_transmission_test ${Boost_LIBRARIES})
 
-  catkin_add_gtest(transmission_interface_test        test/transmission_interface_test.cpp)
+  catkin_add_gtest(transmission_interface_test test/transmission_interface_test.cpp)
   target_link_libraries(transmission_interface_test ${TinyXML_LIBRARIES} ${catkin_LIBRARIES})
 
   catkin_add_gtest(transmission_parser_test test/transmission_parser_test.cpp)

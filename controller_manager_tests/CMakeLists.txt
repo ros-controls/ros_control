@@ -21,14 +21,14 @@ add_library(${PROJECT_NAME}
   src/pos_eff_controller.cpp
   src/pos_eff_opt_controller.cpp
   src/vel_eff_controller.cpp
-  )
+)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 add_executable(dummy_app src/dummy_app.cpp)
 target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
 if(CATKIN_ENABLE_TESTING)
-  find_package(rostest)
+  find_package(rostest REQUIRED)
   add_executable(cm_test test/cm_test.cpp)
   add_dependencies(tests cm_test)
   target_link_libraries(cm_test ${GTEST_LIBRARIES} ${catkin_LIBRARIES})
