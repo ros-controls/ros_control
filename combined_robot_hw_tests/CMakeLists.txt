@@ -40,7 +40,7 @@ if(CATKIN_ENABLE_TESTING)
     test/combined_robot_hw_test.cpp
   )
   target_link_libraries(combined_robot_hw_test ${PROJECT_NAME} ${catkin_LIBRARIES})
-  
+
   add_rostest_gtest(combined_robot_hw_cm_test
     test/cm_test.test
     test/cm_test.cpp

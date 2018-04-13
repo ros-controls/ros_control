@@ -20,8 +20,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>controller_manager</depend>
-  <depend>rqt_gui</depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>rqt_gui</exec_depend>
 
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml" />
