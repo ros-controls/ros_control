@@ -21,6 +21,5 @@
   <depend>controller_manager_msgs</depend>
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
-  <depend>realtime_tools</depend>
   <test_depend>rostest</test_depend>
 </package>
