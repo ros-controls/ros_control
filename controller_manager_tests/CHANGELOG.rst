@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.6 (2018-04-16)
+------------------
 * Fix controller_manager_interface and add unit tests.
 * Contributors: Yong Li
 
