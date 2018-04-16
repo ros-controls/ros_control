@@ -2,6 +2,12 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix controller_manager_interface and add unit tests.
+* migrate to new class list macros header
+* Contributors: Mathias Lüdtke, Yong Li
+
 0.13.1 (2018-03-26)
 -------------------
 * add tests for controller_manager scripts and nodes

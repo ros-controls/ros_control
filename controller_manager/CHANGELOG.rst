@@ -2,6 +2,12 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix controller_manager_interface and add unit tests.
+* migrate classloader headers
+* Contributors: Mathias Lüdtke, Yong Li
+
 0.13.1 (2018-03-26)
 -------------------
 * refactored controller_manager unspawner
