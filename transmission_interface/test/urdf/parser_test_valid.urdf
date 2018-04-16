@@ -9,11 +9,13 @@
       <mechanicalReduction>2</mechanicalReduction>
       <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
       <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <role>role1</role>
     </joint>
     <joint name="bar_joint">
       <offset>-0.5</offset> <!--optional-->
       <mechanicalReduction>-2</mechanicalReduction>
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <role>role2</role>
     </joint>
     <actuator name="foo_actuator">
       <mechanicalReduction>50</mechanicalReduction>
