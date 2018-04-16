@@ -2,8 +2,8 @@
 Changelog for package combined_robot_hw_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.2 (2018-04-16)
+-------------------
 * migrate to new class list macros header
 * Contributors: Mathias Lüdtke
 

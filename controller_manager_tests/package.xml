@@ -1,6 +1,6 @@
 <package>
   <name>controller_manager_tests</name>
-  <version>0.13.1</version>
+  <version>0.13.2</version>
   <description>controller_manager_tests</description>
   <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
