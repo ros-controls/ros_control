@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>combined_robot_hw</name>
-  <version>0.14.0</version>
+  <version>0.14.1</version>
   <description>Combined Robot HW class.</description>
   <maintainer email="toni@shadowrobot.com">Toni Oliver</maintainer>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
