@@ -2,6 +2,9 @@
 Changelog for package rqt_controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.14.0 (2018-03-26)
 -------------------
 

@@ -2,6 +2,9 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.14.0 (2018-03-26)
 -------------------
 
