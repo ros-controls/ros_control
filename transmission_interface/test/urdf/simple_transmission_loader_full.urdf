@@ -9,6 +9,7 @@
       <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
       <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <role></role>
     </joint>
     <actuator name="foo_actuator">
       <mechanicalReduction>50</mechanicalReduction>

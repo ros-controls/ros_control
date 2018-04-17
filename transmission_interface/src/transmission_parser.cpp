@@ -146,6 +146,12 @@ bool TransmissionParser::parseJoints(TiXmlElement *trans_it, std::vector<JointIn
       return false;
     }
 
+    TiXmlElement *role_it = joint_it->FirstChildElement("role");
+    if(role_it)
+    {
+      joint.role_ = role_it->GetText() ? role_it->GetText() : std::string();
+    }
+
     // Hardware interfaces (required)
     TiXmlElement *hw_iface_it = NULL;
     for (hw_iface_it = joint_it->FirstChildElement("hardwareInterface"); hw_iface_it;
