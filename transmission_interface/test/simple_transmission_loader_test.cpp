@@ -56,6 +56,7 @@ TEST(SimpleTransmissionLoaderTest, FullSpec)
   const TransmissionInfo& info = infos.front();
   transmission = transmission_loader->load(info);
   ASSERT_TRUE(0 != transmission);
+  ASSERT_STREQ(infos.front().joints_.front().role_.c_str(),"");
 
   // Validate transmission
   SimpleTransmission* simple_transmission = dynamic_cast<SimpleTransmission*>(transmission.get());

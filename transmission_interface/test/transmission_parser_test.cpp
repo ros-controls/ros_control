@@ -101,6 +101,9 @@ TEST(TransmissionParserTest, SuccessfulParse)
     EXPECT_EQ("hardware_interface/PositionJointInterface", info.joints_[0].hardware_interfaces_[0]);
     EXPECT_EQ("hardware_interface/VelocityJointInterface", info.joints_[0].hardware_interfaces_[1]);
 
+    EXPECT_STREQ(info.joints_[0].role_.c_str(),"role1");
+    EXPECT_STREQ(info.joints_[1].role_.c_str(),"role2");
+
     ASSERT_EQ(1, info.joints_[1].hardware_interfaces_.size());
     EXPECT_EQ("hardware_interface/EffortJointInterface", info.joints_[1].hardware_interfaces_[0]);
 
