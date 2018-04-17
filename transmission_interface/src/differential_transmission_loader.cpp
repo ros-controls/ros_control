@@ -39,17 +39,17 @@
 namespace transmission_interface
 {
 
-DifferentialTransmissionLoader::TransmissionPtr
+TransmissionSharedPtr 
 DifferentialTransmissionLoader::load(const TransmissionInfo& transmission_info)
 {
   // Transmission should contain only one actuator/joint
-  if (!checkActuatorDimension(transmission_info, 2)) {return TransmissionPtr();}
-  if (!checkJointDimension(transmission_info,    2)) {return TransmissionPtr();}
+  if (!checkActuatorDimension(transmission_info, 2)) {return TransmissionSharedPtr();}
+  if (!checkJointDimension(transmission_info,    2)) {return TransmissionSharedPtr();}
 
   // Get actuator and joint configuration sorted by role: [actuator1, actuator2] and [joint1, joint2]
   std::vector<double> act_reduction;
   const bool act_config_ok = getActuatorConfig(transmission_info, act_reduction);
-  if (!act_config_ok) {return TransmissionPtr();}
+  if (!act_config_ok) {return TransmissionSharedPtr();}
 
   std::vector<double> jnt_reduction;
   std::vector<double> jnt_offset;
@@ -57,14 +57,14 @@ DifferentialTransmissionLoader::load(const TransmissionInfo& transmission_info)
                                             jnt_reduction,
                                             jnt_offset);
 
-  if (!jnt_config_ok) {return TransmissionPtr();}
+  if (!jnt_config_ok) {return TransmissionSharedPtr();}
 
   // Transmission instance
   try
   {
-    TransmissionPtr transmission(new DifferentialTransmission(act_reduction,
-                                                              jnt_reduction,
-                                                              jnt_offset));
+    TransmissionSharedPtr transmission(new DifferentialTransmission(act_reduction,
+                                                                    jnt_reduction,
+                                                                    jnt_offset));
     return transmission;
   }
   catch(const TransmissionInterfaceException& ex)
@@ -72,7 +72,7 @@ DifferentialTransmissionLoader::load(const TransmissionInfo& transmission_info)
     using hardware_interface::internal::demangledTypeName;
     ROS_ERROR_STREAM_NAMED("parser", "Failed to construct transmission '" << transmission_info.name_ << "' of type '" <<
                            demangledTypeName<DifferentialTransmission>()<< "'. " << ex.what());
-    return TransmissionPtr();
+    return TransmissionSharedPtr();
   }
 }
 

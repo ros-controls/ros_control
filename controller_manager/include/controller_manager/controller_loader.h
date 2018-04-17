@@ -56,7 +56,7 @@ public:
     reload();
   }
 
-  boost::shared_ptr<controller_interface::ControllerBase> createInstance(const std::string& lookup_name)
+  controller_interface::ControllerBaseSharedPtr createInstance(const std::string& lookup_name)
   {
     return controller_loader_->createInstance(lookup_name);
   }
