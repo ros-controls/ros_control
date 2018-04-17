@@ -122,6 +122,8 @@ public:
                         const std::list<ControllerInfo>& /*stop_list*/) {}
 };
 
+typedef boost::shared_ptr<RobotHW> RobotHWSharedPtr;
+
 }
 
 #endif

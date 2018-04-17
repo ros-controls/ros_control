@@ -35,6 +35,7 @@
 
 #include <ros/node_handle.h>
 #include <hardware_interface/robot_hw.h>
+#include <boost/shared_ptr.hpp>
 
 
 namespace controller_interface
@@ -154,6 +155,8 @@ private:
   ControllerBase& operator =(const ControllerBase &c);
 
 };
+
+typedef boost::shared_ptr<ControllerBase> ControllerBaseSharedPtr;
 
 }
 
