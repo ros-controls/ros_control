@@ -39,7 +39,6 @@
 #include <string>
 #include <vector>
 #include <controller_interface/controller_base.h>
-#include <boost/shared_ptr.hpp>
 #include <hardware_interface/controller_info.h>
 
 namespace controller_manager
@@ -54,7 +53,7 @@ namespace controller_manager
 struct ControllerSpec
 {
   hardware_interface::ControllerInfo info;
-  boost::shared_ptr<controller_interface::ControllerBase> c;
+  controller_interface::ControllerBaseSharedPtr c;
 };
 
 }

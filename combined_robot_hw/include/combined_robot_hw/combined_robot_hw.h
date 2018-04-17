@@ -104,7 +104,7 @@ protected:
   ros::NodeHandle root_nh_;
   ros::NodeHandle robot_hw_nh_;
   pluginlib::ClassLoader<hardware_interface::RobotHW> robot_hw_loader_;
-  std::vector<boost::shared_ptr<hardware_interface::RobotHW> > robot_hw_list_;
+  std::vector<hardware_interface::RobotHWSharedPtr> robot_hw_list_;
 
   virtual bool loadRobotHW(const std::string& name);
 
@@ -113,7 +113,7 @@ protected:
    */
   void filterControllerList(const std::list<hardware_interface::ControllerInfo>& list,
                             std::list<hardware_interface::ControllerInfo>& filtered_list,
-                            boost::shared_ptr<hardware_interface::RobotHW> robot_hw);
+                            hardware_interface::RobotHWSharedPtr robot_hw);
 };
 
 }

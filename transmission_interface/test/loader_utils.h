@@ -34,8 +34,6 @@
 #include "read_file.h"
 
 using namespace transmission_interface;
-typedef TransmissionLoader::TransmissionPtr TransmissionPtr;
-
 
 struct TransmissionPluginLoader
 {
@@ -44,14 +42,14 @@ struct TransmissionPluginLoader
   {
   }
 
-  boost::shared_ptr<TransmissionLoader> create(const std::string& type)
+  TransmissionLoaderSharedPtr create(const std::string& type)
   {
 
     try
     {
       return class_loader_.createInstance(type);
     }
-    catch(...) {return boost::shared_ptr<TransmissionLoader>();}
+    catch(...) {return TransmissionLoaderSharedPtr();}
   }
 
 private:
