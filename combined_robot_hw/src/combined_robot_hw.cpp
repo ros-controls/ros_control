@@ -62,7 +62,7 @@ namespace combined_robot_hw
                              const std::list<hardware_interface::ControllerInfo>& stop_list)
   {
     // Call the prepareSwitch method of the single RobotHW objects.
-    std::vector<boost::shared_ptr<hardware_interface::RobotHW> >::iterator robot_hw;
+    std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
     for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
     {
       std::list<hardware_interface::ControllerInfo> filtered_start_list;
@@ -82,7 +82,7 @@ namespace combined_robot_hw
                         const std::list<hardware_interface::ControllerInfo>& stop_list)
   {
     // Call the doSwitch method of the single RobotHW objects.
-    std::vector<boost::shared_ptr<hardware_interface::RobotHW> >::iterator robot_hw;
+    std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
     for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
     {
       std::list<hardware_interface::ControllerInfo> filtered_start_list;
@@ -117,7 +117,7 @@ namespace combined_robot_hw
       return false;
     }
 
-    boost::shared_ptr<hardware_interface::RobotHW> robot_hw;
+    hardware_interface::RobotHWSharedPtr robot_hw;
     std::string type;
     if (c_nh.getParam("type", type))
     {
@@ -187,7 +187,7 @@ namespace combined_robot_hw
   void CombinedRobotHW::read(const ros::Time& time, const ros::Duration& period)
   {
     // Call the read method of the single RobotHW objects.
-    std::vector<boost::shared_ptr<hardware_interface::RobotHW> >::iterator robot_hw;
+    std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
     for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
     {
       (*robot_hw)->read(time, period);
@@ -198,7 +198,7 @@ namespace combined_robot_hw
   void CombinedRobotHW::write(const ros::Time& time, const ros::Duration& period)
   {
     // Call the write method of the single RobotHW objects.
-    std::vector<boost::shared_ptr<hardware_interface::RobotHW> >::iterator robot_hw;
+    std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
     for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
     {
       (*robot_hw)->write(time, period);
@@ -207,7 +207,7 @@ namespace combined_robot_hw
 
   void CombinedRobotHW::filterControllerList(const std::list<hardware_interface::ControllerInfo>& list,
                                              std::list<hardware_interface::ControllerInfo>& filtered_list,
-                                             boost::shared_ptr<hardware_interface::RobotHW> robot_hw)
+                                             hardware_interface::RobotHWSharedPtr robot_hw)
   {
     filtered_list.clear();
     for (std::list<hardware_interface::ControllerInfo>::const_iterator it = list.begin(); it != list.end(); ++it)
