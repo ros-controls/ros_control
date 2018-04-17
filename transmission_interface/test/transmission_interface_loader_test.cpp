@@ -35,7 +35,6 @@
 #include "read_file.h"
 
 using namespace transmission_interface;
-typedef TransmissionLoader::TransmissionPtr TransmissionPtr;
 
 // Floating-point value comparison threshold
 const double EPS = 1e-6;
