@@ -38,7 +38,7 @@ namespace transmission_interface
 
 bool RequisiteProvider::loadTransmissionMaps(const TransmissionInfo& transmission_info,
                                              TransmissionLoaderData& loader_data,
-                                             TransmissionPtr         transmission)
+                                             TransmissionSharedPtr   transmission)
 {
   TransmissionHandleData handle_data;
   handle_data.name         = transmission_info.name_;
@@ -133,10 +133,10 @@ bool TransmissionInterfaceLoader::load(const std::vector<TransmissionInfo>& tran
 bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info)
 {
   // Create transmission instance
-  TransmissionPtr transmission;
+  TransmissionSharedPtr transmission;
   try
   {
-    TransmissionLoaderPtr transmission_loader = transmission_class_loader_->createInstance(transmission_info.type_);
+    TransmissionLoaderSharedPtr transmission_loader = transmission_class_loader_->createInstance(transmission_info.type_);
     transmission = transmission_loader->load(transmission_info);
     if (!transmission) {return false;}
   }

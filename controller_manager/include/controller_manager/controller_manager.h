@@ -160,7 +160,7 @@ public:
    * \param controller_loader A pointer to the loader to be registered
    *
    */
-  void registerControllerLoader(boost::shared_ptr<ControllerLoaderInterface> controller_loader);
+  void registerControllerLoader(ControllerLoaderInterfaceSharedPtr controller_loader);
   /*\}*/
 
 
@@ -171,8 +171,7 @@ private:
 
   ros::NodeHandle root_nh_, cm_node_;
 
-  typedef boost::shared_ptr<ControllerLoaderInterface> LoaderPtr;
-  std::list<LoaderPtr> controller_loaders_;
+  std::list<ControllerLoaderInterfaceSharedPtr> controller_loaders_;
 
   /** \name Controller Switching
    *\{*/

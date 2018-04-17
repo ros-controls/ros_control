@@ -39,11 +39,11 @@
 namespace transmission_interface
 {
 
-SimpleTransmissionLoader::TransmissionPtr SimpleTransmissionLoader::load(const TransmissionInfo& transmission_info)
+TransmissionSharedPtr SimpleTransmissionLoader::load(const TransmissionInfo& transmission_info)
 {
   // Transmission should contain only one actuator/joint
-  if (!checkActuatorDimension(transmission_info, 1)) {return TransmissionPtr();}
-  if (!checkJointDimension(transmission_info,    1)) {return TransmissionPtr();}
+  if (!checkActuatorDimension(transmission_info, 1)) {return TransmissionSharedPtr();}
+  if (!checkJointDimension(transmission_info,    1)) {return TransmissionSharedPtr();}
 
   // Parse actuator and joint xml elements
   TiXmlElement actuator_el = loadXmlElement(transmission_info.actuators_.front().xml_element_);
@@ -56,7 +56,7 @@ SimpleTransmissionLoader::TransmissionPtr SimpleTransmissionLoader::load(const T
                                                             transmission_info.name_,
                                                             true, // Required
                                                             reduction);
-  if (reduction_status != SUCCESS) {return TransmissionPtr();}
+  if (reduction_status != SUCCESS) {return TransmissionSharedPtr();}
 
   // Parse optional joint offset. Even though it's optional --and to avoid surprises-- we fail if the element is
   // specified but is of the wrong type
@@ -66,12 +66,12 @@ SimpleTransmissionLoader::TransmissionPtr SimpleTransmissionLoader::load(const T
                                                          transmission_info.name_,
                                                          false, // Optional
                                                          joint_offset);
-  if (joint_offset_status == BAD_TYPE) {return TransmissionPtr();}
+  if (joint_offset_status == BAD_TYPE) {return TransmissionSharedPtr();}
 
   // Transmission instance
   try
   {
-    TransmissionPtr transmission(new SimpleTransmission(reduction, joint_offset));
+    TransmissionSharedPtr transmission(new SimpleTransmission(reduction, joint_offset));
     return transmission;
   }
   catch(const TransmissionInterfaceException& ex)
@@ -79,7 +79,7 @@ SimpleTransmissionLoader::TransmissionPtr SimpleTransmissionLoader::load(const T
     using hardware_interface::internal::demangledTypeName;
     ROS_ERROR_STREAM_NAMED("parser", "Failed to construct transmission '" << transmission_info.name_ << "' of type '" <<
                            demangledTypeName<SimpleTransmission>()<< "'. " << ex.what());
-    return TransmissionPtr();
+    return TransmissionSharedPtr();
   }
 }
 

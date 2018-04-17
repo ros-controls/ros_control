@@ -67,8 +67,7 @@ public:
 
   virtual ~TransmissionLoader() {}
 
-  typedef boost::shared_ptr<Transmission> TransmissionPtr;
-  virtual TransmissionPtr load(const TransmissionInfo& transmission_info) = 0;
+  virtual TransmissionSharedPtr load(const TransmissionInfo& transmission_info) = 0;
 
 protected:
   enum ParseStatus
@@ -143,6 +142,8 @@ protected:
                                   bool                required,
                                   std::string&        role);
 };
+
+typedef boost::shared_ptr<TransmissionLoader> TransmissionLoaderSharedPtr;
 
 } // namespace
 

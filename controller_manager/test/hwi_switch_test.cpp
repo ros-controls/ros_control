@@ -97,11 +97,13 @@ class SwitchBot : public hardware_interface::RobotHW
         }
     };
 
-    std::map<std::string, boost::shared_ptr<Joint> > joints_;
+    typedef boost::shared_ptr<Joint> JointSharedPtr;
 
-    boost::shared_ptr<Joint> makeJoint(const std::string & name)
+    std::map<std::string,  JointSharedPtr> joints_;
+
+    JointSharedPtr makeJoint(const std::string & name)
     {
-        boost::shared_ptr<Joint> j(new Joint(name, jsi_));
+        JointSharedPtr j(new Joint(name, jsi_));
         joints_.insert(std::make_pair(name, j));
         return j;
     }
@@ -111,7 +113,7 @@ class SwitchBot : public hardware_interface::RobotHW
 public:
     SwitchBot()
     {
-        boost::shared_ptr<Joint> j;
+        JointSharedPtr j;
 
         j = makeJoint("j_pv");
 
@@ -270,9 +272,9 @@ public:
         add("PositionJointInterface");
         add("VelocityJointInterface");
     }
-    virtual boost::shared_ptr<controller_interface::ControllerBase> createInstance(const std::string& lookup_name)
+    virtual controller_interface::ControllerBaseSharedPtr createInstance(const std::string& lookup_name)
     {
-        return boost::shared_ptr<controller_interface::ControllerBase>(new DummyController(classes.at(lookup_name)));
+        return controller_interface::ControllerBaseSharedPtr(new DummyController(classes.at(lookup_name)));
     }
     virtual std::vector<std::string> getDeclaredClasses()
     {

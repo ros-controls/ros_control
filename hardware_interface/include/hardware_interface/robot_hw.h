@@ -164,6 +164,8 @@ public:
   virtual void write(const ros::Time& time, const ros::Duration& period) {}
 };
 
+typedef boost::shared_ptr<RobotHW> RobotHWSharedPtr;
+
 }
 
 #endif

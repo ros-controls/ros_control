@@ -51,8 +51,9 @@ ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, cons
   used_by_realtime_(-1)
 {
   // create controller loader
-  controller_loaders_.push_back( LoaderPtr(new ControllerLoader<controller_interface::ControllerBase>("controller_interface",
-                                                                                                      "controller_interface::ControllerBase") ) );
+  controller_loaders_.push_back( 
+    ControllerLoaderInterfaceSharedPtr(new ControllerLoader<controller_interface::ControllerBase>("controller_interface",
+                                                                                                  "controller_interface::ControllerBase") ) );
 
   // Advertise services (this should be the last thing we do in init)
   srv_list_controllers_ = cm_node_.advertiseService("list_controllers", &ControllerManager::listControllersSrv, this);
@@ -184,7 +185,7 @@ bool ControllerManager::loadController(const std::string& name)
     ROS_ERROR("Exception thrown while constructing nodehandle for controller with name '%s'", name.c_str());
     return false;
   }
-  boost::shared_ptr<controller_interface::ControllerBase> c;
+  controller_interface::ControllerBaseSharedPtr c;
   std::string type;
   if (c_nh.getParam("type", type))
   {
@@ -192,7 +193,7 @@ bool ControllerManager::loadController(const std::string& name)
     try
     {
       // Trying loading the controller using all of our controller loaders. Exit once we've found the first valid loaded controller
-      std::list<LoaderPtr>::iterator it = controller_loaders_.begin();
+      std::list<ControllerLoaderInterfaceSharedPtr>::iterator it = controller_loaders_.begin();
       while (!c && it != controller_loaders_.end())
       {
         std::vector<std::string> cur_types = (*it)->getDeclaredClasses();
@@ -558,7 +559,7 @@ bool ControllerManager::reloadControllerLibrariesSrv(
   assert(controllers.empty());
 
   // Force a reload on all the PluginLoaders (internally, this recreates the plugin loaders)
-  for(std::list<LoaderPtr>::iterator it = controller_loaders_.begin(); it != controller_loaders_.end(); ++it)
+  for(std::list<ControllerLoaderInterfaceSharedPtr>::iterator it = controller_loaders_.begin(); it != controller_loaders_.end(); ++it)
   {
     (*it)->reload();
     ROS_INFO("Controller manager: reloaded controller libraries for %s", (*it)->getName().c_str());
@@ -583,7 +584,7 @@ bool ControllerManager::listControllerTypesSrv(
   boost::mutex::scoped_lock guard(services_lock_);
   ROS_DEBUG("list types service locked");
 
-  for(std::list<LoaderPtr>::iterator it = controller_loaders_.begin(); it != controller_loaders_.end(); ++it)
+  for(std::list<ControllerLoaderInterfaceSharedPtr>::iterator it = controller_loaders_.begin(); it != controller_loaders_.end(); ++it)
   {
     std::vector<std::string> cur_types = (*it)->getDeclaredClasses();
     for(size_t i=0; i < cur_types.size(); i++)
@@ -691,7 +692,7 @@ bool ControllerManager::switchControllerSrv(
   return true;
 }
 
-void ControllerManager::registerControllerLoader(boost::shared_ptr<ControllerLoaderInterface> controller_loader)
+void ControllerManager::registerControllerLoader(ControllerLoaderInterfaceSharedPtr controller_loader)
 {
   controller_loaders_.push_back(controller_loader);
 }
