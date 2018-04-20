@@ -8,7 +8,7 @@
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
 
-  <license>Modified BSD</license>
+  <license>BSD</license>
 
   <url type="website">https://github.com/ros-controls/ros_control/wiki</url>
   <url type="bugtracker">https://github.com/ros-controls/ros_control/issues</url>
