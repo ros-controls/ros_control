@@ -4,10 +4,9 @@
   <version>0.13.2</version>
   <description>The rqt_controller_manager package</description>
 
-  <maintainer email="kphawkins@gatech.edu">Kelsey Hawkins</maintainer>
-  <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodríguez Tsouroukdissian</maintainer>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
+  <maintainer email="mathias.luedtke@ipa.fraunhofer.de">Mathias Lüdtke</maintainer>
 
   <license>BSD</license>
 

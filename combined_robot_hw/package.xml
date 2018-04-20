@@ -3,9 +3,10 @@
   <name>combined_robot_hw</name>
   <version>0.13.2</version>
   <description>Combined Robot HW class.</description>
-  <maintainer email="toni@shadowrobot.com">Toni Oliver</maintainer>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
+  <maintainer email="toni@shadowrobot.com">Toni Oliver</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
+  <maintainer email="mathias.luedtke@ipa.fraunhofer.de">Mathias Lüdtke</maintainer>
 
   <license>BSD</license>
 
