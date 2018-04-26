@@ -2,8 +2,8 @@
 Changelog for package controller_manager_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.3 (2018-04-26)
+-------------------
 * Update maintainers
 * Contributors: Bence Magyar
 
