@@ -2,8 +2,8 @@
 Changelog for package ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.14.2 (2018-04-26)
+-------------------
 * Update maintainers
 * Contributors: Bence Magyar
 

@@ -2,8 +2,8 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.14.2 (2018-04-26)
+-------------------
 * Update maintainers
 * Fix catkin_lint errors and warnings
 * fix license string
