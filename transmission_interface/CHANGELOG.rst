@@ -2,6 +2,14 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers
+* Fix catkin_lint errors and warnings
+* fix license string
+* Update transmission parser to parse the joint role
+* Contributors: Bence Magyar, Patrick Holthaus, jlack1987
+
 0.14.1 (2018-04-16)
 -------------------
 

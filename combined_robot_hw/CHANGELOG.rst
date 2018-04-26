@@ -2,6 +2,11 @@
 Changelog for package combined_robot_hw
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers
+* Contributors: Bence Magyar
+
 0.14.1 (2018-04-16)
 -------------------
 

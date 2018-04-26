@@ -2,6 +2,13 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers
+* pluginlib: .h -> .hpp
+* Fix catkin_lint errors and warnings
+* Contributors: Bence Magyar
+
 0.14.1 (2018-04-16)
 -------------------
 * Fix controller_manager_interface and add unit tests.
