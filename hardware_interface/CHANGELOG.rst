@@ -2,6 +2,13 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Introduce shared_ptr typedefs
+* Update maintainers
+* Fix catkin_lint errors and warnings
+* Contributors: Bence Magyar
+
 0.13.2 (2018-04-16)
 -------------------
 

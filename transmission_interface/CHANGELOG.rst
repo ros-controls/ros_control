@@ -2,6 +2,15 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Introduce shared_ptr typedefs
+* Update maintainers
+* Fix catkin_lint errors and warnings
+* fix license string
+* Update transmission parser to parse the joint role
+* Contributors: Bence Magyar, Patrick Holthaus, jlack1987
+
 0.13.2 (2018-04-16)
 -------------------
 * migrate to new class list macros header

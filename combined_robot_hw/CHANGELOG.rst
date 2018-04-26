@@ -2,6 +2,12 @@
 Changelog for package combined_robot_hw
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Introduce shared_ptr typedefs
+* Update maintainers
+* Contributors: Bence Magyar
+
 0.13.2 (2018-04-16)
 -------------------
 * migrate classloader headers

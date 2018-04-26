@@ -2,6 +2,15 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Introduce shared_ptr typedefs
+* Update maintainers
+* Fix catkin_lint errors and warnings
+* Remove unused imports, comment and executable flag
+* Remove realtime_tools dependency
+* Contributors: Bence Magyar
+
 0.13.2 (2018-04-16)
 -------------------
 * Fix controller_manager_interface and add unit tests.
