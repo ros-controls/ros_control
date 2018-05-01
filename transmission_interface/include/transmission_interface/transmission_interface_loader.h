@@ -39,9 +39,6 @@
 #include <vector>
 #include <memory>
 
-// Boost
-#include <boost/foreach.hpp>
-
 // ROS
 #include <ros/console.h>
 
@@ -270,7 +267,7 @@ protected:
     }
 
     // Get handles to all required resource
-    BOOST_FOREACH(const ActuatorInfo& info, actuators_info)
+    for (const ActuatorInfo& info : actuators_info)
     {
       try
       {

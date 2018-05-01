@@ -49,7 +49,7 @@ bool JointStateInterfaceProvider::updateJointInterfaces(const TransmissionInfo& 
   JointStateInterface& interface = *(robot_hw->get<JointStateInterface>());
 
   // Register joints on the hardware interface
-  BOOST_FOREACH(const JointInfo& joint_info, transmission_info.joints_)
+  for (const JointInfo& joint_info : transmission_info.joints_)
   {
     const std::string& name = joint_info.name_;
 
