@@ -129,7 +129,7 @@ namespace combined_robot_hw
         {
           if (type == cur_types[i])
           {
-            robot_hw = robot_hw_loader_.createInstance(type);
+            robot_hw = robot_hw_loader_.createSharedInstance(type);
           }
         }
       }

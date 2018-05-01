@@ -35,7 +35,7 @@
 
 #include <ros/node_handle.h>
 #include <hardware_interface/robot_hw.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace hardware_interface
 {
@@ -162,7 +162,7 @@ private:
 
 };
 
-typedef boost::shared_ptr<ControllerBase> ControllerBaseSharedPtr;
+typedef std::shared_ptr<ControllerBase> ControllerBaseSharedPtr;
 
 }
 

@@ -37,10 +37,10 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <memory>
 
 // Boost
 #include <boost/foreach.hpp>
-#include <boost/shared_ptr.hpp>
 
 // ROS
 #include <ros/console.h>
@@ -155,7 +155,7 @@ struct InverseTransmissionInterfaces
 
 struct TransmissionLoaderData
 {
-  typedef boost::shared_ptr<Transmission> TransmissionPtr; // DEPRECATED and unused!
+  typedef std::shared_ptr<Transmission> TransmissionPtr; // DEPRECATED and unused!
 
   TransmissionLoaderData()
     : robot_hw(0),
@@ -405,11 +405,11 @@ public:
 
 private:
   typedef pluginlib::ClassLoader<TransmissionLoader>      TransmissionClassLoader;
-  typedef boost::shared_ptr<TransmissionClassLoader>      TransmissionClassLoaderPtr;
+  typedef std::shared_ptr<TransmissionClassLoader>      TransmissionClassLoaderPtr;
   typedef pluginlib::ClassLoader<RequisiteProvider>       RequisiteProviderClassLoader;
-  typedef boost::shared_ptr<RequisiteProviderClassLoader> RequisiteProviderClassLoaderPtr;
+  typedef std::shared_ptr<RequisiteProviderClassLoader> RequisiteProviderClassLoaderPtr;
 
-  typedef boost::shared_ptr<RequisiteProvider>            RequisiteProviderPtr;
+  typedef std::shared_ptr<RequisiteProvider>            RequisiteProviderPtr;
 
   TransmissionClassLoaderPtr transmission_class_loader_;
   RequisiteProviderClassLoaderPtr req_provider_loader_;

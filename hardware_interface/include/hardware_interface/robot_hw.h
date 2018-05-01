@@ -30,6 +30,7 @@
 
 #include <list>
 #include <map>
+#include <memory>
 #include <typeinfo>
 #include <hardware_interface/internal/demangle_symbol.h>
 #include <hardware_interface/internal/interface_manager.h>
@@ -164,7 +165,7 @@ public:
   virtual void write(const ros::Time& time, const ros::Duration& period) {}
 };
 
-typedef boost::shared_ptr<RobotHW> RobotHWSharedPtr;
+typedef std::shared_ptr<RobotHW> RobotHWSharedPtr;
 
 }
 
