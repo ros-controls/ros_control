@@ -30,7 +30,7 @@
 
 #include <pluginlib/class_loader.hpp>
 #include <controller_manager/controller_loader_interface.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace controller_manager
 {
@@ -58,7 +58,7 @@ public:
 
   controller_interface::ControllerBaseSharedPtr createInstance(const std::string& lookup_name)
   {
-    return controller_loader_->createInstance(lookup_name);
+    return controller_loader_->createSharedInstance(lookup_name);
   }
 
   std::vector<std::string> getDeclaredClasses()
@@ -74,7 +74,7 @@ public:
 private:
   std::string package_;
   std::string base_class_;
-  boost::shared_ptr<pluginlib::ClassLoader<T> > controller_loader_;
+  std::shared_ptr<pluginlib::ClassLoader<T> > controller_loader_;
 };
 
 }

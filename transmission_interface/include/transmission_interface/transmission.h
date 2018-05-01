@@ -33,7 +33,7 @@
 #include <cstddef>
 #include <string>
 #include <vector>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 
 namespace transmission_interface
@@ -162,7 +162,7 @@ public:
   virtual std::size_t numJoints()    const = 0;
 };
 
-typedef boost::shared_ptr<Transmission> TransmissionSharedPtr;
+typedef std::shared_ptr<Transmission> TransmissionSharedPtr;
 
 } // transmission_interface
 

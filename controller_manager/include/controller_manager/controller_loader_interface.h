@@ -30,7 +30,7 @@
 
 #include <vector>
 #include <string>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <controller_interface/controller_base.h>
 
 namespace controller_manager
@@ -56,7 +56,7 @@ private:
 
 };
 
-typedef boost::shared_ptr<ControllerLoaderInterface> ControllerLoaderInterfaceSharedPtr;
+typedef std::shared_ptr<ControllerLoaderInterface> ControllerLoaderInterfaceSharedPtr;
 
 }
 

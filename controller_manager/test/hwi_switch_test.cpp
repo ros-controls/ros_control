@@ -97,7 +97,7 @@ class SwitchBot : public hardware_interface::RobotHW
         }
     };
 
-    typedef boost::shared_ptr<Joint> JointSharedPtr;
+    typedef std::shared_ptr<Joint> JointSharedPtr;
 
     std::map<std::string,  JointSharedPtr> joints_;
 
@@ -312,7 +312,7 @@ TEST(SwitchInterfacesTest, SwitchInterfaces)
 
     controller_manager::ControllerManager cm(&bot);
 
-    cm.registerControllerLoader(boost::make_shared<DummyControllerLoader>());
+    cm.registerControllerLoader(std::make_shared<DummyControllerLoader>());
 
     ros::Timer timer = nh.createTimer(ros::Duration(0.01), boost::bind(update, boost::ref(cm), _1));
 
