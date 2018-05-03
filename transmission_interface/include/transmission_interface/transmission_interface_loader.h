@@ -152,8 +152,6 @@ struct InverseTransmissionInterfaces
 
 struct TransmissionLoaderData
 {
-  typedef std::shared_ptr<Transmission> TransmissionPtr; // DEPRECATED and unused!
-
   TransmissionLoaderData()
     : robot_hw(0),
       robot_transmissions(0)
