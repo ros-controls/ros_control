@@ -8,6 +8,16 @@
       type: controller_manager_tests/EffortTestController
       joints:
       - hiDOF_joint3
+    controller_groups:
+      group1:
+        - my_controller1
+        - my_controller3
+      group2:
+        - my_controller2
+        - my_controller3
+      group3:
+        - my_controller1
+        - my_controller2
   </rosparam>
 
   <node pkg="controller_manager_tests" type="dummy_app" name="dummy_app"/>
