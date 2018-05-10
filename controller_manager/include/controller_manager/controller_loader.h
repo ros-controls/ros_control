@@ -58,7 +58,7 @@ public:
 
   controller_interface::ControllerBaseSharedPtr createInstance(const std::string& lookup_name)
   {
-    return controller_loader_->createSharedInstance(lookup_name);
+    return controller_loader_->createUniqueInstance(lookup_name);
   }
 
   std::vector<std::string> getDeclaredClasses()

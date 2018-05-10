@@ -136,7 +136,7 @@ bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info
   TransmissionSharedPtr transmission;
   try
   {
-    TransmissionLoaderSharedPtr transmission_loader = transmission_class_loader_->createSharedInstance(transmission_info.type_);
+    TransmissionLoaderSharedPtr transmission_loader = transmission_class_loader_->createUniqueInstance(transmission_info.type_);
     transmission = transmission_loader->load(transmission_info);
     if (!transmission) {return false;}
   }
@@ -171,7 +171,7 @@ bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info
     RequisiteProviderPtr req_provider;
     try
     {
-      req_provider = req_provider_loader_->createSharedInstance(hw_iface);
+      req_provider = req_provider_loader_->createUniqueInstance(hw_iface);
       if (!req_provider) {continue;}
     }
     catch(pluginlib::LibraryLoadException &ex)
