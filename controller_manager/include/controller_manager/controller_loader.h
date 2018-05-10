@@ -74,7 +74,7 @@ public:
 private:
   std::string package_;
   std::string base_class_;
-  std::shared_ptr<pluginlib::ClassLoader<T> > controller_loader_;
+  std::unique_ptr<pluginlib::ClassLoader<T> > controller_loader_;
 };
 
 }
