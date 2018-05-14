@@ -37,11 +37,6 @@
 #include <hardware_interface/robot_hw.h>
 #include <boost/shared_ptr.hpp>
 
-namespace hardware_interface
-{
-  class InterfaceResources;
-}
-
 namespace controller_interface
 {
 
