@@ -2,6 +2,11 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Introduce shared_ptr typedefs
+* Contributors: Bence Magyar
+
 0.9.6 (2018-04-16)
 ------------------
 * Fix controller_manager_interface and add unit tests.
