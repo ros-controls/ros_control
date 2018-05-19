@@ -6,6 +6,7 @@ find_package(urdfdom REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   hardware_interface
+  urdf
 )
 
 include_directories(
@@ -19,6 +20,7 @@ catkin_package(
   CATKIN_DEPENDS
     roscpp
     hardware_interface
+    urdf
   INCLUDE_DIRS
     include
     ${catkin_INCLUDE_DIRS}
