@@ -2,8 +2,8 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.7 (2018-05-19)
+------------------
 * Add urdf dependency, use urdf_compatibility & update urdf include
 * Replace boost::shared_ptr<urdf::XY> with urdf::XYConstSharedPtr
 * Contributors: Bence Magyar

@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.7 (2018-05-19)
+------------------
 * Introduce shared_ptr typedefs
 * Contributors: Bence Magyar
 
