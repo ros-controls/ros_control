@@ -46,7 +46,7 @@ struct TransmissionPluginLoader
 
     try
     {
-      return class_loader_.createInstance(type);
+      return class_loader_.createUniqueInstance(type);
     }
     catch(...) {return TransmissionLoaderSharedPtr();}
   }
