@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.15.0 (2018-05-28)
+-------------------
 * boost::shared_ptr -> std::shared_ptr
 * Introduce shared_ptr typedefs
 * Add controller_group script that allows switching groups easily

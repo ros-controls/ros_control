@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.15.0 (2018-05-28)
+-------------------
 * Add controller_group script that allows switching groups easily
 * Contributors: Enrique Fernández Perdomo, Yong Li
 

@@ -1,6 +1,6 @@
 <package format="2">
   <name>controller_interface</name>
-  <version>0.14.2</version>
+  <version>0.15.0</version>
   <description>Interface base class for controllers</description>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
