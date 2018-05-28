@@ -2,6 +2,12 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* boost::shared_ptr -> std::shared_ptr
+* Introduce shared_ptr typedefs
+* Contributors: Bence Magyar
+
 0.14.2 (2018-04-26)
 -------------------
 * Update maintainers
