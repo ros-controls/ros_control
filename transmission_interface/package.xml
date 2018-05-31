@@ -19,12 +19,12 @@
   <build_depend>hardware_interface</build_depend>
   <build_depend>tinyxml</build_depend>
   <build_depend>cmake_modules</build_depend>
-  <build_depend>pluginlib</build_depend>
+  <build_depend version_gte="1.10.7">pluginlib</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>resource_retriever</build_depend> <!-- Test-only-->
 
   <run_depend>tinyxml</run_depend>
-  <run_depend>pluginlib</run_depend>
+  <run_depend version_gte="1.10.7">pluginlib</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>resource_retriever</run_depend> <!-- Test-only-->
 
