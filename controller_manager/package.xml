@@ -18,13 +18,13 @@
   <build_depend>controller_interface</build_depend> 
   <build_depend>controller_manager_msgs</build_depend> 
   <build_depend>hardware_interface</build_depend>
-  <build_depend>pluginlib</build_depend>
+  <build_depend version_gte="1.10.7">pluginlib</build_depend>
   <build_depend>realtime_tools</build_depend>
   <build_depend>rostest</build_depend>            <!--Tests-only!-->
   <run_depend>controller_interface</run_depend>
   <run_depend>controller_manager_msgs</run_depend> 
   <run_depend>hardware_interface</run_depend> 
-  <run_depend>pluginlib</run_depend> 
+  <run_depend version_gte="1.10.7">pluginlib</run_depend> 
   <run_depend>realtime_tools</run_depend>
   <run_depend>rostest</run_depend>                <!--Tests-only!-->
   <export>
