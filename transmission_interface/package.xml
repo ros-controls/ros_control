@@ -19,7 +19,7 @@
 
   <depend>tinyxml</depend>
   <depend>roscpp</depend>
-  <depend>pluginlib</depend>
+  <depend version_gte="1.11.2">pluginlib</depend>
   <build_depend>hardware_interface</build_depend>
   <build_depend>cmake_modules</build_depend>
 
