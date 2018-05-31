@@ -20,6 +20,6 @@
   <depend>controller_interface</depend>
   <depend>controller_manager_msgs</depend>
   <depend>hardware_interface</depend>
-  <depend>pluginlib</depend>
+  <depend version_gte="1.11.2">pluginlib</depend>
   <test_depend>rostest</test_depend>
 </package>
