@@ -207,7 +207,7 @@ bool ControllerManager::loadController(const std::string& name)
     }
     catch (const std::runtime_error &ex)
     {
-      ROS_ERROR("Could not load class %s: %s", type.c_str(), ex.what());
+      ROS_ERROR("Could not load class '%s': %s", type.c_str(), ex.what());
     }
   }
   else
@@ -234,11 +234,11 @@ bool ControllerManager::loadController(const std::string& name)
     initialized = c->initRequest(robot_hw_, root_nh_, c_nh, claimed_resources);
   }
   catch(std::exception &e){
-    ROS_ERROR("Exception thrown while initializing controller %s.\n%s", name.c_str(), e.what());
+    ROS_ERROR("Exception thrown while initializing controller '%s'.\n%s", name.c_str(), e.what());
     initialized = false;
   }
   catch(...){
-    ROS_ERROR("Exception thrown while initializing controller %s", name.c_str());
+    ROS_ERROR("Exception thrown while initializing controller '%s'", name.c_str());
     initialized = false;
   }
   if (!initialized)
@@ -299,7 +299,7 @@ bool ControllerManager::unloadController(const std::string &name)
     if (from[i].info.name == name){
       if (from[i].c->isRunning()){
         to.clear();
-        ROS_ERROR("Could not unload controller with name %s because it is still running",
+        ROS_ERROR("Could not unload controller with name '%s' because it is still running",
                   name.c_str());
         return false;
       }
@@ -313,7 +313,7 @@ bool ControllerManager::unloadController(const std::string &name)
   if (!removed)
   {
     to.clear();
-    ROS_ERROR("Could not unload controller with name %s because no controller with this name exists",
+    ROS_ERROR("Could not unload controller with name '%s' because no controller with this name exists",
               name.c_str());
     return false;
   }
@@ -353,9 +353,9 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
 
   ROS_DEBUG("switching controllers:");
   for (unsigned int i=0; i<start_controllers.size(); i++)
-    ROS_DEBUG(" - starting controller %s", start_controllers[i].c_str());
+    ROS_DEBUG(" - starting controller '%s'", start_controllers[i].c_str());
   for (unsigned int i=0; i<stop_controllers.size(); i++)
-    ROS_DEBUG(" - stopping controller %s", stop_controllers[i].c_str());
+    ROS_DEBUG(" - stopping controller '%s'", stop_controllers[i].c_str());
 
   // lock controllers
   boost::recursive_mutex::scoped_lock guard(controllers_lock_);
@@ -367,18 +367,18 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     ct = getControllerByName(stop_controllers[i]);
     if (ct == NULL){
       if (strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
-        ROS_ERROR("Could not stop controller with name %s because no controller with this name exists",
+        ROS_ERROR("Could not stop controller with name '%s' because no controller with this name exists",
                   stop_controllers[i].c_str());
         stop_request_.clear();
         return false;
       }
       else{
-        ROS_DEBUG("Could not stop controller with name %s because no controller with this name exists",
+        ROS_DEBUG("Could not stop controller with name '%s' because no controller with this name exists",
                   stop_controllers[i].c_str());
       }
     }
     else{
-      ROS_DEBUG("Found controller %s that needs to be stopped in list of controllers",
+      ROS_DEBUG("Found controller '%s' that needs to be stopped in list of controllers",
                 stop_controllers[i].c_str());
       stop_request_.push_back(ct);
     }
@@ -391,19 +391,19 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     ct = getControllerByName(start_controllers[i]);
     if (ct == NULL){
       if (strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
-        ROS_ERROR("Could not start controller with name %s because no controller with this name exists",
+        ROS_ERROR("Could not start controller with name '%s' because no controller with this name exists",
                   start_controllers[i].c_str());
         stop_request_.clear();
         start_request_.clear();
         return false;
       }
       else{
-        ROS_DEBUG("Could not start controller with name %s because no controller with this name exists",
+        ROS_DEBUG("Could not start controller with name '%s' because no controller with this name exists",
                   start_controllers[i].c_str());
       }
     }
     else{
-      ROS_DEBUG("Found controller %s that needs to be started in list of controllers",
+      ROS_DEBUG("Found controller '%s' that needs to be started in list of controllers",
                 start_controllers[i].c_str());
       start_request_.push_back(ct);
     }
@@ -548,7 +548,7 @@ bool ControllerManager::reloadControllerLibrariesSrv(
     }
     for (unsigned int i=0; i<controllers.size(); i++){
       if (!unloadController(controllers[i])){
-        ROS_ERROR("Controller manager: Cannot reload controller libraries because failed to unload controller %s",
+        ROS_ERROR("Controller manager: Cannot reload controller libraries because failed to unload controller '%s'",
                   controllers[i].c_str());
         resp.ok = false;
         return true;
@@ -562,7 +562,7 @@ bool ControllerManager::reloadControllerLibrariesSrv(
   for(std::list<ControllerLoaderInterfaceSharedPtr>::iterator it = controller_loaders_.begin(); it != controller_loaders_.end(); ++it)
   {
     (*it)->reload();
-    ROS_INFO("Controller manager: reloaded controller libraries for %s", (*it)->getName().c_str());
+    ROS_INFO("Controller manager: reloaded controller libraries for '%s'", (*it)->getName().c_str());
   }
 
   resp.ok = true;
@@ -650,13 +650,13 @@ bool ControllerManager::loadControllerSrv(
   controller_manager_msgs::LoadController::Response &resp)
 {
   // lock services
-  ROS_DEBUG("loading service called for controller %s ",req.name.c_str());
+  ROS_DEBUG("loading service called for controller '%s' ",req.name.c_str());
   boost::mutex::scoped_lock guard(services_lock_);
   ROS_DEBUG("loading service locked");
 
   resp.ok = loadController(req.name);
 
-  ROS_DEBUG("loading service finished for controller %s ",req.name.c_str());
+  ROS_DEBUG("loading service finished for controller '%s' ",req.name.c_str());
   return true;
 }
 
@@ -666,13 +666,13 @@ bool ControllerManager::unloadControllerSrv(
   controller_manager_msgs::UnloadController::Response &resp)
 {
   // lock services
-  ROS_DEBUG("unloading service called for controller %s ",req.name.c_str());
+  ROS_DEBUG("unloading service called for controller '%s' ",req.name.c_str());
   boost::mutex::scoped_lock guard(services_lock_);
   ROS_DEBUG("unloading service locked");
 
   resp.ok = unloadController(req.name);
 
-  ROS_DEBUG("unloading service finished for controller %s ",req.name.c_str());
+  ROS_DEBUG("unloading service finished for controller '%s' ",req.name.c_str());
   return true;
 }
 
