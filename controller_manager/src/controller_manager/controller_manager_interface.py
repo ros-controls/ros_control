@@ -2,12 +2,14 @@
 import rospy
 from controller_manager_msgs.srv import *
 
+
 def list_controller_types():
     rospy.wait_for_service('controller_manager/list_controller_types')
     s = rospy.ServiceProxy('controller_manager/list_controller_types', ListControllerTypes)
     resp = s.call(ListControllerTypesRequest())
     for t in resp.types:
         rospy.loginfo(t)
+
 
 def reload_libraries(force_kill, restore = False):
     rospy.wait_for_service('controller_manager/reload_controller_libraries')
