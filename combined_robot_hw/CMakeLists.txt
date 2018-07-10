@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(combined_robot_hw)
 
+set(CMAKE_CXX_STANDARD 11)
+
 find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   pluginlib

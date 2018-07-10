@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(controller_manager)
 
+set(CMAKE_CXX_STANDARD 11)
+
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS controller_interface controller_manager_msgs hardware_interface pluginlib)
 
