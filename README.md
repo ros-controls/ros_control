@@ -7,6 +7,13 @@ See [ros_control documentation](http://wiki.ros.org/ros_control) on ros.org
 
 [![Build Status](https://travis-ci.org/ros-controls/ros_control.png?branch=melodic-devel)](https://travis-ci.org/ros-controls/ros_control)
 
+### Branches for source-based installation
+
+| ROS Indigo  | ROS Kinetic | ROS Lunar | ROS Melodic |
+| ------------- | ------------- | ------------- | ------------- |
+| indigo-devel  | kinetic-devel  | kinetic-devel | melodic-devel |
+
+
 ## Publication
 
 If you find this work useful please give credits to the authors by citing:
