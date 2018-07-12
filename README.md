@@ -5,7 +5,11 @@ See [ros_control documentation](http://wiki.ros.org/ros_control) on ros.org
 
 ### Build Status
 
-[![Build Status](https://travis-ci.org/ros-controls/ros_control.png?branch=melodic-devel)](https://travis-ci.org/ros-controls/ros_control)
+Indigo | Kinetic | Lunar | Melodic
+------ | ------ | ------ | ------
+[![Build Status](https://travis-ci.org/ros-controls/ros_control.png?branch=indigo-devel)](https://travis-ci.org/ros-controls/ros_control) | [![Build Status](https://travis-ci.org/ros-controls/ros_control.png?branch=kinetic-devel)](https://travis-ci.org/ros-controls/ros_control) | [![Build Status](https://travis-ci.org/ros-controls/ros_control.png?branch=kinetic-devel)](https://travis-ci.org/ros-controls/ros_control) | [![Build Status](https://travis-ci.org/ros-controls/ros_control.png?branch=melodic-devel)](https://travis-ci.org/ros-controls/ros_control)
+
+
 
 ### Branches for source-based installation
 
