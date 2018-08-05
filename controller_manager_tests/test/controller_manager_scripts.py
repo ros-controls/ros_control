@@ -4,17 +4,17 @@ import rospy
 import subprocess
 
 # output of controller_manager list, will by combined dynamically
-myc1_running='my_controller1 - hardware_interface::EffortJointInterface ( running )\n'
-myc1_stopped='my_controller1 - hardware_interface::EffortJointInterface ( stopped )\n'
-myc2_running='my_controller2 - hardware_interface::EffortJointInterface ( running )\n'
-myc2_stopped='my_controller2 - hardware_interface::EffortJointInterface ( stopped )\n'
+myc1_running='\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( running )\n'
+myc1_stopped='\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( stopped )\n'
+myc2_running='\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( running )\n'
+myc2_stopped='\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( stopped )\n'
 
 
 # output of other commands
-loaded_fmt = 'Loaded %s\n'
-unloaded_fmt = 'Unloaded %s successfully\n'
-stopped_fmt = "Stopped ['%s'] successfully\n"
-started_fmt = "Started ['%s'] successfully\n"
+loaded_fmt = 'Loaded \'%s\'\n'
+unloaded_fmt = 'Unloaded \'%s\' successfully\n'
+stopped_fmt = "Stopped [\'%s\'] successfully\n"
+started_fmt = "Started [\'%s\'] successfully\n"
 
 no_controllers = 'No controllers are loaded in mechanism control\n'
 reload_response = 'Restore: False\nSuccessfully reloaded libraries\n'
@@ -124,15 +124,15 @@ class TestUtils(unittest.TestCase):
         # spawn
         self.assertEqual(
             run_cg('spawn group1'),
-            'Loaded my_controller1\n'
-            'Loaded my_controller3\n'
+            'Loaded \'my_controller1\'\n'
+            'Loaded \'my_controller3\'\n'
             'Started [\'my_controller1\'] successfully\n'
             'Started [\'my_controller3\'] successfully\n')
 
         # switch
         self.assertEqual(
             run_cg('switch group2'),
-            'Loaded my_controller2\n'
+            'Loaded \'my_controller2\'\n'
             'Started [\'my_controller2\'] successfully\n'
             'Stopped [\'my_controller1\'] successfully\n')
 
