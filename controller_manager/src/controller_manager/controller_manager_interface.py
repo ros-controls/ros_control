@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+from __future__ import print_function
 import rospy
 from controller_manager_msgs.srv import *
 
