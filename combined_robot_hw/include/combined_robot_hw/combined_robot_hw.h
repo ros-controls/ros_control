@@ -100,6 +100,11 @@ public:
    */
   virtual void write(const ros::Time& time, const ros::Duration& period);
 
+  /**
+   * Checks whether the robot HW components have errors
+   */
+  virtual bool hasError();
+
 protected:
   ros::NodeHandle root_nh_;
   ros::NodeHandle robot_hw_nh_;
