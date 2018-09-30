@@ -2,6 +2,16 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Updated for compatibility with Python2 or Python3
+* Initialize controller_manager node using init_node.
+* back to Python3 prints, add '-s to remaining places
+* pep8 styling
+* added quotes in python code too, also changed python prints to rosconsole
+* added quotes for controller name and controller type in warnings and errors
+* Contributors: Daniel Ingram, Jasper Güldenstein, Stefan Profanter, Gennaro Raiola, Bence Magyar
+
 0.15.0 (2018-05-28)
 -------------------
 * boost::shared_ptr -> std::shared_ptr
