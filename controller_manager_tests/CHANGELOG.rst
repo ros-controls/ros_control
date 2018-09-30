@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.15.1 (2018-09-30)
+-------------------
 * Added quotes for controller name and controller type in warnings and errors
 * Update expected text in tests to have '' around controller names
 * Contributors: Bence Magyar, Gennaro Raiola

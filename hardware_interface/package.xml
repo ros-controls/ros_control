@@ -1,6 +1,6 @@
 <package format="2">
   <name>hardware_interface</name>
-  <version>0.15.0</version>
+  <version>0.15.1</version>
   <description>Hardware Interface base class.</description>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>

@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.15.1 (2018-09-30)
+-------------------
 * Updated for compatibility with Python2 or Python3
 * Initialize controller_manager node using init_node.
 * back to Python3 prints, add '-s to remaining places
