@@ -12,7 +12,7 @@ def list_controller_types():
         print(t)
 
 
-def reload_libraries(force_kill, restore = False):
+def reload_libraries(force_kill, restore=False):
     rospy.wait_for_service('controller_manager/reload_controller_libraries')
     s = rospy.ServiceProxy('controller_manager/reload_controller_libraries', ReloadControllerLibraries)
 
