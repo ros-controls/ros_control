@@ -25,6 +25,7 @@ add_library(${PROJECT_NAME}
   src/my_robot_hw_2.cpp
   src/my_robot_hw_3.cpp
   src/my_robot_hw_4.cpp
+  src/my_robot_hw_5.cpp
 )
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
