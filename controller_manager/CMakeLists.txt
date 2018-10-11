@@ -17,7 +17,6 @@ catkin_package(
 )
 
 if(MSVC)
-  add_definitions(-DNO_STRICT)
   add_compile_options(/Zc:__cplusplus)
 endif()
 
