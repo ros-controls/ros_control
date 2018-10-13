@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(combined_robot_hw)
 
-if(MSVC)
-  add_compile_options(/Zc:__cplusplus)
-endif()
-
 find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   pluginlib
