@@ -16,10 +16,6 @@ catkin_package(
   LIBRARIES ${PROJECT_NAME}
 )
 
-if(MSVC)
-  add_compile_options(/Zc:__cplusplus)
-endif()
-
 add_library(${PROJECT_NAME}
   src/controller_manager.cpp
   include/controller_manager/controller_manager.h
