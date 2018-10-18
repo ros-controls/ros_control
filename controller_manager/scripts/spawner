@@ -41,6 +41,7 @@ import yaml
 from controller_manager_msgs.srv import *
 from std_msgs.msg import *
 import argparse
+import controller_manager.controller_manager_interface
 
 loaded = []
 
@@ -49,27 +50,37 @@ load_controller_service = ""
 switch_controller_service = ""
 unload_controller_service = ""
 
+counter = 0
+
 def shutdown():
     global loaded,unload_controller_service,load_controller_service,switch_controller_service
 
     rospy.loginfo("Shutting down spawner. Stopping and unloading controllers...")
 
     try:
-        # unloader
-        unload_controller = rospy.ServiceProxy(unload_controller_service, UnloadController)
+        # get list of running controllers
+        _running_controllers = []
+        _loaded_controllers = controller_manager.controller_manager_interface.list_controllers()
+        for c in _loaded_controllers:
+            if c.state == "running":
+                _running_controllers.append(c.name)
 
-        # switcher
+        # create unloader and switcher
+        unload_controller = rospy.ServiceProxy(unload_controller_service, UnloadController)
         switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
 
         rospy.loginfo("Stopping all controllers...");
-        switch_controller([], loaded, SwitchControllerRequest.STRICT)
+        switch_controller([], _running_controllers, SwitchControllerRequest.STRICT)
         rospy.loginfo("Unloading all loaded controllers...");
-        for name in reversed(loaded):
+        for name in reversed(_running_controllers):
             rospy.logout("Trying to unload %s" % name)
             unload_controller(name)
             rospy.logout("Succeeded in unloading %s" % name)
     except (rospy.ServiceException, rospy.exceptions.ROSException) as exc:
         rospy.logwarn("Controller Spawner error while taking down controllers: %s"  % (exc))
+        counter += 1
+        if counter < 3:
+            shutdown()
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser(description='Controller spawner')
@@ -190,9 +201,6 @@ def main():
             rospy.logerr("Failed to load %s" % name)
 
     rospy.loginfo("Controller Spawner: Loaded controllers: %s" % ', '.join(loaded))
-
-    if rospy.is_shutdown():
-        return
 
     # start controllers is requested
     if autostart:
