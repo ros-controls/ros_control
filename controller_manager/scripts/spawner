@@ -50,8 +50,6 @@ load_controller_service = ""
 switch_controller_service = ""
 unload_controller_service = ""
 
-counter = 0
-
 def shutdown():
     global loaded,unload_controller_service,load_controller_service,switch_controller_service
 
@@ -78,9 +76,6 @@ def shutdown():
             rospy.logout("Succeeded in unloading %s" % name)
     except (rospy.ServiceException, rospy.exceptions.ROSException) as exc:
         rospy.logwarn("Controller Spawner error while taking down controllers: %s"  % (exc))
-        counter += 1
-        if counter < 3:
-            shutdown()
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser(description='Controller spawner')
