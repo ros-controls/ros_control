@@ -64,7 +64,7 @@ def shutdown():
                 _running_controllers.append(c.name)
 
         # determine if the loaded controllers are still running
-        _running_loaded_controllers = list(set(_running_controllers) & set(loaded))
+        _running_loaded_controllers = [value for value in _running_controllers if value in loaded] 
 
         # create unloader and switcher
         unload_controller = rospy.ServiceProxy(unload_controller_service, UnloadController)
