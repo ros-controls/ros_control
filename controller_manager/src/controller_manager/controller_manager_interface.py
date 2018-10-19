@@ -1,6 +1,8 @@
 #! /usr/bin/env python
+from __future__ import print_function
 import rospy
 from controller_manager_msgs.srv import *
+
 
 def list_controller_types():
     rospy.wait_for_service('controller_manager/list_controller_types')
@@ -9,7 +11,8 @@ def list_controller_types():
     for t in resp.types:
         print(t)
 
-def reload_libraries(force_kill, restore = False):
+
+def reload_libraries(force_kill, restore=False):
     rospy.wait_for_service('controller_manager/reload_controller_libraries')
     s = rospy.ServiceProxy('controller_manager/reload_controller_libraries', ReloadControllerLibraries)
 
@@ -41,7 +44,6 @@ def reload_libraries(force_kill, restore = False):
 
 
 def list_controllers():
-    controller_list = []
     rospy.wait_for_service('controller_manager/list_controllers')
     s = rospy.ServiceProxy('controller_manager/list_controllers', ListControllers)
     resp = s.call(ListControllersRequest())
@@ -49,10 +51,8 @@ def list_controllers():
         print("No controllers are loaded in mechanism control")
     else:
         for c in resp.controller:
-            hwi = list(set(r.hardware_interface for r in  c.claimed_resources))
-            print('%s - %s ( %s )'%(c.name, '+'.join(hwi), c.state))
-            controller_list.append(c)
-        return controller_list
+            hwi = list(set(r.hardware_interface for r in c.claimed_resources))
+            print('%s - %s ( %s )' % (c.name, '+'.join(hwi), c.state))
 
 
 def load_controller(name):
@@ -66,6 +66,7 @@ def load_controller(name):
         print("Error when loading", name)
         return False
 
+
 def unload_controller(name):
     rospy.wait_for_service('controller_manager/unload_controller')
     s = rospy.ServiceProxy('controller_manager/unload_controller', UnloadController)
@@ -77,17 +78,22 @@ def unload_controller(name):
         print("Error when unloading", name)
         return False
 
+
 def start_controller(name):
     return start_stop_controllers([name], True)
+
 
 def start_controllers(names):
     return start_stop_controllers(names, True)
 
+
 def stop_controller(name):
     return start_stop_controllers([name], False)
 
+
 def stop_controllers(names):
     return start_stop_controllers(names, False)
+
 
 def start_stop_controllers(names, st):
     rospy.wait_for_service('controller_manager/switch_controller')
