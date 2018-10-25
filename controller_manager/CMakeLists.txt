@@ -6,7 +6,8 @@ find_package(catkin REQUIRED COMPONENTS controller_interface controller_manager_
 
 find_package(Boost REQUIRED COMPONENTS thread)
 
-include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+include_directories(include)
+include_directories(SYSTEM ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
 # Declare catkin package
 catkin_package(
