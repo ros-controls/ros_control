@@ -100,6 +100,16 @@ public:
    */
   virtual void write(const ros::Time& time, const ros::Duration& period);
 
+  /**
+   * Stops the robot HW
+   */
+  virtual void stop();
+
+  /**
+   * Recovers/Reinitializes the robot HW
+   */
+  virtual void recover();
+
 protected:
   ros::NodeHandle root_nh_;
   ros::NodeHandle robot_hw_nh_;

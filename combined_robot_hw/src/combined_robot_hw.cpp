@@ -205,6 +205,24 @@ namespace combined_robot_hw
     }
   }
 
+  void CombinedRobotHW::stop()
+  {
+    std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
+    for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
+    {
+      (*robot_hw)->stop();
+    }
+  }
+
+  void CombinedRobotHW::recover()
+  {
+    std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
+    for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
+    {
+      (*robot_hw)->recover();
+    }
+  }
+
   void CombinedRobotHW::filterControllerList(const std::list<hardware_interface::ControllerInfo>& list,
                                              std::list<hardware_interface::ControllerInfo>& filtered_list,
                                              hardware_interface::RobotHWSharedPtr robot_hw)
