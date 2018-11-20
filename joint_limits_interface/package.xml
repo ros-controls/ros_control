@@ -1,10 +1,10 @@
 <package format="2">
   <name>joint_limits_interface</name>
-  <version>0.12.0</version>
+  <version>0.13.3</version>
   <description>Interface for enforcing joint limits.</description>
-  <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
+  <maintainer email="mathias.luedtke@ipa.fraunhofer.de">Mathias Lüdtke</maintainer>
   <license>BSD</license>
 
   <url type="website">https://github.com/ros-controls/ros_control/wiki</url>
@@ -19,5 +19,6 @@
   <depend>urdf</depend>
   <depend>liburdfdom-dev</depend>
 
+  <test_depend>rosunit</test_depend>
   <test_depend>rostest</test_depend>
 </package>

@@ -1,0 +1,16 @@
+<launch>
+  <rosparam>
+    my_controller1:
+      type: controller_manager_tests/EffortTestController
+    my_controller2:
+      type: controller_manager_tests/EffortTestController
+    my_controller3:
+      type: controller_manager_tests/EffortTestController
+      joints:
+      - hiDOF_joint3
+  </rosparam>
+
+  <node pkg="controller_manager_tests" type="dummy_app" name="dummy_app"/>
+  <test test-name="controller_manager_scripts_test" pkg="controller_manager_tests" type="controller_manager_scripts.py"/>
+  <test test-name="controller_manager_interface_test" pkg="controller_manager_tests" type="controller_manager_interface_test.py"/>
+</launch>

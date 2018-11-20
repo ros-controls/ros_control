@@ -1,14 +1,13 @@
 <package format="2">
   <name>transmission_interface</name>
-  <version>0.12.0</version>
+  <version>0.13.3</version>
   <description>Transmission Interface.</description>
 
-  <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodriguez Tsouroukdissian</maintainer>
-  <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
+  <maintainer email="mathias.luedtke@ipa.fraunhofer.de">Mathias Lüdtke</maintainer>
 
-  <license>Modified BSD</license>
+  <license>BSD</license>
 
   <url type="website">https://github.com/ros-controls/ros_control/wiki</url>
   <url type="bugtracker">https://github.com/ros-controls/ros_control/issues</url>
@@ -20,10 +19,11 @@
 
   <depend>tinyxml</depend>
   <depend>roscpp</depend>
-  <depend>pluginlib</depend>
+  <depend version_gte="1.11.2">pluginlib</depend>
   <build_depend>hardware_interface</build_depend>
   <build_depend>cmake_modules</build_depend>
 
+  <test_depend>rosunit</test_depend>
   <test_depend>resource_retriever</test_depend>
 
   <export>

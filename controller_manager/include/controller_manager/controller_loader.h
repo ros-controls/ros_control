@@ -28,7 +28,7 @@
 #ifndef CONRTOLLER_MANAGER_CONTROLLER_LOADER_H
 #define CONRTOLLER_MANAGER_CONTROLLER_LOADER_H
 
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 #include <controller_manager/controller_loader_interface.h>
 #include <boost/shared_ptr.hpp>
 
@@ -56,7 +56,7 @@ public:
     reload();
   }
 
-  boost::shared_ptr<controller_interface::ControllerBase> createInstance(const std::string& lookup_name)
+  controller_interface::ControllerBaseSharedPtr createInstance(const std::string& lookup_name)
   {
     return controller_loader_->createInstance(lookup_name);
   }

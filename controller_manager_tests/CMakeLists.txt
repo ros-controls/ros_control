@@ -21,20 +21,21 @@ add_library(${PROJECT_NAME}
   src/pos_eff_controller.cpp
   src/pos_eff_opt_controller.cpp
   src/vel_eff_controller.cpp
-  )
+)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 add_executable(dummy_app src/dummy_app.cpp)
 target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
 if(CATKIN_ENABLE_TESTING)
-  find_package(rostest)
+  find_package(rostest REQUIRED)
   add_executable(cm_test test/cm_test.cpp)
   add_dependencies(tests cm_test)
   target_link_libraries(cm_test ${GTEST_LIBRARIES} ${catkin_LIBRARIES})
   add_rostest(test/cm_test.test)
   catkin_add_nosetests(test)
   add_rostest(test/cm_msgs_utils_rostest.test)
+  add_rostest(test/controller_manager_scripts.test)
 endif()
 
 # Install
@@ -48,4 +49,3 @@ install(TARGETS ${PROJECT_NAME} dummy_app
 
 install(FILES test_controllers_plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-

@@ -43,7 +43,7 @@ class SimpleTransmissionLoader : public TransmissionLoader
 {
 public:
 
-  TransmissionPtr load(const TransmissionInfo& transmission_info);
+  TransmissionSharedPtr load(const TransmissionInfo& transmission_info);
 };
 
 } // namespace

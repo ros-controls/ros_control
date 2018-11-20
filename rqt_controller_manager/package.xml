@@ -1,13 +1,12 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>rqt_controller_manager</name>
-  <version>0.12.0</version>
+  <version>0.13.3</version>
   <description>The rqt_controller_manager package</description>
 
-  <maintainer email="kphawkins@gatech.edu">Kelsey Hawkins</maintainer>
-  <maintainer email="adolfo.rodriguez@pal-robotics.com">Adolfo Rodríguez Tsouroukdissian</maintainer>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
+  <maintainer email="mathias.luedtke@ipa.fraunhofer.de">Mathias Lüdtke</maintainer>
 
   <license>BSD</license>
 
@@ -20,8 +19,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>controller_manager</depend>
-  <depend>rqt_gui</depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>rqt_gui</exec_depend>
 
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml" />

@@ -3,8 +3,6 @@ project(hardware_interface)
 
 find_package(catkin REQUIRED COMPONENTS roscpp)
 
-include_directories(include)
-
 # Declare catkin package
 catkin_package(
   CATKIN_DEPENDS roscpp
@@ -13,8 +11,8 @@ catkin_package(
 
 if(CATKIN_ENABLE_TESTING)
 
-  find_package(catkin REQUIRED COMPONENTS rosconsole) 
-  include_directories(${catkin_INCLUDE_DIRS})
+  find_package(rostest REQUIRED)
+  include_directories(${catkin_INCLUDE_DIRS} include)
 
   catkin_add_gtest(hardware_resource_manager_test  test/hardware_resource_manager_test.cpp)
   target_link_libraries(hardware_resource_manager_test ${catkin_LIBRARIES})
@@ -42,13 +40,13 @@ if(CATKIN_ENABLE_TESTING)
 
   catkin_add_gtest(interface_manager_test          test/interface_manager_test.cpp)
   target_link_libraries(interface_manager_test ${catkin_LIBRARIES})
-    
-    catkin_add_gtest(posvel_command_interface_test test/posvel_command_interface_test.cpp)
-    target_link_libraries(posvel_command_interface_test ${catkin_LIBRARIES})
-    
-    catkin_add_gtest(posvelacc_command_interface_test test/posvelacc_command_interface_test.cpp)
-    target_link_libraries(posvelacc_command_interface_test ${catkin_LIBRARIES})
-    
+
+  catkin_add_gtest(posvel_command_interface_test test/posvel_command_interface_test.cpp)
+  target_link_libraries(posvel_command_interface_test ${catkin_LIBRARIES})
+
+  catkin_add_gtest(posvelacc_command_interface_test test/posvelacc_command_interface_test.cpp)
+  target_link_libraries(posvelacc_command_interface_test ${catkin_LIBRARIES})
+
 endif()
 
 # Install

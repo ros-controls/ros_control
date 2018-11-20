@@ -30,7 +30,7 @@
 #include <string>
 #include <boost/foreach.hpp>
 #include <gtest/gtest.h>
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 #include <transmission_interface/four_bar_linkage_transmission.h>
 #include <transmission_interface/transmission_loader.h>
 #include "read_file.h"
@@ -46,10 +46,10 @@ TEST(FourBarLinkageTransmissionLoaderTest, FullSpec)
 
   // Transmission loader
   TransmissionPluginLoader loader;
-  boost::shared_ptr<TransmissionLoader> transmission_loader = loader.create(infos.front().type_);
+  TransmissionLoaderSharedPtr transmission_loader = loader.create(infos.front().type_);
   ASSERT_TRUE(0 != transmission_loader);
 
-  TransmissionPtr transmission;
+  TransmissionSharedPtr transmission;
   const TransmissionInfo& info = infos.front();
   transmission = transmission_loader->load(info);
   ASSERT_TRUE(0 != transmission);
@@ -80,10 +80,10 @@ TEST(FourBarLinkageTransmissionLoaderTest, MinimalSpec)
 
   // Transmission loader
   TransmissionPluginLoader loader;
-  boost::shared_ptr<TransmissionLoader> transmission_loader = loader.create(infos.front().type_);
+  TransmissionLoaderSharedPtr transmission_loader = loader.create(infos.front().type_);
   ASSERT_TRUE(0 != transmission_loader);
 
-  TransmissionPtr transmission;
+  TransmissionSharedPtr transmission;
   const TransmissionInfo& info = infos.front();
   transmission = transmission_loader->load(info);
   ASSERT_TRUE(0 != transmission);
@@ -113,12 +113,12 @@ TEST(FourBarLinkageTransmissionLoaderTest, InvalidSpec)
 
   // Transmission loader
   TransmissionPluginLoader loader;
-  boost::shared_ptr<TransmissionLoader> transmission_loader = loader.create(infos.front().type_);
+  TransmissionLoaderSharedPtr transmission_loader = loader.create(infos.front().type_);
   ASSERT_TRUE(0 != transmission_loader);
 
   BOOST_FOREACH(const TransmissionInfo& info, infos)
   {
-    TransmissionPtr transmission;
+    TransmissionSharedPtr transmission;
     transmission = transmission_loader->load(info);
     ASSERT_TRUE(0 == transmission);
   }

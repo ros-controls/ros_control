@@ -2,6 +2,31 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.13.3 (2018-04-26)
+-------------------
+* Introduce shared_ptr typedefs
+* Update maintainers
+* Fix catkin_lint errors and warnings
+* Contributors: Bence Magyar
+
+0.13.2 (2018-04-16)
+-------------------
+
+0.13.1 (2018-03-26)
+-------------------
+
+0.13.0 (2017-12-23)
+-------------------
+* move CheckIsResourceManager into internal namespace
+* remove unused CheckIsResourceManager::value
+* do not require default constructors for HardwareInterface classes
+  ResourceManager-based interfaces still need a default constructor.
+* get rid of warnings for functions returning no values
+* test for HW interface without default constructor
+* fix constness in ImuSensorHandle
+* fix constness in ForceTorqueSensorHandle
+* Contributors: Mathias Lüdtke
+
 0.12.0 (2017-08-05)
 -------------------
 

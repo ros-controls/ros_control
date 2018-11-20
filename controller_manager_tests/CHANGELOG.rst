@@ -2,6 +2,29 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.13.3 (2018-04-26)
+-------------------
+* Update maintainers
+* Fix catkin_lint errors and warnings
+* Contributors: Bence Magyar
+
+0.13.2 (2018-04-16)
+-------------------
+* Fix controller_manager_interface and add unit tests.
+* migrate to new class list macros header
+* Contributors: Mathias Lüdtke, Yong Li
+
+0.13.1 (2018-03-26)
+-------------------
+* add tests for controller_manager scripts and nodes
+* return 0 in dummy_app main
+* Contributors: Mathias Lüdtke
+
+0.13.0 (2017-12-23)
+-------------------
+* Drop includes from CMake library build.
+* Contributors: Mike Purvis
+
 0.12.0 (2017-08-05)
 -------------------
 

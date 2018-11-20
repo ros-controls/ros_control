@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # Provides quick access to the services exposed by controller_manager_msgs
 
+from __future__ import print_function
 import rospy, sys
 from controller_manager import controller_manager_interface
 
@@ -14,7 +15,7 @@ class Tracker:
         self.msg = msg
 
 def print_usage(exit_code = 0):
-    print '''Commands:
+    print('''Commands:
     load <name>          - Load the controller named <name>
     unload <name>        - Unload the controller named <name>
     start <name>         - Start the controller named <name>
@@ -23,13 +24,14 @@ def print_usage(exit_code = 0):
     kill <name>          - Stop and unload the controller named <name>
     list                 - List active controllers
     list-types           - List controller Types
-    reload-libraries     - Reloads all plugin controller libraries'''
+    reload-libraries     - Reloads all plugin controller libraries''')
 
     sys.exit(exit_code)
 
 
 if __name__ == '__main__':
     args = rospy.myargv()
+    rospy.init_node('controller_manager', anonymous=True)
     if len(args) < 2:
         print_usage()
     if args[1] == 'lt' or args[1] == 'list-types':
@@ -37,9 +39,7 @@ if __name__ == '__main__':
     elif args[1] == 'lc' or args[1] == 'list':
         controller_manager_interface.list_controllers()
     elif args[1] == 'reload-libraries':
-        print "ARGS", args, args[2:]
         if '--restore' in args[2:]:
-            print "RE1"
             controller_manager_interface.reload_libraries(True, restore = True)
         else:
             controller_manager_interface.reload_libraries(True)

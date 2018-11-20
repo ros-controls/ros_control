@@ -52,5 +52,6 @@ int main(int argc, char** argv)
     hw.write();
     period.sleep();
   }
+  return 0;
 }
 

@@ -2,6 +2,27 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.13.3 (2018-04-26)
+-------------------
+* Introduce shared_ptr typedefs
+* Update maintainers
+* Fix catkin_lint errors and warnings
+* fix license string
+* Update transmission parser to parse the joint role
+* Contributors: Bence Magyar, Patrick Holthaus, jlack1987
+
+0.13.2 (2018-04-16)
+-------------------
+* migrate to new class list macros header
+* migrate classloader headers
+* Contributors: Mathias Lüdtke
+
+0.13.1 (2018-03-26)
+-------------------
+
+0.13.0 (2017-12-23)
+-------------------
+
 0.12.0 (2017-08-05)
 -------------------
 * Add unit tests for new bidirectional joint interface providers

@@ -2,6 +2,38 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.13.3 (2018-04-26)
+-------------------
+* Introduce shared_ptr typedefs
+* Update maintainers
+* Fix catkin_lint errors and warnings
+* Remove unused imports, comment and executable flag
+* Remove realtime_tools dependency
+* Contributors: Bence Magyar
+
+0.13.2 (2018-04-16)
+-------------------
+* Fix controller_manager_interface and add unit tests.
+* migrate classloader headers
+* Contributors: Mathias Lüdtke, Yong Li
+
+0.13.1 (2018-03-26)
+-------------------
+* refactored controller_manager unspawner
+* fix controller_manager list: migrated to new ControllerState with claimed_resources
+* remove debug prints from controller_manager script
+* Contributors: Mathias Lüdtke
+
+0.13.0 (2017-12-23)
+-------------------
+* Several spawner-related fixes:
+* Remove shutdown_timeout & add deprecation note
+* Remove roslib import
+* Run wait_for_service on object instead of the hardcoded string version
+* Remove wait_for_service and rephrase warning after exception
+* Remove sleep(1) as it causes more problems than what it solves
+* Contributors: Bence Magyar
+
 0.12.0 (2017-08-05)
 -------------------
 
