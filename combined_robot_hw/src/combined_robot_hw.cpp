@@ -39,16 +39,15 @@ namespace combined_robot_hw
     root_nh_ = root_nh;
     robot_hw_nh_ = robot_hw_nh;
 
-    std::vector<std::string> robots;
     std::string param_name = "robot_hardware";
-    if (!robot_hw_nh.getParam(param_name, robots))
+    if (!robot_hw_nh.getParam(param_name, robot_hw_names))
     {
       ROS_ERROR_STREAM("Could not find '" << param_name << "' parameter (namespace: " << robot_hw_nh.getNamespace() << ").");
       return false;
     }
 
     std::vector<std::string>::iterator it;
-    for (it = robots.begin(); it != robots.end(); it++)
+    for (it = robot_hw_names.begin(); it != robot_hw_names.end(); it++)
     {
       if (!loadRobotHW(*it))
       {
@@ -205,22 +204,38 @@ namespace combined_robot_hw
     }
   }
 
-  void CombinedRobotHW::stop()
+  bool CombinedRobotHW::stop()
   {
+    bool stop_success = true;
+    int	i = 0;
     std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
     for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
     {
-      (*robot_hw)->stop();
+      if ((*robot_hw)->stop() == false)
+      {
+        ROS_ERROR("Stopping robot HW '%s' failed", robot_hw_names[i].c_str());
+        stop_success = false;
+      }
+      i++;
     }
+    return stop_success;
   }
 
-  void CombinedRobotHW::recover()
+  bool CombinedRobotHW::recover()
   {
+    int i = 0;
+    bool recover_success;
     std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
     for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
     {
-      (*robot_hw)->recover();
+      if ((*robot_hw)->recover() == false)
+      {
+        ROS_ERROR("Recovering/Reinitializing robot HW '%s' failed", robot_hw_names[i].c_str());
+        recover_success = false;
+      }
+      i++;
     }
+    return recover_success;
   }
 
   void CombinedRobotHW::filterControllerList(const std::list<hardware_interface::ControllerInfo>& list,

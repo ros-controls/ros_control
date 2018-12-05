@@ -103,18 +103,19 @@ public:
   /**
    * Stops the robot HW
    */
-  virtual void stop();
+  virtual bool stop();
 
   /**
    * Recovers/Reinitializes the robot HW
    */
-  virtual void recover();
+  virtual bool recover();
 
 protected:
   ros::NodeHandle root_nh_;
   ros::NodeHandle robot_hw_nh_;
   pluginlib::ClassLoader<hardware_interface::RobotHW> robot_hw_loader_;
   std::vector<hardware_interface::RobotHWSharedPtr> robot_hw_list_;
+  std::vector<std::string> robot_hw_names;
 
   virtual bool loadRobotHW(const std::string& name);
 
