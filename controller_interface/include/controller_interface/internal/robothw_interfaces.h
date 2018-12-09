@@ -56,7 +56,7 @@ inline std::string enumerateElements(const T&           val,
   const std::string sdp = suffix+delimiter+prefix;
   std::stringstream ss;
   ss << prefix;
-  std::copy(val.begin(), val.end(), std::ostream_iterator<class T::value_type>(ss, sdp.c_str()));
+  std::copy(val.begin(), val.end(), std::ostream_iterator<typename T::value_type>(ss, sdp.c_str()));
   ret = ss.str();
   if (!ret.empty()) {ret.erase(ret.size() - delimiter.size() - prefix.size());}
   return ret;
