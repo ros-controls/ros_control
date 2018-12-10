@@ -224,7 +224,7 @@ namespace combined_robot_hw
   bool CombinedRobotHW::recover()
   {
     int i = 0;
-    bool recover_success;
+    bool recover_success = true;
     std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
     for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
     {
