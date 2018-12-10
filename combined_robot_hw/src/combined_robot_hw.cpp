@@ -206,8 +206,8 @@ namespace combined_robot_hw
 
   bool CombinedRobotHW::stop()
   {
+    int i = 0;
     bool stop_success = true;
-    int	i = 0;
     std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
     for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
     {
