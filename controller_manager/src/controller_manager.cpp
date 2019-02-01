@@ -36,11 +36,8 @@
 #include <ros/console.h>
 #include <controller_manager/controller_loader.h>
 #include <controller_manager_msgs/ControllerState.h>
-
-#ifdef _WIN32
-  #include <chrono>
-  #include <thread>
-#endif
+#include <chrono>
+#include <thread>
 
 namespace controller_manager{
 
@@ -158,11 +155,7 @@ bool ControllerManager::loadController(const std::string& name)
     {
       return false;
     }
-#ifdef _WIN32
     std::this_thread::sleep_for(std::chrono::microseconds(200));
-#else
-    usleep(200);
-#endif
   }
   std::vector<ControllerSpec>
     &from = controllers_lists_[current_controllers_list_],
@@ -277,11 +270,7 @@ bool ControllerManager::loadController(const std::string& name)
     {
       return false;
     }
-#ifdef _WIN32
     std::this_thread::sleep_for(std::chrono::microseconds(200));
-#else
-    usleep(200);
-#endif
   }
   from.clear();
 
@@ -307,11 +296,7 @@ bool ControllerManager::unloadController(const std::string &name)
     {
       return false;
     }
-#ifdef _WIN32
     std::this_thread::sleep_for(std::chrono::microseconds(200));
-#else
-    usleep(200);
-#endif
   }
   std::vector<ControllerSpec>
     &from = controllers_lists_[current_controllers_list_],
@@ -354,11 +339,7 @@ bool ControllerManager::unloadController(const std::string &name)
     {
       return false;
     }
-#ifdef _WIN32
     std::this_thread::sleep_for(std::chrono::microseconds(200));
-#else
-    usleep(200);
-#endif
   }
   ROS_DEBUG("Destruct controller");
   from.clear();
@@ -542,11 +523,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     {
       return false;
     }
-#ifdef _WIN32
     std::this_thread::sleep_for(std::chrono::microseconds(100));
-#else
-    usleep(100);
-#endif
   }
   start_request_.clear();
   stop_request_.clear();
