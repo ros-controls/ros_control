@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(combined_robot_hw)
 
+if(MSVC)
+  add_compile_options(/Zc:__cplusplus)
+endif()
+
 find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   pluginlib
@@ -23,12 +27,12 @@ add_library(${PROJECT_NAME}
 )
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-
+set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
 # Install
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 
 install(TARGETS ${PROJECT_NAME}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+  DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
