@@ -16,6 +16,11 @@ catkin_package(
   LIBRARIES ${PROJECT_NAME}
 )
 
+if(MSVC)
+  add_definitions(-DNO_STRICT)
+  add_compile_options(/Zc:__cplusplus)
+endif()
+
 add_library(${PROJECT_NAME}
   src/controller_manager.cpp
   include/controller_manager/controller_manager.h
@@ -23,6 +28,7 @@ add_library(${PROJECT_NAME}
   include/controller_manager/controller_loader.h
 )
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
 if(catkin_EXPORTED_TARGETS)
   add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
@@ -44,7 +50,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 
 install(TARGETS ${PROJECT_NAME}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+  DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
 catkin_install_python(PROGRAMS
   scripts/controller_group
