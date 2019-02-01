@@ -23,7 +23,6 @@ add_library(${PROJECT_NAME}
   include/controller_manager/controller_loader.h
 )
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
 if(catkin_EXPORTED_TARGETS)
   add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
