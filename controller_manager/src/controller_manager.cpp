@@ -32,6 +32,8 @@
 #include <algorithm>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/condition.hpp>
+#include <chrono>
+#include <thread>
 #include <sstream>
 #include <ros/console.h>
 #include <controller_manager/controller_loader.h>
@@ -150,7 +152,7 @@ bool ControllerManager::loadController(const std::string& name)
   while (ros::ok() && free_controllers_list == used_by_realtime_){
     if (!ros::ok())
       return false;
-    usleep(200);
+    std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
   std::vector<ControllerSpec>
     &from = controllers_lists_[current_controllers_list_],
@@ -262,7 +264,7 @@ bool ControllerManager::loadController(const std::string& name)
   while (ros::ok() && used_by_realtime_ == former_current_controllers_list_){
     if (!ros::ok())
       return false;
-    usleep(200);
+    std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
   from.clear();
 
@@ -285,7 +287,7 @@ bool ControllerManager::unloadController(const std::string &name)
   while (ros::ok() && free_controllers_list == used_by_realtime_){
     if (!ros::ok())
       return false;
-    usleep(200);
+    std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
   std::vector<ControllerSpec>
     &from = controllers_lists_[current_controllers_list_],
@@ -325,7 +327,7 @@ bool ControllerManager::unloadController(const std::string &name)
   while (ros::ok() && used_by_realtime_ == former_current_controllers_list_){
     if (!ros::ok())
       return false;
-    usleep(200);
+    std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
   ROS_DEBUG("Destruct controller");
   from.clear();
@@ -506,7 +508,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   while (ros::ok() && please_switch_){
     if (!ros::ok())
       return false;
-    usleep(100);
+    std::this_thread::sleep_for(std::chrono::microseconds(100));
   }
   start_request_.clear();
   stop_request_.clear();
