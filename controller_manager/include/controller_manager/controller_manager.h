@@ -34,7 +34,6 @@
 #define CONTROLLER_MANAGER_CONTROLLER_MANAGER_H
 
 #include "controller_manager/controller_spec.h"
-#include <pthread.h>
 #include <cstdio>
 #include <map>
 #include <string>
