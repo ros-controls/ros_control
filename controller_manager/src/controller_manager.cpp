@@ -36,6 +36,8 @@
 #include <ros/console.h>
 #include <controller_manager/controller_loader.h>
 #include <controller_manager_msgs/ControllerState.h>
+#include <chrono>
+#include <thread>
 
 namespace controller_manager{
 
@@ -147,10 +149,13 @@ bool ControllerManager::loadController(const std::string& name)
 
   // get reference to controller list
   int free_controllers_list = (current_controllers_list_ + 1) % 2;
-  while (ros::ok() && free_controllers_list == used_by_realtime_){
+  while (ros::ok() && free_controllers_list == used_by_realtime_)
+  {
     if (!ros::ok())
+    {
       return false;
-    usleep(200);
+    }
+    std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
   std::vector<ControllerSpec>
     &from = controllers_lists_[current_controllers_list_],
@@ -259,10 +264,13 @@ bool ControllerManager::loadController(const std::string& name)
   // Destroys the old controllers list when the realtime thread is finished with it.
   int former_current_controllers_list_ = current_controllers_list_;
   current_controllers_list_ = free_controllers_list;
-  while (ros::ok() && used_by_realtime_ == former_current_controllers_list_){
+  while (ros::ok() && used_by_realtime_ == former_current_controllers_list_)
+  {
     if (!ros::ok())
+    {
       return false;
-    usleep(200);
+    }
+    std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
   from.clear();
 
@@ -282,10 +290,13 @@ bool ControllerManager::unloadController(const std::string &name)
 
   // get reference to controller list
   int free_controllers_list = (current_controllers_list_ + 1) % 2;
-  while (ros::ok() && free_controllers_list == used_by_realtime_){
+  while (ros::ok() && free_controllers_list == used_by_realtime_)
+  {
     if (!ros::ok())
+    {
       return false;
-    usleep(200);
+    }
+    std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
   std::vector<ControllerSpec>
     &from = controllers_lists_[current_controllers_list_],
@@ -322,10 +333,13 @@ bool ControllerManager::unloadController(const std::string &name)
   ROS_DEBUG("Realtime switches over to new controller list");
   int former_current_controllers_list_ = current_controllers_list_;
   current_controllers_list_ = free_controllers_list;
-  while (ros::ok() && used_by_realtime_ == former_current_controllers_list_){
+  while (ros::ok() && used_by_realtime_ == former_current_controllers_list_)
+  {
     if (!ros::ok())
+    {
       return false;
-    usleep(200);
+    }
+    std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
   ROS_DEBUG("Destruct controller");
   from.clear();
@@ -503,10 +517,13 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
 
   // wait until switch is finished
   ROS_DEBUG("Request atomic controller switch from realtime loop");
-  while (ros::ok() && please_switch_){
+  while (ros::ok() && please_switch_)
+  {
     if (!ros::ok())
+    {
       return false;
-    usleep(100);
+    }
+    std::this_thread::sleep_for(std::chrono::microseconds(100));
   }
   start_request_.clear();
   stop_request_.clear();
