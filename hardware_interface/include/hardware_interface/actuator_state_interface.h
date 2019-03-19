@@ -36,50 +36,126 @@
 
 namespace hardware_interface
 {
+class PositionActuatorStateHandle
+{
+  public:
+    PositionActuatorStateHandle() = default;
+
+    PositionActuatorStateHandle(const double* pos) : pos_(pos)
+    {
+        if (!pos)
+        {
+            throw HardwareInterfaceException("Position data pointer is null.");
+        }
+    }
+
+    virtual double getPosition() const
+    {
+        assert(pos_);
+        return *pos_;
+    }
+
+    virtual const double* getPositionPtr() const
+    {
+        return pos_;
+    }
+
+    virtual std::string getName() const = 0;
+
+  protected:
+    const double* pos_ = nullptr;
+};
+
+class VelocityActuatorStateHandle
+{
+  public:
+    VelocityActuatorStateHandle() = default;
+
+    VelocityActuatorStateHandle(const double* vel) : vel_(vel)
+    {
+        if (!vel)
+        {
+            throw HardwareInterfaceException("Velocity data pointer is null.");
+        }
+    }
+
+    virtual double getVelocity() const
+    {
+        assert(vel_);
+        return *vel_;
+    }
+
+    virtual const double* getVelocityPtr() const
+    {
+        return vel_;
+    }
+
+    virtual std::string getName() const = 0;
+
+  protected:
+    const double* vel_ = nullptr;
+};
+
+class EffortActuatorStateHandle
+{
+  public:
+    EffortActuatorStateHandle() = default;
+
+    EffortActuatorStateHandle(const double* eff) : eff_(eff)
+    {
+        if (!eff)
+        {
+            throw HardwareInterfaceException("Effort data pointer is null.");
+        }
+    }
+
+    virtual double getEffort() const
+    {
+        assert(eff_);
+        return *eff_;
+    }
+
+    virtual const double* getEffortPtr() const
+    {
+        return eff_;
+    }
+
+    virtual std::string getName() const = 0;
+
+  protected:
+    const double* eff_ = nullptr;
+};
 
 /** A handle used to read the state of a single actuator. */
-class ActuatorStateHandle
+class ActuatorStateHandle : public PositionActuatorStateHandle,
+                            public VelocityActuatorStateHandle,
+                            public EffortActuatorStateHandle
 {
-public:
-  ActuatorStateHandle() : name_(), pos_(0), vel_(0), eff_(0) {}
+  public:
+    ActuatorStateHandle() = default;
 
-  /**
-   * \param name The name of the actuator
-   * \param pos A pointer to the storage for this actuator's position
-   * \param vel A pointer to the storage for this actuator's velocity
-   * \param eff A pointer to the storage for this actuator's effort (force or torque)
-   */
-  ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff)
-  {
-    if (!pos)
+    /**
+     * \param name The name of the actuator
+     * \param pos A pointer to the storage for this actuator's position
+     * \param vel A pointer to the storage for this actuator's velocity
+     * \param eff A pointer to the storage for this actuator's effort (force or torque)
+     */
+    ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
+      try : PositionActuatorStateHandle(pos), VelocityActuatorStateHandle(vel), EffortActuatorStateHandle(eff), name_(name)
     {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Position data pointer is null.");
     }
-    if (!vel)
+    catch(const HardwareInterfaceException& ex)
     {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Velocity data pointer is null.");
+       throw HardwareInterfaceException("Cannot create handle '" + name + "'. " + ex.what());
     }
-    if (!eff)
+
+    std::string getName() const
     {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
+        return name_;
     }
-  }
 
-  std::string getName() const {return name_;}
-  double getPosition()  const {assert(pos_); return *pos_;}
-  double getVelocity()  const {assert(vel_); return *vel_;}
-  double getEffort()    const {assert(eff_); return *eff_;}
-
-  const double* getPositionPtr() const {return pos_;}
-  const double* getVelocityPtr() const {return vel_;}
-  const double* getEffortPtr()   const {return eff_;}
-
-private:
-  std::string name_;
-  const double* pos_;
-  const double* vel_;
-  const double* eff_;
+  private:
+    std::string name_ = "";
 };
 
 /** \brief Hardware interface to support reading the state of an array of actuators
@@ -89,8 +165,9 @@ private:
  * torque).
  *
  */
-class ActuatorStateInterface : public HardwareResourceManager<ActuatorStateHandle> {};
-
+class ActuatorStateInterface : public HardwareResourceManager<ActuatorStateHandle>
+{
+};
 }
 
 #endif
