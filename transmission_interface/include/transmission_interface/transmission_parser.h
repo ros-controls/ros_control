@@ -60,16 +60,16 @@ class TransmissionParser
 public:
 
   /**
-   * \brief Parses the tranmission elements of a URDF
-   * \param[in] urdf_string XML string of a valid URDF file that contains <tt>\<tranmission\></tt> elements
+   * \brief Parses the transmission elements of a URDF
+   * \param[in] urdf_string XML string of a valid URDF file that contains <tt>\<transmission\></tt> elements
    * \param[out] transmissions vector of loaded transmission meta data
    * \return true if parsing was successful
    */
   static bool parse(const std::string& urdf_string, std::vector<TransmissionInfo>& transmissions);
 
-private:
+protected:
   /**
-   * \brief Parses the joint elements within tranmission elements of a URDF
+   * \brief Parses the joint elements within transmission elements of a URDF
    * \param[in] trans_it pointer to the current XML element being parsed
    * \param[out] joints resulting list of joints in the transmission
    * \return true if successful
@@ -77,7 +77,7 @@ private:
   static bool parseJoints(TiXmlElement *trans_it, std::vector<JointInfo>& joints);
 
   /**
-   * \brief Parses the actuator elements within tranmission elements of a URDF
+   * \brief Parses the actuator elements within transmission elements of a URDF
    * \param[in] trans_it pointer to the current XML element being parsed
    * \param[out] actuators resulting list of actuators in the transmission
    * \return true if successful
