@@ -34,7 +34,7 @@
  *********************************************************************/
 /**
  * \file
- * \brief Structs to hold tranmission data loaded straight from XML (URDF).
+ * \brief Structs to hold transmission data loaded straight from XML (URDF).
  * \author Dave Coleman
  */
 
