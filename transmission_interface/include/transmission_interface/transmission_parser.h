@@ -67,7 +67,7 @@ public:
    */
   static bool parse(const std::string& urdf_string, std::vector<TransmissionInfo>& transmissions);
 
-private:
+protected:
   /**
    * \brief Parses the joint elements within tranmission elements of a URDF
    * \param[in] trans_it pointer to the current XML element being parsed
