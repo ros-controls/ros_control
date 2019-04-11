@@ -41,6 +41,8 @@
 using ::testing::StrictMock;
 using ::testing::_;
 using ::testing::Return;
+using ::testing::AtLeast;
+using ::testing::AnyNumber;
 
 class RobotHWMock : public hardware_interface::RobotHW
 {
@@ -114,7 +116,29 @@ TEST(UpdateControllerManagerTest, NoSwitchTest)
   cm.update(ros::Time::now(), period);
 }
 
-TEST(UpdateControllerManagerTest, SwitchTest)
+TEST(UpdateControllerManagerTest, SwitchOnlyTest)
+{
+  StrictMock<RobotHWMock> hw_mock;
+
+  controller_manager::ControllerManager cm(&hw_mock);
+
+  // timer that calls controller manager's update
+  ros::NodeHandle node_handle;
+  ros::Timer timer =
+      node_handle.createTimer(ros::Duration(0.01), boost::bind(update, boost::ref(cm), _1));
+
+  EXPECT_CALL(hw_mock, checkForConflict(_)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(hw_mock, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(hw_mock, doSwitch(_, _)).Times(1);
+
+  // only way to trigger switch is through switchController(...) which in turn waits for
+  // update(...) to finish the switch, hence the update on a timer
+  const std::vector<std::string> start_controllers, stop_controllers;
+  const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
+  ASSERT_TRUE(cm.switchController(start_controllers, stop_controllers, strictness));
+}
+
+TEST(UpdateControllerManagerTest, SwitchWithControllersTest)
 {
   StrictMock<RobotHWMock> hw_mock;
 
@@ -150,14 +174,36 @@ TEST(UpdateControllerManagerTest, SwitchTest)
   ASSERT_TRUE(cm.loadController("mock_ctrl_1"));
   ASSERT_TRUE(cm.loadController("mock_ctrl_2"));
 
-  EXPECT_CALL(hw_mock, checkForConflict(_)).Times(1).WillOnce(Return(false));
-  EXPECT_CALL(hw_mock, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
-  EXPECT_CALL(hw_mock, doSwitch(_, _)).Times(1);
+  EXPECT_CALL(hw_mock, checkForConflict(_)).Times(2).WillOnce(Return(false));
+  EXPECT_CALL(hw_mock, prepareSwitch(_, _)).Times(2).WillRepeatedly(Return(true));
+  EXPECT_CALL(hw_mock, doSwitch(_, _)).Times(2);
 
   // only way to trigger switch is through switchController(...) which in turn waits for
   // update(...) to finish the switch, hence the update on a timer
-  std::vector<std::string> start_controllers, stop_controllers;
+
   const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
+  std::vector<std::string> start_controllers, stop_controllers;
+
+  /// @todo do this on initRequest() expect call?
+  ctrl_1_mock->state_ = ctrl_1_mock->INITIALIZED;
+  ctrl_2_mock->state_ = ctrl_2_mock->INITIALIZED;
+
+  EXPECT_CALL(*ctrl_1_mock, update(_, _)).Times(AtLeast(1));
+  // this may or may not be called depending on the timing of the update timer
+  EXPECT_CALL(*ctrl_2_mock, update(_, _)).Times(AnyNumber());
+
+  // start controller
+  EXPECT_CALL(*ctrl_1_mock, starting(_)).Times(1);
+
+  start_controllers = { "mock_ctrl_1" };
+  ASSERT_TRUE(cm.switchController(start_controllers, stop_controllers, strictness));
+
+  // stop and start controllers
+  EXPECT_CALL(*ctrl_1_mock, stopping(_)).Times(1);
+  EXPECT_CALL(*ctrl_2_mock, starting(_)).Times(1);
+
+  start_controllers = { "mock_ctrl_2" };
+  stop_controllers = { "mock_ctrl_1" };
   ASSERT_TRUE(cm.switchController(start_controllers, stop_controllers, strictness));
 }
 
