@@ -28,7 +28,9 @@
 /// \author Jordan Palacios
 
 #include <hardware_interface/robot_hw.h>
+#include <controller_interface/controller_base.h>
 #include <controller_manager_msgs/SwitchController.h>
+#include <controller_manager/controller_loader_interface.h>
 #include <controller_manager/controller_manager.h>
 
 #include <ros/ros.h>
@@ -40,9 +42,7 @@ using ::testing::StrictMock;
 using ::testing::_;
 using ::testing::Return;
 
-namespace hardware_interface
-{
-class RobotHWMock : public RobotHW
+class RobotHWMock : public hardware_interface::RobotHW
 {
 public:
   RobotHWMock()
@@ -53,15 +53,49 @@ public:
   }
 
   MOCK_METHOD2(init, bool(ros::NodeHandle &, ros::NodeHandle &));
-  MOCK_CONST_METHOD1(checkForConflict, bool(const std::list<ControllerInfo> &));
-  MOCK_METHOD2(prepareSwitch,
-               bool(const std::list<ControllerInfo> &, const std::list<ControllerInfo> &));
-  MOCK_METHOD2(doSwitch,
-               void(const std::list<ControllerInfo> &, const std::list<ControllerInfo> &));
+  MOCK_CONST_METHOD1(checkForConflict,
+                     bool(const std::list<hardware_interface::ControllerInfo> &));
+  MOCK_METHOD2(prepareSwitch, bool(const std::list<hardware_interface::ControllerInfo> &,
+                                   const std::list<hardware_interface::ControllerInfo> &));
+  MOCK_METHOD2(doSwitch, void(const std::list<hardware_interface::ControllerInfo> &,
+                              const std::list<hardware_interface::ControllerInfo> &));
   MOCK_METHOD2(read, void(const ros::Time &time, const ros::Duration &period));
   MOCK_METHOD2(write, void(const ros::Time &time, const ros::Duration &period));
 };
-}
+
+class ControllerLoaderMock : public controller_manager::ControllerLoaderInterface
+{
+public:
+  ControllerLoaderMock() : ControllerLoaderInterface("ControllerLoaderMock")
+  {
+  }
+  ~ControllerLoaderMock()
+  {
+  }
+
+  MOCK_METHOD1(createInstance,
+               controller_interface::ControllerBaseSharedPtr(const std::string &));
+  MOCK_METHOD0(getDeclaredClasses, std::vector<std::string>(void));
+  MOCK_METHOD0(reload, void(void));
+};
+
+class ControllerMock : public controller_interface::ControllerBase
+{
+public:
+  ControllerMock()
+  {
+  }
+  ~ControllerMock()
+  {
+  }
+
+  MOCK_METHOD1(starting, void(const ros::Time &));
+  MOCK_METHOD2(update, void(const ros::Time &, const ros::Duration &));
+  MOCK_METHOD1(stopping, void(const ros::Time &));
+  MOCK_METHOD4(initRequest, bool(hardware_interface::RobotHW *, ros::NodeHandle &,
+                                 ros::NodeHandle &, ClaimedResources &));
+};
+
 
 void update(controller_manager::ControllerManager &cm, const ros::TimerEvent &e)
 {
@@ -70,7 +104,7 @@ void update(controller_manager::ControllerManager &cm, const ros::TimerEvent &e)
 
 TEST(UpdateControllerManagerTest, NoSwitchTest)
 {
-  StrictMock<hardware_interface::RobotHWMock> hw_mock;
+  StrictMock<RobotHWMock> hw_mock;
   controller_manager::ControllerManager cm(&hw_mock);
 
   const ros::Duration period(1.0);
@@ -82,7 +116,16 @@ TEST(UpdateControllerManagerTest, NoSwitchTest)
 
 TEST(UpdateControllerManagerTest, SwitchTest)
 {
-  StrictMock<hardware_interface::RobotHWMock> hw_mock;
+  StrictMock<RobotHWMock> hw_mock;
+
+  StrictMock<ControllerLoaderMock> *ctrl_loader_mock = new StrictMock<ControllerLoaderMock>();
+  controller_manager::ControllerLoaderInterfaceSharedPtr ctrl_loader_mock_ptr(ctrl_loader_mock);
+
+  StrictMock<ControllerMock> *ctrl_1_mock = new StrictMock<ControllerMock>();
+  StrictMock<ControllerMock> *ctrl_2_mock = new StrictMock<ControllerMock>();
+  controller_interface::ControllerBaseSharedPtr ctrl_1_mock_ptr(ctrl_1_mock);
+  controller_interface::ControllerBaseSharedPtr ctrl_2_mock_ptr(ctrl_2_mock);
+
   controller_manager::ControllerManager cm(&hw_mock);
 
   // timer that calls controller manager's update
@@ -90,12 +133,29 @@ TEST(UpdateControllerManagerTest, SwitchTest)
   ros::Timer timer =
       node_handle.createTimer(ros::Duration(0.01), boost::bind(update, boost::ref(cm), _1));
 
+  // register mock controller loader
+  cm.registerControllerLoader(ctrl_loader_mock_ptr);
+
+  const std::vector<std::string> types = { "ControllerMock" };
+  EXPECT_CALL(*ctrl_loader_mock, getDeclaredClasses()).Times(2).WillRepeatedly(Return(types));
+  EXPECT_CALL(*ctrl_loader_mock, createInstance("ControllerMock"))
+      .Times(2)
+      .WillOnce(Return(ctrl_1_mock_ptr))
+      .WillOnce(Return(ctrl_2_mock_ptr));
+
+  EXPECT_CALL(*ctrl_1_mock, initRequest(_, _, _, _)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*ctrl_2_mock, initRequest(_, _, _, _)).Times(1).WillOnce(Return(true));
+
+  // load mock controllers
+  ASSERT_TRUE(cm.loadController("mock_ctrl_1"));
+  ASSERT_TRUE(cm.loadController("mock_ctrl_2"));
+
   EXPECT_CALL(hw_mock, checkForConflict(_)).Times(1).WillOnce(Return(false));
   EXPECT_CALL(hw_mock, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
   EXPECT_CALL(hw_mock, doSwitch(_, _)).Times(1);
 
   // only way to trigger switch is through switchController(...) which in turn waits for
-  // update(...) to finish the switch
+  // update(...) to finish the switch, hence the update on a timer
   std::vector<std::string> start_controllers, stop_controllers;
   const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
   ASSERT_TRUE(cm.switchController(start_controllers, stop_controllers, strictness));
