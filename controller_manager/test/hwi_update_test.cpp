@@ -66,6 +66,7 @@ public:
                                    const std::list<hardware_interface::ControllerInfo> &));
   MOCK_METHOD2(doSwitch, void(const std::list<hardware_interface::ControllerInfo> &,
                               const std::list<hardware_interface::ControllerInfo> &));
+  MOCK_CONST_METHOD0(switchResult, SwitchState(void));
   MOCK_METHOD2(read, void(const ros::Time &time, const ros::Duration &period));
   MOCK_METHOD2(write, void(const ros::Time &time, const ros::Duration &period));
 };
@@ -204,6 +205,7 @@ TEST_F(ControllerManagerTest, SwitchOnlyTest)
   EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(1).WillOnce(Return(false));
   EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
   EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
+  EXPECT_CALL(*hw_mock_, switchResult()).Times(1).WillOnce(Return(RobotHWMock::DONE));
 
   // switch with no controllers at all
   const std::vector<std::string> start_controllers, stop_controllers;
@@ -223,6 +225,7 @@ TEST_F(ControllerManagerTest, SwitchWithControllersTest)
   EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(2).WillRepeatedly(Return(false));
   EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(2).WillRepeatedly(Return(true));
   EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(2);
+  EXPECT_CALL(*hw_mock_, switchResult()).Times(2).WillRepeatedly(Return(RobotHWMock::DONE));
 
   const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
   std::vector<std::string> start_controllers, stop_controllers;
@@ -258,6 +261,7 @@ TEST_F(ControllerManagerTest, ControllerUpdatesTest)
   EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(1).WillOnce(Return(false));
   EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
   EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
+  EXPECT_CALL(*hw_mock_, switchResult()).Times(1).WillOnce(Return(RobotHWMock::DONE));
 
   const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
   std::vector<std::string> start_controllers, stop_controllers;

@@ -177,6 +177,7 @@ private:
   std::vector<controller_interface::ControllerBase*> start_request_, stop_request_;
   std::list<hardware_interface::ControllerInfo> switch_start_list_, switch_stop_list_;
   bool please_switch_;
+  bool switch_started_;
   int switch_strictness_;
   /*\}*/
 
