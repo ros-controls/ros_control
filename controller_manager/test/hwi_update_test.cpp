@@ -108,47 +108,6 @@ public:
                                  ros::NodeHandle &, ClaimedResources &));
 };
 
-
-void update(std::shared_ptr<controller_manager::ControllerManager> cm, const ros::TimerEvent &e)
-{
-  cm->update(e.current_real, e.current_real - e.last_real);
-}
-
-TEST(UpdateControllerManagerTest, NoSwitchTest)
-{
-  StrictMock<RobotHWMock> hw_mock;
-  controller_manager::ControllerManager cm(&hw_mock);
-
-  const ros::Duration period(1.0);
-
-  EXPECT_CALL(hw_mock, doSwitch(_, _)).Times(0);
-
-  cm.update(ros::Time::now(), period);
-}
-
-TEST(UpdateControllerManagerTest, SwitchOnlyTest)
-{
-  StrictMock<RobotHWMock> hw_mock;
-
-  std::shared_ptr<controller_manager::ControllerManager> cm(
-      new controller_manager::ControllerManager(&hw_mock));
-
-  // timer that calls controller manager's update
-  ros::NodeHandle node_handle;
-  ros::Timer timer = node_handle.createTimer(ros::Duration(0.01),
-                                             std::bind(update, cm, std::placeholders::_1));
-
-  EXPECT_CALL(hw_mock, checkForConflict(_)).Times(1).WillOnce(Return(false));
-  EXPECT_CALL(hw_mock, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
-  EXPECT_CALL(hw_mock, doSwitch(_, _)).Times(1);
-
-  // only way to trigger switch is through switchController(...) which in turn waits
-  // for update(...) to finish the switch, hence the update on a timer
-  const std::vector<std::string> start_controllers, stop_controllers;
-  const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
-  ASSERT_TRUE(cm->switchController(start_controllers, stop_controllers, strictness));
-}
-
 class ControllerManagerTest : public ::testing::Test
 {
 public:
@@ -220,9 +179,42 @@ public:
   std::shared_ptr<controller_manager::ControllerManager> cm_;
 };
 
+void update(std::shared_ptr<controller_manager::ControllerManager> cm, const ros::TimerEvent &e)
+{
+  cm->update(e.current_real, e.current_real - e.last_real);
+}
+
+TEST_F(ControllerManagerTest, NoSwitchTest)
+{
+  const ros::Duration period(1.0);
+
+  EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(0);
+
+  cm_->update(ros::Time::now(), period);
+}
+
+TEST_F(ControllerManagerTest, SwitchOnlyTest)
+{
+  // only way to trigger switch is through switchController(...) which in turn waits
+  // for update(...) to finish the switch, hence the update on a timer
+  ros::NodeHandle node_handle;
+  ros::Timer timer = node_handle.createTimer(ros::Duration(0.01),
+                                             std::bind(update, cm_, std::placeholders::_1));
+
+  EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
+
+  // switch with no controllers at all
+  const std::vector<std::string> start_controllers, stop_controllers;
+  const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
+  ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness));
+}
+
 TEST_F(ControllerManagerTest, SwitchWithControllersTest)
 {
-  // timer that calls controller manager's update
+  // only way to trigger switch is through switchController(...) which in turn waits for
+  // update(...) to finish the switch, hence the update on a timer
   ros::NodeHandle node_handle;
   ros::Timer timer = node_handle.createTimer(ros::Duration(0.01),
                                              std::bind(update, cm_, std::placeholders::_1));
@@ -231,12 +223,10 @@ TEST_F(ControllerManagerTest, SwitchWithControllersTest)
   EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(2).WillRepeatedly(Return(true));
   EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(2);
 
-  // only way to trigger switch is through switchController(...) which in turn waits for
-  // update(...) to finish the switch, hence the update on a timer
-
   const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
   std::vector<std::string> start_controllers, stop_controllers;
 
+  // called at least once, otherwise can't perform second switch
   EXPECT_CALL(*ctrl_1_mock_, update(_, _)).Times(AtLeast(1));
   // this may or may not be called depending on the timing of the update timer
   EXPECT_CALL(*ctrl_2_mock_, update(_, _)).Times(AnyNumber());
