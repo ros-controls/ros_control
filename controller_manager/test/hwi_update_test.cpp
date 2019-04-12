@@ -40,9 +40,11 @@
 
 using ::testing::StrictMock;
 using ::testing::_;
-using ::testing::Return;
 using ::testing::AtLeast;
 using ::testing::AnyNumber;
+using ::testing::DoAll;
+using ::testing::InvokeWithoutArgs;
+using ::testing::Return;
 
 class RobotHWMock : public hardware_interface::RobotHW
 {
@@ -89,6 +91,11 @@ public:
   }
   ~ControllerMock()
   {
+  }
+
+  void initializeState()
+  {
+    state_ = INITIALIZED;
   }
 
   MOCK_METHOD1(starting, void(const ros::Time &));
@@ -167,8 +174,14 @@ TEST(UpdateControllerManagerTest, SwitchWithControllersTest)
       .WillOnce(Return(ctrl_1_mock_ptr))
       .WillOnce(Return(ctrl_2_mock_ptr));
 
-  EXPECT_CALL(*ctrl_1_mock, initRequest(_, _, _, _)).Times(1).WillOnce(Return(true));
-  EXPECT_CALL(*ctrl_2_mock, initRequest(_, _, _, _)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*ctrl_1_mock, initRequest(_, _, _, _))
+      .Times(1)
+      .WillOnce(DoAll(InvokeWithoutArgs(ctrl_1_mock, &ControllerMock::initializeState),
+                      Return(true)));
+  EXPECT_CALL(*ctrl_2_mock, initRequest(_, _, _, _))
+      .Times(1)
+      .WillOnce(DoAll(InvokeWithoutArgs(ctrl_2_mock, &ControllerMock::initializeState),
+                      Return(true)));
 
   // load mock controllers
   ASSERT_TRUE(cm.loadController("mock_ctrl_1"));
@@ -183,10 +196,6 @@ TEST(UpdateControllerManagerTest, SwitchWithControllersTest)
 
   const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
   std::vector<std::string> start_controllers, stop_controllers;
-
-  /// @todo do this on initRequest() expect call?
-  ctrl_1_mock->state_ = ctrl_1_mock->INITIALIZED;
-  ctrl_2_mock->state_ = ctrl_2_mock->INITIALIZED;
 
   EXPECT_CALL(*ctrl_1_mock, update(_, _)).Times(AtLeast(1));
   // this may or may not be called depending on the timing of the update timer
