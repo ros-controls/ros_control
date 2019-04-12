@@ -219,6 +219,7 @@ TEST_F(ControllerManagerTest, SwitchWithControllersTest)
   ros::Timer timer = node_handle.createTimer(ros::Duration(0.01),
                                              std::bind(update, cm_, std::placeholders::_1));
 
+  // one call for each controller
   EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(2).WillRepeatedly(Return(false));
   EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(2).WillRepeatedly(Return(true));
   EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(2);
@@ -244,6 +245,41 @@ TEST_F(ControllerManagerTest, SwitchWithControllersTest)
   start_controllers = { "mock_ctrl_2" };
   stop_controllers = { "mock_ctrl_1" };
   ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness));
+}
+
+TEST_F(ControllerManagerTest, ControllerUpdatesTest)
+{
+  // only way to trigger switch is through switchController(...) which in turn waits for
+  // update(...) to finish the switch, hence the update on a timer
+  ros::NodeHandle node_handle;
+  ros::Timer timer = node_handle.createTimer(ros::Duration(0.01),
+                                             std::bind(update, cm_, std::placeholders::_1));
+
+  EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
+
+  const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
+  std::vector<std::string> start_controllers, stop_controllers;
+
+  // controller started
+  EXPECT_CALL(*ctrl_1_mock_, update(_, _)).Times(AtLeast(5));
+  // controller not started
+  EXPECT_CALL(*ctrl_2_mock_, update(_, _)).Times(0);
+
+  // start controller
+  EXPECT_CALL(*ctrl_1_mock_, starting(_)).Times(1);
+
+  start_controllers = { "mock_ctrl_1" };
+  ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness));
+
+  timer.stop();
+
+  const ros::Duration period(1.0);
+  for(unsigned int i = 0; i < 5; ++i)
+  {
+    cm_->update(ros::Time::now(), period);
+  }
 }
 
 int main(int argc, char **argv)
