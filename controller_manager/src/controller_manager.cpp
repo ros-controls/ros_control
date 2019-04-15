@@ -50,6 +50,8 @@ ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, cons
   stop_request_(0),
   please_switch_(false),
   switch_started_(false),
+  switch_strictness_(0),
+  wait_full_switch_(true),
   current_controllers_list_(0),
   used_by_realtime_(-1)
 {
@@ -95,7 +97,11 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
   for (size_t i=0; i<controllers.size(); i++)
     controllers[i].c->updateRequest(time, period);
 
-  manageSwitch(time);
+  // there are controllers to start/stop
+  if (please_switch_)
+  {
+    manageSwitch(time);
+  }
 }
 
 controller_interface::ControllerBase* ControllerManager::getControllerByName(const std::string& name)
@@ -123,30 +129,30 @@ void ControllerManager::getControllerNames(std::vector<std::string> &names)
   }
 }
 
-void ControllerManager::manageSwitch(const ros::Time& time)
+void ControllerManager::manageSwitch(const ros::Time &time)
 {
-  // there are controllers to start/stop
-  if (please_switch_)
+  // switch hardware interfaces (if any)
+  if (!switch_started_)
   {
-    if (!switch_started_)
-    {
-      // switch hardware interfaces (if any)
-      robot_hw_->doSwitch(switch_start_list_, switch_stop_list_);
-      switch_started_ = true;
-    }
+    robot_hw_->doSwitch(switch_start_list_, switch_stop_list_);
+    switch_started_ = true;
+  }
 
-    // stop controllers
-    for (auto &request : stop_request_)
+  // stop controllers
+  for (auto &request : stop_request_)
+  {
+    if (request->isRunning())
     {
-      if (request->isRunning())
+      if (!request->stopRequest(time))
       {
-        if (!request->stopRequest(time))
-        {
-          ROS_FATAL("Failed to stop controller in realtime loop. This should never happen.");
-        }
+        ROS_FATAL("Failed to stop controller in realtime loop. This should never happen.");
       }
     }
+  }
 
+  // start controllers once the switch is fully complete
+  if (wait_full_switch_)
+  {
     if (robot_hw_->switchResult() == hardware_interface::RobotHW::DONE)
     {
       // start controllers
@@ -158,6 +164,39 @@ void ControllerManager::manageSwitch(const ros::Time& time)
         }
       }
 
+      please_switch_ = false;
+      switch_started_ = false;
+    }
+  }
+  // start controllers as soon as their required joints are done switching
+  else
+  {
+    // start controllers if possible
+    for (auto &request : start_request_)
+    {
+      if (!request->isRunning())
+      {
+        // find the info from this controller
+        for (auto &controller : controllers_lists_[current_controllers_list_])
+        {
+          if (request == controller.c.get() &&
+              robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::DONE)
+          {
+            if (!request->startRequest(time))
+            {
+              ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
+            }
+          }
+        }
+      }
+    }
+
+    // all needed controllers started, switch done
+    if (std::count_if(start_request_.begin(), start_request_.end(),
+                      [](controller_interface::ControllerBase *request) {
+                        return request->isRunning();
+                      }) == start_request_.size())
+    {
       please_switch_ = false;
       switch_started_ = false;
     }
@@ -377,7 +416,7 @@ bool ControllerManager::unloadController(const std::string &name)
 
 bool ControllerManager::switchController(const std::vector<std::string>& start_controllers,
                                          const std::vector<std::string>& stop_controllers,
-                                         int strictness)
+                                         int strictness, bool wait_full_switch)
 {
   if (!stop_request_.empty() || !start_request_.empty())
     ROS_FATAL("The internal stop and start request lists are not empty at the beginning of the swithController() call. This should not happen.");
@@ -537,6 +576,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
 
   // start the atomic controller switching
   switch_strictness_ = strictness;
+  wait_full_switch_ = wait_full_switch;
   please_switch_ = true;
 
   // wait until switch is finished
@@ -727,7 +767,8 @@ bool ControllerManager::switchControllerSrv(
   boost::mutex::scoped_lock guard(services_lock_);
   ROS_DEBUG("switching service locked");
 
-  resp.ok = switchController(req.start_controllers, req.stop_controllers, req.strictness);
+  resp.ok = switchController(req.start_controllers, req.stop_controllers, req.strictness,
+                             req.wait_full_switch);
 
   ROS_DEBUG("switching service finished");
   return true;
