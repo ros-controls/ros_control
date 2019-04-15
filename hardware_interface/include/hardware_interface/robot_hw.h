@@ -161,6 +161,12 @@ public:
     return DONE;
   }
 
+//  // Return (in realtime) the state of the last doSwitch() for a given controller
+//  virtual SwitchState switchResult(const ControllerInfo& /*controller*/) const
+//  {
+//    return DONE;
+//  }
+
   /**
    * Reads data from the robot HW
    *
