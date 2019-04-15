@@ -98,7 +98,7 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
   // there are controllers to start/stop
   if (please_switch_)
   {
-    if(!switch_started_)
+    if (!switch_started_)
     {
       // switch hardware interfaces (if any)
       robot_hw_->doSwitch(switch_start_list_, switch_stop_list_);
@@ -106,23 +106,23 @@ void ControllerManager::update(const ros::Time& time, const ros::Duration& perio
     }
 
     // stop controllers
-    for (unsigned int i = 0; i < stop_request_.size(); i++)
+    for (auto &request : stop_request_)
     {
-      if(stop_request_[i]->isRunning())
+      if (request->isRunning())
       {
-        if (!stop_request_[i]->stopRequest(time))
+        if (!request->stopRequest(time))
         {
           ROS_FATAL("Failed to stop controller in realtime loop. This should never happen.");
         }
       }
     }
 
-    if(robot_hw_->switchResult() == hardware_interface::RobotHW::DONE)
+    if (robot_hw_->switchResult() == hardware_interface::RobotHW::DONE)
     {
       // start controllers
-      for (unsigned int i = 0; i < start_request_.size(); i++)
+      for (auto &request : start_request_)
       {
-        if (!start_request_[i]->startRequest(time))
+        if (!request->startRequest(time))
         {
           ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
         }
