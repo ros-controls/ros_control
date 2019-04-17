@@ -134,7 +134,7 @@ public:
    * \pre Actuator and joint effort vectors must have size 2 and point to valid data.
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
-  void actuatorToJointEffort(const ActuatorData& act_data,
+  void actuatorToJointEffort(const EffortActuatorData& act_data,
                                    JointData&    jnt_data);
 
   /**
@@ -144,7 +144,7 @@ public:
    * \pre Actuator and joint velocity vectors must have size 2 and point to valid data.
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
-  void actuatorToJointVelocity(const ActuatorData& act_data,
+  void actuatorToJointVelocity(const VelocityActuatorData& act_data,
                                      JointData&    jnt_data);
 
   /**
@@ -154,7 +154,7 @@ public:
    * \pre Actuator and joint position vectors must have size 2 and point to valid data.
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
-  void actuatorToJointPosition(const ActuatorData& act_data,
+  void actuatorToJointPosition(const PositionActuatorData& act_data,
                                      JointData&    jnt_data);
 
   /**
@@ -165,7 +165,7 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void jointToActuatorEffort(const JointData&    jnt_data,
-                                   ActuatorData& act_data);
+                                   EffortActuatorData& act_data);
 
   /**
    * \brief Transform \e velocity variables from joint to actuator space.
@@ -175,7 +175,7 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void jointToActuatorVelocity(const JointData&    jnt_data,
-                                     ActuatorData& act_data);
+                                     VelocityActuatorData& act_data);
 
   /**
    * \brief Transform \e position variables from joint to actuator space.
@@ -185,7 +185,7 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void jointToActuatorPosition(const JointData&    jnt_data,
-                                     ActuatorData& act_data);
+                                     PositionActuatorData& act_data);
 
   std::size_t numActuators() const {return 2;}
   std::size_t numJoints()    const {return 2;}
@@ -223,7 +223,7 @@ inline FourBarLinkageTransmission::FourBarLinkageTransmission(const std::vector<
   }
 }
 
-inline void FourBarLinkageTransmission::actuatorToJointEffort(const ActuatorData& act_data,
+inline void FourBarLinkageTransmission::actuatorToJointEffort(const EffortActuatorData& act_data,
                                                                     JointData&    jnt_data)
 {
   assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
@@ -236,7 +236,7 @@ inline void FourBarLinkageTransmission::actuatorToJointEffort(const ActuatorData
   *jnt_data.effort[1] = jr[1] * (*act_data.effort[1] * ar[1] - *act_data.effort[0] * ar[0] * jr[0]);
 }
 
-inline void FourBarLinkageTransmission::actuatorToJointVelocity(const ActuatorData& act_data,
+inline void FourBarLinkageTransmission::actuatorToJointVelocity(const VelocityActuatorData& act_data,
                                                                       JointData&    jnt_data)
 {
   assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
@@ -249,7 +249,7 @@ inline void FourBarLinkageTransmission::actuatorToJointVelocity(const ActuatorDa
   *jnt_data.velocity[1] = (*act_data.velocity[1] / ar[1] - *act_data.velocity[0] / (jr[0] * ar[0])) / jr[1];
 }
 
-inline void FourBarLinkageTransmission::actuatorToJointPosition(const ActuatorData& act_data,
+inline void FourBarLinkageTransmission::actuatorToJointPosition(const PositionActuatorData& act_data,
                                                                       JointData&    jnt_data)
 {
   assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
@@ -264,7 +264,7 @@ inline void FourBarLinkageTransmission::actuatorToJointPosition(const ActuatorDa
 }
 
 inline void FourBarLinkageTransmission::jointToActuatorEffort(const JointData&    jnt_data,
-                                                                    ActuatorData& act_data)
+                                                                    EffortActuatorData& act_data)
 {
   assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
   assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
@@ -277,7 +277,7 @@ inline void FourBarLinkageTransmission::jointToActuatorEffort(const JointData&  
 }
 
 inline void FourBarLinkageTransmission::jointToActuatorVelocity(const JointData&    jnt_data,
-                                                                      ActuatorData& act_data)
+                                                                      VelocityActuatorData& act_data)
 {
   assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
   assert(act_data.velocity[0] && act_data.velocity[1] && jnt_data.velocity[0] && jnt_data.velocity[1]);
@@ -290,7 +290,7 @@ inline void FourBarLinkageTransmission::jointToActuatorVelocity(const JointData&
 }
 
 inline void FourBarLinkageTransmission::jointToActuatorPosition(const JointData&    jnt_data,
-                                                                      ActuatorData& act_data)
+                                                                      PositionActuatorData& act_data)
 {
   assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
   assert(act_data.position[0] && act_data.position[1] && jnt_data.position[0] && jnt_data.position[1]);
