@@ -10,6 +10,23 @@ catkin_package(
   INCLUDE_DIRS include
   )
 
+if(CATKIN_ENABLE_TESTING)
+
+  find_package(rosunit REQUIRED)
+
+  include_directories(include)
+  include_directories(SYSTEM ${catkin_INCLUDE_DIRS})
+
+  catkin_add_gmock(controller_base_test
+    test/controller_base_test.cpp
+  )
+
+  target_link_libraries(controller_base_test
+    ${catkin_LIBRARIES}
+  )
+
+endif()
+
 # Install
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

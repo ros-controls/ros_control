@@ -19,4 +19,6 @@
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
   <depend>roscpp</depend>
+
+  <test_depend>rosunit</test_depend>
 </package>
