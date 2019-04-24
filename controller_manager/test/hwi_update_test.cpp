@@ -106,6 +106,7 @@ public:
   MOCK_METHOD1(starting, void(const ros::Time &));
   MOCK_METHOD2(update, void(const ros::Time &, const ros::Duration &));
   MOCK_METHOD1(stopping, void(const ros::Time &));
+  MOCK_METHOD1(waiting, void(const ros::Time &));
   MOCK_METHOD4(initRequest, bool(hardware_interface::RobotHW *, ros::NodeHandle &,
                                  ros::NodeHandle &, ClaimedResources &));
 };
@@ -262,13 +263,22 @@ TEST_F(ControllerManagerTest, ControllerUpdatesTest)
   EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(1).WillOnce(Return(false));
   EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
   EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
-  EXPECT_CALL(*hw_mock_, switchResult()).Times(1).WillOnce(Return(RobotHWMock::DONE));
+  EXPECT_CALL(*hw_mock_, switchResult())
+      .Times(6)
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::DONE));
 
   const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
   std::vector<std::string> start_controllers, stop_controllers;
 
   // controller started
   EXPECT_CALL(*ctrl_1_mock_, update(_, _)).Times(AtLeast(5));
+  // called 5 times, once for each ONGOING
+  EXPECT_CALL(*ctrl_1_mock_, waiting(_)).Times(5);
   // controller not started
   EXPECT_CALL(*ctrl_2_mock_, update(_, _)).Times(0);
 
@@ -321,6 +331,8 @@ TEST_F(ControllerManagerTest, SwitchControllersAtDiffTimesTest)
   // both controllers are started
   EXPECT_CALL(*ctrl_1_mock_, starting(_)).Times(1);
   EXPECT_CALL(*ctrl_2_mock_, starting(_)).Times(1);
+  // called 5 times, once for each ONGOING
+  EXPECT_CALL(*ctrl_2_mock_, waiting(_)).Times(5);
 
   start_controllers = { "mock_ctrl_1", "mock_ctrl_2" };
   ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness, false));

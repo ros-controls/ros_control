@@ -59,11 +59,44 @@ public:
   MOCK_METHOD1(starting, void(const ros::Time&));
   MOCK_METHOD2(update, void(const ros::Time&, const ros::Duration&));
   MOCK_METHOD1(stopping, void(const ros::Time&));
+  MOCK_METHOD1(waiting, void(const ros::Time&));
   MOCK_METHOD4(initRequest, bool(hardware_interface::RobotHW*, ros::NodeHandle&,
                                  ros::NodeHandle&, ClaimedResources&));
 };
 
-TEST(ControllerBaseAPI, IsRunning)
+TEST(ControllerBaseAPI, DefaultStateTest)
+{
+  StrictMock<ControllerMock> controller;
+
+  ASSERT_FALSE(controller.isInitialized());
+  ASSERT_FALSE(controller.isRunning());
+  ASSERT_FALSE(controller.isStopped());
+  ASSERT_FALSE(controller.isWaiting());
+  ASSERT_FALSE(controller.isAborted());
+}
+
+TEST(ControllerBaseAPI, IsInitializedTest)
+{
+  StrictMock<ControllerMock> controller;
+
+  hardware_interface::RobotHW* robot_hw = nullptr;
+  ros::NodeHandle* node_handle = nullptr;
+  ControllerMock::ClaimedResources resources;
+  const ros::Time time;
+
+  EXPECT_CALL(controller, initRequest(_, _, _, _))
+      .Times(1)
+      .WillOnce(DoAll(InvokeWithoutArgs(&controller, &ControllerMock::initializeState),
+                      Return(true)));
+
+  // not initialized by default
+  ASSERT_FALSE(controller.isInitialized());
+
+  ASSERT_TRUE(controller.initRequest(robot_hw, *node_handle, *node_handle, resources));
+  ASSERT_TRUE(controller.isInitialized());
+}
+
+TEST(ControllerBaseAPI, IsRunningTest)
 {
   StrictMock<ControllerMock> controller;
 
@@ -90,7 +123,61 @@ TEST(ControllerBaseAPI, IsRunning)
   ASSERT_FALSE(controller.isRunning());
 }
 
-TEST(ControllerBaseAPI, StartRequest)
+TEST(ControllerBaseAPI, IsStoppedTest)
+{
+  StrictMock<ControllerMock> controller;
+
+  hardware_interface::RobotHW* robot_hw = nullptr;
+  ros::NodeHandle* node_handle = nullptr;
+  ControllerMock::ClaimedResources resources;
+  const ros::Time time;
+
+  EXPECT_CALL(controller, starting(_)).Times(1);
+  EXPECT_CALL(controller, stopping(_)).Times(1);
+  EXPECT_CALL(controller, initRequest(_, _, _, _))
+      .Times(1)
+      .WillOnce(DoAll(InvokeWithoutArgs(&controller, &ControllerMock::initializeState),
+                      Return(true)));
+
+  // not stopped by default
+  ASSERT_FALSE(controller.isStopped());
+
+  ASSERT_TRUE(controller.initRequest(robot_hw, *node_handle, *node_handle, resources));
+  ASSERT_TRUE(controller.stopRequest(time));
+  ASSERT_TRUE(controller.isStopped());
+
+  ASSERT_TRUE(controller.startRequest(time));
+  ASSERT_FALSE(controller.isStopped());
+}
+
+TEST(ControllerBaseAPI, IsWaitingTest)
+{
+  StrictMock<ControllerMock> controller;
+
+  hardware_interface::RobotHW* robot_hw = nullptr;
+  ros::NodeHandle* node_handle = nullptr;
+  ControllerMock::ClaimedResources resources;
+  const ros::Time time;
+
+  EXPECT_CALL(controller, starting(_)).Times(1);
+  EXPECT_CALL(controller, waiting(_)).Times(1);
+  EXPECT_CALL(controller, initRequest(_, _, _, _))
+      .Times(1)
+      .WillOnce(DoAll(InvokeWithoutArgs(&controller, &ControllerMock::initializeState),
+                      Return(true)));
+
+  // not waiting by default
+  ASSERT_FALSE(controller.isWaiting());
+
+  ASSERT_TRUE(controller.initRequest(robot_hw, *node_handle, *node_handle, resources));
+  ASSERT_TRUE(controller.waitRequest(time));
+  ASSERT_TRUE(controller.isWaiting());
+
+  ASSERT_TRUE(controller.startRequest(time));
+  ASSERT_FALSE(controller.isWaiting());
+}
+
+TEST(ControllerBaseAPI, StartRequestTest)
 {
   StrictMock<ControllerMock> controller;
 
@@ -115,7 +202,7 @@ TEST(ControllerBaseAPI, StartRequest)
   ASSERT_TRUE(controller.startRequest(time));
 }
 
-TEST(ControllerBaseAPI, StopRequest)
+TEST(ControllerBaseAPI, StopRequestTest)
 {
   StrictMock<ControllerMock> controller;
 
@@ -140,7 +227,32 @@ TEST(ControllerBaseAPI, StopRequest)
   ASSERT_TRUE(controller.stopRequest(time));
 }
 
-TEST(ControllerBaseAPI, UpdateRequest)
+TEST(ControllerBaseAPI, WaitRequestTest)
+{
+  StrictMock<ControllerMock> controller;
+
+  hardware_interface::RobotHW* robot_hw = nullptr;
+  ros::NodeHandle* node_handle = nullptr;
+  ControllerMock::ClaimedResources resources;
+  const ros::Time time;
+
+  EXPECT_CALL(controller, waiting(_)).Times(2);
+  EXPECT_CALL(controller, initRequest(_, _, _, _))
+      .Times(1)
+      .WillOnce(DoAll(InvokeWithoutArgs(&controller, &ControllerMock::initializeState),
+                      Return(true)));
+
+  // not initialized
+  ASSERT_FALSE(controller.waitRequest(time));
+
+  ASSERT_TRUE(controller.initRequest(robot_hw, *node_handle, *node_handle, resources));
+  ASSERT_TRUE(controller.waitRequest(time));
+
+  // can wait multiple times
+  ASSERT_TRUE(controller.waitRequest(time));
+}
+
+TEST(ControllerBaseAPI, UpdateRequestTest)
 {
   StrictMock<ControllerMock> controller;
 

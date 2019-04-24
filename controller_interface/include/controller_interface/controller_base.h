@@ -76,45 +76,111 @@ public:
    */
   virtual void stopping(const ros::Time& /*time*/) {};
 
+  /** \brief This is called from within the realtime thread while the controller is
+   * waiting to start
+   *
+   * \param time The current time
+   */
+  virtual void waiting(const ros::Time& /*time*/) {};
+
+  /** \brief Check if the controller is initialized
+   * \returns true if the controller is initialized
+   */
+  bool isInitialized()
+  {
+    return state_ == INITIALIZED;
+  }
+
   /** \brief Check if the controller is running
    * \returns true if the controller is running
    */
   bool isRunning()
   {
-    return (state_ == RUNNING);
+    return state_ == RUNNING;
+  }
+
+  /** \brief Check if the controller is stopped
+   * \returns true if the controller is stopped
+   */
+  bool isStopped()
+  {
+    return state_ == STOPPED;
+  }
+
+  /** \brief Check if the controller is waiting
+   * \returns true if the controller is waiting
+   */
+  bool isWaiting()
+  {
+    return state_ == WAITING;
+  }
+
+  /** \brief Check if the controller is aborted
+   * \returns true if the controller is aborted
+   */
+  bool isAborted()
+  {
+    return state_ == ABORTED;
   }
 
   /// Calls \ref update only if this controller is running.
   void updateRequest(const ros::Time& time, const ros::Duration& period)
   {
     if (state_ == RUNNING)
+    {
       update(time, period);
+    }
   }
 
-  /// Calls \ref starting only if this controller is initialized or already running
+  /// Calls \ref starting unless this controller is just constructed
   bool startRequest(const ros::Time& time)
   {
+    // start works from any state, except CONSTRUCTED
     // start succeeds even if the controller was already started
-    if (state_ == RUNNING || state_ == INITIALIZED){
+    if (state_ != CONSTRUCTED)
+    {
       starting(time);
       state_ = RUNNING;
       return true;
     }
     else
+    {
       return false;
+    }
   }
 
-  /// Calls \ref stopping only if this controller is initialized or already running
+  /// Calls \ref stopping unless this controller is just constructed
   bool stopRequest(const ros::Time& time)
   {
+    // stop works from any state, except CONSTRUCTED
     // stop succeeds even if the controller was already stopped
-    if (state_ == RUNNING || state_ == INITIALIZED){
+    if (state_ != CONSTRUCTED)
+    {
       stopping(time);
-      state_ = INITIALIZED;
+      state_ = STOPPED;
       return true;
     }
     else
+    {
       return false;
+    }
+  }
+
+  /// Calls \ref waiting unless this controller is just constructed
+  bool waitRequest(const ros::Time& time)
+  {
+    // wait works from any state, except CONSTRUCTED
+    // wait succeeds even if the controller was already waiting
+    if (state_ != CONSTRUCTED)
+    {
+      waiting(time);
+      state_ = WAITING;
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
 
   /*\}*/
@@ -148,7 +214,7 @@ public:
   /*\}*/
 
   /// The current execution state of the controller
-  enum {CONSTRUCTED, INITIALIZED, RUNNING} state_;
+  enum {CONSTRUCTED, INITIALIZED, RUNNING, STOPPED, WAITING, ABORTED} state_;
 
 
 private:

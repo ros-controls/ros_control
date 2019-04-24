@@ -153,9 +153,9 @@ void ControllerManager::manageSwitch(const ros::Time &time)
   // start controllers once the switch is fully complete
   if (wait_full_switch_)
   {
+    // start controllers
     if (robot_hw_->switchResult() == hardware_interface::RobotHW::DONE)
     {
-      // start controllers
       for (auto &request : start_request_)
       {
         if (!request->startRequest(time))
@@ -166,6 +166,17 @@ void ControllerManager::manageSwitch(const ros::Time &time)
 
       please_switch_ = false;
       switch_started_ = false;
+    }
+    // wait controllers
+    else
+    {
+      for (auto &request : start_request_)
+      {
+        if (!request->waitRequest(time))
+        {
+          ROS_FATAL("Failed to wait controller in realtime loop. This should never happen.");
+        }
+      }
     }
   }
   // start controllers as soon as their required joints are done switching
@@ -179,12 +190,23 @@ void ControllerManager::manageSwitch(const ros::Time &time)
         // find the info from this controller
         for (auto &controller : controllers_lists_[current_controllers_list_])
         {
-          if (request == controller.c.get() &&
-              robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::DONE)
+          if (request == controller.c.get())
           {
-            if (!request->startRequest(time))
+            // ready to start
+            if (robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::DONE)
             {
-              ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
+              if (!request->startRequest(time))
+              {
+                ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
+              }
+            }
+            // controller is waiting
+            else
+            {
+              if (!request->waitRequest(time))
+              {
+                ROS_FATAL("Failed to wait controller in realtime loop. This should never happen.");
+              }
             }
           }
         }
@@ -715,10 +737,31 @@ bool ControllerManager::listControllersSrv(
       cs.claimed_resources.push_back(iface_res);
     }
 
-    if (controllers[i].c->isRunning())
+    if (controllers[i].c->isInitialized())
+    {
+      cs.state = "initialized";
+    }
+    else if (controllers[i].c->isRunning())
+    {
       cs.state = "running";
-    else
+    }
+    else if (controllers[i].c->isStopped())
+    {
       cs.state = "stopped";
+    }
+    else if (controllers[i].c->isWaiting())
+    {
+      cs.state = "waiting";
+    }
+    else if (controllers[i].c->isAborted())
+    {
+      cs.state = "aborted";
+    }
+    else
+    {
+      // should never happen
+      cs.state = "unknown";
+    }
   }
 
   ROS_DEBUG("list controller service finished");
