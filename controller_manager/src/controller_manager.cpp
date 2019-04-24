@@ -138,6 +138,22 @@ void ControllerManager::manageSwitch(const ros::Time &time)
     switch_started_ = true;
   }
 
+  stopControllers(time);
+
+  // start controllers once the switch is fully complete
+  if (wait_full_switch_)
+  {
+    startControllers(time);
+  }
+  // start controllers as soon as their required joints are done switching
+  else
+  {
+    startControllersAsap(time);
+  }
+}
+
+void ControllerManager::stopControllers(const ros::Time &time)
+{
   // stop controllers
   for (auto &request : stop_request_)
   {
@@ -149,79 +165,78 @@ void ControllerManager::manageSwitch(const ros::Time &time)
       }
     }
   }
+}
 
-  // start controllers once the switch is fully complete
-  if (wait_full_switch_)
+void ControllerManager::startControllers(const ros::Time &time)
+{
+  // start controllers
+  if (robot_hw_->switchResult() == hardware_interface::RobotHW::DONE)
   {
-    // start controllers
-    if (robot_hw_->switchResult() == hardware_interface::RobotHW::DONE)
+    for (auto &request : start_request_)
     {
-      for (auto &request : start_request_)
+      if (!request->startRequest(time))
       {
-        if (!request->startRequest(time))
-        {
-          ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
-        }
+        ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
       }
-
-      please_switch_ = false;
-      switch_started_ = false;
     }
-    // wait controllers
-    else
+
+    please_switch_ = false;
+    switch_started_ = false;
+  }
+  // wait controllers
+  else
+  {
+    for (auto &request : start_request_)
     {
-      for (auto &request : start_request_)
+      if (!request->waitRequest(time))
       {
-        if (!request->waitRequest(time))
-        {
-          ROS_FATAL("Failed to wait controller in realtime loop. This should never happen.");
-        }
+        ROS_FATAL("Failed to wait controller in realtime loop. This should never happen.");
       }
     }
   }
-  // start controllers as soon as their required joints are done switching
-  else
+}
+
+void ControllerManager::startControllersAsap(const ros::Time &time)
+{
+  // start controllers if possible
+  for (auto &request : start_request_)
   {
-    // start controllers if possible
-    for (auto &request : start_request_)
+    if (!request->isRunning())
     {
-      if (!request->isRunning())
+      // find the info from this controller
+      for (auto &controller : controllers_lists_[current_controllers_list_])
       {
-        // find the info from this controller
-        for (auto &controller : controllers_lists_[current_controllers_list_])
+        if (request == controller.c.get())
         {
-          if (request == controller.c.get())
+          // ready to start
+          if (robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::DONE)
           {
-            // ready to start
-            if (robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::DONE)
+            if (!request->startRequest(time))
             {
-              if (!request->startRequest(time))
-              {
-                ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
-              }
+              ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
             }
-            // controller is waiting
-            else
+          }
+          // controller is waiting
+          else
+          {
+            if (!request->waitRequest(time))
             {
-              if (!request->waitRequest(time))
-              {
-                ROS_FATAL("Failed to wait controller in realtime loop. This should never happen.");
-              }
+              ROS_FATAL("Failed to wait controller in realtime loop. This should never happen.");
             }
           }
         }
       }
     }
+  }
 
-    // all needed controllers started, switch done
-    if (std::count_if(start_request_.begin(), start_request_.end(),
-                      [](controller_interface::ControllerBase *request) {
-                        return request->isRunning();
-                      }) == start_request_.size())
-    {
-      please_switch_ = false;
-      switch_started_ = false;
-    }
+  // all needed controllers started, switch done
+  if (std::count_if(start_request_.begin(), start_request_.end(),
+                    [](controller_interface::ControllerBase *request) {
+                      return request->isRunning();
+                    }) == start_request_.size())
+  {
+    please_switch_ = false;
+    switch_started_ = false;
   }
 }
 

@@ -167,6 +167,9 @@ private:
   void getControllerNames(std::vector<std::string> &v);
 
   void manageSwitch(const ros::Time &time);
+  void stopControllers(const ros::Time &time);
+  void startControllers(const ros::Time &time);
+  void startControllersAsap(const ros::Time &time);
 
   hardware_interface::RobotHW* robot_hw_;
 
