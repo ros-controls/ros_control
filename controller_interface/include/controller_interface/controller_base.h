@@ -83,6 +83,13 @@ public:
    */
   virtual void waiting(const ros::Time& /*time*/) {};
 
+  /** \brief This is called from within the realtime thread when the controller needs
+   * to be aborted
+   *
+   * \param time The current time
+   */
+  virtual void aborting(const ros::Time& /*time*/) {};
+
   /** \brief Check if the controller is initialized
    * \returns true if the controller is initialized
    */
@@ -175,6 +182,23 @@ public:
     {
       waiting(time);
       state_ = WAITING;
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  /// Calls \ref abort unless this controller is just constructed
+  bool abortRequest(const ros::Time& time)
+  {
+    // abort works from any state, except CONSTRUCTED
+    // abort succeeds even if the controller was already waiting
+    if (state_ != CONSTRUCTED)
+    {
+      aborting(time);
+      state_ = ABORTED;
       return true;
     }
     else

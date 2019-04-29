@@ -60,6 +60,7 @@ public:
   MOCK_METHOD2(update, void(const ros::Time&, const ros::Duration&));
   MOCK_METHOD1(stopping, void(const ros::Time&));
   MOCK_METHOD1(waiting, void(const ros::Time&));
+  MOCK_METHOD1(aborting, void(const ros::Time&));
   MOCK_METHOD4(initRequest, bool(hardware_interface::RobotHW*, ros::NodeHandle&,
                                  ros::NodeHandle&, ClaimedResources&));
 };
@@ -250,6 +251,31 @@ TEST(ControllerBaseAPI, WaitRequestTest)
 
   // can wait multiple times
   ASSERT_TRUE(controller.waitRequest(time));
+}
+
+TEST(ControllerBaseAPI, AbortRequestTest)
+{
+  StrictMock<ControllerMock> controller;
+
+  hardware_interface::RobotHW* robot_hw = nullptr;
+  ros::NodeHandle* node_handle = nullptr;
+  ControllerMock::ClaimedResources resources;
+  const ros::Time time;
+
+  EXPECT_CALL(controller, aborting(_)).Times(2);
+  EXPECT_CALL(controller, initRequest(_, _, _, _))
+      .Times(1)
+      .WillOnce(DoAll(InvokeWithoutArgs(&controller, &ControllerMock::initializeState),
+                      Return(true)));
+
+  // not initialized
+  ASSERT_FALSE(controller.abortRequest(time));
+
+  ASSERT_TRUE(controller.initRequest(robot_hw, *node_handle, *node_handle, resources));
+  ASSERT_TRUE(controller.abortRequest(time));
+
+  // can abort multiple times
+  ASSERT_TRUE(controller.abortRequest(time));
 }
 
 TEST(ControllerBaseAPI, UpdateRequestTest)

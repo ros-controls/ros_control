@@ -183,6 +183,20 @@ void ControllerManager::startControllers(const ros::Time &time)
     please_switch_ = false;
     switch_started_ = false;
   }
+  // abort controllers
+  else if (robot_hw_->switchResult() == hardware_interface::RobotHW::ERROR)
+  {
+    for (auto &request : start_request_)
+    {
+      if (!request->abortRequest(time))
+      {
+        ROS_FATAL("Failed to abort controller in realtime loop. This should never happen.");
+      }
+    }
+
+    please_switch_ = false;
+    switch_started_ = false;
+  }
   // wait controllers
   else
   {
@@ -216,6 +230,14 @@ void ControllerManager::startControllersAsap(const ros::Time &time)
               ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
             }
           }
+          // abort on error
+          else if (robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::ERROR)
+          {
+            if (!request->abortRequest(time))
+            {
+              ROS_FATAL("Failed to abort controller in realtime loop. This should never happen.");
+            }
+          }
           // controller is waiting
           else
           {
@@ -225,6 +247,7 @@ void ControllerManager::startControllersAsap(const ros::Time &time)
             }
           }
         }
+        continue;
       }
     }
   }
@@ -232,7 +255,7 @@ void ControllerManager::startControllersAsap(const ros::Time &time)
   // all needed controllers started, switch done
   if (std::count_if(start_request_.begin(), start_request_.end(),
                     [](controller_interface::ControllerBase *request) {
-                      return request->isRunning();
+                      return request->isRunning() || request->isAborted();
                     }) == start_request_.size())
   {
     please_switch_ = false;

@@ -107,6 +107,7 @@ public:
   MOCK_METHOD2(update, void(const ros::Time &, const ros::Duration &));
   MOCK_METHOD1(stopping, void(const ros::Time &));
   MOCK_METHOD1(waiting, void(const ros::Time &));
+  MOCK_METHOD1(aborting, void(const ros::Time &));
   MOCK_METHOD4(initRequest, bool(hardware_interface::RobotHW *, ros::NodeHandle &,
                                  ros::NodeHandle &, ClaimedResources &));
 };
@@ -252,6 +253,35 @@ TEST_F(ControllerManagerTest, SwitchWithControllersTest)
   ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness));
 }
 
+TEST_F(ControllerManagerTest, SwitchWithControllersAbortTest)
+{
+  // only way to trigger switch is through switchController(...) which in turn waits for
+  // update(...) to finish the switch, hence the update on a timer
+  ros::NodeHandle node_handle;
+  ros::Timer timer = node_handle.createTimer(ros::Duration(0.01),
+                                             std::bind(update, cm_, std::placeholders::_1));
+
+  // one call for each controller
+  EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
+  EXPECT_CALL(*hw_mock_, switchResult()).Times(2).WillRepeatedly(Return(RobotHWMock::ERROR));
+
+  const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
+  std::vector<std::string> start_controllers, stop_controllers;
+
+  // controllers are aborted before they can update
+  EXPECT_CALL(*ctrl_1_mock_, update(_, _)).Times(0);
+  EXPECT_CALL(*ctrl_2_mock_, update(_, _)).Times(0);
+
+  // abort controller
+  EXPECT_CALL(*ctrl_1_mock_, aborting(_)).Times(1);
+  EXPECT_CALL(*ctrl_2_mock_, aborting(_)).Times(1);
+
+  start_controllers = { "mock_ctrl_1", "mock_ctrl_2" };
+  ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness));
+}
+
 TEST_F(ControllerManagerTest, ControllerUpdatesTest)
 {
   // only way to trigger switch is through switchController(...) which in turn waits for
@@ -264,7 +294,12 @@ TEST_F(ControllerManagerTest, ControllerUpdatesTest)
   EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
   EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
   EXPECT_CALL(*hw_mock_, switchResult())
-      .Times(6)
+      .Times(11)
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
       .WillOnce(Return(RobotHWMock::ONGOING))
       .WillOnce(Return(RobotHWMock::ONGOING))
       .WillOnce(Return(RobotHWMock::ONGOING))
@@ -291,13 +326,13 @@ TEST_F(ControllerManagerTest, ControllerUpdatesTest)
   timer.stop();
 
   const ros::Duration period(1.0);
-  for(unsigned int i = 0; i < 5; ++i)
+  for (unsigned int i = 0; i < 5; ++i)
   {
     cm_->update(ros::Time::now(), period);
   }
 }
 
-TEST_F(ControllerManagerTest, SwitchControllersAtDiffTimesTest)
+TEST_F(ControllerManagerTest, SwitchControllersAsapTest)
 {
   // only way to trigger switch is through switchController(...) which in turn waits for
   // update(...) to finish the switch, hence the update on a timer
@@ -311,8 +346,13 @@ TEST_F(ControllerManagerTest, SwitchControllersAtDiffTimesTest)
   EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
   EXPECT_CALL(*hw_mock_, switchResult()).Times(0);
   EXPECT_CALL(*hw_mock_, switchResult(_))
-      .Times(7)
+      .Times(12)
       .WillOnce(Return(RobotHWMock::DONE))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
       .WillOnce(Return(RobotHWMock::ONGOING))
       .WillOnce(Return(RobotHWMock::ONGOING))
       .WillOnce(Return(RobotHWMock::ONGOING))
@@ -331,6 +371,53 @@ TEST_F(ControllerManagerTest, SwitchControllersAtDiffTimesTest)
   // both controllers are started
   EXPECT_CALL(*ctrl_1_mock_, starting(_)).Times(1);
   EXPECT_CALL(*ctrl_2_mock_, starting(_)).Times(1);
+  // called 5 times, once for each ONGOING
+  EXPECT_CALL(*ctrl_2_mock_, waiting(_)).Times(5);
+
+  start_controllers = { "mock_ctrl_1", "mock_ctrl_2" };
+  ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness, false));
+}
+
+TEST_F(ControllerManagerTest, SwitchControllersAsapAbortTest)
+{
+  // only way to trigger switch is through switchController(...) which in turn waits for
+  // update(...) to finish the switch, hence the update on a timer
+  ros::NodeHandle node_handle;
+  ros::Timer timer = node_handle.createTimer(ros::Duration(0.01),
+                                             std::bind(update, cm_, std::placeholders::_1));
+
+  // one call for each controller
+  EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(1).WillRepeatedly(Return(false));
+  EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(1).WillRepeatedly(Return(true));
+  EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
+  EXPECT_CALL(*hw_mock_, switchResult()).Times(0);
+  EXPECT_CALL(*hw_mock_, switchResult(_))
+      .Times(13)
+      .WillOnce(Return(RobotHWMock::DONE))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ONGOING))
+      .WillOnce(Return(RobotHWMock::ERROR))
+      .WillOnce(Return(RobotHWMock::ERROR));
+
+  const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
+  std::vector<std::string> start_controllers, stop_controllers;
+
+  // called at least 5 times, once for each ONGOING
+  EXPECT_CALL(*ctrl_1_mock_, update(_, _)).Times(AtLeast(5));
+  // this may or may not be called depending on the timing of the update timer
+  EXPECT_CALL(*ctrl_2_mock_, update(_, _)).Times(AnyNumber());
+
+  // one controller manages to start, the other is aborted
+  EXPECT_CALL(*ctrl_1_mock_, starting(_)).Times(1);
+  EXPECT_CALL(*ctrl_2_mock_, aborting(_)).Times(1);
   // called 5 times, once for each ONGOING
   EXPECT_CALL(*ctrl_2_mock_, waiting(_)).Times(5);
 
