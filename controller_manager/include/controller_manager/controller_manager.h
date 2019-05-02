@@ -137,7 +137,7 @@ public:
    */
   bool switchController(const std::vector<std::string>& start_controllers,
                         const std::vector<std::string>& stop_controllers,
-                        const int strictness, bool wait_full_switch = true);
+                        const int strictness, bool start_asap = false);
 
   /** \brief Get a controller by name.
    *
@@ -184,7 +184,7 @@ private:
   bool please_switch_;
   bool switch_started_;
   int switch_strictness_;
-  bool wait_full_switch_;
+  bool start_asap_;
   /*\}*/
 
   /** \name Controllers List

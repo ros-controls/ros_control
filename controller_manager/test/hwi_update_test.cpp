@@ -375,7 +375,7 @@ TEST_F(ControllerManagerTest, SwitchControllersAsapTest)
   EXPECT_CALL(*ctrl_2_mock_, waiting(_)).Times(5);
 
   start_controllers = { "mock_ctrl_1", "mock_ctrl_2" };
-  ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness, false));
+  ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness, true));
 }
 
 TEST_F(ControllerManagerTest, SwitchControllersAsapAbortTest)
@@ -422,7 +422,7 @@ TEST_F(ControllerManagerTest, SwitchControllersAsapAbortTest)
   EXPECT_CALL(*ctrl_2_mock_, waiting(_)).Times(5);
 
   start_controllers = { "mock_ctrl_1", "mock_ctrl_2" };
-  ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness, false));
+  ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness, true));
 }
 
 int main(int argc, char **argv)

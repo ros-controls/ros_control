@@ -51,7 +51,7 @@ ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, cons
   please_switch_(false),
   switch_started_(false),
   switch_strictness_(0),
-  wait_full_switch_(true),
+  start_asap_(false),
   current_controllers_list_(0),
   used_by_realtime_(-1)
 {
@@ -141,7 +141,7 @@ void ControllerManager::manageSwitch(const ros::Time &time)
   stopControllers(time);
 
   // start controllers once the switch is fully complete
-  if (wait_full_switch_)
+  if (!start_asap_)
   {
     startControllers(time);
   }
@@ -476,7 +476,7 @@ bool ControllerManager::unloadController(const std::string &name)
 
 bool ControllerManager::switchController(const std::vector<std::string>& start_controllers,
                                          const std::vector<std::string>& stop_controllers,
-                                         int strictness, bool wait_full_switch)
+                                         int strictness, bool start_asap)
 {
   if (!stop_request_.empty() || !start_request_.empty())
     ROS_FATAL("The internal stop and start request lists are not empty at the beginning of the swithController() call. This should not happen.");
@@ -636,7 +636,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
 
   // start the atomic controller switching
   switch_strictness_ = strictness;
-  wait_full_switch_ = wait_full_switch;
+  start_asap_ = start_asap;
   please_switch_ = true;
 
   // wait until switch is finished
@@ -849,7 +849,7 @@ bool ControllerManager::switchControllerSrv(
   ROS_DEBUG("switching service locked");
 
   resp.ok = switchController(req.start_controllers, req.stop_controllers, req.strictness,
-                             req.wait_full_switch);
+                             req.start_asap);
 
   ROS_DEBUG("switching service finished");
   return true;
