@@ -216,7 +216,7 @@ TEST_F(ControllerManagerTest, SwitchOnlyTest)
   ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness));
 }
 
-TEST_F(ControllerManagerTest, SwitchWithControllersTest)
+TEST_F(ControllerManagerTest, SwitchControllersTest)
 {
   // only way to trigger switch is through switchController(...) which in turn waits for
   // update(...) to finish the switch, hence the update on a timer
@@ -243,6 +243,7 @@ TEST_F(ControllerManagerTest, SwitchWithControllersTest)
 
   start_controllers = { "mock_ctrl_1" };
   ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness));
+  ASSERT_TRUE(ctrl_1_mock_->isRunning());
 
   // stop and start controllers
   EXPECT_CALL(*ctrl_1_mock_, stopping(_)).Times(1);
@@ -251,9 +252,11 @@ TEST_F(ControllerManagerTest, SwitchWithControllersTest)
   start_controllers = { "mock_ctrl_2" };
   stop_controllers = { "mock_ctrl_1" };
   ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness));
+  ASSERT_TRUE(ctrl_1_mock_->isStopped());
+  ASSERT_TRUE(ctrl_2_mock_->isRunning());
 }
 
-TEST_F(ControllerManagerTest, SwitchWithControllersAbortTest)
+TEST_F(ControllerManagerTest, SwitchControllersAbortTest)
 {
   // only way to trigger switch is through switchController(...) which in turn waits for
   // update(...) to finish the switch, hence the update on a timer
@@ -280,6 +283,43 @@ TEST_F(ControllerManagerTest, SwitchWithControllersAbortTest)
 
   start_controllers = { "mock_ctrl_1", "mock_ctrl_2" };
   ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness));
+  ASSERT_TRUE(ctrl_1_mock_->isAborted());
+  ASSERT_TRUE(ctrl_2_mock_->isAborted());
+}
+
+TEST_F(ControllerManagerTest, SwitchControllersTimeoutTest)
+{
+  // only way to trigger switch is through switchController(...) which in turn waits for
+  // update(...) to finish the switch, hence the update on a timer
+  ros::NodeHandle node_handle;
+  ros::Timer timer = node_handle.createTimer(ros::Duration(0.01),
+                                             std::bind(update, cm_, std::placeholders::_1));
+
+  // one call for each controller
+  EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
+  EXPECT_CALL(*hw_mock_, switchResult()).WillRepeatedly(Return(RobotHWMock::ONGOING));
+
+  const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
+  std::vector<std::string> start_controllers, stop_controllers;
+
+  // controllers are never started
+  EXPECT_CALL(*ctrl_1_mock_, update(_, _)).Times(0);
+  EXPECT_CALL(*ctrl_2_mock_, update(_, _)).Times(0);
+
+  // called while hardware interfaces are ONGOING
+  EXPECT_CALL(*ctrl_1_mock_, waiting(_)).Times(AtLeast(1));
+  EXPECT_CALL(*ctrl_2_mock_, waiting(_)).Times(AtLeast(1));
+
+  // abort controller
+  EXPECT_CALL(*ctrl_1_mock_, aborting(_)).Times(1);
+  EXPECT_CALL(*ctrl_2_mock_, aborting(_)).Times(1);
+
+  start_controllers = { "mock_ctrl_1", "mock_ctrl_2" };
+  ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness, false, 1.0));
+  ASSERT_TRUE(ctrl_1_mock_->isAborted());
+  ASSERT_TRUE(ctrl_2_mock_->isAborted());
 }
 
 TEST_F(ControllerManagerTest, ControllerUpdatesTest)
@@ -322,6 +362,7 @@ TEST_F(ControllerManagerTest, ControllerUpdatesTest)
 
   start_controllers = { "mock_ctrl_1" };
   ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness));
+  ASSERT_TRUE(ctrl_1_mock_->isRunning());
 
   timer.stop();
 
@@ -376,6 +417,8 @@ TEST_F(ControllerManagerTest, SwitchControllersAsapTest)
 
   start_controllers = { "mock_ctrl_1", "mock_ctrl_2" };
   ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness, true));
+  ASSERT_TRUE(ctrl_1_mock_->isRunning());
+  ASSERT_TRUE(ctrl_2_mock_->isRunning());
 }
 
 TEST_F(ControllerManagerTest, SwitchControllersAsapAbortTest)
@@ -423,6 +466,44 @@ TEST_F(ControllerManagerTest, SwitchControllersAsapAbortTest)
 
   start_controllers = { "mock_ctrl_1", "mock_ctrl_2" };
   ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness, true));
+  ASSERT_TRUE(ctrl_1_mock_->isRunning());
+  ASSERT_TRUE(ctrl_2_mock_->isAborted());
+}
+
+TEST_F(ControllerManagerTest, SwitchControllersAsapTimeoutTest)
+{
+  // only way to trigger switch is through switchController(...) which in turn waits for
+  // update(...) to finish the switch, hence the update on a timer
+  ros::NodeHandle node_handle;
+  ros::Timer timer = node_handle.createTimer(ros::Duration(0.01),
+                                             std::bind(update, cm_, std::placeholders::_1));
+
+  // one call for each controller
+  EXPECT_CALL(*hw_mock_, checkForConflict(_)).Times(1).WillRepeatedly(Return(false));
+  EXPECT_CALL(*hw_mock_, prepareSwitch(_, _)).Times(1).WillRepeatedly(Return(true));
+  EXPECT_CALL(*hw_mock_, doSwitch(_, _)).Times(1);
+  EXPECT_CALL(*hw_mock_, switchResult()).Times(0);
+  EXPECT_CALL(*hw_mock_, switchResult(_))
+      .WillOnce(Return(RobotHWMock::DONE))
+      .WillRepeatedly(Return(RobotHWMock::ONGOING));
+
+  const int strictness = controller_manager_msgs::SwitchController::Request::STRICT;
+  std::vector<std::string> start_controllers, stop_controllers;
+
+  EXPECT_CALL(*ctrl_1_mock_, update(_, _)).Times(AtLeast(1));
+  // this may or may not be called depending on the timing of the update timer
+  EXPECT_CALL(*ctrl_2_mock_, update(_, _)).Times(AnyNumber());
+
+  // one controller manages to start, the other is aborted
+  EXPECT_CALL(*ctrl_1_mock_, starting(_)).Times(1);
+  EXPECT_CALL(*ctrl_2_mock_, aborting(_)).Times(1);
+
+  EXPECT_CALL(*ctrl_2_mock_, waiting(_)).Times(AtLeast(1));
+
+  start_controllers = { "mock_ctrl_1", "mock_ctrl_2" };
+  ASSERT_TRUE(cm_->switchController(start_controllers, stop_controllers, strictness, true, 1.0));
+  ASSERT_TRUE(ctrl_1_mock_->isRunning());
+  ASSERT_TRUE(ctrl_2_mock_->isAborted());
 }
 
 int main(int argc, char **argv)
