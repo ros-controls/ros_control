@@ -35,6 +35,7 @@
 #include <vector>
 
 #include <hardware_interface/internal/resource_manager.h>
+#include <transmission_interface/actuator_data.h>
 #include <transmission_interface/transmission.h>
 #include <transmission_interface/transmission_interface_exception.h>
 
@@ -45,6 +46,7 @@ namespace transmission_interface
  * \brief Handle for propagating a single map (position, velocity, or effort) on a single transmission
  * (eg. actuator to joint effort for a simple reducer).
  */
+template <class ActuatorDataType = ActuatorData> // extends ActuatorBase
 class TransmissionHandle
 {
 public:
@@ -54,7 +56,7 @@ public:
 protected:
   std::string   name_;
   Transmission* transmission_;
-  ActuatorData  actuator_data_;
+  ActuatorDataType  actuator_data_;
   JointData     joint_data_;
 
   /**
@@ -158,7 +160,7 @@ private:
 /**
  *\brief Handle for propagating actuator state (position, velocity and effort) to joint state for a given transmission.
  */
-class ActuatorToJointStateHandle : public TransmissionHandle
+class ActuatorToJointStateHandle : public TransmissionHandle<>
 {
 public:
   /** \sa TransmissionHandle::TransmissionHandle */
@@ -182,7 +184,7 @@ public:
 
 
 /** \brief Handle for propagating actuator positions to joint positions for a given transmission. */
-class ActuatorToJointPositionHandle : public TransmissionHandle
+class ActuatorToJointPositionHandle : public TransmissionHandle<>
 {
 public:
   /** \sa TransmissionHandle::TransmissionHandle */
@@ -201,7 +203,7 @@ public:
 
 
 /** \brief Handle for propagating actuator velocities to joint velocities for a given transmission. */
-class ActuatorToJointVelocityHandle : public TransmissionHandle
+class ActuatorToJointVelocityHandle : public TransmissionHandle<>
 {
 public:
   /** \sa TransmissionHandle::TransmissionHandle */
@@ -220,7 +222,7 @@ public:
 
 
 /** \brief Handle for propagating actuator efforts to joint efforts for a given transmission. */
-class ActuatorToJointEffortHandle : public TransmissionHandle
+class ActuatorToJointEffortHandle : public TransmissionHandle<>
 {
 public:
   /** \sa TransmissionHandle::TransmissionHandle */
@@ -241,7 +243,7 @@ public:
 /**
  *\brief Handle for propagating joint state (position, velocity and effort) to actuator state for a given transmission.
  */
-class JointToActuatorStateHandle : public TransmissionHandle
+class JointToActuatorStateHandle : public TransmissionHandle<>
 {
 public:
   /** \sa TransmissionHandle::TransmissionHandle */
@@ -265,7 +267,7 @@ public:
 
 
 /** \brief Handle for propagating joint positions to actuator positions for a given transmission. */
-class JointToActuatorPositionHandle : public TransmissionHandle
+class JointToActuatorPositionHandle : public TransmissionHandle<>
 {
 public:
   /** \sa TransmissionHandle::TransmissionHandle */
@@ -284,7 +286,7 @@ public:
 
 
 /** \brief Handle for propagating joint velocities to actuator velocities for a given transmission. */
-class JointToActuatorVelocityHandle : public TransmissionHandle
+class JointToActuatorVelocityHandle : public TransmissionHandle<>
 {
 public:
   /** \sa TransmissionHandle::TransmissionHandle */
@@ -303,7 +305,7 @@ public:
 
 
 /** \brief Handle for propagating joint efforts to actuator efforts for a given transmission. */
-class JointToActuatorEffortHandle : public TransmissionHandle
+class JointToActuatorEffortHandle : public TransmissionHandle<>
 {
 public:
   /** \sa TransmissionHandle::TransmissionHandle */

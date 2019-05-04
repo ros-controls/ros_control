@@ -42,7 +42,7 @@ using namespace transmission_interface;
 // Floating-point value comparison threshold
 const double EPS = 1e-6;
 
-class DummyHandle : public TransmissionHandle
+class DummyHandle : public TransmissionHandle<>
 {
 public:
   DummyHandle(const std::string&  name,
