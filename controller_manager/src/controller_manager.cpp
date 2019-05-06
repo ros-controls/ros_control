@@ -156,10 +156,7 @@ void ControllerManager::stopControllers(const ros::Time& time)
   {
     if (request->isRunning())
     {
-      if (!request->stopRequest(time))
-      {
-        ROS_FATAL("Failed to stop controller in realtime loop. This should never happen.");
-      }
+      request->stopRequest(time);
     }
   }
 }
@@ -171,10 +168,7 @@ void ControllerManager::startControllers(const ros::Time& time)
   {
     for (auto &request : start_request_)
     {
-      if (!request->startRequest(time))
-      {
-        ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
-      }
+      request->startRequest(time);
     }
 
     switch_params_.do_switch = false;
@@ -186,10 +180,7 @@ void ControllerManager::startControllers(const ros::Time& time)
   {
     for (auto &request : start_request_)
     {
-      if (!request->abortRequest(time))
-      {
-        ROS_FATAL("Failed to abort controller in realtime loop. This should never happen.");
-      }
+      request->abortRequest(time);
     }
 
     switch_params_.do_switch = false;
@@ -199,10 +190,7 @@ void ControllerManager::startControllers(const ros::Time& time)
   {
     for (auto &request : start_request_)
     {
-      if (!request->waitRequest(time))
-      {
-        ROS_FATAL("Failed to wait controller in realtime loop. This should never happen.");
-      }
+      request->waitRequest(time);
     }
   }
 }
@@ -222,28 +210,19 @@ void ControllerManager::startControllersAsap(const ros::Time& time)
           // ready to start
           if (robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::DONE)
           {
-            if (!request->startRequest(time))
-            {
-              ROS_FATAL("Failed to start controller in realtime loop. This should never happen.");
-            }
+            request->startRequest(time);
           }
           // abort on error or timeout (if set)
           else if ((robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::ERROR) ||
                    (switch_params_.timeout > 0.0 &&
                     (time - switch_params_.init_time).toSec() > switch_params_.timeout))
           {
-            if (!request->abortRequest(time))
-            {
-              ROS_FATAL("Failed to abort controller in realtime loop. This should never happen.");
-            }
+            request->abortRequest(time);
           }
           // controller is waiting
           else
           {
-            if (!request->waitRequest(time))
-            {
-              ROS_FATAL("Failed to wait controller in realtime loop. This should never happen.");
-            }
+            request->waitRequest(time);
           }
         }
         continue;

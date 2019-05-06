@@ -152,6 +152,7 @@ public:
     }
     else
     {
+      ROS_FATAL("Failed to start controller. It is not initialized.");
       return false;
     }
   }
@@ -169,6 +170,7 @@ public:
     }
     else
     {
+      ROS_FATAL("Failed to stop controller. It is not initialized.");
       return false;
     }
   }
@@ -186,6 +188,7 @@ public:
     }
     else
     {
+      ROS_FATAL("Failed to wait controller. It is not initialized.");
       return false;
     }
   }
@@ -203,6 +206,7 @@ public:
     }
     else
     {
+      ROS_FATAL("Failed to abort controller. It is not initialized.");
       return false;
     }
   }
