@@ -134,6 +134,10 @@ public:
    * controller_manager_msgs/SwitchControllers service as either \c BEST_EFFORT
    * or \c STRICT.  \c BEST_EFFORT means that \ref switchController can still
    * succeed if a non-existent controller is requested to be stopped or started.
+   * \param start_asap Start the controllers as soon as their resources
+   * are ready, will wait for all resources to be ready otherwise.
+   * \param timeout The timeout in seconds before aborting pending
+   * controllers. Zero for infinite.
    */
   bool switchController(const std::vector<std::string>& start_controllers,
                         const std::vector<std::string>& stop_controllers,
