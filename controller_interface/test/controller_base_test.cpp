@@ -33,7 +33,6 @@
 #include <ros/ros.h>
 
 #include <gmock/gmock.h>
-#include <gtest/gtest.h>
 
 using ::testing::StrictMock;
 using ::testing::_;

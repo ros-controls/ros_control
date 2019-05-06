@@ -36,7 +36,6 @@
 #include <ros/ros.h>
 
 #include <gmock/gmock.h>
-#include <gtest/gtest.h>
 
 #include <memory>
 #include <functional>
