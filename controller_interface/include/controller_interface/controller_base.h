@@ -93,7 +93,7 @@ public:
   /** \brief Check if the controller is initialized
    * \returns true if the controller is initialized
    */
-  bool isInitialized()
+  bool isInitialized() const
   {
     return state_ == INITIALIZED;
   }
@@ -101,7 +101,7 @@ public:
   /** \brief Check if the controller is running
    * \returns true if the controller is running
    */
-  bool isRunning()
+  bool isRunning() const
   {
     return state_ == RUNNING;
   }
@@ -109,7 +109,7 @@ public:
   /** \brief Check if the controller is stopped
    * \returns true if the controller is stopped
    */
-  bool isStopped()
+  bool isStopped() const
   {
     return state_ == STOPPED;
   }
@@ -117,7 +117,7 @@ public:
   /** \brief Check if the controller is waiting
    * \returns true if the controller is waiting
    */
-  bool isWaiting()
+  bool isWaiting() const
   {
     return state_ == WAITING;
   }
@@ -125,7 +125,7 @@ public:
   /** \brief Check if the controller is aborted
    * \returns true if the controller is aborted
    */
-  bool isAborted()
+  bool isAborted() const
   {
     return state_ == ABORTED;
   }
