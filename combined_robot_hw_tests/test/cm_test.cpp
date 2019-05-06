@@ -472,7 +472,7 @@ TEST(CMTests, listControllers)
     EXPECT_EQ(state1.claimed_resources[0].resources[1], "hiDOF_joint2");
 
     EXPECT_EQ(state2.name, "vel_eff_controller");
-    EXPECT_EQ(state2.state, "stopped");
+    EXPECT_EQ(state2.state, "initialized");
     EXPECT_EQ(state2.type, "controller_manager_tests/VelEffController");
     EXPECT_EQ(state2.claimed_resources.size(), 2);
     EXPECT_EQ(state2.claimed_resources[0].hardware_interface, "hardware_interface::VelocityJointInterface");
