@@ -256,10 +256,10 @@ void ControllerManager::startControllersAsap(const ros::Time& time)
   }
 
   // all needed controllers started, switch done
-  if (std::count_if(start_request_.begin(), start_request_.end(),
-                    [](controller_interface::ControllerBase *request) {
-                      return request->isRunning() || request->isAborted();
-                    }) == start_request_.size())
+  if (std::all_of(start_request_.begin(), start_request_.end(),
+                  [](controller_interface::ControllerBase *request) {
+                    return request->isRunning() || request->isAborted();
+                  }))
   {
     please_switch_ = false;
     switch_started_ = false;
