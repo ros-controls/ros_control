@@ -46,7 +46,7 @@ namespace transmission_interface
  * \brief Handle for propagating a single map (position, velocity, or effort) on a single transmission
  * (eg. actuator to joint effort for a simple reducer).
  */
-template <class ActuatorDataType = ActuatorData> // extends ActuatorBase
+template <class ActuatorDataType = ActuatorData> // extends ActuatorDataBase
 class TransmissionHandle
 {
 public:
@@ -69,10 +69,10 @@ protected:
    * data and their size should be consistent with the number of transmission actuators and joints.
    * Data vectors not used by this handle can remain empty.
    */
-  TransmissionHandle(const std::string&  name,
-                     Transmission*       transmission,
-                     const ActuatorData& actuator_data,
-                     const JointData&    joint_data)
+  TransmissionHandle(const std::string&      name,
+                     Transmission*           transmission,
+                     const ActuatorDataType& actuator_data,
+                     const JointData&        joint_data)
     : name_(name),
       transmission_(transmission),
       actuator_data_(actuator_data),
@@ -85,24 +85,16 @@ protected:
     }
 
     // Catch trivial error: All data vectors are empty (handle can't do anything without data)
-    if (actuator_data.position.empty() && actuator_data.velocity.empty() && actuator_data.effort.empty() &&
+    if (actuator_data.empty() &&
         joint_data.position.empty() && joint_data.velocity.empty() && joint_data.effort.empty())
     {
        throw TransmissionInterfaceException("All data vectors are empty. Transmission instance can't do anything!.");
     }
 
     // Precondition: All non-empty data vectors must have sizes consistent with the transmission
-    if (!actuator_data.position.empty() && actuator_data.position.size() != transmission_->numActuators())
+    if (!actuator_data.hasSize(transmission_->numActuators()))
     {
-      throw TransmissionInterfaceException("Actuator position data size does not match transmission.");
-    }
-    if (!actuator_data.velocity.empty() && actuator_data.velocity.size() != transmission_->numActuators())
-    {
-      throw TransmissionInterfaceException("Actuator velocity data size does not match transmission.");
-    }
-    if (!actuator_data.effort.empty() && actuator_data.effort.size() != transmission_->numActuators())
-    {
-      throw TransmissionInterfaceException("Actuator effort data size does not match transmission.");
+      throw TransmissionInterfaceException("Actuator data size does not match transmission.");
     }
 
     if (!joint_data.position.empty() && joint_data.position.size() != transmission_->numJoints())
@@ -119,17 +111,9 @@ protected:
     }
 
     // Precondition: Valid pointers to raw data
-    if (!hasValidPointers(actuator_data.position))
+    if (!actuator_data.valid())
     {
-      throw TransmissionInterfaceException("Actuator position data contains null pointers.");
-    }
-    if (!hasValidPointers(actuator_data.velocity))
-    {
-      throw TransmissionInterfaceException("Actuator velocity data contains null pointers.");
-    }
-    if (!hasValidPointers(actuator_data.effort))
-    {
-      throw TransmissionInterfaceException("Actuator effort data contains null pointers.");
+      throw TransmissionInterfaceException("Actuator data contains null pointers.");
     }
 
     if (!hasValidPointers(joint_data.position))
