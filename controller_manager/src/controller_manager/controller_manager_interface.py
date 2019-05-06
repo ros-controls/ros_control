@@ -99,7 +99,7 @@ def start_stop_controllers(start_controllers=[], stop_controllers=[]):
     rospy.wait_for_service('controller_manager/switch_controller')
     s = rospy.ServiceProxy('controller_manager/switch_controller', SwitchController)
     strictness = SwitchControllerRequest.STRICT
-    resp = s.call(SwitchControllerRequest(start_controllers, stop_controllers, strictness))
+    resp = s.call(SwitchControllerRequest(start_controllers, stop_controllers, strictness, False, 0.0))
     if resp.ok == 1:
         if start_controllers:
             print("Started {} successfully".format(start_controllers))
