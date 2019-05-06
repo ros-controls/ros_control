@@ -66,6 +66,9 @@ namespace controller_manager{
 class ControllerManager{
 
 public:
+  static constexpr bool WAIT_FOR_ALL_RESOURCES = false;
+  static constexpr double INFINITE_TIMEOUT = 0.0;
+
   /** \brief Constructor
    *
    * \param robot_hw A pointer to a robot hardware interface
@@ -141,7 +144,8 @@ public:
    */
   bool switchController(const std::vector<std::string>& start_controllers,
                         const std::vector<std::string>& stop_controllers,
-                        const int strictness, bool start_asap = false, double timeout = 0.0);
+                        const int strictness, bool start_asap = WAIT_FOR_ALL_RESOURCES,
+                        double timeout = INFINITE_TIMEOUT);
 
   /** \brief Get a controller by name.
    *
