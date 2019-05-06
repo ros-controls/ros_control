@@ -46,6 +46,7 @@ public:
   ControllerMock() : controller_interface::ControllerBase()
   {
   }
+
   ~ControllerMock()
   {
   }

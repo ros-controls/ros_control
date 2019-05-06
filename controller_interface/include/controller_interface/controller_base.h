@@ -60,7 +60,7 @@ public:
    *
    * \param time The current time
    */
-  virtual void starting(const ros::Time& /*time*/) {};
+  virtual void starting(const ros::Time& /*time*/) {}
 
   /** \brief This is called periodically by the realtime thread when the controller is running
    *
@@ -74,21 +74,21 @@ public:
    *
    * \param time The current time
    */
-  virtual void stopping(const ros::Time& /*time*/) {};
+  virtual void stopping(const ros::Time& /*time*/) {}
 
   /** \brief This is called from within the realtime thread while the controller is
    * waiting to start
    *
    * \param time The current time
    */
-  virtual void waiting(const ros::Time& /*time*/) {};
+  virtual void waiting(const ros::Time& /*time*/) {}
 
   /** \brief This is called from within the realtime thread when the controller needs
    * to be aborted
    *
    * \param time The current time
    */
-  virtual void aborting(const ros::Time& /*time*/) {};
+  virtual void aborting(const ros::Time& /*time*/) {}
 
   /** \brief Check if the controller is initialized
    * \returns true if the controller is initialized

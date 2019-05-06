@@ -54,6 +54,7 @@ public:
   RobotHWMock()
   {
   }
+
   ~RobotHWMock()
   {
   }
@@ -77,6 +78,7 @@ public:
   ControllerLoaderMock() : ControllerLoaderInterface("ControllerLoaderMock")
   {
   }
+
   ~ControllerLoaderMock()
   {
   }
@@ -93,6 +95,7 @@ public:
   ControllerMock()
   {
   }
+
   ~ControllerMock()
   {
   }
