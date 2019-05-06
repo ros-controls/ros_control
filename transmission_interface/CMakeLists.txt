@@ -106,6 +106,9 @@ if(CATKIN_ENABLE_TESTING)
   catkin_add_gtest(transmission_interface_test test/transmission_interface_test.cpp)
   target_link_libraries(transmission_interface_test ${TinyXML_LIBRARIES} ${catkin_LIBRARIES})
 
+  catkin_add_gtest(transmission_interface_variable_test test/transmission_interface_variable_test.cpp)
+  target_link_libraries(transmission_interface_variable_test ${TinyXML_LIBRARIES} ${catkin_LIBRARIES})
+
   catkin_add_gtest(transmission_parser_test test/transmission_parser_test.cpp)
   target_link_libraries(transmission_parser_test ${PROJECT_NAME}_parser ${catkin_LIBRARIES})
 
