@@ -185,12 +185,31 @@ private:
    *\{*/
   std::vector<controller_interface::ControllerBase*> start_request_, stop_request_;
   std::list<hardware_interface::ControllerInfo> switch_start_list_, switch_stop_list_;
-  bool please_switch_;
-  bool switch_started_;
-  int switch_strictness_;
-  bool start_asap_;
-  double timeout_;
-  ros::Time init_switch_;
+
+  struct SwitchParams
+  {
+    SwitchParams()
+      : do_switch(false)
+      , started(false)
+      , init_time(ros::TIME_MAX)
+      , strictness(0)
+      , start_asap(false)
+      , timeout(0.0)
+    {
+    }
+
+    bool do_switch;
+    bool started;
+    ros::Time init_time;
+
+    // switch options
+    int strictness;
+    bool start_asap;
+    double timeout;
+  };
+
+  SwitchParams switch_params_;
+
   /*\}*/
 
   /** \name Controllers List
