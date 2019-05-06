@@ -143,7 +143,6 @@ public:
   bool startRequest(const ros::Time& time)
   {
     // start works from any state, except CONSTRUCTED
-    // start succeeds even if the controller was already started
     if (state_ != CONSTRUCTED)
     {
       starting(time);
@@ -161,7 +160,6 @@ public:
   bool stopRequest(const ros::Time& time)
   {
     // stop works from any state, except CONSTRUCTED
-    // stop succeeds even if the controller was already stopped
     if (state_ != CONSTRUCTED)
     {
       stopping(time);
@@ -179,7 +177,6 @@ public:
   bool waitRequest(const ros::Time& time)
   {
     // wait works from any state, except CONSTRUCTED
-    // wait succeeds even if the controller was already waiting
     if (state_ != CONSTRUCTED)
     {
       waiting(time);
@@ -197,7 +194,6 @@ public:
   bool abortRequest(const ros::Time& time)
   {
     // abort works from any state, except CONSTRUCTED
-    // abort succeeds even if the controller was already waiting
     if (state_ != CONSTRUCTED)
     {
       aborting(time);
