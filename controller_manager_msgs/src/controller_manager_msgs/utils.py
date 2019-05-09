@@ -141,7 +141,7 @@ def _sloppy_get_controller_managers(namespace):
     try:
         # refresh the list of controller managers we can find
         srv_list = rosservice.get_service_list(namespace=namespace)
-    except ROSServiceIOException:
+    except rosservice.ROSServiceIOException:
         return []
 
     ns_list = []
