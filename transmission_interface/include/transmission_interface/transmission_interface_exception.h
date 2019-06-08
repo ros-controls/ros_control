@@ -29,6 +29,7 @@
 #define TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_EXCEPTION_H
 
 #include <exception>
+#include <iostream>
 
 namespace transmission_interface
 {
@@ -36,7 +37,8 @@ namespace transmission_interface
 class TransmissionInterfaceException: public std::exception
 {
 public:
-  TransmissionInterfaceException(const std::string& message) : msg(message) {}
+  TransmissionInterfaceException(const std::string& message) : msg(message) 
+  { std::cout << message << std::endl;}
   virtual ~TransmissionInterfaceException() throw() {}
   virtual const char* what() const throw() {return msg.c_str();}
 private:

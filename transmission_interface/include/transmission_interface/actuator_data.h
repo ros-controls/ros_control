@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 namespace transmission_interface
 {
@@ -45,7 +46,6 @@ struct ActuatorDataContainer : public ActuatorDataBase, public Interfaces...
     virtual bool valid() const = 0;
 };
 
-
 /**
  * \brief Contains pointers to raw data representing the position, velocity and acceleration of a transmission's
  * actuators.
@@ -60,7 +60,25 @@ public:
 
     bool hasSize(std::size_t size) const override
     {
-        return ((not empty()) and (position.size() == size) and (velocity.size() == size) and (effort.size() == size));
+        if(not position.empty() and position.size() != size )
+        {
+            std::cout << "Positions vector has wrong size" << std::endl;
+            return false;
+        }
+
+        if(not velocity.empty() and velocity.size() != size )
+        {
+            std::cout << "velocity vector has wrong size" << std::endl;
+            return false;
+        }
+        
+        if(not effort.empty() and effort.size() != size )
+        {
+            std::cout << "effort vector has wrong size" << std::endl;
+            return false;
+        }
+
+        return true;
     }
 
     bool valid() const override
