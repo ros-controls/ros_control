@@ -38,11 +38,9 @@
 
 namespace transmission_interface
 {
-
 /**
  * @defgroup transmission_types Transmission types
  */
-
 
 /**
  * \brief Contains pointers to raw data representing the position, velocity and acceleration of a transmission's
@@ -50,9 +48,9 @@ namespace transmission_interface
  */
 struct JointData
 {
-  std::vector<double*> position;
-  std::vector<double*> velocity;
-  std::vector<double*> effort;
+    std::vector<double*> position;
+    std::vector<double*> velocity;
+    std::vector<double*> effort;
 };
 
 /**
@@ -76,84 +74,80 @@ struct JointData
  */
 class Transmission
 {
-public:
-  virtual ~Transmission() {}
+  public:
+    virtual ~Transmission()
+    {
+    }
 
-  /**
-   * \brief Transform \e effort variables from actuator to joint space.
-   * \param[in]  act_data Actuator-space variables.
-   * \param[out] jnt_data Joint-space variables.
-   * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
-   * transmission actuators and joints.
-   * Data vectors not used in this map can remain empty.
-   */
-  virtual void actuatorToJointEffort(const EffortActuatorData& act_data,
-                                           JointData&    jnt_data) = 0;
+    /**
+     * \brief Transform \e effort variables from actuator to joint space.
+     * \param[in]  act_data Actuator-space variables.
+     * \param[out] jnt_data Joint-space variables.
+     * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
+     * transmission actuators and joints.
+     * Data vectors not used in this map can remain empty.
+     */
+    virtual void actuatorToJoint(const EffortActuatorData& act_data, JointData& jnt_data) = 0;
 
-  /**
-   * \brief Transform \e velocity variables from actuator to joint space.
-   * \param[in]  act_data Actuator-space variables.
-   * \param[out] jnt_data Joint-space variables.
-   * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
-   * transmission actuators and joints.
-   * Data vectors not used in this map can remain empty.
-   */
-  virtual void actuatorToJointVelocity(const VelocityActuatorData& act_data,
-                                             JointData&    jnt_data) = 0;
+    /**
+     * \brief Transform \e velocity variables from actuator to joint space.
+     * \param[in]  act_data Actuator-space variables.
+     * \param[out] jnt_data Joint-space variables.
+     * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
+     * transmission actuators and joints.
+     * Data vectors not used in this map can remain empty.
+     */
+    virtual void actuatorToJointVelocity(const VelocityActuatorData& act_data, JointData& jnt_data) = 0;
 
-  /**
-   * \brief Transform \e position variables from actuator to joint space.
-   * \param[in]  act_data Actuator-space variables.
-   * \param[out] jnt_data Joint-space variables.
-   * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
-   * transmission actuators and joints.
-   * Data vectors not used in this map can remain empty.
-   */
-  virtual void actuatorToJointPosition(const PositionActuatorData& act_data,
-                                             JointData&    jnt_data) = 0;
+    /**
+     * \brief Transform \e position variables from actuator to joint space.
+     * \param[in]  act_data Actuator-space variables.
+     * \param[out] jnt_data Joint-space variables.
+     * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
+     * transmission actuators and joints.
+     * Data vectors not used in this map can remain empty.
+     */
+    virtual void actuatorToJointPosition(const PositionActuatorData& act_data, JointData& jnt_data) = 0;
 
-  /**
-   * \brief Transform \e effort variables from joint to actuator space.
-   * \param[in]  jnt_data Joint-space variables.
-   * \param[out] act_data Actuator-space variables.
-   * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
-   * transmission actuators and joints.
-   * Data vectors not used in this map can remain empty.
-   */
-  virtual void jointToActuatorEffort(const JointData&    jnt_data,
-                                           EffortActuatorData& act_data) = 0;
+    /**
+     * \brief Transform \e effort variables from joint to actuator space.
+     * \param[in]  jnt_data Joint-space variables.
+     * \param[out] act_data Actuator-space variables.
+     * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
+     * transmission actuators and joints.
+     * Data vectors not used in this map can remain empty.
+     */
+    virtual void jointToActuatorEffort(const JointData& jnt_data, EffortActuatorData& act_data) = 0;
 
-  /**
-   * \brief Transform \e velocity variables from joint to actuator space.
-   * \param[in]  jnt_data Joint-space variables.
-   * \param[out] act_data Actuator-space variables.
-   * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
-   * transmission actuators and joints.
-   * Data vectors not used in this map can remain empty.
-   */
-  virtual void jointToActuatorVelocity(const JointData&    jnt_data,
-                                             VelocityActuatorData& act_data) = 0;
+    /**
+     * \brief Transform \e velocity variables from joint to actuator space.
+     * \param[in]  jnt_data Joint-space variables.
+     * \param[out] act_data Actuator-space variables.
+     * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
+     * transmission actuators and joints.
+     * Data vectors not used in this map can remain empty.
+     */
+    virtual void jointToActuatorVelocity(const JointData& jnt_data, VelocityActuatorData& act_data) = 0;
 
-  /**
-   * \brief Transform \e position variables from joint to actuator space.
-   * \param[in]  jnt_data Joint-space variables.
-   * \param[out] act_data Actuator-space variables.
-   * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
-   * transmission actuators and joints.
-   * Data vectors not used in this map can remain empty.
-   */
-  virtual void jointToActuatorPosition(const JointData&    jnt_data,
-                                             PositionActuatorData& act_data) = 0;
+    /**
+     * \brief Transform \e position variables from joint to actuator space.
+     * \param[in]  jnt_data Joint-space variables.
+     * \param[out] act_data Actuator-space variables.
+     * \pre All non-empty vectors must contain valid data and their size should be consistent with the number of
+     * transmission actuators and joints.
+     * Data vectors not used in this map can remain empty.
+     */
+    virtual void jointToActuatorPosition(const JointData& jnt_data, PositionActuatorData& act_data) = 0;
 
-  /** \return Number of actuators managed by transmission, ie. the dimension of the actuator space. */
-  virtual std::size_t numActuators() const = 0;
+    /** \return Number of actuators managed by transmission, ie. the dimension of the actuator space. */
+    virtual std::size_t numActuators() const = 0;
 
-  /** \return Number of joints managed by transmission, ie. the dimension of the joint space. */
-  virtual std::size_t numJoints()    const = 0;
+    /** \return Number of joints managed by transmission, ie. the dimension of the joint space. */
+    virtual std::size_t numJoints() const = 0;
 };
 
 typedef std::shared_ptr<Transmission> TransmissionSharedPtr;
 
-} // transmission_interface
+}  // transmission_interface
 
-#endif // TRANSMISSION_INTERFACE_TRANSMISSION_H
+#endif  // TRANSMISSION_INTERFACE_TRANSMISSION_H

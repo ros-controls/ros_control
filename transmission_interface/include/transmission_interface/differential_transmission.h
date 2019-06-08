@@ -39,7 +39,6 @@
 
 namespace transmission_interface
 {
-
 /**
  * \brief Implementation of a differential transmission.
  *
@@ -116,195 +115,198 @@ namespace transmission_interface
  */
 class DifferentialTransmission : public Transmission
 {
-public:
-  /**
-   * \param actuator_reduction Reduction ratio of actuators.
-   * \param joint_reduction    Reduction ratio of joints.
-   * \param joint_offset       Joint position offset used in the position mappings.
-   * \pre Nonzero actuator and joint reduction values.
-   */
-  DifferentialTransmission(const std::vector<double>& actuator_reduction,
-                           const std::vector<double>& joint_reduction,
-                           const std::vector<double>& joint_offset = std::vector<double>(2, 0.0));
+  public:
+    /**
+     * \param actuator_reduction Reduction ratio of actuators.
+     * \param joint_reduction    Reduction ratio of joints.
+     * \param joint_offset       Joint position offset used in the position mappings.
+     * \pre Nonzero actuator and joint reduction values.
+     */
+    DifferentialTransmission(const std::vector<double>& actuator_reduction, const std::vector<double>& joint_reduction,
+                             const std::vector<double>& joint_offset = std::vector<double>(2, 0.0));
 
-  /**
-   * \brief Transform \e effort variables from actuator to joint space.
-   * \param[in]  act_data Actuator-space variables.
-   * \param[out] jnt_data Joint-space variables.
-   * \pre Actuator and joint effort vectors must have size 2 and point to valid data.
-   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
-   */
-  void actuatorToJointEffort(const EffortActuatorData& act_data,
-                                   JointData&    jnt_data);
+    /**
+     * \brief Transform \e effort variables from actuator to joint space.
+     * \param[in]  act_data Actuator-space variables.
+     * \param[out] jnt_data Joint-space variables.
+     * \pre Actuator and joint effort vectors must have size 2 and point to valid data.
+     *  To call this method it is not required that all other data vectors contain valid data, and can even remain
+     * empty.
+     */
+    void actuatorToJoint(const EffortActuatorData& act_data, JointData& jnt_data);
 
-  /**
-   * \brief Transform \e velocity variables from actuator to joint space.
-   * \param[in]  act_data Actuator-space variables.
-   * \param[out] jnt_data Joint-space variables.
-   * \pre Actuator and joint velocity vectors must have size 2 and point to valid data.
-   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
-   */
-  void actuatorToJointVelocity(const VelocityActuatorData& act_data,
-                                     JointData&    jnt_data);
+    /**
+     * \brief Transform \e velocity variables from actuator to joint space.
+     * \param[in]  act_data Actuator-space variables.
+     * \param[out] jnt_data Joint-space variables.
+     * \pre Actuator and joint velocity vectors must have size 2 and point to valid data.
+     *  To call this method it is not required that all other data vectors contain valid data, and can even remain
+     * empty.
+     */
+    void actuatorToJointVelocity(const VelocityActuatorData& act_data, JointData& jnt_data);
 
-  /**
-   * \brief Transform \e position variables from actuator to joint space.
-   * \param[in]  act_data Actuator-space variables.
-   * \param[out] jnt_data Joint-space variables.
-   * \pre Actuator and joint position vectors must have size 2 and point to valid data.
-   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
-   */
-  void actuatorToJointPosition(const PositionActuatorData& act_data,
-                                     JointData&    jnt_data);
+    /**
+     * \brief Transform \e position variables from actuator to joint space.
+     * \param[in]  act_data Actuator-space variables.
+     * \param[out] jnt_data Joint-space variables.
+     * \pre Actuator and joint position vectors must have size 2 and point to valid data.
+     *  To call this method it is not required that all other data vectors contain valid data, and can even remain
+     * empty.
+     */
+    void actuatorToJointPosition(const PositionActuatorData& act_data, JointData& jnt_data);
 
-  /**
-   * \brief Transform \e effort variables from joint to actuator space.
-   * \param[in]  jnt_data Joint-space variables.
-   * \param[out] act_data Actuator-space variables.
-   * \pre Actuator and joint effort vectors must have size 2 and point to valid data.
-   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
-   */
-  void jointToActuatorEffort(const JointData&    jnt_data,
-                                   EffortActuatorData& act_data);
+    /**
+     * \brief Transform \e effort variables from joint to actuator space.
+     * \param[in]  jnt_data Joint-space variables.
+     * \param[out] act_data Actuator-space variables.
+     * \pre Actuator and joint effort vectors must have size 2 and point to valid data.
+     *  To call this method it is not required that all other data vectors contain valid data, and can even remain
+     * empty.
+     */
+    void jointToActuatorEffort(const JointData& jnt_data, EffortActuatorData& act_data);
 
-  /**
-   * \brief Transform \e velocity variables from joint to actuator space.
-   * \param[in]  jnt_data Joint-space variables.
-   * \param[out] act_data Actuator-space variables.
-   * \pre Actuator and joint velocity vectors must have size 2 and point to valid data.
-   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
-   */
-  void jointToActuatorVelocity(const JointData&    jnt_data,
-                                     VelocityActuatorData& act_data);
+    /**
+     * \brief Transform \e velocity variables from joint to actuator space.
+     * \param[in]  jnt_data Joint-space variables.
+     * \param[out] act_data Actuator-space variables.
+     * \pre Actuator and joint velocity vectors must have size 2 and point to valid data.
+     *  To call this method it is not required that all other data vectors contain valid data, and can even remain
+     * empty.
+     */
+    void jointToActuatorVelocity(const JointData& jnt_data, VelocityActuatorData& act_data);
 
-  /**
-   * \brief Transform \e position variables from joint to actuator space.
-   * \param[in]  jnt_data Joint-space variables.
-   * \param[out] act_data Actuator-space variables.
-   * \pre Actuator and joint position vectors must have size 2 and point to valid data.
-   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
-   */
-  void jointToActuatorPosition(const JointData&    jnt_data,
-                                     PositionActuatorData& act_data);
+    /**
+     * \brief Transform \e position variables from joint to actuator space.
+     * \param[in]  jnt_data Joint-space variables.
+     * \param[out] act_data Actuator-space variables.
+     * \pre Actuator and joint position vectors must have size 2 and point to valid data.
+     *  To call this method it is not required that all other data vectors contain valid data, and can even remain
+     * empty.
+     */
+    void jointToActuatorPosition(const JointData& jnt_data, PositionActuatorData& act_data);
 
-  std::size_t numActuators() const {return 2;}
-  std::size_t numJoints()    const {return 2;}
+    std::size_t numActuators() const
+    {
+        return 2;
+    }
+    std::size_t numJoints() const
+    {
+        return 2;
+    }
 
-  const std::vector<double>& getActuatorReduction() const {return act_reduction_;}
-  const std::vector<double>& getJointReduction()    const {return jnt_reduction_;}
-  const std::vector<double>& getJointOffset()       const {return jnt_offset_;}
+    const std::vector<double>& getActuatorReduction() const
+    {
+        return act_reduction_;
+    }
+    const std::vector<double>& getJointReduction() const
+    {
+        return jnt_reduction_;
+    }
+    const std::vector<double>& getJointOffset() const
+    {
+        return jnt_offset_;
+    }
 
-protected:
-  std::vector<double>  act_reduction_;
-  std::vector<double>  jnt_reduction_;
-  std::vector<double>  jnt_offset_;
+  protected:
+    std::vector<double> act_reduction_;
+    std::vector<double> jnt_reduction_;
+    std::vector<double> jnt_offset_;
 };
 
 inline DifferentialTransmission::DifferentialTransmission(const std::vector<double>& actuator_reduction,
                                                           const std::vector<double>& joint_reduction,
                                                           const std::vector<double>& joint_offset)
-  : Transmission(),
-    act_reduction_(actuator_reduction),
-    jnt_reduction_(joint_reduction),
-    jnt_offset_(joint_offset)
+  : Transmission(), act_reduction_(actuator_reduction), jnt_reduction_(joint_reduction), jnt_offset_(joint_offset)
 {
-  if (numActuators() != act_reduction_.size() ||
-      numJoints()    != jnt_reduction_.size() ||
-      numJoints()    != jnt_offset_.size())
-  {
-    throw TransmissionInterfaceException("Reduction and offset vectors of a differential transmission must have size 2.");
-  }
+    if (numActuators() != act_reduction_.size() || numJoints() != jnt_reduction_.size() ||
+        numJoints() != jnt_offset_.size())
+    {
+        throw TransmissionInterfaceException("Reduction and offset vectors of a differential transmission must have "
+                                             "size 2.");
+    }
 
-  if (0.0 == act_reduction_[0] ||
-      0.0 == act_reduction_[1] ||
-      0.0 == jnt_reduction_[0] ||
-      0.0 == jnt_reduction_[1]
-  )
-  {
-    throw TransmissionInterfaceException("Transmission reduction ratios cannot be zero.");
-  }
+    if (0.0 == act_reduction_[0] || 0.0 == act_reduction_[1] || 0.0 == jnt_reduction_[0] || 0.0 == jnt_reduction_[1])
+    {
+        throw TransmissionInterfaceException("Transmission reduction ratios cannot be zero.");
+    }
 }
 
-inline void DifferentialTransmission::actuatorToJointEffort(const EffortActuatorData& act_data,
-                                                                  JointData&    jnt_data)
+inline void DifferentialTransmission::actuatorToJoint(const EffortActuatorData& act_data, JointData& jnt_data)
 {
-  assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
-  assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
+    assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
+    assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+    std::vector<double>& ar = act_reduction_;
+    std::vector<double>& jr = jnt_reduction_;
 
-  *jnt_data.effort[0] = jr[0] * (*act_data.effort[0] * ar[0] + *act_data.effort[1] * ar[1]);
-  *jnt_data.effort[1] = jr[1] * (*act_data.effort[0] * ar[0] - *act_data.effort[1] * ar[1]);
+    *jnt_data.effort[0] = jr[0] * (*act_data.effort[0] * ar[0] + *act_data.effort[1] * ar[1]);
+    *jnt_data.effort[1] = jr[1] * (*act_data.effort[0] * ar[0] - *act_data.effort[1] * ar[1]);
 }
 
-inline void DifferentialTransmission::actuatorToJointVelocity(const VelocityActuatorData& act_data,
-                                                                    JointData&    jnt_data)
+inline void DifferentialTransmission::actuatorToJointVelocity(const VelocityActuatorData& act_data, JointData& jnt_data)
 {
-  assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
-  assert(act_data.velocity[0] && act_data.velocity[1] && jnt_data.velocity[0] && jnt_data.velocity[1]);
+    assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
+    assert(act_data.velocity[0] && act_data.velocity[1] && jnt_data.velocity[0] && jnt_data.velocity[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+    std::vector<double>& ar = act_reduction_;
+    std::vector<double>& jr = jnt_reduction_;
 
-  *jnt_data.velocity[0] = (*act_data.velocity[0] / ar[0] + *act_data.velocity[1] / ar[1]) / (2.0 * jr[0]);
-  *jnt_data.velocity[1] = (*act_data.velocity[0] / ar[0] - *act_data.velocity[1] / ar[1]) / (2.0 * jr[1]);
+    *jnt_data.velocity[0] = (*act_data.velocity[0] / ar[0] + *act_data.velocity[1] / ar[1]) / (2.0 * jr[0]);
+    *jnt_data.velocity[1] = (*act_data.velocity[0] / ar[0] - *act_data.velocity[1] / ar[1]) / (2.0 * jr[1]);
 }
 
-inline void DifferentialTransmission::actuatorToJointPosition(const PositionActuatorData& act_data,
-                                                                    JointData&    jnt_data)
+inline void DifferentialTransmission::actuatorToJointPosition(const PositionActuatorData& act_data, JointData& jnt_data)
 {
-  assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
-  assert(act_data.position[0] && act_data.position[1] && jnt_data.position[0] && jnt_data.position[1]);
+    assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
+    assert(act_data.position[0] && act_data.position[1] && jnt_data.position[0] && jnt_data.position[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+    std::vector<double>& ar = act_reduction_;
+    std::vector<double>& jr = jnt_reduction_;
 
-  *jnt_data.position[0] = (*act_data.position[0] / ar[0] + *act_data.position[1] / ar[1]) / (2.0 * jr[0]) + jnt_offset_[0];
-  *jnt_data.position[1] = (*act_data.position[0] / ar[0] - *act_data.position[1] / ar[1]) / (2.0 * jr[1]) + jnt_offset_[1];
+    *jnt_data.position[0] =
+        (*act_data.position[0] / ar[0] + *act_data.position[1] / ar[1]) / (2.0 * jr[0]) + jnt_offset_[0];
+    *jnt_data.position[1] =
+        (*act_data.position[0] / ar[0] - *act_data.position[1] / ar[1]) / (2.0 * jr[1]) + jnt_offset_[1];
 }
 
-inline void DifferentialTransmission::jointToActuatorEffort(const JointData&    jnt_data,
-                                                                  EffortActuatorData& act_data)
+inline void DifferentialTransmission::jointToActuatorEffort(const JointData& jnt_data, EffortActuatorData& act_data)
 {
-  assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
-  assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
+    assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
+    assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+    std::vector<double>& ar = act_reduction_;
+    std::vector<double>& jr = jnt_reduction_;
 
-  *act_data.effort[0] = (*jnt_data.effort[0] / jr[0] + *jnt_data.effort[1] / jr[1]) / (2.0 * ar[0]);
-  *act_data.effort[1] = (*jnt_data.effort[0] / jr[0] - *jnt_data.effort[1] / jr[1]) / (2.0 * ar[1]);
+    *act_data.effort[0] = (*jnt_data.effort[0] / jr[0] + *jnt_data.effort[1] / jr[1]) / (2.0 * ar[0]);
+    *act_data.effort[1] = (*jnt_data.effort[0] / jr[0] - *jnt_data.effort[1] / jr[1]) / (2.0 * ar[1]);
 }
 
-inline void DifferentialTransmission::jointToActuatorVelocity(const JointData&    jnt_data,
-                                                                    VelocityActuatorData& act_data)
+inline void DifferentialTransmission::jointToActuatorVelocity(const JointData& jnt_data, VelocityActuatorData& act_data)
 {
-  assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
-  assert(act_data.velocity[0] && act_data.velocity[1] && jnt_data.velocity[0] && jnt_data.velocity[1]);
+    assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
+    assert(act_data.velocity[0] && act_data.velocity[1] && jnt_data.velocity[0] && jnt_data.velocity[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+    std::vector<double>& ar = act_reduction_;
+    std::vector<double>& jr = jnt_reduction_;
 
-  *act_data.velocity[0] = (*jnt_data.velocity[0] * jr[0] + *jnt_data.velocity[1] * jr[1]) * ar[0];
-  *act_data.velocity[1] = (*jnt_data.velocity[0] * jr[0] - *jnt_data.velocity[1] * jr[1]) * ar[1];
+    *act_data.velocity[0] = (*jnt_data.velocity[0] * jr[0] + *jnt_data.velocity[1] * jr[1]) * ar[0];
+    *act_data.velocity[1] = (*jnt_data.velocity[0] * jr[0] - *jnt_data.velocity[1] * jr[1]) * ar[1];
 }
 
-inline void DifferentialTransmission::jointToActuatorPosition(const JointData&    jnt_data,
-                                                                    PositionActuatorData& act_data)
+inline void DifferentialTransmission::jointToActuatorPosition(const JointData& jnt_data, PositionActuatorData& act_data)
 {
-  assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
-  assert(act_data.position[0] && act_data.position[1] && jnt_data.position[0] && jnt_data.position[1]);
+    assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
+    assert(act_data.position[0] && act_data.position[1] && jnt_data.position[0] && jnt_data.position[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+    std::vector<double>& ar = act_reduction_;
+    std::vector<double>& jr = jnt_reduction_;
 
-  double jnt_pos_off[2] = {*jnt_data.position[0] - jnt_offset_[0], *jnt_data.position[1] - jnt_offset_[1]};
+    double jnt_pos_off[2] = { *jnt_data.position[0] - jnt_offset_[0], *jnt_data.position[1] - jnt_offset_[1] };
 
-  *act_data.position[0] = (jnt_pos_off[0] * jr[0] + jnt_pos_off[1] * jr[1]) * ar[0];
-  *act_data.position[1] = (jnt_pos_off[0] * jr[0] - jnt_pos_off[1] * jr[1]) * ar[1];
+    *act_data.position[0] = (jnt_pos_off[0] * jr[0] + jnt_pos_off[1] * jr[1]) * ar[0];
+    *act_data.position[1] = (jnt_pos_off[0] * jr[0] - jnt_pos_off[1] * jr[1]) * ar[1];
 }
 
-} // transmission_interface
+}  // transmission_interface
 
-#endif // TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_H
+#endif  // TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_H

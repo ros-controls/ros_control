@@ -41,104 +41,105 @@
 
 namespace transmission_interface
 {
-
 /**
  * \brief Handle for propagating a single map (position, velocity, or effort) on a single transmission
  * (eg. actuator to joint effort for a simple reducer).
  */
-template <class ActuatorDataType = ActuatorData> // extends ActuatorDataBase
+template <class ActuatorDataType = ActuatorData>  // extends ActuatorDataBase
 class TransmissionHandle
 {
-public:
-  /** \return Transmission name. */
-  std::string getName() const {return name_;}
-
-protected:
-  std::string   name_;
-  Transmission* transmission_;
-  ActuatorDataType  actuator_data_;
-  JointData     joint_data_;
-
-  /**
-   * \param name %Transmission name.
-   * \param transmission Pointer to transmission instance.
-   * \param actuator_data Actuator-space variables.
-   * \param joint_data Joint-space variables.
-   * \note The lifecycle of the pointed-to instances passed as parameters is not handled by this class.
-   * \pre Valid transmission pointer. Actuator and joint variable vectors required by this handle must contain valid
-   * data and their size should be consistent with the number of transmission actuators and joints.
-   * Data vectors not used by this handle can remain empty.
-   */
-  TransmissionHandle(const std::string&      name,
-                     Transmission*           transmission,
-                     const ActuatorDataType& actuator_data,
-                     const JointData&        joint_data)
-    : name_(name),
-      transmission_(transmission),
-      actuator_data_(actuator_data),
-      joint_data_(joint_data)
-  {
-    // Precondition: Valid transmission
-    if (!transmission_)
+  public:
+    /** \return Transmission name. */
+    std::string getName() const
     {
-      throw TransmissionInterfaceException("Unspecified transmission.");
+        return name_;
     }
 
-    // Catch trivial error: All data vectors are empty (handle can't do anything without data)
-    if (actuator_data.empty() &&
-        joint_data.position.empty() && joint_data.velocity.empty() && joint_data.effort.empty())
+  protected:
+    std::string name_;
+    Transmission* transmission_;
+    ActuatorDataType actuator_data_;
+    JointData joint_data_;
+
+    /**
+     * \param name %Transmission name.
+     * \param transmission Pointer to transmission instance.
+     * \param actuator_data Actuator-space variables.
+     * \param joint_data Joint-space variables.
+     * \note The lifecycle of the pointed-to instances passed as parameters is not handled by this class.
+     * \pre Valid transmission pointer. Actuator and joint variable vectors required by this handle must contain valid
+     * data and their size should be consistent with the number of transmission actuators and joints.
+     * Data vectors not used by this handle can remain empty.
+     */
+    TransmissionHandle(const std::string& name, Transmission* transmission, const ActuatorDataType& actuator_data,
+                       const JointData& joint_data)
+      : name_(name), transmission_(transmission), actuator_data_(actuator_data), joint_data_(joint_data)
     {
-       throw TransmissionInterfaceException("All data vectors are empty. Transmission instance can't do anything!.");
+        // Precondition: Valid transmission
+        if (!transmission_)
+        {
+            throw TransmissionInterfaceException("Unspecified transmission.");
+        }
+
+        // Catch trivial error: All data vectors are empty (handle can't do anything without data)
+        if (actuator_data.empty() && joint_data.position.empty() && joint_data.velocity.empty() &&
+            joint_data.effort.empty())
+        {
+            throw TransmissionInterfaceException("All data vectors are empty. Transmission instance can't do "
+                                                 "anything!.");
+        }
+
+        // Precondition: All non-empty data vectors must have sizes consistent with the transmission
+        if (!actuator_data.hasSize(transmission_->numActuators()))
+        {
+            throw TransmissionInterfaceException("Actuator data size does not match transmission.");
+        }
+
+        if (!joint_data.position.empty() && joint_data.position.size() != transmission_->numJoints())
+        {
+            throw TransmissionInterfaceException("Joint position data size does not match transmission.");
+        }
+        if (!joint_data.velocity.empty() && joint_data.velocity.size() != transmission_->numJoints())
+        {
+            throw TransmissionInterfaceException("Joint velocity data size does not match transmission.");
+        }
+        if (!joint_data.effort.empty() && joint_data.effort.size() != transmission_->numJoints())
+        {
+            throw TransmissionInterfaceException("Joint effort data size does not match transmission.");
+        }
+
+        // Precondition: Valid pointers to raw data
+        if (!actuator_data.valid())
+        {
+            throw TransmissionInterfaceException("Actuator data contains null pointers.");
+        }
+
+        if (!hasValidPointers(joint_data.position))
+        {
+            throw TransmissionInterfaceException("Joint position data contains null pointers.");
+        }
+        if (!hasValidPointers(joint_data.velocity))
+        {
+            throw TransmissionInterfaceException("Joint velocity data contains null pointers.");
+        }
+        if (!hasValidPointers(joint_data.effort))
+        {
+            throw TransmissionInterfaceException("Joint effort data contains null pointers.");
+        }
     }
 
-    // Precondition: All non-empty data vectors must have sizes consistent with the transmission
-    if (!actuator_data.hasSize(transmission_->numActuators()))
+  private:
+    static bool hasValidPointers(const std::vector<double*>& data)
     {
-      throw TransmissionInterfaceException("Actuator data size does not match transmission.");
+        for (std::vector<double*>::const_iterator it = data.begin(); it != data.end(); ++it)
+        {
+            if (!(*it))
+            {
+                return false;
+            }
+        }
+        return true;
     }
-
-    if (!joint_data.position.empty() && joint_data.position.size() != transmission_->numJoints())
-    {
-      throw TransmissionInterfaceException("Joint position data size does not match transmission.");
-    }
-    if (!joint_data.velocity.empty() && joint_data.velocity.size() != transmission_->numJoints())
-    {
-      throw TransmissionInterfaceException("Joint velocity data size does not match transmission.");
-    }
-    if (!joint_data.effort.empty() && joint_data.effort.size() != transmission_->numJoints())
-    {
-      throw TransmissionInterfaceException("Joint effort data size does not match transmission.");
-    }
-
-    // Precondition: Valid pointers to raw data
-    if (!actuator_data.valid())
-    {
-      throw TransmissionInterfaceException("Actuator data contains null pointers.");
-    }
-
-    if (!hasValidPointers(joint_data.position))
-    {
-      throw TransmissionInterfaceException("Joint position data contains null pointers.");
-    }
-    if (!hasValidPointers(joint_data.velocity))
-    {
-      throw TransmissionInterfaceException("Joint velocity data contains null pointers.");
-    }
-    if (!hasValidPointers(joint_data.effort))
-    {
-      throw TransmissionInterfaceException("Joint effort data contains null pointers.");
-    }
-  }
-
-private:
-  static bool hasValidPointers(const std::vector<double*>& data)
-  {
-    for (std::vector<double*>::const_iterator it = data.begin(); it != data.end(); ++it)
-    {
-      if (!(*it)) {return false;}
-    }
-    return true;
-  }
 };
 
 /**
@@ -146,164 +147,175 @@ private:
  */
 class ActuatorToJointStateHandle : public TransmissionHandle<>
 {
-public:
-  /** \sa TransmissionHandle::TransmissionHandle */
-  ActuatorToJointStateHandle(const std::string&  name,
-                             Transmission*       transmission,
-                             const ActuatorData& actuator_data,
-                             const JointData&    joint_data)
-    : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
+  public:
+    /** \sa TransmissionHandle::TransmissionHandle */
+    ActuatorToJointStateHandle(const std::string& name, Transmission* transmission, const ActuatorData& actuator_data,
+                               const JointData& joint_data)
+      : TransmissionHandle(name, transmission, actuator_data, joint_data)
+    {
+    }
 
-  /** \name Real-Time Safe Functions
-   *\{*/
-  /** \brief Propagate actuator state to joint state for the stored transmission. */
-  void propagate()
-  {
-    transmission_->actuatorToJointPosition(actuator_data_, joint_data_);
-    transmission_->actuatorToJointVelocity(actuator_data_, joint_data_);
-    transmission_->actuatorToJointEffort(  actuator_data_, joint_data_);
-  }
-  /*\}*/
+    /** \name Real-Time Safe Functions
+     *\{*/
+    /** \brief Propagate actuator state to joint state for the stored transmission. */
+    void propagate()
+    {
+        transmission_->actuatorToJointPosition(actuator_data_, joint_data_);
+        transmission_->actuatorToJointVelocity(actuator_data_, joint_data_);
+        transmission_->actuatorToJoint(actuator_data_, joint_data_);
+    }
+    /*\}*/
 };
-
 
 /** \brief Handle for propagating actuator positions to joint positions for a given transmission. */
 class ActuatorToJointPositionHandle : public TransmissionHandle<>
 {
-public:
-  /** \sa TransmissionHandle::TransmissionHandle */
-  ActuatorToJointPositionHandle(const std::string&  name,
-                                Transmission*       transmission,
-                                const ActuatorData& actuator_data,
-                                const JointData&    joint_data)
-    : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
+  public:
+    /** \sa TransmissionHandle::TransmissionHandle */
+    ActuatorToJointPositionHandle(const std::string& name, Transmission* transmission,
+                                  const ActuatorData& actuator_data, const JointData& joint_data)
+      : TransmissionHandle(name, transmission, actuator_data, joint_data)
+    {
+    }
 
-  /** \name Real-Time Safe Functions
-   *\{*/
-  /** \brief Propagate actuator positions to joint positions for the stored transmission. */
-  void propagate() {transmission_->actuatorToJointPosition(actuator_data_, joint_data_);}
-  /*\}*/
+    /** \name Real-Time Safe Functions
+     *\{*/
+    /** \brief Propagate actuator positions to joint positions for the stored transmission. */
+    void propagate()
+    {
+        transmission_->actuatorToJointPosition(actuator_data_, joint_data_);
+    }
+    /*\}*/
 };
-
 
 /** \brief Handle for propagating actuator velocities to joint velocities for a given transmission. */
 class ActuatorToJointVelocityHandle : public TransmissionHandle<>
 {
-public:
-  /** \sa TransmissionHandle::TransmissionHandle */
-  ActuatorToJointVelocityHandle(const std::string&  name,
-                                Transmission*       transmission,
-                                const ActuatorData& actuator_data,
-                                const JointData&    joint_data)
-    : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
+  public:
+    /** \sa TransmissionHandle::TransmissionHandle */
+    ActuatorToJointVelocityHandle(const std::string& name, Transmission* transmission,
+                                  const ActuatorData& actuator_data, const JointData& joint_data)
+      : TransmissionHandle(name, transmission, actuator_data, joint_data)
+    {
+    }
 
-  /** \name Real-Time Safe Functions
-   *\{*/
-  /** \brief Propagate actuator velocities to joint velocities for the stored transmission. */
-  void propagate() {transmission_->actuatorToJointVelocity(actuator_data_, joint_data_);}
-  /*\}*/
+    /** \name Real-Time Safe Functions
+     *\{*/
+    /** \brief Propagate actuator velocities to joint velocities for the stored transmission. */
+    void propagate()
+    {
+        transmission_->actuatorToJointVelocity(actuator_data_, joint_data_);
+    }
+    /*\}*/
 };
-
 
 /** \brief Handle for propagating actuator efforts to joint efforts for a given transmission. */
 class ActuatorToJointEffortHandle : public TransmissionHandle<>
 {
-public:
-  /** \sa TransmissionHandle::TransmissionHandle */
-  ActuatorToJointEffortHandle(const std::string&  name,
-                              Transmission*       transmission,
-                              const ActuatorData& actuator_data,
-                              const JointData&    joint_data)
-    : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
+  public:
+    /** \sa TransmissionHandle::TransmissionHandle */
+    ActuatorToJointEffortHandle(const std::string& name, Transmission* transmission, const ActuatorData& actuator_data,
+                                const JointData& joint_data)
+      : TransmissionHandle(name, transmission, actuator_data, joint_data)
+    {
+    }
 
-  /** \name Real-Time Safe Functions
-   *\{*/
-  /** \brief Propagate actuator efforts to joint efforts for the stored transmission. */
-  void propagate() {transmission_->actuatorToJointEffort(actuator_data_, joint_data_);}
-  /*\}*/
+    /** \name Real-Time Safe Functions
+     *\{*/
+    /** \brief Propagate actuator efforts to joint efforts for the stored transmission. */
+    void propagate()
+    {
+        transmission_->actuatorToJoint(actuator_data_, joint_data_);
+    }
+    /*\}*/
 };
-
 
 /**
  *\brief Handle for propagating joint state (position, velocity and effort) to actuator state for a given transmission.
  */
 class JointToActuatorStateHandle : public TransmissionHandle<>
 {
-public:
-  /** \sa TransmissionHandle::TransmissionHandle */
-  JointToActuatorStateHandle(const std::string&  name,
-                             Transmission*       transmission,
-                             const ActuatorData& actuator_data,
-                             const JointData&    joint_data)
-    : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
+  public:
+    /** \sa TransmissionHandle::TransmissionHandle */
+    JointToActuatorStateHandle(const std::string& name, Transmission* transmission, const ActuatorData& actuator_data,
+                               const JointData& joint_data)
+      : TransmissionHandle(name, transmission, actuator_data, joint_data)
+    {
+    }
 
-  /** \name Real-Time Safe Functions
-   *\{*/
-  /** \brief Propagate joint state to actuator state for the stored transmission. */
-  void propagate()
-  {
-    transmission_->jointToActuatorPosition(joint_data_, actuator_data_);
-    transmission_->jointToActuatorVelocity(joint_data_, actuator_data_);
-    transmission_->jointToActuatorEffort(  joint_data_, actuator_data_);
-  }
-  /*\}*/
+    /** \name Real-Time Safe Functions
+     *\{*/
+    /** \brief Propagate joint state to actuator state for the stored transmission. */
+    void propagate()
+    {
+        transmission_->jointToActuatorPosition(joint_data_, actuator_data_);
+        transmission_->jointToActuatorVelocity(joint_data_, actuator_data_);
+        transmission_->jointToActuatorEffort(joint_data_, actuator_data_);
+    }
+    /*\}*/
 };
-
 
 /** \brief Handle for propagating joint positions to actuator positions for a given transmission. */
 class JointToActuatorPositionHandle : public TransmissionHandle<>
 {
-public:
-  /** \sa TransmissionHandle::TransmissionHandle */
-  JointToActuatorPositionHandle(const std::string&  name,
-                                Transmission*       transmission,
-                                const ActuatorData& actuator_data,
-                                const JointData&    joint_data)
-    : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
+  public:
+    /** \sa TransmissionHandle::TransmissionHandle */
+    JointToActuatorPositionHandle(const std::string& name, Transmission* transmission,
+                                  const ActuatorData& actuator_data, const JointData& joint_data)
+      : TransmissionHandle(name, transmission, actuator_data, joint_data)
+    {
+    }
 
-  /** \name Real-Time Safe Functions
-   *\{*/
-  /** \brief Propagate joint positions to actuator positions for the stored transmission. */
-  void propagate() {transmission_->jointToActuatorPosition(joint_data_, actuator_data_);}
-  /*\}*/
+    /** \name Real-Time Safe Functions
+     *\{*/
+    /** \brief Propagate joint positions to actuator positions for the stored transmission. */
+    void propagate()
+    {
+        transmission_->jointToActuatorPosition(joint_data_, actuator_data_);
+    }
+    /*\}*/
 };
-
 
 /** \brief Handle for propagating joint velocities to actuator velocities for a given transmission. */
 class JointToActuatorVelocityHandle : public TransmissionHandle<>
 {
-public:
-  /** \sa TransmissionHandle::TransmissionHandle */
-  JointToActuatorVelocityHandle(const std::string&  name,
-                                Transmission*       transmission,
-                                const ActuatorData& actuator_data,
-                                const JointData&    joint_data)
-    : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
+  public:
+    /** \sa TransmissionHandle::TransmissionHandle */
+    JointToActuatorVelocityHandle(const std::string& name, Transmission* transmission,
+                                  const ActuatorData& actuator_data, const JointData& joint_data)
+      : TransmissionHandle(name, transmission, actuator_data, joint_data)
+    {
+    }
 
-  /** \name Real-Time Safe Functions
-   *\{*/
-  /** \brief Propagate joint velocities to actuator velocities for the stored transmission. */
-  void propagate() {transmission_->jointToActuatorVelocity(joint_data_, actuator_data_);}
-  /*\}*/
+    /** \name Real-Time Safe Functions
+     *\{*/
+    /** \brief Propagate joint velocities to actuator velocities for the stored transmission. */
+    void propagate()
+    {
+        transmission_->jointToActuatorVelocity(joint_data_, actuator_data_);
+    }
+    /*\}*/
 };
-
 
 /** \brief Handle for propagating joint efforts to actuator efforts for a given transmission. */
 class JointToActuatorEffortHandle : public TransmissionHandle<>
 {
-public:
-  /** \sa TransmissionHandle::TransmissionHandle */
-  JointToActuatorEffortHandle(const std::string&  name,
-                              Transmission*       transmission,
-                              const ActuatorData& actuator_data,
-                              const JointData&    joint_data)
-    : TransmissionHandle(name, transmission, actuator_data, joint_data) {}
+  public:
+    /** \sa TransmissionHandle::TransmissionHandle */
+    JointToActuatorEffortHandle(const std::string& name, Transmission* transmission, const ActuatorData& actuator_data,
+                                const JointData& joint_data)
+      : TransmissionHandle(name, transmission, actuator_data, joint_data)
+    {
+    }
 
-  /** \name Real-Time Safe Functions
-   *\{*/
-  /** \brief Propagate joint efforts to actuator efforts for the stored transmission. */
-  void propagate() {transmission_->jointToActuatorEffort(joint_data_, actuator_data_);}
-  /*\}*/
+    /** \name Real-Time Safe Functions
+     *\{*/
+    /** \brief Propagate joint efforts to actuator efforts for the stored transmission. */
+    void propagate()
+    {
+        transmission_->jointToActuatorEffort(joint_data_, actuator_data_);
+    }
+    /*\}*/
 };
 
 /**
@@ -326,61 +338,78 @@ public:
 template <class HandleType>
 class TransmissionInterface : public hardware_interface::ResourceManager<HandleType>
 {
-public:
+  public:
+    HandleType getHandle(const std::string& name)
+    {
+        // Rethrow exception with a meaningful type
+        try
+        {
+            return this->hardware_interface::ResourceManager<HandleType>::getHandle(name);
+        }
+        catch (const std::logic_error& e)
+        {
+            throw TransmissionInterfaceException(e.what());
+        }
+    }
 
-  HandleType getHandle(const std::string& name)
-  {
-    // Rethrow exception with a meaningful type
-    try
+    /** \name Real-Time Safe Functions
+     *\{*/
+    /** \brief Propagate the transmission maps of all managed handles. */
+    void propagate()
     {
-      return this->hardware_interface::ResourceManager<HandleType>::getHandle(name);
+        typedef typename hardware_interface::ResourceManager<HandleType>::ResourceMap::iterator ItratorType;
+        for (ItratorType it = this->resource_map_.begin(); it != this->resource_map_.end(); ++it)
+        {
+            it->second.propagate();
+        }
     }
-    catch(const std::logic_error& e)
-    {
-      throw TransmissionInterfaceException(e.what());
-    }
-  }
-
-  /** \name Real-Time Safe Functions
-   *\{*/
-  /** \brief Propagate the transmission maps of all managed handles. */
-  void propagate()
-  {
-    typedef typename hardware_interface::ResourceManager<HandleType>::ResourceMap::iterator ItratorType;
-    for (ItratorType it = this->resource_map_.begin(); it != this->resource_map_.end(); ++it)
-    {
-      it->second.propagate();
-    }
-  }
-  /*\}*/
+    /*\}*/
 };
 
 // Convenience typedefs
 
-/** Interface for propagating actuator state (position, velocity and effort) to joint state on a set of transmissions. */
-class ActuatorToJointStateInterface : public TransmissionInterface<ActuatorToJointStateHandle> {};
+/** Interface for propagating actuator state (position, velocity and effort) to joint state on a set of transmissions.
+ */
+class ActuatorToJointStateInterface : public TransmissionInterface<ActuatorToJointStateHandle>
+{
+};
 
 /** Interface for propagating actuator positions to joint positions on a set of transmissions. */
-class ActuatorToJointPositionInterface : public TransmissionInterface<ActuatorToJointPositionHandle> {};
+class ActuatorToJointPositionInterface : public TransmissionInterface<ActuatorToJointPositionHandle>
+{
+};
 
 /** Interface for propagating actuator velocities to joint velocities on a set of transmissions. */
-class ActuatorToJointVelocityInterface : public TransmissionInterface<ActuatorToJointVelocityHandle> {};
+class ActuatorToJointVelocityInterface : public TransmissionInterface<ActuatorToJointVelocityHandle>
+{
+};
 
 /** Interface for propagating actuator efforts to joint efforts on a set of transmissions. */
-class ActuatorToJointEffortInterface : public TransmissionInterface<ActuatorToJointEffortHandle> {};
+class ActuatorToJointEffortInterface : public TransmissionInterface<ActuatorToJointEffortHandle>
+{
+};
 
-/** Interface for propagating joint state (position, velocity and effort) to actuator state on a set of transmissions. */
-class JointToActuatorStateInterface : public TransmissionInterface<JointToActuatorStateHandle> {};
+/** Interface for propagating joint state (position, velocity and effort) to actuator state on a set of transmissions.
+ */
+class JointToActuatorStateInterface : public TransmissionInterface<JointToActuatorStateHandle>
+{
+};
 
 /** Interface for propagating joint positions to actuator positions on a set of transmissions. */
-class JointToActuatorPositionInterface : public TransmissionInterface<JointToActuatorPositionHandle> {};
+class JointToActuatorPositionInterface : public TransmissionInterface<JointToActuatorPositionHandle>
+{
+};
 
 /** Interface for propagating joint velocities to actuator velocities on a set of transmissions. */
-class JointToActuatorVelocityInterface : public TransmissionInterface<JointToActuatorVelocityHandle> {};
+class JointToActuatorVelocityInterface : public TransmissionInterface<JointToActuatorVelocityHandle>
+{
+};
 
 /** Interface for propagating joint efforts to actuator efforts on a set of transmissions. */
-class JointToActuatorEffortInterface : public TransmissionInterface<JointToActuatorEffortHandle> {};
+class JointToActuatorEffortInterface : public TransmissionInterface<JointToActuatorEffortHandle>
+{
+};
 
-} // transmission_interface
+}  // transmission_interface
 
-#endif // TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_H
+#endif  // TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_H
