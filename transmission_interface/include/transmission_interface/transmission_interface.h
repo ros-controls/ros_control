@@ -36,6 +36,7 @@
 
 #include <hardware_interface/internal/resource_manager.h>
 #include <transmission_interface/actuator_data.h>
+#include <transmission_interface/joint_data.h>
 #include <transmission_interface/transmission.h>
 #include <transmission_interface/transmission_interface_exception.h>
 
@@ -44,8 +45,10 @@ namespace transmission_interface
 /**
  * \brief Handle for propagating a single map (position, velocity, or effort) on a single transmission
  * (eg. actuator to joint effort for a simple reducer).
+ * \tparam ActuatorDataType extends ActuatorDataBase
+ * \tparam JointDataType extends JointDataBase
  */
-template <class ActuatorDataType = ActuatorData>  // extends ActuatorDataBase
+template <class ActuatorDataType = ActuatorData, class JointDataType = JointData>
 class TransmissionHandle
 {
   public:
@@ -59,7 +62,7 @@ class TransmissionHandle
     std::string name_;
     Transmission* transmission_;
     ActuatorDataType actuator_data_;
-    JointData joint_data_;
+    JointDataType joint_data_;
 
     /**
      * \param name %Transmission name.
@@ -72,7 +75,7 @@ class TransmissionHandle
      * Data vectors not used by this handle can remain empty.
      */
     TransmissionHandle(const std::string& name, Transmission* transmission, const ActuatorDataType& actuator_data,
-                       const JointData& joint_data)
+                       const JointDataType& joint_data)
       : name_(name), transmission_(transmission), actuator_data_(actuator_data), joint_data_(joint_data)
     {
         // Precondition: Valid transmission
@@ -82,8 +85,7 @@ class TransmissionHandle
         }
 
         // Catch trivial error: All data vectors are empty (handle can't do anything without data)
-        if (actuator_data.empty() && joint_data.position.empty() && joint_data.velocity.empty() &&
-            joint_data.effort.empty())
+        if (actuator_data.empty() && joint_data.empty())
         {
             throw TransmissionInterfaceException("All data vectors are empty. Transmission instance can't do "
                                                  "anything!.");
@@ -95,17 +97,9 @@ class TransmissionHandle
             throw TransmissionInterfaceException("Actuator data size does not match transmission.");
         }
 
-        if (!joint_data.position.empty() && joint_data.position.size() != transmission_->numJoints())
+        if (!joint_data.hasSize(transmission_->numActuators()))
         {
-            throw TransmissionInterfaceException("Joint position data size does not match transmission.");
-        }
-        if (!joint_data.velocity.empty() && joint_data.velocity.size() != transmission_->numJoints())
-        {
-            throw TransmissionInterfaceException("Joint velocity data size does not match transmission.");
-        }
-        if (!joint_data.effort.empty() && joint_data.effort.size() != transmission_->numJoints())
-        {
-            throw TransmissionInterfaceException("Joint effort data size does not match transmission.");
+            throw TransmissionInterfaceException("Joint data size does not match transmission.");
         }
 
         // Precondition: Valid pointers to raw data
@@ -114,17 +108,9 @@ class TransmissionHandle
             throw TransmissionInterfaceException("Actuator data contains null pointers.");
         }
 
-        if (!hasValidPointers(joint_data.position))
+        if (!joint_data.valid())
         {
-            throw TransmissionInterfaceException("Joint position data contains null pointers.");
-        }
-        if (!hasValidPointers(joint_data.velocity))
-        {
-            throw TransmissionInterfaceException("Joint velocity data contains null pointers.");
-        }
-        if (!hasValidPointers(joint_data.effort))
-        {
-            throw TransmissionInterfaceException("Joint effort data contains null pointers.");
+            throw TransmissionInterfaceException("Joint data contains null pointers.");
         }
     }
 

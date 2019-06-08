@@ -31,27 +31,17 @@
 #define TRANSMISSION_INTERFACE_TRANSMISSION_H
 
 #include <cstddef>
-#include <string>
-#include <vector>
 #include <memory>
+#include <string>
 #include <transmission_interface/actuator_data.h>
+#include <transmission_interface/joint_data.h>
+#include <vector>
 
 namespace transmission_interface
 {
 /**
  * @defgroup transmission_types Transmission types
  */
-
-/**
- * \brief Contains pointers to raw data representing the position, velocity and acceleration of a transmission's
- * joints.
- */
-struct JointData
-{
-    std::vector<double*> position;
-    std::vector<double*> velocity;
-    std::vector<double*> effort;
-};
 
 /**
  * \brief Abstract base class for representing mechanical transmissions.
