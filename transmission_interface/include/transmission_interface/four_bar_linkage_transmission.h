@@ -134,7 +134,7 @@ class FourBarLinkageTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void actuatorToJoint(const EffortActuatorData& act_data, JointData& jnt_data);
+    void actuatorToJoint(const EffortActuatorData& act_data, EffortJointData& jnt_data);
 
     /**
      * \brief Transform \e velocity variables from actuator to joint space.
@@ -144,7 +144,7 @@ class FourBarLinkageTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void actuatorToJointVelocity(const VelocityActuatorData& act_data, JointData& jnt_data);
+    void actuatorToJoint(const VelocityActuatorData& act_data, VelocityJointData& jnt_data);
 
     /**
      * \brief Transform \e position variables from actuator to joint space.
@@ -154,7 +154,7 @@ class FourBarLinkageTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void actuatorToJointPosition(const PositionActuatorData& act_data, JointData& jnt_data);
+    void actuatorToJoint(const PositionActuatorData& act_data, PositionJointData& jnt_data);
 
     /**
      * \brief Transform \e effort variables from joint to actuator space.
@@ -164,7 +164,7 @@ class FourBarLinkageTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void jointToActuatorEffort(const JointData& jnt_data, EffortActuatorData& act_data);
+    void jointToActuator(const EffortJointData& jnt_data, EffortActuatorData& act_data);
 
     /**
      * \brief Transform \e velocity variables from joint to actuator space.
@@ -174,7 +174,7 @@ class FourBarLinkageTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void jointToActuatorVelocity(const JointData& jnt_data, VelocityActuatorData& act_data);
+    void jointToActuator(const VelocityJointData& jnt_data, VelocityActuatorData& act_data);
 
     /**
      * \brief Transform \e position variables from joint to actuator space.
@@ -184,7 +184,7 @@ class FourBarLinkageTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void jointToActuatorPosition(const JointData& jnt_data, PositionActuatorData& act_data);
+    void jointToActuator(const PositionJointData& jnt_data, PositionActuatorData& act_data);
 
     std::size_t numActuators() const
     {
@@ -231,7 +231,7 @@ inline FourBarLinkageTransmission::FourBarLinkageTransmission(const std::vector<
     }
 }
 
-inline void FourBarLinkageTransmission::actuatorToJoint(const EffortActuatorData& act_data, JointData& jnt_data)
+inline void FourBarLinkageTransmission::actuatorToJoint(const EffortActuatorData& act_data, EffortJointData& jnt_data)
 {
     assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
     assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
@@ -243,8 +243,7 @@ inline void FourBarLinkageTransmission::actuatorToJoint(const EffortActuatorData
     *jnt_data.effort[1] = jr[1] * (*act_data.effort[1] * ar[1] - *act_data.effort[0] * ar[0] * jr[0]);
 }
 
-inline void FourBarLinkageTransmission::actuatorToJointVelocity(const VelocityActuatorData& act_data,
-                                                                JointData& jnt_data)
+inline void FourBarLinkageTransmission::actuatorToJoint(const VelocityActuatorData& act_data, VelocityJointData& jnt_data)
 {
     assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
     assert(act_data.velocity[0] && act_data.velocity[1] && jnt_data.velocity[0] && jnt_data.velocity[1]);
@@ -256,8 +255,8 @@ inline void FourBarLinkageTransmission::actuatorToJointVelocity(const VelocityAc
     *jnt_data.velocity[1] = (*act_data.velocity[1] / ar[1] - *act_data.velocity[0] / (jr[0] * ar[0])) / jr[1];
 }
 
-inline void FourBarLinkageTransmission::actuatorToJointPosition(const PositionActuatorData& act_data,
-                                                                JointData& jnt_data)
+inline void FourBarLinkageTransmission::actuatorToJoint(const PositionActuatorData& act_data,
+                                                              PositionJointData& jnt_data)
 {
     assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
     assert(act_data.position[0] && act_data.position[1] && jnt_data.position[0] && jnt_data.position[1]);
@@ -270,7 +269,7 @@ inline void FourBarLinkageTransmission::actuatorToJointPosition(const PositionAc
         (*act_data.position[1] / ar[1] - *act_data.position[0] / (jr[0] * ar[0])) / jr[1] + jnt_offset_[1];
 }
 
-inline void FourBarLinkageTransmission::jointToActuatorEffort(const JointData& jnt_data, EffortActuatorData& act_data)
+inline void FourBarLinkageTransmission::jointToActuator(const EffortJointData& jnt_data, EffortActuatorData& act_data)
 {
     assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
     assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
@@ -282,7 +281,7 @@ inline void FourBarLinkageTransmission::jointToActuatorEffort(const JointData& j
     *act_data.effort[1] = (*jnt_data.effort[0] + *jnt_data.effort[1] / jr[1]) / ar[1];
 }
 
-inline void FourBarLinkageTransmission::jointToActuatorVelocity(const JointData& jnt_data,
+inline void FourBarLinkageTransmission::jointToActuator(const VelocityJointData& jnt_data,
                                                                 VelocityActuatorData& act_data)
 {
     assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
@@ -295,7 +294,7 @@ inline void FourBarLinkageTransmission::jointToActuatorVelocity(const JointData&
     *act_data.velocity[1] = (*jnt_data.velocity[0] + *jnt_data.velocity[1] * jr[1]) * ar[1];
 }
 
-inline void FourBarLinkageTransmission::jointToActuatorPosition(const JointData& jnt_data,
+inline void FourBarLinkageTransmission::jointToActuator(const PositionJointData& jnt_data,
                                                                 PositionActuatorData& act_data)
 {
     assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());

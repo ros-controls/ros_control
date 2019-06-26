@@ -109,7 +109,7 @@ class SimpleTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void actuatorToJoint(const EffortActuatorData& act_data, JointData& jnt_data);
+    void actuatorToJoint(const EffortActuatorData& act_data, EffortJointData& jnt_data);
 
     /**
      * \brief Transform \e velocity variables from actuator to joint space.
@@ -119,7 +119,7 @@ class SimpleTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void actuatorToJointVelocity(const VelocityActuatorData& act_data, JointData& jnt_data);
+    void actuatorToJoint(const VelocityActuatorData& act_data, VelocityJointData& jnt_data);
 
     /**
      * \brief Transform \e position variables from actuator to joint space.
@@ -129,7 +129,7 @@ class SimpleTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void actuatorToJointPosition(const PositionActuatorData& act_data, JointData& jnt_data);
+    void actuatorToJoint(const PositionActuatorData& act_data, PositionJointData& jnt_data);
 
     /**
      * \brief Transform \e effort variables from joint to actuator space.
@@ -139,7 +139,7 @@ class SimpleTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void jointToActuatorEffort(const JointData& jnt_data, EffortActuatorData& act_data);
+    void jointToActuator(const EffortJointData& jnt_data, EffortActuatorData& act_data);
 
     /**
      * \brief Transform \e velocity variables from joint to actuator space.
@@ -149,7 +149,7 @@ class SimpleTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void jointToActuatorVelocity(const JointData& jnt_data, VelocityActuatorData& act_data);
+    void jointToActuator(const VelocityJointData& jnt_data, VelocityActuatorData& act_data);
 
     /**
      * \brief Transform \e position variables from joint to actuator space.
@@ -159,7 +159,7 @@ class SimpleTransmission : public Transmission
      *  To call this method it is not required that all other data vectors contain valid data, and can even remain
      * empty.
      */
-    void jointToActuatorPosition(const JointData& jnt_data, PositionActuatorData& act_data);
+    void jointToActuator(const PositionJointData& jnt_data, PositionActuatorData& act_data);
 
     std::size_t numActuators() const
     {
@@ -193,7 +193,7 @@ inline SimpleTransmission::SimpleTransmission(const double reduction, const doub
     }
 }
 
-inline void SimpleTransmission::actuatorToJoint(const EffortActuatorData& act_data, JointData& jnt_data)
+inline void SimpleTransmission::actuatorToJoint(const EffortActuatorData& act_data, EffortJointData& jnt_data)
 {
     assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
     assert(act_data.effort[0] && jnt_data.effort[0]);
@@ -201,7 +201,7 @@ inline void SimpleTransmission::actuatorToJoint(const EffortActuatorData& act_da
     *jnt_data.effort[0] = *act_data.effort[0] * reduction_;
 }
 
-inline void SimpleTransmission::actuatorToJointVelocity(const VelocityActuatorData& act_data, JointData& jnt_data)
+inline void SimpleTransmission::actuatorToJoint(const VelocityActuatorData& act_data, VelocityJointData& jnt_data)
 {
     assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
     assert(act_data.velocity[0] && jnt_data.velocity[0]);
@@ -209,7 +209,7 @@ inline void SimpleTransmission::actuatorToJointVelocity(const VelocityActuatorDa
     *jnt_data.velocity[0] = *act_data.velocity[0] / reduction_;
 }
 
-inline void SimpleTransmission::actuatorToJointPosition(const PositionActuatorData& act_data, JointData& jnt_data)
+inline void SimpleTransmission::actuatorToJoint(const PositionActuatorData& act_data, PositionJointData& jnt_data)
 {
     assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
     assert(act_data.position[0] && jnt_data.position[0]);
@@ -217,7 +217,7 @@ inline void SimpleTransmission::actuatorToJointPosition(const PositionActuatorDa
     *jnt_data.position[0] = *act_data.position[0] / reduction_ + jnt_offset_;
 }
 
-inline void SimpleTransmission::jointToActuatorEffort(const JointData& jnt_data, EffortActuatorData& act_data)
+inline void SimpleTransmission::jointToActuator(const EffortJointData& jnt_data, EffortActuatorData& act_data)
 {
     assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
     assert(act_data.effort[0] && jnt_data.effort[0]);
@@ -225,7 +225,7 @@ inline void SimpleTransmission::jointToActuatorEffort(const JointData& jnt_data,
     *act_data.effort[0] = *jnt_data.effort[0] / reduction_;
 }
 
-inline void SimpleTransmission::jointToActuatorVelocity(const JointData& jnt_data, VelocityActuatorData& act_data)
+inline void SimpleTransmission::jointToActuator(const VelocityJointData& jnt_data, VelocityActuatorData& act_data)
 {
     assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
     assert(act_data.velocity[0] && jnt_data.velocity[0]);
@@ -233,7 +233,7 @@ inline void SimpleTransmission::jointToActuatorVelocity(const JointData& jnt_dat
     *act_data.velocity[0] = *jnt_data.velocity[0] * reduction_;
 }
 
-inline void SimpleTransmission::jointToActuatorPosition(const JointData& jnt_data, PositionActuatorData& act_data)
+inline void SimpleTransmission::jointToActuator(const PositionJointData& jnt_data, PositionActuatorData& act_data)
 {
     assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
     assert(act_data.position[0] && jnt_data.position[0]);

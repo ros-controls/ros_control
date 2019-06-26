@@ -146,9 +146,9 @@ class ActuatorToJointStateHandle : public TransmissionHandle<>
     /** \brief Propagate actuator state to joint state for the stored transmission. */
     void propagate()
     {
-        transmission_->actuatorToJointPosition(actuator_data_, joint_data_);
-        transmission_->actuatorToJointVelocity(actuator_data_, joint_data_);
-        transmission_->actuatorToJoint(actuator_data_, joint_data_);
+        transmission_->actuatorToJoint((PositionActuatorData)actuator_data_, joint_data_);
+        transmission_->actuatorToJoint((VelocityActuatorData)actuator_data_, joint_data_);
+        transmission_->actuatorToJoint((EffortActuatorData)actuator_data_, joint_data_);
     }
     /*\}*/
 };
@@ -169,7 +169,7 @@ class ActuatorToJointPositionHandle : public TransmissionHandle<>
     /** \brief Propagate actuator positions to joint positions for the stored transmission. */
     void propagate()
     {
-        transmission_->actuatorToJointPosition(actuator_data_, joint_data_);
+        transmission_->actuatorToJoint((PositionActuatorData)actuator_data_, joint_data_);
     }
     /*\}*/
 };
@@ -190,7 +190,7 @@ class ActuatorToJointVelocityHandle : public TransmissionHandle<>
     /** \brief Propagate actuator velocities to joint velocities for the stored transmission. */
     void propagate()
     {
-        transmission_->actuatorToJointVelocity(actuator_data_, joint_data_);
+        transmission_->actuatorToJoint((VelocityActuatorData)actuator_data_, joint_data_);
     }
     /*\}*/
 };
@@ -211,7 +211,7 @@ class ActuatorToJointEffortHandle : public TransmissionHandle<>
     /** \brief Propagate actuator efforts to joint efforts for the stored transmission. */
     void propagate()
     {
-        transmission_->actuatorToJoint(actuator_data_, joint_data_);
+        transmission_->actuatorToJoint((EffortActuatorData)actuator_data_, joint_data_);
     }
     /*\}*/
 };
@@ -234,9 +234,9 @@ class JointToActuatorStateHandle : public TransmissionHandle<>
     /** \brief Propagate joint state to actuator state for the stored transmission. */
     void propagate()
     {
-        transmission_->jointToActuatorPosition(joint_data_, actuator_data_);
-        transmission_->jointToActuatorVelocity(joint_data_, actuator_data_);
-        transmission_->jointToActuatorEffort(joint_data_, actuator_data_);
+        transmission_->jointToActuator((PositionJointData)joint_data_, actuator_data_);
+        transmission_->jointToActuator((VelocityJointData)joint_data_, actuator_data_);
+        transmission_->jointToActuator((EffortJointData)joint_data_, actuator_data_);
     }
     /*\}*/
 };
@@ -257,7 +257,7 @@ class JointToActuatorPositionHandle : public TransmissionHandle<>
     /** \brief Propagate joint positions to actuator positions for the stored transmission. */
     void propagate()
     {
-        transmission_->jointToActuatorPosition(joint_data_, actuator_data_);
+        transmission_->jointToActuator((PositionJointData)joint_data_, actuator_data_);
     }
     /*\}*/
 };
@@ -278,7 +278,7 @@ class JointToActuatorVelocityHandle : public TransmissionHandle<>
     /** \brief Propagate joint velocities to actuator velocities for the stored transmission. */
     void propagate()
     {
-        transmission_->jointToActuatorVelocity(joint_data_, actuator_data_);
+        transmission_->jointToActuator((VelocityJointData)joint_data_, actuator_data_);
     }
     /*\}*/
 };
@@ -299,7 +299,7 @@ class JointToActuatorEffortHandle : public TransmissionHandle<>
     /** \brief Propagate joint efforts to actuator efforts for the stored transmission. */
     void propagate()
     {
-        transmission_->jointToActuatorEffort(joint_data_, actuator_data_);
+        transmission_->jointToActuator((EffortJointData)joint_data_, actuator_data_);
     }
     /*\}*/
 };
