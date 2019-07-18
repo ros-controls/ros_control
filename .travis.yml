@@ -19,7 +19,7 @@ env:
     - ROSINSTALL_FILENAME=ros_control.rosinstall
     - ROS_PARALLEL_TEST_JOBS=-j1
   matrix:
-    - ROS_DISTRO=melodic ROS_REPO=ros-shadow-fixed
+    - ROS_DISTRO=melodic ROS_REPO=ros-testing
 
 install:
   - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
