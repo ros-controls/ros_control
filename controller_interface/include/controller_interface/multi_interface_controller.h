@@ -30,7 +30,8 @@
 #ifndef CONTROLLER_INTERFACE_MULTI_INTERFACE_CONTROLLER_H
 #define CONTROLLER_INTERFACE_MULTI_INTERFACE_CONTROLLER_H
 
-#warning MultiInterfaceController is deprecated. Please use Controller instead.
+// TODO: Decide in the future if/when to deprecate MultiInterfaceController.
+// #warning MultiInterfaceController is deprecated. Please use Controller instead.
 
 #include <controller_interface/controller.h>
 #include <controller_interface/internal/robothw_interfaces.h>
