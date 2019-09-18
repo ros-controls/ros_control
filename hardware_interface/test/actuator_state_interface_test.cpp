@@ -125,6 +125,82 @@ TEST_F(ActuatorStateInterfaceTest, ExcerciseApi)
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 }
 
+namespace hardware_interface {
+
+class CustomActuatorStateHandle
+{
+public:
+  CustomActuatorStateHandle() = default;
+
+  CustomActuatorStateHandle(const double* custom) : custom_(custom)
+  {
+    if (!custom)
+    {
+      throw HardwareInterfaceException("Custom data pointer is null.");
+    }
+  }
+
+  virtual ~CustomActuatorStateHandle()
+  {
+  }
+
+  virtual double getCustom() const
+  {
+    assert(custom_);
+    return *custom_;
+  }
+
+  virtual const double* getCustomPtr() const
+  {
+    return custom_;
+  }
+
+  virtual std::string getName() const = 0;
+
+protected:
+  const double* custom_ = nullptr;
+};
+
+class ExtendedActuatorStateHandle : public ActuatorStateHandle,
+                                    public CustomActuatorStateHandle
+{
+public:
+  ExtendedActuatorStateHandle() = default;
+
+  ExtendedActuatorStateHandle(const std::string& name, const double* pos,
+                              const double* vel, const double* eff, const double* custom)
+    : ActuatorStateHandle(name, pos, vel, eff), CustomActuatorStateHandle(custom)
+  {
+  }
+
+  std::string getName() const
+  {
+    return ActuatorStateHandle::getName();
+  }
+};
+
+}
+
+TEST_F(ActuatorStateInterfaceTest, ExtensionTest)
+{
+  const double POSITION = 1.0;
+  const double VELOCITY = 2.0;
+  const double EFFORT = 3.0;
+  const double CUSTOM = 4.0;
+
+  double pos = POSITION;
+  double vel = VELOCITY;
+  double eff = EFFORT;
+  double custom = CUSTOM;
+
+  ExtendedActuatorStateHandle act("ExtendedHandle", &pos, &vel, &eff, &custom);
+
+  ASSERT_EQ(act.getPosition(), POSITION);
+  ASSERT_EQ(act.getVelocity(), VELOCITY);
+  ASSERT_EQ(act.getEffort(), EFFORT);
+  ASSERT_EQ(act.getCustom(), CUSTOM);
+}
+
 int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
