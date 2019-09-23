@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- global costmap without laser and vo layers -->
+  <rosparam command="load" ns="/move_base" file="$(find tiago_integration_tests)/config/global_costmap.yaml" />
+
+  <!-- default local planner parameters -->
+  <rosparam command="load" ns="" file="$(find tiago_2dnav)/config/base/pal/local_planner.yaml" />
+
+  <node name="pal_local_planner" pkg="pal_local_planner" type="vfh_node" args="cmd_vel_out:=mobile_base_controller/cmd_vel" />
+
+  <test test-name="$(arg test_name)" pkg="tiago_integration_tests" type="collision_avoidance-test" time-limit="600">
+    <param name="robot" value="tiago"/>
+  </test>
+</launch>

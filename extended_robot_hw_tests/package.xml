@@ -10,16 +10,18 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>pluginlib</build_depend>
-  <build_depend>transmission_interface</build_depend>
+  <depend>transmission_interface</depend>
 
   <exec_depend>pluginlib</exec_depend>
 
+  <test_depend>hardware_interface</test_depend>
+  <test_depend>resource_retriever</test_depend>
   <test_depend>rostest</test_depend>
   <test_depend>rosunit</test_depend>
-  <test_depend>hardware_interface</test_depend>
+  <test_depend>urdf</test_depend>
 
   <export>
-    <transmission_interface plugin="${prefix}/extended_plugins.xml" />
+	  <transmission_interface plugin="${prefix}/extended_plugins.xml" />
   </export>
 
 </package>

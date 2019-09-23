@@ -2,6 +2,14 @@
 
 <robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <link name="link_1"/>
+  <link name="link_2"/>
+
+  <joint name="extended_joint" type="floating">
+     <parent link="link_1"/>
+     <child link="link_2"/>
+  </joint>
+
   <transmission name="extended_simple_trans">
     <type>transmission_interface/ExtendedSimpleTransmission</type>
     <joint name="extended_joint">

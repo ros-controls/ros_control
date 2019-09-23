@@ -30,10 +30,19 @@
 #include "extended_actuator_interface.h"
 #include "extended_joint_interface.h"
 
-#include <transmission_interface/simple_transmission.h>
+#include <transmission_interface/transmission_info.h>
+#include <transmission_interface/transmission_parser.h>
+#include <transmission_interface/transmission_interface_loader.h>
+#include <transmission_interface/robot_transmissions.h>
 #include <hardware_interface/robot_hw.h>
 
+#include <resource_retriever/retriever.h>
+#include <urdf_parser/urdf_parser.h>
+#include <ros/ros.h>
+
 #include <gtest/gtest.h>
+
+#include <string>
 
 struct ExtendedActuatorData
 {
@@ -67,17 +76,16 @@ struct ExtendedActuatorData
 class ExtendedRobotHW : public hardware_interface::RobotHW
 {
 public:
-  ExtendedRobotHW(ExtendedActuatorData* act_data)
+  ExtendedRobotHW()
     : hardware_interface::RobotHW(), act_name_("extended_actuator")
   {
-    init_robot(act_data);
   }
 
   virtual ~ExtendedRobotHW()
   {
   }
 
-  void init_robot(ExtendedActuatorData* act_data)
+  bool init_acts(ExtendedActuatorData* act_data)
   {
     // for simplicity, robot with one actuator
 
@@ -108,8 +116,54 @@ public:
     registerInterface(&act_foo_cmd_);
     registerInterface(&act_bar_cmd_);
 
+    /// @todo add some checks
+    return true;
+  }
+
+  bool init_trans()
+  {
+    std::string urdf;
+    if(!readURDF("test/urdf/extended_simple_transmission_loader.urdf", urdf))
+    {
+      return false;
+    }
+
+    transmission_interface::TransmissionParser parser;
+    if (!parser.parse(urdf, transmission_infos_))
+    {
+      return false;
+    }
+
+    transmission_interface::TransmissionInterfaceLoader loader(this, &robot_transmissions_);
+    if(!loader.load(transmission_infos_))
+    {
+      return false;
+    }
+
+    return true;
+  }
 
 
+  void init_joints()
+  {
+  }
+
+private:
+  bool readURDF(const std::string& filename, std::string& contents)
+  {
+    resource_retriever::Retriever retriever;
+    resource_retriever::MemoryResource resource;
+    try
+    {
+       resource = retriever.get("package://extended_robot_hw_tests/" + filename);
+    }
+    catch (resource_retriever::Exception& e)
+    {
+      ROS_ERROR_STREAM("Failed to retrieve file: " << e.what());
+      return false;
+    }
+    contents.assign(resource.data.get(), resource.data.get() + resource.size);
+    return true;
   }
 
 private:
@@ -121,6 +175,9 @@ private:
   hardware_interface::FooActuatorInterface act_foo_cmd_;
   hardware_interface::BarActuatorInterface act_bar_cmd_;
 
+  // transmissions
+
+
   // joints
   hardware_interface::PositionJointInterface jnt_pos_cmd_;
   hardware_interface::VelocityJointInterface jnt_vel_cmd_;
@@ -128,16 +185,21 @@ private:
   hardware_interface::FooJointInterface jnt_foo_cmd_;
   hardware_interface::BarJointInterface jnt_bar_cmd_;
 
-  // transmissions
-
   std::string act_name_;
+
+  // ros::NodeHandle node_handle_;
+  std::vector<transmission_interface::TransmissionInfo> transmission_infos_;
+  transmission_interface::RobotTransmissions robot_transmissions_;
 };
 
 TEST(RobotHWExtensionTest, ExtensionTest)
 {
   ExtendedActuatorData data;
 
-  ExtendedRobotHW robot_hw(&data);
+  ExtendedRobotHW robot_hw;
+
+  ASSERT_TRUE(robot_hw.init_acts(&data));
+  ASSERT_TRUE(robot_hw.init_trans());
 
   /// @todo test write actuator data, check equals joint data
   /// @todo test write joint command, check equals actuator command
