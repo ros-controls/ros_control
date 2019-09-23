@@ -29,7 +29,9 @@ include_directories(include)
 include_directories(SYSTEM ${catkin_INCLUDE_DIRS} ${TinyXML_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}_loader_plugins
-  src/extended_simple_transmission_loader.cpp)
+  src/extended_simple_transmission_loader.cpp
+  src/foo_joint_interface_provider.cpp)
+#  src/bar_joint_interface_provider.cpp)
 
 target_link_libraries(${PROJECT_NAME}_loader_plugins ${catkin_LIBRARIES})
 
