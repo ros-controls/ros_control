@@ -1,0 +1,11 @@
+<library path="lib/libtransmission_interface_loader_plugins">
+
+  <class name="transmission_interface/ExtendedSimpleTransmission"
+         type="transmission_interface::ExtendedSimpleTransmissionLoader"
+         base_class_type="transmission_interface::TransmissionLoader">
+    <description>
+      Load from a URDF description the configuration of a simple transmission.
+    </description>
+  </class>
+
+</library>
