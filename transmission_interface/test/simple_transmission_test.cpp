@@ -88,54 +88,54 @@ TEST(PreconditionsTest, AssertionTriggering)
   SimpleTransmission trans = SimpleTransmission(1.0);
 
   // Data with invalid pointers should trigger an assertion
-  EXPECT_DEATH(trans.actuatorToJointEffort(a_bad_data,  j_bad_data),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointEffort(a_good_data, j_bad_data),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointEffort(a_bad_data,  j_good_data), ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((EffortActuatorData)a_bad_data,  j_bad_data),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((EffortActuatorData)a_good_data, j_bad_data),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((EffortActuatorData)a_bad_data,  j_good_data), ".*");
 
-  EXPECT_DEATH(trans.actuatorToJointVelocity(a_bad_data,  j_bad_data),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointVelocity(a_good_data, j_bad_data),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointVelocity(a_bad_data,  j_good_data), ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((VelocityActuatorData)a_bad_data,  j_bad_data),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((VelocityActuatorData)a_good_data, j_bad_data),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((VelocityActuatorData)a_bad_data,  j_good_data), ".*");
 
-  EXPECT_DEATH(trans.actuatorToJointPosition(a_bad_data,  j_bad_data),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointPosition(a_good_data, j_bad_data),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointPosition(a_bad_data,  j_good_data), ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((PositionActuatorData)a_bad_data,  j_bad_data),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((PositionActuatorData)a_good_data, j_bad_data),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((PositionActuatorData)a_bad_data,  j_good_data), ".*");
 
-  EXPECT_DEATH(trans.jointToActuatorEffort(j_bad_data,  a_bad_data),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorEffort(j_good_data, a_bad_data),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorEffort(j_bad_data,  a_good_data), ".*");
+  EXPECT_DEATH(trans.jointToActuator((EffortJointData)j_bad_data,  a_bad_data),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((EffortJointData)j_good_data, a_bad_data),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((EffortJointData)j_bad_data,  a_good_data), ".*");
 
-  EXPECT_DEATH(trans.jointToActuatorVelocity(j_bad_data,  a_bad_data),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorVelocity(j_good_data, a_bad_data),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorVelocity(j_bad_data,  a_good_data), ".*");
+  EXPECT_DEATH(trans.jointToActuator((VelocityJointData)j_bad_data,  a_bad_data),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((VelocityJointData)j_good_data, a_bad_data),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((VelocityJointData)j_bad_data,  a_good_data), ".*");
 
-  EXPECT_DEATH(trans.jointToActuatorPosition(j_bad_data,  a_bad_data),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorPosition(j_good_data, a_bad_data),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorPosition(j_bad_data,  a_good_data), ".*");
+  EXPECT_DEATH(trans.jointToActuator((PositionJointData)j_bad_data,  a_bad_data),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((PositionJointData)j_good_data, a_bad_data),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((PositionJointData)j_bad_data,  a_good_data), ".*");
 
   // Wrong parameter sizes should trigger an assertion
-  EXPECT_DEATH(trans.actuatorToJointEffort(a_bad_size,  j_bad_size),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointEffort(a_good_data, j_bad_size),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointEffort(a_bad_size,  j_good_data), ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((EffortActuatorData)a_bad_size,  j_bad_size),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((EffortActuatorData)a_good_data, j_bad_size),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((EffortActuatorData)a_bad_size,  j_good_data), ".*");
 
-  EXPECT_DEATH(trans.actuatorToJointVelocity(a_bad_size,  j_bad_size),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointVelocity(a_good_data, j_bad_size),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointVelocity(a_bad_size,  j_good_data), ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((VelocityActuatorData)a_bad_size,  j_bad_size),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((VelocityActuatorData)a_good_data, j_bad_size),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((VelocityActuatorData)a_bad_size,  j_good_data), ".*");
 
-  EXPECT_DEATH(trans.actuatorToJointPosition(a_bad_size,  j_bad_size),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointPosition(a_good_data, j_bad_size),  ".*");
-  EXPECT_DEATH(trans.actuatorToJointPosition(a_bad_size,  j_good_data), ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((PositionActuatorData)a_bad_size,  j_bad_size),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((PositionActuatorData)a_good_data, j_bad_size),  ".*");
+  EXPECT_DEATH(trans.actuatorToJoint((PositionActuatorData)a_bad_size,  j_good_data), ".*");
 
-  EXPECT_DEATH(trans.jointToActuatorEffort(j_bad_size,  a_bad_size),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorEffort(j_good_data, a_bad_size),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorEffort(j_bad_size,  a_good_data), ".*");
+  EXPECT_DEATH(trans.jointToActuator((EffortJointData)j_bad_size,  a_bad_size),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((EffortJointData)j_good_data, a_bad_size),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((EffortJointData)j_bad_size,  a_good_data), ".*");
 
-  EXPECT_DEATH(trans.jointToActuatorVelocity(j_bad_size,  a_bad_size),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorVelocity(j_good_data, a_bad_size),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorVelocity(j_bad_size,  a_good_data), ".*");
+  EXPECT_DEATH(trans.jointToActuator((VelocityJointData)j_bad_size,  a_bad_size),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((VelocityJointData)j_good_data, a_bad_size),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((VelocityJointData)j_bad_size,  a_good_data), ".*");
 
-  EXPECT_DEATH(trans.jointToActuatorPosition(j_bad_size,  a_bad_size),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorPosition(j_good_data, a_bad_size),  ".*");
-  EXPECT_DEATH(trans.jointToActuatorPosition(j_bad_size,  a_good_data), ".*");
+  EXPECT_DEATH(trans.jointToActuator((PositionJointData)j_bad_size,  a_bad_size),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((PositionJointData)j_good_data, a_bad_size),  ".*");
+  EXPECT_DEATH(trans.jointToActuator((PositionJointData)j_bad_size,  a_good_data), ".*");
 }
 #endif // NDEBUG
 
@@ -183,43 +183,43 @@ protected:
   {
     // Effort interface
     {
-      ActuatorData a_data;
+      EffortActuatorData a_data;
       a_data.effort = a_vec;
       *a_data.effort[0] = ref_val;
 
-      JointData j_data;
+      EffortJointData j_data;
       j_data.effort = j_vec;
 
-      trans.actuatorToJointEffort(a_data, j_data);
-      trans.jointToActuatorEffort(j_data, a_data);
+      trans.actuatorToJoint(a_data, j_data);
+      trans.jointToActuator(j_data, a_data);
       EXPECT_NEAR(ref_val, *a_data.effort[0], EPS);
     }
 
     // Velocity interface
     {
-      ActuatorData a_data;
+      VelocityActuatorData a_data;
       a_data.velocity = a_vec;
       *a_data.velocity[0] = ref_val;
 
-      JointData j_data;
+      VelocityJointData j_data;
       j_data.velocity = j_vec;
 
-      trans.actuatorToJointVelocity(a_data, j_data);
-      trans.jointToActuatorVelocity(j_data, a_data);
+      trans.actuatorToJoint(a_data, j_data);
+      trans.jointToActuator(j_data, a_data);
       EXPECT_NEAR(ref_val, *a_data.velocity[0], EPS);
     }
 
     // Position interface
     {
-      ActuatorData a_data;
+      PositionActuatorData a_data;
       a_data.position = a_vec;
       *a_data.position[0] = ref_val;
 
-      JointData j_data;
+      PositionJointData j_data;
       j_data.position = j_vec;
 
-      trans.actuatorToJointPosition(a_data, j_data);
-      trans.jointToActuatorPosition(j_data, a_data);
+      trans.actuatorToJoint(a_data, j_data);
+      trans.jointToActuator(j_data, a_data);
       EXPECT_NEAR(ref_val, *a_data.position[0], EPS);
     }
   }
@@ -259,37 +259,37 @@ TEST_F(WhiteBoxTest, MoveJoint)
 
   // Effort interface
   {
-    ActuatorData a_data;
+    EffortActuatorData a_data;
     a_data.effort = a_vec;
 
-    JointData j_data;
+    EffortJointData j_data;
     j_data.effort = j_vec;
 
-    trans.actuatorToJointEffort(a_data, j_data);
+    trans.actuatorToJoint(a_data, j_data);
     EXPECT_NEAR(10.0, *j_data.effort[0], EPS);
   }
 
   // Velocity interface
   {
-    ActuatorData a_data;
+    VelocityActuatorData a_data;
     a_data.velocity = a_vec;
 
-    JointData j_data;
+    VelocityJointData j_data;
     j_data.velocity = j_vec;
 
-    trans.actuatorToJointVelocity(a_data, j_data);
+    trans.actuatorToJoint(a_data, j_data);
     EXPECT_NEAR(0.1, *j_data.velocity[0], EPS);
   }
 
   // Position interface
   {
-    ActuatorData a_data;
+    PositionActuatorData a_data;
     a_data.position = a_vec;
 
-    JointData j_data;
+    PositionJointData j_data;
     j_data.position = j_vec;
 
-    trans.actuatorToJointPosition(a_data, j_data);
+    trans.actuatorToJoint(a_data, j_data);
     EXPECT_NEAR(1.1, *j_data.position[0], EPS);
   }
 }
