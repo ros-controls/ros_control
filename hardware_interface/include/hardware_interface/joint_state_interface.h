@@ -37,11 +37,88 @@
 namespace hardware_interface
 {
 
+class PositionJointStateHandle
+{
+  public:
+    PositionJointStateHandle() = default;
+
+    PositionJointStateHandle(const double* pos) : pos_(pos)
+    {
+        if (!pos)
+        {
+            throw HardwareInterfaceException("Position data pointer is null.");
+        }
+    }
+
+    virtual double getPosition()  const 
+    {
+      assert(pos_);
+      return *pos_;
+    }
+
+    virtual std::string getName() const = 0;
+
+  protected:
+    const double* pos_ = nullptr;
+};
+
+class VelocityJointStateHandle
+{
+  public:
+    VelocityJointStateHandle() = default;
+
+    VelocityJointStateHandle(const double* vel) : vel_(vel)
+    {
+        if (!vel)
+        {
+            throw HardwareInterfaceException("Velocity data pointer is null.");
+        }
+    }
+
+    virtual double getVelocity() const
+    {
+        assert(vel_);
+        return *vel_;
+    }
+
+    virtual std::string getName() const = 0;
+
+  protected:
+    const double* vel_ = nullptr;
+};
+
+class EffortJointStateHandle
+{
+  public:
+    EffortJointStateHandle() = default;
+
+    EffortJointStateHandle(const double* eff) : eff_(eff)
+    {
+        if (!eff)
+        {
+            throw HardwareInterfaceException("Effort data pointer is null.");
+        }
+    }
+
+    virtual double getEffort() const
+    {
+        assert(eff_);
+        return *eff_;
+    }
+
+    virtual std::string getName() const = 0;
+
+  protected:
+    const double* eff_ = nullptr;
+};  
+
 /** A handle used to read the state of a single joint. */
-class JointStateHandle
+class JointStateHandle : public PositionJointStateHandle,
+                         public VelocityJointStateHandle,
+                         public EffortJointStateHandle
 {
 public:
-  JointStateHandle() : name_(), pos_(0), vel_(0), eff_(0) {}
+  JointStateHandle() = default;
 
   /**
    * \param name The name of the joint
@@ -50,32 +127,19 @@ public:
    * \param eff A pointer to the storage for this joint's effort (force or torque)
    */
   JointStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff)
-  {
-    if (!pos)
+          try : PositionJointStateHandle(pos), VelocityJointStateHandle(vel), EffortJointStateHandle(eff), name_(name)
     {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Position data pointer is null.");
     }
-    if (!vel)
+    catch(const HardwareInterfaceException& ex)
     {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Velocity data pointer is null.");
+       throw HardwareInterfaceException("Cannot create handle '" + name + "'. " + ex.what());
     }
-    if (!eff)
-    {
-      throw HardwareInterfaceException("Cannot create handle '" + name + "'. Effort data pointer is null.");
-    }
-  }
+
 
   std::string getName() const {return name_;}
-  double getPosition()  const {assert(pos_); return *pos_;}
-  double getVelocity()  const {assert(vel_); return *vel_;}
-  double getEffort()    const {assert(eff_); return *eff_;}
 
 private:
-  std::string name_;
-  const double* pos_;
-  const double* vel_;
-  const double* eff_;
+  std::string name_ = "";
 };
 
 /** \brief Hardware interface to support reading the state of an array of joints
