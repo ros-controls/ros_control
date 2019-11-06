@@ -92,7 +92,7 @@ public:
   virtual bool checkForConflict(const std::list<ControllerInfo>& info) const
   {
     // Map from resource name to all controllers claiming it
-    typedef std::map<std::string, std::list<ControllerInfo> > ResourceMap;
+    typedef std::map<std::string, std::list<ControllerInfo> > CtrlInfoMap;
 
     typedef std::list<ControllerInfo>::const_iterator CtrlInfoIt;
     typedef std::vector<InterfaceResources>::const_iterator ClaimedResIt;
@@ -100,7 +100,7 @@ public:
 
     // Populate a map of all controllers claiming individual resources.
     // We do this by iterating over every claimed resource of every hardware interface used by every controller
-    ResourceMap resource_map;
+    CtrlInfoMap resource_map;
     for (CtrlInfoIt info_it = info.begin(); info_it != info.end(); ++info_it)
     {
       const std::vector<InterfaceResources>& c_res = info_it->claimed_resources;
@@ -116,7 +116,7 @@ public:
 
     // Enforce resource exclusivity policy: No resource can be claimed by more than one controller
     bool in_conflict = false;
-    for (ResourceMap::iterator it = resource_map.begin(); it != resource_map.end(); ++it)
+    for (CtrlInfoMap::iterator it = resource_map.begin(); it != resource_map.end(); ++it)
     {
       if (it->second.size() > 1)
       {
