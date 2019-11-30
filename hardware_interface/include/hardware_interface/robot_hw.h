@@ -148,6 +148,25 @@ public:
   virtual void doSwitch(const std::list<ControllerInfo>& /*start_list*/,
                         const std::list<ControllerInfo>& /*stop_list*/) {}
 
+  enum SwitchState
+  {
+    DONE,
+    ONGOING,
+    ERROR
+  };
+
+  // Return (in realtime) the state of the last doSwitch()
+  virtual SwitchState switchResult() const
+  {
+    return DONE;
+  }
+
+  // Return (in realtime) the state of the last doSwitch() for a given controller
+  virtual SwitchState switchResult(const ControllerInfo& /*controller*/) const
+  {
+    return DONE;
+  }
+
   /**
    * Reads data from the robot HW
    *

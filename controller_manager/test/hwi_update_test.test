@@ -1,0 +1,4 @@
+<launch>
+  <rosparam command="load" file="$(find controller_manager)/test/hwi_update_test.yaml" />
+  <test test-name="controller_manager_hwi_update_test" pkg="controller_manager" type="controller_manager_hwi_update_test"/>
+</launch>

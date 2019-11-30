@@ -4,8 +4,10 @@ import rospy
 import subprocess
 
 # output of controller_manager list, will by combined dynamically
+myc1_initialized='\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( initialized )\n'
 myc1_running='\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( running )\n'
 myc1_stopped='\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( stopped )\n'
+myc2_initialized='\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( initialized )\n'
 myc2_running='\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( running )\n'
 myc2_stopped='\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( stopped )\n'
 
@@ -65,11 +67,11 @@ class TestUtils(unittest.TestCase):
 
         # load my_controller2
         self.assertEqual(*load_c('my_controller2'))
-        self.assertEqual(run_cm('list'), myc1_running + myc2_stopped)
+        self.assertEqual(run_cm('list'), myc1_running + myc2_initialized)
 
         # stop my_controller1
         self.assertEqual(*stop_c('my_controller1'))
-        self.assertEqual(run_cm('list'), myc1_stopped + myc2_stopped)
+        self.assertEqual(run_cm('list'), myc1_stopped + myc2_initialized)
 
         # start my_controller2
         self.assertEqual(*start_c('my_controller2'))

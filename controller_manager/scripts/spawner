@@ -62,7 +62,7 @@ def shutdown():
         switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
 
         rospy.loginfo("Stopping all controllers...");
-        switch_controller([], loaded, SwitchControllerRequest.STRICT)
+        switch_controller([], loaded, SwitchControllerRequest.STRICT, False, 0.0)
         rospy.loginfo("Unloading all loaded controllers...");
         for name in reversed(loaded):
             rospy.logout("Trying to unload %s" % name)
@@ -196,7 +196,7 @@ def main():
 
     # start controllers is requested
     if autostart:
-        resp = switch_controller(loaded, [], 2)
+        resp = switch_controller(loaded, [], 2, False, 0.0)
         if resp.ok != 0:
             rospy.loginfo("Started controllers: %s" % ', '.join(loaded))
         else:

@@ -1,0 +1,6 @@
+mock_ctrl_1:
+    type: ControllerMock
+    joints: [joint_1, joint_2]
+mock_ctrl_2:
+    type: ControllerMock
+    joints: [joint_1, joint_2]

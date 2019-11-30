@@ -66,6 +66,9 @@ namespace controller_manager{
 class ControllerManager{
 
 public:
+  static constexpr bool WAIT_FOR_ALL_RESOURCES = false;
+  static constexpr double INFINITE_TIMEOUT = 0.0;
+
   /** \brief Constructor
    *
    * \param robot_hw A pointer to a robot hardware interface
@@ -134,10 +137,15 @@ public:
    * controller_manager_msgs/SwitchControllers service as either \c BEST_EFFORT
    * or \c STRICT.  \c BEST_EFFORT means that \ref switchController can still
    * succeed if a non-existent controller is requested to be stopped or started.
+   * \param start_asap Start the controllers as soon as their resources
+   * are ready, will wait for all resources to be ready otherwise.
+   * \param timeout The timeout in seconds before aborting pending
+   * controllers. Zero for infinite.
    */
   bool switchController(const std::vector<std::string>& start_controllers,
                         const std::vector<std::string>& stop_controllers,
-                        const int strictness);
+                        const int strictness, bool start_asap = WAIT_FOR_ALL_RESOURCES,
+                        double timeout = INFINITE_TIMEOUT);
 
   /** \brief Get a controller by name.
    *
@@ -166,6 +174,11 @@ public:
 private:
   void getControllerNames(std::vector<std::string> &v);
 
+  void manageSwitch(const ros::Time& time);
+  void stopControllers(const ros::Time& time);
+  void startControllers(const ros::Time& time);
+  void startControllersAsap(const ros::Time& time);
+
   hardware_interface::RobotHW* robot_hw_;
 
   ros::NodeHandle root_nh_, cm_node_;
@@ -176,8 +189,31 @@ private:
    *\{*/
   std::vector<controller_interface::ControllerBase*> start_request_, stop_request_;
   std::list<hardware_interface::ControllerInfo> switch_start_list_, switch_stop_list_;
-  bool please_switch_;
-  int switch_strictness_;
+
+  struct SwitchParams
+  {
+    SwitchParams()
+      : do_switch(false)
+      , started(false)
+      , init_time(ros::TIME_MAX)
+      , strictness(0)
+      , start_asap(false)
+      , timeout(0.0)
+    {
+    }
+
+    bool do_switch;
+    bool started;
+    ros::Time init_time;
+
+    // switch options
+    int strictness;
+    bool start_asap;
+    double timeout;
+  };
+
+  SwitchParams switch_params_;
+
   /*\}*/
 
   /** \name Controllers List
