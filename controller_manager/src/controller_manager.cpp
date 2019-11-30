@@ -39,7 +39,8 @@
 #include <chrono>
 #include <thread>
 
-namespace controller_manager{
+namespace controller_manager
+{
 
 
 ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, const ros::NodeHandle& nh) :
@@ -69,8 +70,6 @@ ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, cons
 
 ControllerManager::~ControllerManager()
 {}
-
-
 
 
 // Must be realtime safe.
@@ -379,8 +378,6 @@ bool ControllerManager::loadController(const std::string& name)
 }
 
 
-
-
 bool ControllerManager::unloadController(const std::string &name)
 {
   ROS_DEBUG("Will unload controller '%s'", name.c_str());
@@ -448,7 +445,6 @@ bool ControllerManager::unloadController(const std::string &name)
   ROS_DEBUG("Successfully unloaded controller '%s'", name.c_str());
   return true;
 }
-
 
 
 bool ControllerManager::switchController(const std::vector<std::string>& start_controllers,
@@ -622,7 +618,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
 
   // wait until switch is finished
   ROS_DEBUG("Request atomic controller switch from realtime loop");
-  while (ros::ok() && switch_params_.do_switch){
+  while (ros::ok() && switch_params_.do_switch)
   {
     if (!ros::ok())
     {
@@ -636,9 +632,6 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   ROS_DEBUG("Successfully switched controllers");
   return true;
 }
-
-
-
 
 
 bool ControllerManager::reloadControllerLibrariesSrv(
