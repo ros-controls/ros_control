@@ -94,6 +94,9 @@ TEST(CombinedRobotHWTests, combinationOk)
   robot_hw.write(ros::Time::now(), period);
   ej_handle = ej_interface->getHandle("test_joint2");
   ASSERT_FLOAT_EQ(3.5, ej_handle.getCommand());
+
+  bool error = robot_hw.hasError();
+  ASSERT_TRUE(error);
 }
 
 TEST(CombinedRobotHWTests, switchOk)

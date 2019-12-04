@@ -182,6 +182,12 @@ public:
    * \param period The time passed since the last call to \ref write
    */
   virtual void write(const ros::Time& time, const ros::Duration& period) {}
+
+  /**
+   * Check whether the robot HW has encountered an error
+   */
+  virtual bool hasError() { return false; };
+
 };
 
 typedef std::shared_ptr<RobotHW> RobotHWSharedPtr;
