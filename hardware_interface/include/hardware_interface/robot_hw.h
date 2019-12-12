@@ -39,6 +39,10 @@
 #include <ros/console.h>
 #include <ros/node_handle.h>
 
+#ifdef ERROR
+#undef ERROR
+#endif
+
 namespace hardware_interface
 {
 
