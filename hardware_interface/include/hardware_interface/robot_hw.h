@@ -39,7 +39,7 @@
 #include <ros/console.h>
 #include <ros/node_handle.h>
 
-// On Windows build, some namespaces has been taken by Windows header.
+// On Windows build, some namespaces have been taken by Windows header.
 // To avoid the conflicts, undefine it as needed.
 #ifdef ERROR
 #undef ERROR
