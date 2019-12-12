@@ -150,21 +150,21 @@ public:
 
   enum SwitchState
   {
-    DONE,
-    ONGOING,
-    ERROR
+    SS_DONE,
+    SS_ONGOING,
+    SS_ERROR
   };
 
   // Return (in realtime) the state of the last doSwitch()
   virtual SwitchState switchResult() const
   {
-    return DONE;
+    return SS_DONE;
   }
 
   // Return (in realtime) the state of the last doSwitch() for a given controller
   virtual SwitchState switchResult(const ControllerInfo& /*controller*/) const
   {
-    return DONE;
+    return SS_DONE;
   }
 
   /**
