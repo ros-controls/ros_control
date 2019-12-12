@@ -32,7 +32,8 @@ catkin_package(
 ###########
 
 # Build
-include_directories(include ${catkin_INCLUDE_DIRS} ${TinyXML_INCLUDE_DIRS})
+include_directories(include)
+include_directories(SYSTEM ${catkin_INCLUDE_DIRS} ${TinyXML_INCLUDE_DIRS})
 
 # Transmission parser Library
 add_library(${PROJECT_NAME}_parser

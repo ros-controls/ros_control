@@ -64,9 +64,9 @@ class PositionJointSaturationHandle
 {
 public:
   PositionJointSaturationHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits)
+  : jh_(jh),
+    limits_(limits)
   {
-    jh_ = jh;
-    limits_ = limits;
 
     if (limits_.has_position_limits)
     {
