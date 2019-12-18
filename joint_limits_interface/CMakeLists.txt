@@ -9,13 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   urdf
 )
 
-include_directories(
-  include)
-include_directories(
-  SYSTEM
-  ${catkin_INCLUDE_DIRS}
-  ${urdfdom_INCLUDE_DIRS}
-)
+include_directories(include ${catkin_INCLUDE_DIRS} ${urdfdom_INCLUDE_DIRS})
 
 # Declare catkin package
 catkin_package(
