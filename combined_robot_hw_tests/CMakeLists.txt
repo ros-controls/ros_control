@@ -9,8 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
 )
 
-include_directories(include)
-include_directories(SYSTEM ${catkin_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 catkin_package(
   INCLUDE_DIRS include
@@ -59,4 +58,3 @@ install(TARGETS ${PROJECT_NAME}
 
 install(FILES test_robot_hw_plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-
