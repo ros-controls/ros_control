@@ -36,7 +36,7 @@ MyRobotHW2::MyRobotHW2()
 {
 }
 
-bool MyRobotHW2::init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh)
+bool MyRobotHW2::init(ros::NodeHandle& /*root_nh*/, ros::NodeHandle &robot_hw_nh)
 {
   using namespace hardware_interface;
 
@@ -74,17 +74,17 @@ bool MyRobotHW2::init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh)
 }
 
 
-void MyRobotHW2::read(const ros::Time& time, const ros::Duration& period)
+void MyRobotHW2::read(const ros::Time& /*time*/, const ros::Duration& /*period*/)
 {
 
 }
 
-void MyRobotHW2::write(const ros::Time& time, const ros::Duration& period)
+void MyRobotHW2::write(const ros::Time& /*time*/, const ros::Duration& /*period*/)
 {
 }
 
 bool MyRobotHW2::prepareSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
-                               const std::list<hardware_interface::ControllerInfo>& stop_list)
+                               const std::list<hardware_interface::ControllerInfo>& /*stop_list*/)
 {
   for (std::list<hardware_interface::ControllerInfo>::const_iterator it = start_list.begin(); it != start_list.end(); ++it)
   {
@@ -119,7 +119,7 @@ bool MyRobotHW2::prepareSwitch(const std::list<hardware_interface::ControllerInf
 }
 
 void MyRobotHW2::doSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
-                          const std::list<hardware_interface::ControllerInfo>& stop_list)
+                          const std::list<hardware_interface::ControllerInfo>& /*stop_list*/)
 {
   for (std::list<hardware_interface::ControllerInfo>::const_iterator it = start_list.begin(); it != start_list.end(); ++it)
   {

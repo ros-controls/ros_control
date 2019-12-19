@@ -31,7 +31,7 @@
 using namespace controller_manager_tests;
 
 bool ExtensibleController::init(hardware_interface::RobotHW* robot_hw,
-          ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh)
+          ros::NodeHandle& /*root_nh*/, ros::NodeHandle& controller_nh)
 {
   std::string vel_joint_name;
   controller_nh.getParam("velocity_joint", vel_joint_name);

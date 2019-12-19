@@ -36,7 +36,7 @@ MyRobotHW1::MyRobotHW1()
 {
 }
 
-bool MyRobotHW1::init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh)
+bool MyRobotHW1::init(ros::NodeHandle& /*root_nh*/, ros::NodeHandle &/*robot_hw_nh*/)
 {
   using namespace hardware_interface;
 
@@ -90,19 +90,19 @@ bool MyRobotHW1::init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh)
 }
 
 
-void MyRobotHW1::read(const ros::Time& time, const ros::Duration& period)
+void MyRobotHW1::read(const ros::Time& /*time*/, const ros::Duration& /*period*/)
 {
   joint_position_[0] = 2.7;
 }
 
-void MyRobotHW1::write(const ros::Time& time, const ros::Duration& period)
+void MyRobotHW1::write(const ros::Time& /*time*/, const ros::Duration& /*period*/)
 {
   // Just to test that write() is called
   joint_effort_command_[1] = joint_effort_command_[0];
 }
 
 bool MyRobotHW1::prepareSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
-                               const std::list<hardware_interface::ControllerInfo>& stop_list)
+                               const std::list<hardware_interface::ControllerInfo>& /*stop_list*/)
 {
   for (std::list<hardware_interface::ControllerInfo>::const_iterator it = start_list.begin(); it != start_list.end(); ++it)
   {
@@ -139,7 +139,7 @@ bool MyRobotHW1::prepareSwitch(const std::list<hardware_interface::ControllerInf
 }
 
 void MyRobotHW1::doSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
-                          const std::list<hardware_interface::ControllerInfo>& stop_list)
+                          const std::list<hardware_interface::ControllerInfo>& /*stop_list*/)
 {
   for (std::list<hardware_interface::ControllerInfo>::const_iterator it = start_list.begin(); it != start_list.end(); ++it)
   {

@@ -78,7 +78,7 @@ public:
    *
    * \returns True if initialization was successful
    */
-  virtual bool init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh) {return true;}
+  virtual bool init(ros::NodeHandle& /*root_nh*/, ros::NodeHandle &/*robot_hw_nh*/) {return true;}
 
   /** \name Resource Management
    *\{*/
@@ -138,8 +138,8 @@ public:
    * with regard to necessary hardware interface switches and prepare the switching. Start and stop list are disjoint.
    * This handles the check and preparation, the actual switch is commited in doSwitch()
    */
-  virtual bool prepareSwitch(const std::list<ControllerInfo>& start_list,
-                             const std::list<ControllerInfo>& stop_list) { return true; }
+  virtual bool prepareSwitch(const std::list<ControllerInfo>& /*start_list*/,
+                             const std::list<ControllerInfo>& /*stop_list*/) { return true; }
 
   /**
    * Perform (in realtime) all necessary hardware interface switches in order to start and stop the given controllers.
@@ -173,7 +173,7 @@ public:
    * \param time The current time
    * \param period The time passed since the last call to \ref read
    */
-  virtual void read(const ros::Time& time, const ros::Duration& period) {}
+  virtual void read(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
 
   /**
    * Writes data to the robot HW
@@ -181,7 +181,7 @@ public:
    * \param time The current time
    * \param period The time passed since the last call to \ref write
    */
-  virtual void write(const ros::Time& time, const ros::Duration& period) {}
+  virtual void write(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
 };
 
 typedef std::shared_ptr<RobotHW> RobotHWSharedPtr;

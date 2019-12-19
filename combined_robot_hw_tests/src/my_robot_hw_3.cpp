@@ -35,7 +35,7 @@ MyRobotHW3::MyRobotHW3()
 {
 }
 
-bool MyRobotHW3::init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh)
+bool MyRobotHW3::init(ros::NodeHandle& /*root_nh*/, ros::NodeHandle &robot_hw_nh)
 {
   using namespace hardware_interface;
 
@@ -79,12 +79,12 @@ bool MyRobotHW3::init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh)
 }
 
 
-void MyRobotHW3::read(const ros::Time& time, const ros::Duration& period)
+void MyRobotHW3::read(const ros::Time& /*time*/, const ros::Duration& /*period*/)
 {
 
 }
 
-void MyRobotHW3::write(const ros::Time& time, const ros::Duration& period)
+void MyRobotHW3::write(const ros::Time& /*time*/, const ros::Duration& /*period*/)
 {
 }
 
