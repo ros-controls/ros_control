@@ -77,4 +77,4 @@ bool BiDirectionalPositionJointInterfaceProvider::registerTransmission(Transmiss
 }
 
 PLUGINLIB_EXPORT_CLASS(transmission_interface::BiDirectionalPositionJointInterfaceProvider, 
-                       transmission_interface::RequisiteProvider);
+                       transmission_interface::RequisiteProvider)

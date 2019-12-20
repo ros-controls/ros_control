@@ -77,4 +77,4 @@ bool BiDirectionalEffortJointInterfaceProvider::registerTransmission(Transmissio
 } // namespace
 
 PLUGINLIB_EXPORT_CLASS(transmission_interface::BiDirectionalEffortJointInterfaceProvider, 
-                       transmission_interface::RequisiteProvider);
+                       transmission_interface::RequisiteProvider)

@@ -63,10 +63,10 @@ struct CheckIsResourceManager {
 
   // method called if C is not a ResourceManager
   template <typename C>
-  static void callCM(typename std::vector<C*>& managers, C* result, ...) {}
+  static void callCM(typename std::vector<C*>& /*managers*/, C* /*result*/, ...) {}
 
   // calls ResourceManager::concatManagers if C is a ResourceManager
-  static const void callConcatManagers(typename std::vector<T*>& managers, T* result)
+  static void callConcatManagers(typename std::vector<T*>& managers, T* result)
   { callCM<T>(managers, result, 0); }
 
 
@@ -79,7 +79,7 @@ struct CheckIsResourceManager {
 
   // method called if C is not a ResourceManager
   template <typename C>
-  static void callGR(std::vector<std::string> &resources, T* iface, ...) { }
+  static void callGR(std::vector<std::string> &/*resources*/, T* /*iface*/, ...) { }
 
   // calls ResourceManager::concatManagers if C is a ResourceManager
   static void callGetResources(std::vector<std::string> &resources, T* iface)
@@ -96,7 +96,7 @@ struct CheckIsResourceManager {
 
   // method called if C is not a ResourceManager
   template <typename C>
-  static T* newCI(boost::ptr_vector<ResourceManagerBase> &guards, ...) {
+  static T* newCI(boost::ptr_vector<ResourceManagerBase> &/*guards*/, ...) {
     // it is not a ResourceManager
     ROS_ERROR("You cannot register multiple interfaces of the same type which are "
               "not of type ResourceManager. There is no established protocol "

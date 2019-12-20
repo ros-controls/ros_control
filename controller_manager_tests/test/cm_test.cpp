@@ -408,8 +408,8 @@ TEST(CMTests, listControllerTypes)
   bool call_success = types_client.call(srv);
   ASSERT_TRUE(call_success);
   // Weak test that the number of available types and base classes is not lower than those defined in this test package
-  EXPECT_GE(srv.response.types.size(), 3);
-  EXPECT_GE(srv.response.base_classes.size(), 3);
+  EXPECT_GE(srv.response.types.size(), 3u);
+  EXPECT_GE(srv.response.base_classes.size(), 3u);
 }
 
 TEST(CMTests, listControllers)
@@ -442,7 +442,7 @@ TEST(CMTests, listControllers)
     ListControllers srv;
     bool call_success = list_client.call(srv);
     ASSERT_TRUE(call_success);
-    ASSERT_EQ(srv.response.controller.size(), 2);
+    ASSERT_EQ(srv.response.controller.size(), 2u);
 
     ControllerState state1, state2;
     if (srv.response.controller[0].name == "my_controller")
@@ -459,22 +459,22 @@ TEST(CMTests, listControllers)
     EXPECT_EQ(state1.name, "my_controller");
     EXPECT_EQ(state1.state, "running");
     EXPECT_EQ(state1.type, "controller_manager_tests/EffortTestController");
-    ASSERT_EQ(state1.claimed_resources.size(), 1);
+    ASSERT_EQ(state1.claimed_resources.size(), 1u);
     EXPECT_EQ(state1.claimed_resources[0].hardware_interface, "hardware_interface::EffortJointInterface");
-    ASSERT_EQ(state1.claimed_resources[0].resources.size(), 2);
+    ASSERT_EQ(state1.claimed_resources[0].resources.size(), 2u);
     EXPECT_EQ(state1.claimed_resources[0].resources[0], "hiDOF_joint1");
     EXPECT_EQ(state1.claimed_resources[0].resources[1], "hiDOF_joint2");
 
     EXPECT_EQ(state2.name, "vel_eff_controller");
     EXPECT_EQ(state2.state, "initialized");
     EXPECT_EQ(state2.type, "controller_manager_tests/VelEffController");
-    EXPECT_EQ(state2.claimed_resources.size(), 2);
+    EXPECT_EQ(state2.claimed_resources.size(), 2u);
     EXPECT_EQ(state2.claimed_resources[0].hardware_interface, "hardware_interface::VelocityJointInterface");
-    ASSERT_EQ(state2.claimed_resources[0].resources.size(), 2);
+    ASSERT_EQ(state2.claimed_resources[0].resources.size(), 2u);
     EXPECT_EQ(state2.claimed_resources[0].resources[0], "hiDOF_joint1");
     EXPECT_EQ(state2.claimed_resources[0].resources[1], "hiDOF_joint2");
     EXPECT_EQ(state2.claimed_resources[1].hardware_interface, "hardware_interface::EffortJointInterface");
-    ASSERT_EQ(state2.claimed_resources[1].resources.size(), 1);
+    ASSERT_EQ(state2.claimed_resources[1].resources.size(), 1u);
     EXPECT_EQ(state2.claimed_resources[1].resources[0], "hiDOF_joint3");
   }
 
@@ -526,12 +526,12 @@ TEST(CMTests, extensibleControllers)
   {
     ListControllers srv;
     ASSERT_TRUE(list_client.call(srv));
-    ASSERT_EQ(2, srv.response.controller.size());
+    ASSERT_EQ(2u, srv.response.controller.size());
     ControllerState state = srv.response.controller[0].name == "extensible_controller" ?
         srv.response.controller[0] : srv.response.controller[1];
     EXPECT_EQ("extensible_controller", state.name);
     EXPECT_EQ("running", state.state);
-    ASSERT_EQ(1, state.claimed_resources.size());
+    ASSERT_EQ(1u, state.claimed_resources.size());
   }
 
   // Start the derived controller instead.
@@ -548,12 +548,12 @@ TEST(CMTests, extensibleControllers)
   {
     ListControllers srv;
     ASSERT_TRUE(list_client.call(srv));
-    ASSERT_EQ(2, srv.response.controller.size());
+    ASSERT_EQ(2u, srv.response.controller.size());
     ControllerState state = srv.response.controller[
       srv.response.controller[0].name == "derived_controller" ? 0 : 1];
     EXPECT_EQ("derived_controller", state.name);
     EXPECT_EQ("running", state.state);
-    ASSERT_EQ(2, state.claimed_resources.size());
+    ASSERT_EQ(2u, state.claimed_resources.size());
   }
 
   // Stop controller.
