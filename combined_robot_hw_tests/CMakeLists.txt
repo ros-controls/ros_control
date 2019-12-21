@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(combined_robot_hw_tests)
 
+# Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS
   combined_robot_hw
   controller_manager
@@ -9,13 +10,26 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS})
-
+# Declare a catkin package
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS combined_robot_hw hardware_interface roscpp
+  INCLUDE_DIRS
+    include
+  LIBRARIES
+    ${PROJECT_NAME}
+  CATKIN_DEPENDS
+    combined_robot_hw
+    hardware_interface
+    roscpp
+    # Note: controller_manager and controller_manager_tests are only used in tests
 )
+
+
+###########
+## Build ##
+###########
+
+# Specify header include paths
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
   src/my_robot_hw_1.cpp
@@ -29,9 +43,14 @@ target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_executable(combined_robot_hw_dummy_app src/dummy_app.cpp)
 target_link_libraries(combined_robot_hw_dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
-if(CATKIN_ENABLE_TESTING)
 
+#############
+## Testing ##
+#############
+
+if(CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
+
   add_rostest_gtest(combined_robot_hw_test
     test/combined_robot_hw_test.test
     test/combined_robot_hw_test.cpp
@@ -43,18 +62,26 @@ if(CATKIN_ENABLE_TESTING)
     test/cm_test.cpp
   )
   target_link_libraries(combined_robot_hw_cm_test ${PROJECT_NAME} ${catkin_LIBRARIES})
-
 endif()
 
-# Install
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 
-# Install library
-install(TARGETS ${PROJECT_NAME}
+#############
+## Install ##
+#############
+
+# Install headers
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
+
+# Install targets
+install(TARGETS ${PROJECT_NAME} combined_robot_hw_dummy_app
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+)
 
+# Install plugins
 install(FILES test_robot_hw_plugin.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
