@@ -53,7 +53,7 @@ bool TransmissionParser::parse(const std::string& urdf, std::vector<Transmission
   TiXmlElement *root = doc.RootElement();
 
   // Constructs the transmissions by parsing custom xml.
-  TiXmlElement *trans_it = NULL;
+  TiXmlElement *trans_it = nullptr;
   for (trans_it = root->FirstChildElement("transmission"); trans_it;
        trans_it = trans_it->NextSiblingElement("transmission"))
   {
@@ -123,7 +123,7 @@ bool TransmissionParser::parse(const std::string& urdf, std::vector<Transmission
 bool TransmissionParser::parseJoints(TiXmlElement *trans_it, std::vector<JointInfo>& joints)
 {
   // Loop through each available joint
-  TiXmlElement *joint_it = NULL;
+  TiXmlElement *joint_it = nullptr;
   for (joint_it = trans_it->FirstChildElement("joint"); joint_it;
        joint_it = joint_it->NextSiblingElement("joint"))
   {
@@ -153,7 +153,7 @@ bool TransmissionParser::parseJoints(TiXmlElement *trans_it, std::vector<JointIn
     }
 
     // Hardware interfaces (required)
-    TiXmlElement *hw_iface_it = NULL;
+    TiXmlElement *hw_iface_it = nullptr;
     for (hw_iface_it = joint_it->FirstChildElement("hardwareInterface"); hw_iface_it;
          hw_iface_it = hw_iface_it->NextSiblingElement("hardwareInterface"))
     {
@@ -195,7 +195,7 @@ bool TransmissionParser::parseJoints(TiXmlElement *trans_it, std::vector<JointIn
 bool TransmissionParser::parseActuators(TiXmlElement *trans_it, std::vector<ActuatorInfo>& actuators)
 {
   // Loop through each available actuator
-  TiXmlElement *actuator_it = NULL;
+  TiXmlElement *actuator_it = nullptr;
   for (actuator_it = trans_it->FirstChildElement("actuator"); actuator_it;
        actuator_it = actuator_it->NextSiblingElement("actuator"))
   {
@@ -219,7 +219,7 @@ bool TransmissionParser::parseActuators(TiXmlElement *trans_it, std::vector<Actu
     }
 
     // Hardware interfaces (optional)
-    TiXmlElement *hw_iface_it = NULL;
+    TiXmlElement *hw_iface_it = nullptr;
     for (hw_iface_it = actuator_it->FirstChildElement("hardwareInterface"); hw_iface_it;
          hw_iface_it = hw_iface_it->NextSiblingElement("hardwareInterface"))
     {

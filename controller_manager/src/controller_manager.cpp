@@ -54,7 +54,7 @@ ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, cons
   used_by_realtime_(-1)
 {
   // create controller loader
-  controller_loaders_.push_back( 
+  controller_loaders_.push_back(
     ControllerLoaderInterfaceSharedPtr(new ControllerLoader<controller_interface::ControllerBase>("controller_interface",
                                                                                                   "controller_interface::ControllerBase") ) );
 
@@ -111,7 +111,7 @@ controller_interface::ControllerBase* ControllerManager::getControllerByName(con
     if (controllers[i].info.name == name)
       return controllers[i].c.get();
   }
-  return NULL;
+  return nullptr;
 }
 
 void ControllerManager::getControllerNames(std::vector<std::string> &names)
@@ -477,7 +477,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   for (unsigned int i=0; i<stop_controllers.size(); i++)
   {
     ct = getControllerByName(stop_controllers[i]);
-    if (ct == NULL){
+    if (ct == nullptr){
       if (strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
         ROS_ERROR("Could not stop controller with name '%s' because no controller with this name exists",
                   stop_controllers[i].c_str());
@@ -501,7 +501,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   for (unsigned int i=0; i<start_controllers.size(); i++)
   {
     ct = getControllerByName(start_controllers[i]);
-    if (ct == NULL){
+    if (ct == nullptr){
       if (strictness ==  controller_manager_msgs::SwitchController::Request::STRICT){
         ROS_ERROR("Could not start controller with name '%s' because no controller with this name exists",
                   start_controllers[i].c_str());

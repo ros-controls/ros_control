@@ -162,8 +162,8 @@ struct InverseTransmissionInterfaces
 struct TransmissionLoaderData
 {
   TransmissionLoaderData()
-    : robot_hw(0),
-      robot_transmissions(0)
+    : robot_hw(nullptr),
+      robot_transmissions(nullptr)
   {}
 
   hardware_interface::RobotHW*  robot_hw;            ///< Lifecycle is externally controlled (ie. hardware abstraction)

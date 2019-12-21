@@ -42,7 +42,7 @@ namespace hardware_interface
 class PosVelAccJointHandle : public PosVelJointHandle
 {
 public:
-  PosVelAccJointHandle() : PosVelJointHandle(), cmd_acc_(0) {}
+  PosVelAccJointHandle() : PosVelJointHandle(), cmd_acc_(nullptr) {}
 
   /**
    * \param js This joint's state handle

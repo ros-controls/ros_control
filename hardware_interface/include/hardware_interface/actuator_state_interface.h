@@ -37,15 +37,15 @@
 namespace hardware_interface
 {
 
-/** 
+/**
  * \brief A handle used to read the state of a single actuator.
- * Currently, position, velocity and effort fields are required 
+ * Currently, position, velocity and effort fields are required
  * while absolute position and torque sensors are optional.
  */
 class ActuatorStateHandle
 {
 public:
-  ActuatorStateHandle() : name_(), pos_(0), vel_(0), eff_(0), absolute_pos_(0), torque_sensor_(0) {}
+  ActuatorStateHandle() : name_(), pos_(nullptr), vel_(nullptr), eff_(nullptr), absolute_pos_(nullptr), torque_sensor_(nullptr) {}
 
   /**
    * \param name The name of the actuator
@@ -54,7 +54,7 @@ public:
    * \param eff A pointer to the storage for this actuator's effort (force or torque)
    */
   ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(0), torque_sensor_(0)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(nullptr), torque_sensor_(nullptr)
   {
     if (!pos)
     {
@@ -114,7 +114,7 @@ public:
    */
   ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff,
                       const double* absolute_pos)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(absolute_pos), torque_sensor_(0)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(absolute_pos), torque_sensor_(nullptr)
   {
     if (!pos)
     {
@@ -144,7 +144,7 @@ public:
    */
   ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff,
                       const double* torque_sensor, bool)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(0), torque_sensor_(torque_sensor)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(nullptr), torque_sensor_(torque_sensor)
   {
     if (!pos)
     {
@@ -169,7 +169,7 @@ public:
   double getVelocity()  const {assert(vel_); return *vel_;}
   double getEffort()    const {assert(eff_); return *eff_;}
 
-  double getAbsolutePosition() const 
+  double getAbsolutePosition() const
   {
     if(!hasAbsolutePosition())
     {
@@ -178,7 +178,7 @@ public:
     return *absolute_pos_;
   }
 
-  double getTorqueSensor() const 
+  double getTorqueSensor() const
   {
     if(!hasTorqueSensor())
     {
@@ -191,7 +191,7 @@ public:
   const double* getVelocityPtr() const {return vel_;}
   const double* getEffortPtr()   const {return eff_;}
 
-  const double* getAbsolutePositionPtr() const 
+  const double* getAbsolutePositionPtr() const
   {
     if(!hasAbsolutePosition())
     {
@@ -200,7 +200,7 @@ public:
     return absolute_pos_;
   }
 
-  const double* getTorqueSensorPtr() const 
+  const double* getTorqueSensorPtr() const
   {
     if(!hasTorqueSensor())
     {
