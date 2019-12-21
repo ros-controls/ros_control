@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
 <package format="2">
   <name>combined_robot_hw</name>
   <version>0.15.1</version>
   <description>Combined Robot HW class.</description>
+
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="toni@shadowrobot.com">Toni Oliver</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
@@ -17,6 +17,7 @@
   <author email="toni@shadowrobot.com">Toni Oliver</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
   <depend>roscpp</depend>

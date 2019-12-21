@@ -2,6 +2,7 @@
   <name>controller_interface</name>
   <version>0.15.1</version>
   <description>Interface base class for controllers</description>
+
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
   <maintainer email="mathias.luedtke@ipa.fraunhofer.de">Mathias Lüdtke</maintainer>

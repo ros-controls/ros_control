@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <package format="2">
   <name>rqt_controller_manager</name>
   <version>0.15.1</version>
@@ -23,6 +22,6 @@
   <exec_depend>rqt_gui</exec_depend>
 
   <export>
-    <rqt_gui plugin="${prefix}/plugin.xml" />
+    <rqt_gui plugin="${prefix}/plugin.xml"/>
   </export>
 </package>

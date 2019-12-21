@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
 <package format="2">
   <name>combined_robot_hw_tests</name>
   <version>0.15.1</version>
   <description>The combined_robot_hw_tests package</description>
+
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="toni@shadowrobot.com">Toni Oliver</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
@@ -17,6 +17,7 @@
   <author email="toni@shadowrobot.com">Toni Oliver</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+
   <depend>combined_robot_hw</depend>
   <depend>controller_manager</depend>
   <depend>controller_manager_tests</depend>

@@ -2,6 +2,7 @@
   <name>controller_manager</name>
   <version>0.15.1</version>
   <description>The controller manager.</description>
+
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
   <maintainer email="mathias.luedtke@ipa.fraunhofer.de">Mathias Lüdtke</maintainer>
@@ -21,5 +22,6 @@
   <depend>controller_manager_msgs</depend>
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
+
   <test_depend>rostest</test_depend>
 </package>
