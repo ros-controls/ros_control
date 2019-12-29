@@ -38,7 +38,7 @@ add_library(${PROJECT_NAME}
   src/my_robot_hw_4.cpp
 )
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 add_executable(combined_robot_hw_dummy_app src/dummy_app.cpp)
 target_link_libraries(combined_robot_hw_dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
