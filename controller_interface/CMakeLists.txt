@@ -32,8 +32,6 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 #############
 
 if(CATKIN_ENABLE_TESTING)
-  find_package(rosunit REQUIRED)
-
   catkin_add_gmock(controller_base_test test/controller_base_test.cpp)
   target_link_libraries(controller_base_test ${catkin_LIBRARIES})
 endif()
