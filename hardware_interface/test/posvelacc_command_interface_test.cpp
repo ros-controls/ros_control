@@ -41,13 +41,13 @@ TEST(PosVelAccCommandHandleTest, HandleConstruction)
   double pos, vel, eff;
   double cmd_pos, cmd_vel, cmd_acc;
   EXPECT_NO_THROW(PosVelAccJointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), &cmd_pos, &cmd_vel, &cmd_acc));
-  EXPECT_THROW(PosVelAccJointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), 0, &cmd_vel, &cmd_acc), HardwareInterfaceException);
-  EXPECT_THROW(PosVelAccJointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), &cmd_pos, 0, &cmd_acc), HardwareInterfaceException);
-  EXPECT_THROW(PosVelAccJointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), &cmd_pos, &cmd_vel, 0), HardwareInterfaceException);
+  EXPECT_THROW(PosVelAccJointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), nullptr, &cmd_vel, &cmd_acc), HardwareInterfaceException);
+  EXPECT_THROW(PosVelAccJointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), &cmd_pos, nullptr, &cmd_acc), HardwareInterfaceException);
+  EXPECT_THROW(PosVelAccJointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), &cmd_pos, &cmd_vel, nullptr), HardwareInterfaceException);
 
   // Print error messages
   // Requires manual output inspection, but exception message should be descriptive
-  try {PosVelAccJointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), 0, 0, 0);}
+  try {PosVelAccJointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), nullptr, nullptr, nullptr);}
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 }
 
@@ -147,4 +147,3 @@ int main(int argc, char** argv)
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-

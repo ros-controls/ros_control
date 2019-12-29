@@ -46,17 +46,17 @@ TEST(FourBarLinkageTransmissionLoaderTest, FullSpec)
   // Transmission loader
   TransmissionPluginLoader loader;
   TransmissionLoaderSharedPtr transmission_loader = loader.create(infos.front().type_);
-  ASSERT_TRUE(0 != transmission_loader);
+  ASSERT_TRUE(nullptr != transmission_loader);
 
   TransmissionSharedPtr transmission;
   const TransmissionInfo& info = infos.front();
   transmission = transmission_loader->load(info);
-  ASSERT_TRUE(0 != transmission);
+  ASSERT_TRUE(nullptr != transmission);
 
   // Validate transmission
   FourBarLinkageTransmission* four_bar_linkage_transmission =
   dynamic_cast<FourBarLinkageTransmission*>(transmission.get());
-  ASSERT_TRUE(0 != four_bar_linkage_transmission);
+  ASSERT_TRUE(nullptr != four_bar_linkage_transmission);
 
   const std::vector<double>& actuator_reduction = four_bar_linkage_transmission->getActuatorReduction();
   EXPECT_EQ( 50.0, actuator_reduction[0]);
@@ -80,12 +80,12 @@ TEST(FourBarLinkageTransmissionLoaderTest, MinimalSpec)
   // Transmission loader
   TransmissionPluginLoader loader;
   TransmissionLoaderSharedPtr transmission_loader = loader.create(infos.front().type_);
-  ASSERT_TRUE(0 != transmission_loader);
+  ASSERT_TRUE(nullptr != transmission_loader);
 
   TransmissionSharedPtr transmission;
   const TransmissionInfo& info = infos.front();
   transmission = transmission_loader->load(info);
-  ASSERT_TRUE(0 != transmission);
+  ASSERT_TRUE(nullptr != transmission);
 
   // Validate transmission
   FourBarLinkageTransmission* four_bar_linkage_transmission =
@@ -113,13 +113,13 @@ TEST(FourBarLinkageTransmissionLoaderTest, InvalidSpec)
   // Transmission loader
   TransmissionPluginLoader loader;
   TransmissionLoaderSharedPtr transmission_loader = loader.create(infos.front().type_);
-  ASSERT_TRUE(0 != transmission_loader);
+  ASSERT_TRUE(nullptr != transmission_loader);
 
   for (const TransmissionInfo& info : infos)
   {
     TransmissionSharedPtr transmission;
     transmission = transmission_loader->load(info);
-    ASSERT_TRUE(0 == transmission);
+    ASSERT_TRUE(nullptr == transmission);
   }
 }
 

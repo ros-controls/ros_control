@@ -40,19 +40,19 @@ TEST(ActuatorStateHandleTest, HandleConstruction)
   string name = "name1";
   double pos, vel, eff;
   EXPECT_NO_THROW(ActuatorStateHandle(name, &pos, &vel, &eff));
-  EXPECT_THROW(ActuatorStateHandle(name, 0, &vel, &eff), HardwareInterfaceException);
-  EXPECT_THROW(ActuatorStateHandle(name, &pos, 0, &eff), HardwareInterfaceException);
-  EXPECT_THROW(ActuatorStateHandle(name, &pos, &vel, 0), HardwareInterfaceException);
+  EXPECT_THROW(ActuatorStateHandle(name, nullptr, &vel, &eff), HardwareInterfaceException);
+  EXPECT_THROW(ActuatorStateHandle(name, &pos, nullptr, &eff), HardwareInterfaceException);
+  EXPECT_THROW(ActuatorStateHandle(name, &pos, &vel, nullptr), HardwareInterfaceException);
 
   // Print error messages
   // Requires manual output inspection, but exception message should be descriptive
-  try {ActuatorStateHandle(name, 0, &vel, &eff);}
+  try {ActuatorStateHandle(name, nullptr, &vel, &eff);}
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 
-  try {ActuatorStateHandle(name, &pos, 0, &eff);}
+  try {ActuatorStateHandle(name, &pos, nullptr, &eff);}
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 
-  try {ActuatorStateHandle(name, &pos, &vel, 0);}
+  try {ActuatorStateHandle(name, &pos, &vel, nullptr);}
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 }
 
@@ -130,4 +130,3 @@ int main(int argc, char** argv)
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-
