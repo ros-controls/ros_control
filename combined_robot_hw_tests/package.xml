@@ -1,7 +1,7 @@
 <package format="2">
   <name>combined_robot_hw_tests</name>
   <version>0.15.1</version>
-  <description>The combined_robot_hw_tests package</description>
+  <description>Tests for the combined Robot HW class.</description>
 
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="toni@shadowrobot.com">Toni Oliver</maintainer>
