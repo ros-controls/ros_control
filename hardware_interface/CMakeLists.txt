@@ -6,6 +6,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
 )
 
+# Include header-only Boost libraries
+find_package(Boost REQUIRED)
+
 # Declare a catkin package
 catkin_package(
   INCLUDE_DIRS
@@ -20,7 +23,7 @@ catkin_package(
 ###########
 
 # Specify header include paths
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 
 #############
