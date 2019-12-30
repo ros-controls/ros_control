@@ -137,11 +137,6 @@ protected:
   {
     return hardware_interface::internal::demangledTypeName<T>();
   }
-
-private:
-  Controller<T>(const Controller<T> &c);
-  Controller<T>& operator =(const Controller<T> &c);
-
 };
 
 }

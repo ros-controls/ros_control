@@ -50,6 +50,10 @@ class ControllerBase
 public:
   ControllerBase() = default;
   virtual ~ControllerBase() = default;
+  ControllerBase(const ControllerBase&) = delete;
+  ControllerBase& operator=(const ControllerBase&) = delete;
+  ControllerBase(ControllerBase&&) = delete;
+  ControllerBase& operator=(ControllerBase&&) = delete;
 
   /** \name Real-Time Safe Functions
    *\{*/

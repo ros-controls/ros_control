@@ -339,10 +339,6 @@ protected:
 
   /** Flag to indicate if hardware interfaces are considered optional (i.e. non-required). */
   bool allow_optional_interfaces_;
-
-private:
-  MultiInterfaceController(const MultiInterfaceController& c);
-  MultiInterfaceController& operator =(const MultiInterfaceController& c);
 };
 
 } // namespace
