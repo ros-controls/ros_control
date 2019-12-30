@@ -27,6 +27,9 @@
 
 /// \author Daniel Pinyol
 
+#pragma once
+
+
 #include <pluginlib/class_loader.hpp>
 #include <transmission_interface/simple_transmission.h>
 #include <transmission_interface/transmission_loader.h>
