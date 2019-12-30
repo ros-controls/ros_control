@@ -157,8 +157,6 @@ public:
   MultiInterfaceController(bool allow_optional_interfaces = false)
     : allow_optional_interfaces_(allow_optional_interfaces) {}
 
-  ~MultiInterfaceController() override = default;
-
   /** \name Non Real-Time Safe Functions
    *\{*/
 

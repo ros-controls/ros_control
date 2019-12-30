@@ -38,7 +38,6 @@ namespace combined_robot_hw_tests
 class MyRobotHW3 : public hardware_interface::RobotHW
 {
 public:
-  MyRobotHW3() = default;
   ~MyRobotHW3() override = default;
   bool init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh) override;
   void read(const ros::Time& time, const ros::Duration& period) override;

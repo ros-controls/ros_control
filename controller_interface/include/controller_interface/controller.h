@@ -52,7 +52,6 @@ template <class T>
 class Controller: public virtual ControllerBase
 {
 public:
-  Controller() = default;
   ~Controller<T>() override = default;
 
   /** \brief The init function is called to initialize the controller from a
