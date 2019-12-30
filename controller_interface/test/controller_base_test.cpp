@@ -43,13 +43,9 @@ using ::testing::Return;
 class ControllerMock : public controller_interface::ControllerBase
 {
 public:
-  ControllerMock() : controller_interface::ControllerBase()
-  {
-  }
+  ControllerMock() : controller_interface::ControllerBase() {}
 
-  ~ControllerMock()
-  {
-  }
+  ~ControllerMock() override = default;
 
   void initializeState()
   {

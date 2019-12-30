@@ -160,7 +160,7 @@ private:
 class PositionJointSoftLimitsHandle
 {
 public:
-  PositionJointSoftLimitsHandle() {}
+  PositionJointSoftLimitsHandle() = default;
 
   PositionJointSoftLimitsHandle(const hardware_interface::JointHandle& jh,
                                 const JointLimits&                     limits,
@@ -316,7 +316,7 @@ private:
 class EffortJointSoftLimitsHandle
 {
 public:
-  EffortJointSoftLimitsHandle() {}
+  EffortJointSoftLimitsHandle() = default;
 
   EffortJointSoftLimitsHandle(const hardware_interface::JointHandle& jh,
                               const JointLimits&                     limits,
@@ -402,7 +402,7 @@ private:
 class VelocityJointSaturationHandle
 {
 public:
-  VelocityJointSaturationHandle() {}
+  VelocityJointSaturationHandle() = default;
 
   VelocityJointSaturationHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits)
     : jh_(jh)

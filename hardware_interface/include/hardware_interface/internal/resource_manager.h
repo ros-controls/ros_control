@@ -52,7 +52,7 @@ namespace hardware_interface
 class ResourceManagerBase
 {
 public:
-  virtual ~ResourceManagerBase() {}
+  virtual ~ResourceManagerBase() = default;
 };
 
 /**
@@ -73,7 +73,7 @@ public:
   /** \name Non Real-Time Safe Functions
    *\{*/
 
-  virtual ~ResourceManager() {}
+  ~ResourceManager() override = default;
 
   /** \return Vector of resource names registered to this interface. */
   std::vector<std::string> getNames() const

@@ -43,9 +43,9 @@ class ExtensibleController : public virtual BaseControllerInterface
 {
 public:
   bool init(hardware_interface::RobotHW* robot_hw,
-            ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh);
+            ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) override;
   virtual int helper();
-  void update(const ros::Time&, const ros::Duration&);
+  void update(const ros::Time&, const ros::Duration&) override;
 };
 
 /**
@@ -58,10 +58,10 @@ class DerivedController : public ExtensibleController, public DerivedControllerI
 {
 public:
   bool initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle& nh, ros::NodeHandle& pnh,
-      controller_interface::ControllerBase::ClaimedResources& cr);
+      controller_interface::ControllerBase::ClaimedResources& cr) override;
   bool init(hardware_interface::RobotHW* robot_hw,
-            ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh);
-  virtual int helper();
+            ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) override;
+  int helper() override;
 };
 
 }  // namespace controller_manager_tests

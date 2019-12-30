@@ -31,10 +31,6 @@
 namespace combined_robot_hw_tests
 {
 
-MyRobotHW4::MyRobotHW4()
-{
-}
-
 bool MyRobotHW4::init(ros::NodeHandle& /*root_nh*/, ros::NodeHandle &/*robot_hw_nh*/)
 {
   using namespace hardware_interface;

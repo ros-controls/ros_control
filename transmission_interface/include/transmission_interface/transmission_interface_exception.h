@@ -37,8 +37,8 @@ class TransmissionInterfaceException: public std::exception
 {
 public:
   TransmissionInterfaceException(const std::string& message) : msg(message) {}
-  virtual ~TransmissionInterfaceException() throw() {}
-  virtual const char* what() const throw() {return msg.c_str();}
+  ~TransmissionInterfaceException() noexcept override = default;
+  const char* what() const noexcept override {return msg.c_str();}
 private:
   std::string msg;
 };

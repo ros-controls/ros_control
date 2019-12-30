@@ -75,7 +75,7 @@ public:
    */
   ControllerManager(hardware_interface::RobotHW *robot_hw,
                    const ros::NodeHandle& nh=ros::NodeHandle());
-  virtual ~ControllerManager();
+  virtual ~ControllerManager() = default;
 
   /** \name Real-Time Safe Functions
    *\{*/

@@ -31,10 +31,6 @@
 namespace combined_robot_hw_tests
 {
 
-MyRobotHW3::MyRobotHW3()
-{
-}
-
 bool MyRobotHW3::init(ros::NodeHandle& /*root_nh*/, ros::NodeHandle &robot_hw_nh)
 {
   using namespace hardware_interface;
@@ -91,4 +87,3 @@ void MyRobotHW3::write(const ros::Time& /*time*/, const ros::Duration& /*period*
 }
 
 PLUGINLIB_EXPORT_CLASS( combined_robot_hw_tests::MyRobotHW3, hardware_interface::RobotHW)
-

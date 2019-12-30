@@ -62,7 +62,7 @@ class TransmissionLoader
 {
 public:
 
-  virtual ~TransmissionLoader() {}
+  virtual ~TransmissionLoader() = default;
 
   virtual TransmissionSharedPtr load(const TransmissionInfo& transmission_info) = 0;
 

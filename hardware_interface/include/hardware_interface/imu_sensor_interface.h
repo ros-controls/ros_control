@@ -46,7 +46,7 @@ class ImuSensorHandle
 public:
   struct Data
   {
-    Data() {};
+    Data() = default;
 
     std::string name;                                   ///< The name of the sensor
     std::string frame_id;                               ///< The reference frame to which this sensor is associated

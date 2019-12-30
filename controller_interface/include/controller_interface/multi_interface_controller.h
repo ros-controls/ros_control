@@ -155,10 +155,9 @@ public:
    * If set to false (the default), all requested interfaces are required.
    */
   MultiInterfaceController(bool allow_optional_interfaces = false)
-    : allow_optional_interfaces_(allow_optional_interfaces)
-  {}
+    : allow_optional_interfaces_(allow_optional_interfaces) {}
 
-  virtual ~MultiInterfaceController() {}
+  ~MultiInterfaceController() override = default;
 
   /** \name Non Real-Time Safe Functions
    *\{*/
@@ -245,10 +244,10 @@ protected:
    * \returns True if initialization was successful and the controller
    * is ready to be started.
    */
-  virtual bool initRequest(hardware_interface::RobotHW* robot_hw,
-                           ros::NodeHandle&             root_nh,
-                           ros::NodeHandle&             controller_nh,
-                           ClaimedResources&            claimed_resources)
+  bool initRequest(hardware_interface::RobotHW* robot_hw,
+                   ros::NodeHandle&             root_nh,
+                   ros::NodeHandle&             controller_nh,
+                   ClaimedResources&            claimed_resources) override
   {
     // check if construction finished cleanly
     if (state_ != CONSTRUCTED){

@@ -38,9 +38,8 @@ namespace transmission_interface
 class BiDirectionalPositionJointInterfaceProvider : public PositionJointInterfaceProvider
 {
 protected:
-
   bool registerTransmission(TransmissionLoaderData& loader_data,
-                            TransmissionHandleData& handle_data);
+                            TransmissionHandleData& handle_data) override;
 };
 
 } // namespace
