@@ -37,17 +37,11 @@
 namespace controller_manager_tests
 {
 
-class MyDummyInterface : public hardware_interface::HardwareInterface
-{
-public:
-  MyDummyInterface() = default;
-};
+class MyDummyInterface : public hardware_interface::HardwareInterface {};
 
 class MyDummyController : public controller_interface::Controller<MyDummyInterface>
 {
 public:
-  MyDummyController() = default;
-
   using controller_interface::Controller<MyDummyInterface>::init;
   bool init(MyDummyInterface* /*hw*/, ros::NodeHandle& /*n*/) override { return true; }
   void starting(const ros::Time& /*time*/) override { }

@@ -51,8 +51,6 @@ using ::testing::Return;
 class RobotHWMock : public hardware_interface::RobotHW
 {
 public:
-  RobotHWMock() = default;
-
   ~RobotHWMock() override = default;
 
   MOCK_METHOD2(init, bool(ros::NodeHandle &, ros::NodeHandle &));
@@ -84,8 +82,6 @@ public:
 class ControllerMock : public controller_interface::ControllerBase
 {
 public:
-  ControllerMock() = default;
-
   ~ControllerMock() override = default;
 
   void initializeState()

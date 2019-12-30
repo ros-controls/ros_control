@@ -61,7 +61,6 @@ namespace transmission_interface
 class TransmissionLoader
 {
 public:
-
   virtual ~TransmissionLoader() = default;
 
   virtual TransmissionSharedPtr load(const TransmissionInfo& transmission_info) = 0;

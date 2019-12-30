@@ -128,7 +128,6 @@ struct TransmissionLoaderData
 class RequisiteProvider // TODO: There must be a more descriptive name for this class!
 {
 public:
-
   virtual ~RequisiteProvider() = default;
 
   /**

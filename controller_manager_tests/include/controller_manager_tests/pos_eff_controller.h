@@ -40,8 +40,6 @@ class PosEffController : public
                                                      hardware_interface::EffortJointInterface>
 {
 public:
-  PosEffController() = default;
-
   bool init(hardware_interface::RobotHW* robot_hw, ros::NodeHandle &n) override;
   void starting(const ros::Time& time) override;
   void update(const ros::Time& time, const ros::Duration& period) override;

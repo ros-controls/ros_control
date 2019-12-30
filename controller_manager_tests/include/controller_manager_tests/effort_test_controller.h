@@ -40,8 +40,6 @@ namespace controller_manager_tests
 class EffortTestController: public controller_interface::Controller<hardware_interface::EffortJointInterface>
 {
 public:
-  EffortTestController() = default;
-
   using controller_interface::Controller<hardware_interface::EffortJointInterface>::init;
   bool init(hardware_interface::EffortJointInterface* hw, ros::NodeHandle& /*n*/) override;
   void starting(const ros::Time& /*time*/) override;
