@@ -42,7 +42,7 @@ namespace hardware_interface
 class JointHandle : public JointStateHandle
 {
 public:
-  JointHandle() {}
+  JointHandle() = default;
 
   /**
    * \param js This joint's state handle

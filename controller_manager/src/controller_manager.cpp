@@ -62,10 +62,6 @@ ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, cons
 }
 
 
-ControllerManager::~ControllerManager()
-{}
-
-
 // Must be realtime safe.
 void ControllerManager::update(const ros::Time& time, const ros::Duration& period, bool reset_controllers)
 {

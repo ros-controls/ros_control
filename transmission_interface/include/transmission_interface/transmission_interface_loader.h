@@ -129,7 +129,7 @@ class RequisiteProvider // TODO: There must be a more descriptive name for this 
 {
 public:
 
-  virtual ~RequisiteProvider() {}
+  virtual ~RequisiteProvider() = default;
 
   /**
    * \brief Update a robot's joint interfaces with joint information contained in a transmission.

@@ -46,7 +46,7 @@ namespace hardware_interface{
 class HardwareInterface
 {
 public:
-  virtual ~HardwareInterface() {}
+  virtual ~HardwareInterface() = default;
 
   /** \name Resource management
    *\{**/
@@ -74,9 +74,9 @@ public:
   HardwareInterfaceException(const std::string& message)
     : msg(message) {}
 
-  virtual ~HardwareInterfaceException() throw() {}
+  ~HardwareInterfaceException() noexcept override = default;
 
-  virtual const char* what() const throw()
+  const char* what() const noexcept override
   {
     return msg.c_str();
   }

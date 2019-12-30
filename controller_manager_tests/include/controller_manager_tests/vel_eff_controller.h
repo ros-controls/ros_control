@@ -40,12 +40,12 @@ class VelEffController : public
                                                      hardware_interface::EffortJointInterface>
 {
 public:
-  VelEffController() {}
+  VelEffController() = default;
 
-  bool init(hardware_interface::RobotHW* robot_hw, ros::NodeHandle &n);
-  void starting(const ros::Time& time);
-  void update(const ros::Time& time, const ros::Duration& period);
-  void stopping(const ros::Time& time);
+  bool init(hardware_interface::RobotHW* robot_hw, ros::NodeHandle &n) override;
+  void starting(const ros::Time& time) override;
+  void update(const ros::Time& time, const ros::Duration& period) override;
+  void stopping(const ros::Time& time) override;
 
 private:
   std::vector<hardware_interface::JointHandle> vel_cmd_;

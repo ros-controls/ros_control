@@ -43,27 +43,27 @@ public:
   bool updateJointInterfaces(const TransmissionInfo&      transmission_info,
                              hardware_interface::RobotHW* robot_hw,
                              JointInterfaces&             joint_interfaces,
-                             RawJointDataMap&             raw_joint_data_map);
+                             RawJointDataMap&             raw_joint_data_map) override;
 
 protected:
   bool getJointStateData(const TransmissionInfo& transmission_info,
                          const RawJointDataMap&  raw_joint_data_map,
-                         JointData&              jnt_state_data);
+                         JointData&              jnt_state_data) override;
 
   bool getJointCommandData(const TransmissionInfo& /*transmission_info*/,
                            const RawJointDataMap&  /*raw_joint_data_map*/,
-                           JointData&              /*jnt_cmd_data*/) {return true;}
+                           JointData&              /*jnt_cmd_data*/) override {return true;}
 
   bool getActuatorStateData(const TransmissionInfo&      transmission_info,
                             hardware_interface::RobotHW* robot_hw,
-                            ActuatorData&                act_state_data);
+                            ActuatorData&                act_state_data) override;
 
   bool getActuatorCommandData(const TransmissionInfo&      /*transmission_info*/,
                               hardware_interface::RobotHW* /*robot_hw*/,
-                              ActuatorData&                /*act_cmd_data*/) {return true;}
+                              ActuatorData&                /*act_cmd_data*/) override {return true;}
 
   bool registerTransmission(TransmissionLoaderData& loader_data,
-                            TransmissionHandleData& handle_data);
+                            TransmissionHandleData& handle_data) override;
 };
 
 } // namespace

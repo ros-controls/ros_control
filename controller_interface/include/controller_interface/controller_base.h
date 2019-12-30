@@ -48,8 +48,8 @@ namespace controller_interface
 class ControllerBase
 {
 public:
-  ControllerBase(){}
-  virtual ~ControllerBase(){}
+  ControllerBase() = default;
+  virtual ~ControllerBase() = default;
 
   /** \name Real-Time Safe Functions
    *\{*/

@@ -50,7 +50,7 @@ public:
   virtual std::vector<std::string> getDeclaredClasses() = 0;
   virtual void reload() = 0;
   const std::string& getName() { return name_; }
-  virtual ~ControllerLoaderInterface() { }
+  virtual ~ControllerLoaderInterface() = default;
 private:
   const std::string name_;
 
