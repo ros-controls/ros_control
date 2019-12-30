@@ -50,6 +50,10 @@ class ControllerBase
 public:
   ControllerBase() = default;
   virtual ~ControllerBase() = default;
+  ControllerBase(const ControllerBase&) = delete;
+  ControllerBase& operator=(const ControllerBase&) = delete;
+  ControllerBase(ControllerBase&&) = delete;
+  ControllerBase& operator=(ControllerBase&&) = delete;
 
   /** \name Real-Time Safe Functions
    *\{*/
@@ -238,12 +242,6 @@ public:
 
   /// The current execution state of the controller
   enum {CONSTRUCTED, INITIALIZED, RUNNING, STOPPED, WAITING, ABORTED} state_ = {CONSTRUCTED};
-
-
-private:
-  ControllerBase(const ControllerBase &c);
-  ControllerBase& operator =(const ControllerBase &c);
-
 };
 
 typedef std::shared_ptr<ControllerBase> ControllerBaseSharedPtr;
