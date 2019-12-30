@@ -27,8 +27,8 @@
 
 /// \author: Adolfo Rodriguez Tsouroukdissian
 
-#ifndef HARDWARE_INTERFACE_FORCE_CONTROL_SENSOR_INTERFACE_H
-#define HARDWARE_INTERFACE_FORCE_CONTROL_SENSOR_INTERFACE_H
+#pragma once
+
 
 #include <hardware_interface/internal/hardware_resource_manager.h>
 #include <string>
@@ -86,5 +86,3 @@ private:
 class ForceTorqueSensorInterface : public HardwareResourceManager<ForceTorqueSensorHandle> {};
 
 }
-
-#endif // HARDWARE_INTERFACE_FORCE_CONTROL_SENSOR_INTERFACE_H

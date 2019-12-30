@@ -27,8 +27,8 @@
 
 /// \author Wim Meeussen
 
-#ifndef HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
+#pragma once
+
 
 #include <cassert>
 #include <string>
@@ -88,5 +88,3 @@ class VelocityJointInterface : public JointCommandInterface {};
 class PositionJointInterface : public JointCommandInterface {};
 
 }
-
-#endif

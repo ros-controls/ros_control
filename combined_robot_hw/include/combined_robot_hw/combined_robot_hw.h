@@ -25,8 +25,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef COMBINED_ROBOT_HW_COMBINED_ROBOT_HW_H
-#define COMBINED_ROBOT_HW_COMBINED_ROBOT_HW_H
+#pragma once
+
 
 #include <list>
 #include <map>
@@ -117,5 +117,3 @@ protected:
 };
 
 }
-
-#endif

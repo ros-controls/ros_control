@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_H
-#define TRANSMISSION_INTERFACE_TRANSMISSION_H
+#pragma once
+
 
 #include <cstddef>
 #include <string>
@@ -184,5 +184,3 @@ public:
 typedef std::shared_ptr<Transmission> TransmissionSharedPtr;
 
 } // transmission_interface
-
-#endif // TRANSMISSION_INTERFACE_TRANSMISSION_H

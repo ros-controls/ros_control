@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_SIMPLE_TRANSMISSION_H
-#define TRANSMISSION_INTERFACE_SIMPLE_TRANSMISSION_H
+#pragma once
+
 
 #include <cassert>
 #include <string>
@@ -271,5 +271,3 @@ inline void SimpleTransmission::jointToActuatorPosition(const JointData&    jnt_
 }
 
 } // transmission_interface
-
-#endif // TRANSMISSION_INTERFACE_SIMPLE_TRANSMISSION_H

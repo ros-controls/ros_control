@@ -25,8 +25,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef CONTROLLER_MANAGER_TESTS_POS_EFF_OPT_CONTROLLER_H
-#define CONTROLLER_MANAGER_TESTS_POS_EFF_OPT_CONTROLLER_H
+#pragma once
+
 
 #include <controller_interface/multi_interface_controller.h>
 #include <hardware_interface/joint_command_interface.h>
@@ -56,5 +56,3 @@ private:
 };
 
 }
-
-#endif

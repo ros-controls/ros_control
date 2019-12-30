@@ -27,8 +27,8 @@
 
 /// \author Igor Kalevatykh
 
-#ifndef HARDWARE_INTERFACE_POSVEL_COMMAND_INTERFACE_H
-#define HARDWARE_INTERFACE_POSVEL_COMMAND_INTERFACE_H
+#pragma once
+
 
 #include <cassert>
 #include <string>
@@ -90,5 +90,3 @@ private:
 class PosVelJointInterface : public HardwareResourceManager<PosVelJointHandle, ClaimResources> {};
 
 }
-
-#endif /*HARDWARE_INTERFACE_POSVEL_COMMAND_INTERFACE_H*/

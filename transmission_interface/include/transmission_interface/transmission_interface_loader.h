@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_LOADER_H
-#define TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_LOADER_H
+#pragma once
+
 
 // C++ standard
 #include <algorithm>
@@ -426,5 +426,3 @@ private:
 };
 
 } // namespace
-
-#endif // header guard

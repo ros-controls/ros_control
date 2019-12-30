@@ -28,8 +28,8 @@
 
 /// \author Wim Meeussen, Adolfo Rodriguez Tsouroukdissian
 
-#ifndef HARDWARE_INTERFACE_RESOURCE_MANAGER_H
-#define HARDWARE_INTERFACE_RESOURCE_MANAGER_H
+#pragma once
+
 
 #include <stdexcept>
 #include <string>
@@ -154,5 +154,3 @@ protected:
 };
 
 }
-
-#endif // HARDWARE_INTERFACE_RESOURCE_MANAGER_H

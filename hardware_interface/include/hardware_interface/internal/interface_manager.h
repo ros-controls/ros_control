@@ -28,8 +28,8 @@
 
 /// \author Wim Meussen, Adolfo Rodriguez Tsouroukdissian, Kelsey P. Hawkins, Toni Oliver
 
-#ifndef HARDWARE_INTERFACE_INTERFACE_MANAGER_H
-#define HARDWARE_INTERFACE_INTERFACE_MANAGER_H
+#pragma once
+
 
 #include <map>
 #include <string>
@@ -260,5 +260,3 @@ protected:
 };
 
 } // namespace
-
-#endif // header guard

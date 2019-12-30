@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef JOINT_LIMITS_INTERFACE_JOINT_LIMITS_URDF_H
-#define JOINT_LIMITS_INTERFACE_JOINT_LIMITS_URDF_H
+#pragma once
+
 
 #include <ros/common.h>
 #include <urdf_model/joint.h>
@@ -97,5 +97,3 @@ inline bool getSoftJointLimits(urdf::JointConstSharedPtr urdf_joint, SoftJointLi
 }
 
 }
-
-#endif

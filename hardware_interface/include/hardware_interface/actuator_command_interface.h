@@ -26,8 +26,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef HARDWARE_INTERFACE_ACTUATOR_COMMAND_INTERFACE_H
-#define HARDWARE_INTERFACE_ACTUATOR_COMMAND_INTERFACE_H
+#pragma once
+
 
 #include <string>
 #include <hardware_interface/internal/hardware_resource_manager.h>
@@ -85,5 +85,3 @@ class VelocityActuatorInterface : public ActuatorCommandInterface {};
 class PositionActuatorInterface : public ActuatorCommandInterface {};
 
 }
-
-#endif

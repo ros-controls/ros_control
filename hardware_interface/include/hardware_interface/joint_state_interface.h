@@ -27,8 +27,8 @@
 
 /// \author Wim Meeussen
 
-#ifndef HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_STATE_INTERFACE_H
+#pragma once
+
 
 #include <hardware_interface/internal/hardware_resource_manager.h>
 #include <cassert>
@@ -230,5 +230,3 @@ private:
 class JointStateInterface : public HardwareResourceManager<JointStateHandle> {};
 
 }
-
-#endif

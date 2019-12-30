@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_LOADER_H
-#define TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_LOADER_H
+#pragma once
+
 
 // TinyXML
 #include <tinyxml.h>
@@ -58,5 +58,3 @@ private:
 };
 
 } // namespace
-
-#endif // header guard
