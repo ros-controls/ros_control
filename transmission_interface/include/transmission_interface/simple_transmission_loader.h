@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_SIMPLE_TRANSMISSION_LOADER_H
-#define TRANSMISSION_INTERFACE_SIMPLE_TRANSMISSION_LOADER_H
+#pragma once
+
 
 // ros_control
 #include <transmission_interface/transmission_loader.h>
@@ -47,5 +47,3 @@ public:
 };
 
 } // namespace
-
-#endif // header guard

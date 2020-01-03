@@ -29,9 +29,8 @@
  * Author: Wim Meeussen
  */
 
+#pragma once
 
-#ifndef CONTROLLER_MANAGER_CONTROLLER_MANAGER_H
-#define CONTROLLER_MANAGER_CONTROLLER_MANAGER_H
 
 #include "controller_manager/controller_spec.h"
 #include <cstdio>
@@ -252,4 +251,3 @@ private:
 };
 
 }
-#endif

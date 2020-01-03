@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef RANDOM_GENERATOR_UTILS_H
-#define RANDOM_GENERATOR_UTILS_H
+#pragma once
+
 
 #include <cstdlib>
 #include <ctime>
@@ -63,5 +63,3 @@ vector<double> randomVector(const vector<double>::size_type size, RandomDoubleGe
   for (vector<double>::size_type i = 0; i < size; ++i) {out.push_back(generator());}
   return out;
 }
-
-#endif // RANDOM_GENERATOR_UTILS_H

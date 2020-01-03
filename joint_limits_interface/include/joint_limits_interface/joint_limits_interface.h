@@ -28,8 +28,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef JOINT_LIMITS_INTERFACE_JOINT_LIMITS_INTERFACE_H
-#define JOINT_LIMITS_INTERFACE_JOINT_LIMITS_INTERFACE_H
+#pragma once
+
 
 #include <algorithm>
 #include <cassert>
@@ -617,5 +617,3 @@ class VelocityJointSaturationInterface : public JointLimitsInterface<VelocityJoi
 class VelocityJointSoftLimitsInterface : public JointLimitsInterface<VelocityJointSoftLimitsHandle> {};
 
 }
-
-#endif

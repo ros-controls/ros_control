@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_H
-#define TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_H
+#pragma once
+
 
 #include <map>
 #include <string>
@@ -439,5 +439,3 @@ class JointToActuatorVelocityInterface : public TransmissionInterface<JointToAct
 class JointToActuatorEffortInterface : public TransmissionInterface<JointToActuatorEffortHandle> {};
 
 } // transmission_interface
-
-#endif // TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_H

@@ -28,8 +28,8 @@
 
 /** \author Adolfo Rodríguez Tsouroukdissian */
 
-#ifndef CONTROLLER_INTERFACE_INTERNAL_ROBOTHW_INTERFACES_H
-#define CONTROLLER_INTERFACE_INTERNAL_ROBOTHW_INTERFACES_H
+#pragma once
+
 
 #include <algorithm>
 #include <sstream>
@@ -146,5 +146,3 @@ inline void populateClaimedResources(hardware_interface::RobotHW*      robot_hw,
 /** \endcond */
 
 } // namespace
-
-#endif  // CONTROLLER_INTERFACE_INTERNAL_ROBOTHW_INTERFACES_H

@@ -25,9 +25,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
+#pragma once
 
-#ifndef HARDWARE_INTERFACE_CONTROLLER_INFO_H
-#define HARDWARE_INTERFACE_CONTROLLER_INFO_H
 
 #include <string>
 #include <vector>
@@ -55,5 +54,3 @@ struct ControllerInfo
 };
 
 }
-
-#endif

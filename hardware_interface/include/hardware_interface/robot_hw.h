@@ -25,8 +25,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef HARDWARE_INTERFACE_ROBOT_HW_H
-#define HARDWARE_INTERFACE_ROBOT_HW_H
+#pragma once
+
 
 #include <list>
 #include <map>
@@ -187,6 +187,3 @@ public:
 typedef std::shared_ptr<RobotHW> RobotHWSharedPtr;
 
 }
-
-#endif
-

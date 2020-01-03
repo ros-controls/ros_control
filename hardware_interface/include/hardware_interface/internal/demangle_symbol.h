@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef HARDWARE_INTERFACE_INTERNAL_DEMANGLE_SYMBOL_H
-#define HARDWARE_INTERFACE_INTERNAL_DEMANGLE_SYMBOL_H
+#pragma once
+
 
 #include <cstdlib>
 #include <string>
@@ -88,5 +88,3 @@ inline std::string demangledTypeName(const T& val)
 }
 
 }
-
-#endif // HARDWARE_INTERFACE_INTERNAL_DEMANGLE_SYMBOL_H

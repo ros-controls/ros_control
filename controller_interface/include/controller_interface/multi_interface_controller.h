@@ -27,8 +27,8 @@
 
 /** \author Adolfo Rodríguez Tsouroukdissian */
 
-#ifndef CONTROLLER_INTERFACE_MULTI_INTERFACE_CONTROLLER_H
-#define CONTROLLER_INTERFACE_MULTI_INTERFACE_CONTROLLER_H
+#pragma once
+
 
 #include <controller_interface/controller_base.h>
 #include <controller_interface/internal/robothw_interfaces.h>
@@ -347,5 +347,3 @@ private:
 };
 
 } // namespace
-
-#endif

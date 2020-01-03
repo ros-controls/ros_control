@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_H
-#define TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_H
+#pragma once
+
 
 #include <cassert>
 #include <string>
@@ -382,5 +382,3 @@ inline void DifferentialTransmission::jointToActuatorPosition(const JointData&  
 }
 
 } // transmission_interface
-
-#endif // TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_H

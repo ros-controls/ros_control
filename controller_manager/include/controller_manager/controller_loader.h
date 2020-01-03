@@ -25,8 +25,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef CONRTOLLER_MANAGER_CONTROLLER_LOADER_H
-#define CONRTOLLER_MANAGER_CONTROLLER_LOADER_H
+#pragma once
+
 
 #include <pluginlib/class_loader.hpp>
 #include <controller_manager/controller_loader_interface.h>
@@ -78,5 +78,3 @@ private:
 };
 
 }
-
-#endif
