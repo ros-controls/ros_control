@@ -376,14 +376,21 @@ TEST_F(VelocityJointSaturationHandleTest, EnforceAccelerationBounds)
 
   pos = 0.0;
   double cmd;
+  const ros::Duration long_enough(1000.0); // An arbitrarily long time, sufficient to suppress acceleration limits
 
   // Positive velocity
-  vel = limits.max_velocity / 2.0;
+  cmd_handle.setCommand(limits.max_velocity / 2.0); // register last command
+  limits_handle.enforceLimits(long_enough); // make sure the prev_cmd is registered
+                                            // without triggering the acceleration limits
 
   cmd = limits.max_velocity * 2.0; // Try to go beyond +max velocity
   cmd_handle.setCommand(cmd);
   limits_handle.enforceLimits(period);
   EXPECT_NEAR(limits.max_velocity, cmd_handle.getCommand(), EPS); // Max velocity bounded by velocity limit
+
+  cmd_handle.setCommand(limits.max_velocity / 2.0); // register last command
+  limits_handle.enforceLimits(long_enough); // make sure the prev_cmd is registered
+                                            // without triggering the acceleration limits
 
   cmd = -limits.max_velocity * 2.0; // Try to go beyond -max velocity
   cmd_handle.setCommand(cmd);
@@ -391,12 +398,18 @@ TEST_F(VelocityJointSaturationHandleTest, EnforceAccelerationBounds)
   EXPECT_NEAR(-limits.max_velocity / 2.0, cmd_handle.getCommand(), EPS); // Max velocity bounded by acceleration limit
 
   // Negative velocity
-  vel = -limits.max_velocity / 2.0;
+  cmd_handle.setCommand(-limits.max_velocity / 2.0); // register last command
+  limits_handle.enforceLimits(long_enough); // make sure the prev_cmd is registered
+                                            // without triggering the acceleration limits
 
   cmd = limits.max_velocity * 2.0; // Try to go beyond +max velocity
   cmd_handle.setCommand(cmd);
   limits_handle.enforceLimits(period);
   EXPECT_NEAR(limits.max_velocity / 2.0, cmd_handle.getCommand(), EPS); // Max velocity bounded by acceleration limit
+
+  cmd_handle.setCommand(-limits.max_velocity / 2.0); // register last command
+  limits_handle.enforceLimits(long_enough); // make sure the prev_cmd is registered
+                                            // without triggering the acceleration limits
 
   cmd = -limits.max_velocity * 2.0; // Try to go beyond -max velocity
   cmd_handle.setCommand(cmd);
