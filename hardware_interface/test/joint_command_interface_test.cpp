@@ -41,11 +41,11 @@ TEST(JointCommandHandleTest, HandleConstruction)
   double pos, vel, eff;
   double cmd;
   EXPECT_NO_THROW(JointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), &cmd));
-  EXPECT_THROW(JointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), 0), HardwareInterfaceException);
+  EXPECT_THROW(JointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), nullptr), HardwareInterfaceException);
 
   // Print error messages
   // Requires manual output inspection, but exception message should be descriptive
-  try {JointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), 0);}
+  try {JointHandle tmp(JointStateHandle(name, &pos, &vel, &eff), nullptr);}
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 }
 
@@ -130,4 +130,3 @@ int main(int argc, char** argv)
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-

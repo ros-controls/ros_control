@@ -40,7 +40,7 @@ namespace hardware_interface
 class ForceTorqueSensorHandle
 {
 public:
-  ForceTorqueSensorHandle() : name_(""), frame_id_(""), force_(0), torque_(0) {}
+  ForceTorqueSensorHandle() : name_(""), frame_id_(""), force_(nullptr), torque_(nullptr) {}
 
   /**
    * \param name The name of the sensor

@@ -44,7 +44,7 @@ struct RandomDoubleGenerator
 public:
   RandomDoubleGenerator(double min_val, double max_val)
     : min_val_(min_val),
-      max_val_(max_val) {srand(time(NULL));}
+      max_val_(max_val) {srand(time(nullptr));}
   double operator()()
   {
     const double range = max_val_ - min_val_;

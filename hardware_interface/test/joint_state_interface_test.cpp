@@ -40,19 +40,19 @@ TEST(JointStateHandleTest, HandleConstruction)
   string name = "name1";
   double pos, vel, eff;
   EXPECT_NO_THROW(JointStateHandle tmp(name, &pos, &vel, &eff));
-  EXPECT_THROW(JointStateHandle(name, 0, &vel, &eff), HardwareInterfaceException);
-  EXPECT_THROW(JointStateHandle(name, &pos, 0, &eff), HardwareInterfaceException);
-  EXPECT_THROW(JointStateHandle(name, &pos, &vel, 0), HardwareInterfaceException);
+  EXPECT_THROW(JointStateHandle(name, nullptr, &vel, &eff), HardwareInterfaceException);
+  EXPECT_THROW(JointStateHandle(name, &pos, nullptr, &eff), HardwareInterfaceException);
+  EXPECT_THROW(JointStateHandle(name, &pos, &vel, nullptr), HardwareInterfaceException);
 
   // Print error messages
   // Requires manual output inspection, but exception message should be descriptive
-  try {JointStateHandle(name, 0, &vel, &eff);}
+  try {JointStateHandle(name, nullptr, &vel, &eff);}
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 
-  try {JointStateHandle(name, &pos, 0, &eff);}
+  try {JointStateHandle(name, &pos, nullptr, &eff);}
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 
-  try {JointStateHandle(name, &pos, &vel, 0);}
+  try {JointStateHandle(name, &pos, &vel, nullptr);}
   catch(const HardwareInterfaceException& e) {ROS_ERROR_STREAM(e.what());}
 
 }

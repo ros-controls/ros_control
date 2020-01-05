@@ -44,8 +44,8 @@ TEST(ForceTorqueSensorHandleTest, HandleConstruction)
     ForceTorqueSensorHandle handle;
     EXPECT_EQ("", handle.getName());
     EXPECT_EQ("", handle.getFrameId());
-    EXPECT_TRUE(0 == handle.getForce());
-    EXPECT_TRUE(0 == handle.getTorque());
+    EXPECT_TRUE(nullptr == handle.getForce());
+    EXPECT_TRUE(nullptr == handle.getTorque());
   }
 
   // Valid handle
@@ -65,7 +65,7 @@ public:
       name1("name_1"), name2("name_2"),
       frame_id1("frame_1"), frame_id2("frame_2"),
       h1(name1, frame_id1, force1, torque1),
-      h2(name2, frame_id2, 0, torque2) // Torque-only sensor
+      h2(name2, frame_id2, nullptr, torque2) // Torque-only sensor
   {
     force1[0] = 1.0;
     force1[1] = 2.0;
@@ -106,8 +106,8 @@ TEST_F(ForceTorqueSensorInterfaceTest, ExcerciseApi)
   ForceTorqueSensorHandle h1_tmp = iface.getHandle(name1);
   EXPECT_EQ(name1, h1_tmp.getName());
   EXPECT_EQ(frame_id1, h1_tmp.getFrameId());
-  EXPECT_TRUE(0 != h1_tmp.getForce());
-  EXPECT_TRUE(0 != h1_tmp.getTorque());
+  EXPECT_TRUE(nullptr != h1_tmp.getForce());
+  EXPECT_TRUE(nullptr != h1_tmp.getTorque());
   EXPECT_DOUBLE_EQ(force1[0], h1_tmp.getForce()[0]);
   EXPECT_DOUBLE_EQ(force1[1], h1_tmp.getForce()[1]);
   EXPECT_DOUBLE_EQ(force1[2], h1_tmp.getForce()[2]);
@@ -118,8 +118,8 @@ TEST_F(ForceTorqueSensorInterfaceTest, ExcerciseApi)
   ForceTorqueSensorHandle h2_tmp = iface.getHandle(name2);
   EXPECT_EQ(name2, h2_tmp.getName());
   EXPECT_EQ(frame_id2, h2_tmp.getFrameId());
-  EXPECT_TRUE(0 == h2_tmp.getForce());
-  EXPECT_TRUE(0 != h2_tmp.getTorque());
+  EXPECT_TRUE(nullptr == h2_tmp.getForce());
+  EXPECT_TRUE(nullptr != h2_tmp.getTorque());
   EXPECT_DOUBLE_EQ(torque2[0], h2_tmp.getTorque()[0]);
   EXPECT_DOUBLE_EQ(torque2[1], h2_tmp.getTorque()[1]);
   EXPECT_DOUBLE_EQ(torque2[2], h2_tmp.getTorque()[2]);

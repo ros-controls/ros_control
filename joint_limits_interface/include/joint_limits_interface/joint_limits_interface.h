@@ -295,16 +295,16 @@ public:
     {
       const double pos = jh_.getPosition();
       if (pos < limits_.min_position)
-        min_eff = 0;
+        min_eff = 0.0;
       else if (pos > limits_.max_position)
-        max_eff = 0;
+        max_eff = 0.0;
     }
 
     const double vel = jh_.getVelocity();
     if (vel < -limits_.max_velocity)
-      min_eff = 0;
+      min_eff = 0.0;
     else if (vel > limits_.max_velocity)
-      max_eff = 0;
+      max_eff = 0.0;
 
     jh_.setCommand(internal::saturate(jh_.getCommand(), min_eff, max_eff));
   }
