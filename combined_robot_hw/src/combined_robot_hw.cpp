@@ -195,6 +195,18 @@ namespace combined_robot_hw
     }
   }
 
+  bool CombinedRobotHW::isResetRequired()
+  {
+    // Call the isResetRequired method of the single RobotHW objects.
+    std::vector<hardware_interface::RobotHWSharedPtr>::iterator robot_hw;
+    for (robot_hw = robot_hw_list_.begin(); robot_hw != robot_hw_list_.end(); ++robot_hw)
+    {
+      if((*robot_hw)->isResetRequired())
+        return true;
+    }
+    return false;
+  }
+
   void CombinedRobotHW::filterControllerList(const std::list<hardware_interface::ControllerInfo>& list,
                                              std::list<hardware_interface::ControllerInfo>& filtered_list,
                                              hardware_interface::RobotHWSharedPtr robot_hw)

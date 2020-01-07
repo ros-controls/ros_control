@@ -175,6 +175,26 @@ public:
    * \param period The time passed since the last call to \ref write
    */
   virtual void write(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
+
+  /**
+  * Each robot HW might require to reset controllers, rising reset_ to true, this
+  * method returns true if that is the case
+  */
+  virtual bool isResetRequired()
+  {
+      if(reset_once_)
+      {
+        reset_once_ = false;
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+  }
+
+protected:
+  bool reset_once_;
 };
 
 typedef std::shared_ptr<RobotHW> RobotHWSharedPtr;
