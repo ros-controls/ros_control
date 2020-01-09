@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   controller_manager_msgs
   hardware_interface
   pluginlib
+  roscpp
 )
 
 # Include Boost.Thread
@@ -25,6 +26,7 @@ catkin_package(
     controller_manager_msgs
     hardware_interface
     pluginlib
+    roscpp
   DEPENDS
     Boost
 )

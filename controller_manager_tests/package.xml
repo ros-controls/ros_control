@@ -20,6 +20,7 @@
 
   <depend>controller_interface</depend>
   <depend>controller_manager</depend>
+  <depend>roscpp</depend>
 
   <test_depend>rosbash</test_depend>
   <test_depend>rosnode</test_depend>

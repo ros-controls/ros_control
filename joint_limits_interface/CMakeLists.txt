@@ -17,7 +17,8 @@ catkin_package(
     include
   CATKIN_DEPENDS
     hardware_interface
-    roscpp urdf
+    roscpp
+    urdf
   DEPENDS
     urdfdom
 )
