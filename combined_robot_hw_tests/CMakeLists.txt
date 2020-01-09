@@ -11,37 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 # Declare a catkin package
-catkin_package(
-  INCLUDE_DIRS
-    include
-  LIBRARIES
-    ${PROJECT_NAME}
-  CATKIN_DEPENDS
-    combined_robot_hw
-    hardware_interface
-    roscpp
-    # Note: controller_manager and controller_manager_tests are only used in tests
-)
-
-
-###########
-## Build ##
-###########
-
-# Specify header include paths
-include_directories(include ${catkin_INCLUDE_DIRS})
-
-add_library(${PROJECT_NAME}
-  src/my_robot_hw_1.cpp
-  src/my_robot_hw_2.cpp
-  src/my_robot_hw_3.cpp
-  src/my_robot_hw_4.cpp
-)
-add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
-
-add_executable(combined_robot_hw_dummy_app src/dummy_app.cpp)
-target_link_libraries(combined_robot_hw_dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
+catkin_package()
 
 
 #############
@@ -50,6 +20,21 @@ target_link_libraries(combined_robot_hw_dummy_app ${PROJECT_NAME} ${catkin_LIBRA
 
 if(CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
+
+  # Specify header include paths
+  include_directories(include ${catkin_INCLUDE_DIRS})
+
+  add_library(${PROJECT_NAME} EXCLUDE_FROM_ALL
+    src/my_robot_hw_1.cpp
+    src/my_robot_hw_2.cpp
+    src/my_robot_hw_3.cpp
+    src/my_robot_hw_4.cpp
+  )
+  add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
+  target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+
+  add_executable(combined_robot_hw_dummy_app EXCLUDE_FROM_ALL src/dummy_app.cpp)
+  target_link_libraries(combined_robot_hw_dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
   add_rostest_gtest(combined_robot_hw_test
     test/combined_robot_hw_test.test
@@ -63,25 +48,3 @@ if(CATKIN_ENABLE_TESTING)
   )
   target_link_libraries(combined_robot_hw_cm_test ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()
-
-
-#############
-## Install ##
-#############
-
-# Install headers
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
-
-# Install targets
-install(TARGETS ${PROJECT_NAME} combined_robot_hw_dummy_app
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-)
-
-# Install plugins
-install(FILES test_robot_hw_plugin.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)

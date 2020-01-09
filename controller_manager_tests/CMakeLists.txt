@@ -10,37 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_python_setup()
 
 # Declare a catkin package
-catkin_package(
-  INCLUDE_DIRS
-    include
-  LIBRARIES
-    ${PROJECT_NAME}
-  CATKIN_DEPENDS
-    controller_interface
-    controller_manager
-)
-
-
-###########
-## Build ##
-###########
-
-# Specify header include paths
-include_directories(include ${catkin_INCLUDE_DIRS})
-
-add_library(${PROJECT_NAME}
-  src/effort_test_controller.cpp
-  src/extensible_controllers.cpp
-  src/my_dummy_controller.cpp
-  src/my_robot_hw.cpp
-  src/pos_eff_controller.cpp
-  src/pos_eff_opt_controller.cpp
-  src/vel_eff_controller.cpp
-)
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
-
-add_executable(dummy_app src/dummy_app.cpp)
-target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
+catkin_package()
 
 
 #############
@@ -50,7 +20,24 @@ target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 if(CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
 
-  add_executable(cm_test test/cm_test.cpp)
+  # Specify header include paths
+  include_directories(include ${catkin_INCLUDE_DIRS})
+
+  add_library(${PROJECT_NAME} EXCLUDE_FROM_ALL
+    src/effort_test_controller.cpp
+    src/extensible_controllers.cpp
+    src/my_dummy_controller.cpp
+    src/my_robot_hw.cpp
+    src/pos_eff_controller.cpp
+    src/pos_eff_opt_controller.cpp
+    src/vel_eff_controller.cpp
+  )
+  target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+
+  add_executable(dummy_app EXCLUDE_FROM_ALL src/dummy_app.cpp)
+  target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
+
+  add_executable(cm_test EXCLUDE_FROM_ALL test/cm_test.cpp)
   add_dependencies(tests cm_test)
   target_link_libraries(cm_test ${catkin_LIBRARIES} ${GTEST_LIBRARIES})
 
@@ -62,25 +49,3 @@ if(CATKIN_ENABLE_TESTING)
 
   add_rostest(test/controller_manager_scripts.test)
 endif()
-
-
-#############
-## Install ##
-#############
-
-# Install headers
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
-
-# Install targets
-install(TARGETS ${PROJECT_NAME} dummy_app
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-)
-
-# Install plugins
-install(FILES test_controllers_plugin.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
