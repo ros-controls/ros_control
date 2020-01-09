@@ -25,7 +25,6 @@
   <build_depend>hardware_interface</build_depend>
 
   <test_depend>resource_retriever</test_depend>
-  <test_depend>rosunit</test_depend>
 
   <export>
     <rosdoc config="rosdoc.yaml"/>
