@@ -49,3 +49,13 @@ if(CATKIN_ENABLE_TESTING)
 
   add_rostest(test/controller_manager_scripts.test DEPENDENCIES dummy_app)
 endif()
+
+
+#############
+## Install ##
+#############
+
+# Install plugins
+install(FILES test_controllers_plugin.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)

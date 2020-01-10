@@ -49,3 +49,13 @@ if(CATKIN_ENABLE_TESTING)
   add_dependencies(combined_robot_hw_cm_test combined_robot_hw_dummy_app)
   target_link_libraries(combined_robot_hw_cm_test ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()
+
+
+#############
+## Install ##
+#############
+
+# Install plugins
+install(FILES test_robot_hw_plugin.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
