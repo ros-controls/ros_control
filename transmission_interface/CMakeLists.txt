@@ -24,9 +24,11 @@ catkin_package(
     ${PROJECT_NAME}_loader
     ${PROJECT_NAME}_loader_plugins
   CATKIN_DEPENDS
+    hardware_interface
     pluginlib
     roscpp
   DEPENDS
+    Boost # TODO: Should header-only dependencies be DEPENDS or INCLUDE_DIRS?
     TinyXML
 )
 

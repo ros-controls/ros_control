@@ -15,7 +15,6 @@
 
   <author>Adolfo Rodriguez Tsouroukdissian</author>
 
-
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>hardware_interface</depend>

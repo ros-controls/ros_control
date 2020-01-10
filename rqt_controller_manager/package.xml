@@ -18,9 +18,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <exec_depend>controller_manager</exec_depend>
-  <exec_depend>rqt_gui</exec_depend>
+  <exec_depend>controller_manager_msgs</exec_depend>
   <exec_depend>rospy</exec_depend>
+  <exec_depend>rqt_gui</exec_depend>
+  <exec_depend>rqt_gui_py</exec_depend>
 
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml"/>

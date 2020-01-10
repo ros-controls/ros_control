@@ -18,11 +18,16 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <depend>boost</depend>
   <depend>controller_interface</depend>
   <depend>controller_manager_msgs</depend>
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
   <depend>roscpp</depend>
+
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>rosparam</exec_depend>
+  <exec_depend>rospy</exec_depend>
 
   <test_depend>rostest</test_depend>
 </package>

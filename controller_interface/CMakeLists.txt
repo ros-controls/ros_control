@@ -4,7 +4,6 @@ project(controller_interface)
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS
   hardware_interface
-  pluginlib
   roscpp
 )
 
@@ -14,7 +13,6 @@ catkin_package(
     include
   CATKIN_DEPENDS
     hardware_interface
-    pluginlib
     roscpp
 )
 

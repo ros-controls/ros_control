@@ -5,6 +5,7 @@ project(controller_manager_tests)
 find_package(catkin REQUIRED COMPONENTS
   controller_interface
   controller_manager
+  hardware_interface
   roscpp
 )
 

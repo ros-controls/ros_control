@@ -5,8 +5,10 @@ project(combined_robot_hw_tests)
 find_package(catkin REQUIRED COMPONENTS
   combined_robot_hw
   controller_manager
+  controller_manager_msgs
   controller_manager_tests
   hardware_interface
+  pluginlib
   roscpp
 )
 

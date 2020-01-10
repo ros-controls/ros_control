@@ -20,11 +20,15 @@
 
   <depend>controller_interface</depend>
   <depend>controller_manager</depend>
-  <depend>roscpp</depend>
+  <depend>hardware_interface</depend>
+
+  <build_depend>roscpp</build_depend>
+
+  <exec_depend>controller_manager_msgs</exec_depend>
+  <exec_depend>rospy</exec_depend>
 
   <test_depend>rosbash</test_depend>
   <test_depend>rosnode</test_depend>
-  <test_depend>rosservice</test_depend>
   <test_depend>rostest</test_depend>
 
   <export>
