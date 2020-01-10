@@ -19,7 +19,6 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>hardware_interface</depend>
-  <depend>liburdfdom-dev</depend>
   <depend>roscpp</depend>
   <depend>urdf</depend>
 
