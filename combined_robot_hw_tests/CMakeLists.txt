@@ -32,7 +32,6 @@ if(CATKIN_ENABLE_TESTING)
     src/my_robot_hw_3.cpp
     src/my_robot_hw_4.cpp
   )
-  add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
   add_executable(combined_robot_hw_dummy_app EXCLUDE_FROM_ALL src/dummy_app.cpp)
@@ -48,7 +47,7 @@ if(CATKIN_ENABLE_TESTING)
     test/cm_test.test
     test/cm_test.cpp
   )
-  add_dependencies(combined_robot_hw_cm_test combined_robot_hw_dummy_app)
+  add_dependencies(combined_robot_hw_cm_test combined_robot_hw_dummy_app ${catkin_EXPORTED_TARGETS})
   target_link_libraries(combined_robot_hw_cm_test ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()
 

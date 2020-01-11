@@ -60,12 +60,14 @@ if(CATKIN_ENABLE_TESTING)
     test/hwi_switch_test.test
     test/hwi_switch_test.cpp
   )
+  add_dependencies(${PROJECT_NAME}_hwi_switch_test ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${PROJECT_NAME}_hwi_switch_test ${PROJECT_NAME} ${catkin_LIBRARIES})
 
   add_rostest_gmock(${PROJECT_NAME}_hwi_update_test
     test/hwi_update_test.test
     test/hwi_update_test.cpp
   )
+  add_dependencies(${PROJECT_NAME}_hwi_update_test ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${PROJECT_NAME}_hwi_update_test ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()
 

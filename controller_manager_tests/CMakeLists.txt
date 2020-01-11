@@ -37,9 +37,11 @@ if(CATKIN_ENABLE_TESTING)
   target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
   add_executable(dummy_app EXCLUDE_FROM_ALL src/dummy_app.cpp)
+  add_dependencies(dummy_app ${catkin_EXPORTED_TARGETS})
   target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
   add_executable(cm_test EXCLUDE_FROM_ALL test/cm_test.cpp)
+  add_dependencies(cm_test ${catkin_EXPORTED_TARGETS})
   target_link_libraries(cm_test ${catkin_LIBRARIES} ${GTEST_LIBRARIES})
 
   catkin_add_nosetests(test)
