@@ -25,7 +25,7 @@ if(CATKIN_ENABLE_TESTING)
   # Specify header include paths
   include_directories(include ${catkin_INCLUDE_DIRS})
 
-  add_library(${PROJECT_NAME} EXCLUDE_FROM_ALL
+  add_library(${PROJECT_NAME}
     src/effort_test_controller.cpp
     src/extensible_controllers.cpp
     src/my_dummy_controller.cpp
@@ -56,7 +56,20 @@ endif()
 ## Install ##
 #############
 
-# Install plugins
-install(FILES test_controllers_plugin.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
+# NOTE: Libraries and plugins required for tests are installed since CI
+# runs tests out of the install space rather than the devel space
+
+if(CATKIN_ENABLE_TESTING)
+
+  # Install targets
+  install(TARGETS ${PROJECT_NAME}
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+  )
+
+  # Install plugins
+  install(FILES test_controllers_plugin.xml
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  )
+endif()
