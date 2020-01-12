@@ -123,7 +123,7 @@ bool TransmissionInterfaceLoader::load(const std::string& urdf)
 
 bool TransmissionInterfaceLoader::load(const std::vector<TransmissionInfo>& transmission_info_vec)
 {
-  for (const TransmissionInfo& info : transmission_info_vec)
+  for (const auto& info : transmission_info_vec)
   {
     if (!load(info)) {return false;}
   }
@@ -150,7 +150,7 @@ bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info
   // We currently only deal with transmissions specifying a single hardware interface in the joints
   assert(!transmission_info.joints_.empty() && !transmission_info.joints_.front().hardware_interfaces_.empty());
   const std::vector<std::string>& hw_ifaces_ref = transmission_info.joints_.front().hardware_interfaces_; // First joint
-  for (const JointInfo& jnt_info : transmission_info.joints_)
+  for (const auto& jnt_info : transmission_info.joints_)
   {
     // Error out if at least one joint has a different set of hardware interfaces
     if (hw_ifaces_ref.size() != jnt_info.hardware_interfaces_.size() ||
@@ -166,7 +166,7 @@ bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info
 
   // Load transmission for all specified hardware interfaces
   bool has_at_least_one_hw_iface = false;
-  for (const std::string& hw_iface : hw_ifaces_ref)
+  for (const auto& hw_iface : hw_ifaces_ref)
   {
     RequisiteProviderPtr req_provider;
     try
