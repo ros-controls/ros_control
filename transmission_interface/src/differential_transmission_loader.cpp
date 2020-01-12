@@ -39,7 +39,7 @@
 namespace transmission_interface
 {
 
-TransmissionSharedPtr 
+TransmissionSharedPtr
 DifferentialTransmissionLoader::load(const TransmissionInfo& transmission_info)
 {
   // Transmission should contain only one actuator/joint
@@ -104,7 +104,7 @@ bool DifferentialTransmissionLoader::getActuatorConfig(const TransmissionInfo& t
                                                         transmission_info.name_,
                                                         true, // Required
                                                         act_role);
-    if (act_role_status != SUCCESS) {return false;}
+    if (act_role_status != ParseStatus::SUCCESS) {return false;}
 
     // Validate role string
     if (ACTUATOR1_ROLE != act_role && ACTUATOR2_ROLE != act_role)
@@ -149,7 +149,7 @@ bool DifferentialTransmissionLoader::getActuatorConfig(const TransmissionInfo& t
                                                               transmission_info.name_,
                                                               true, // Required
                                                               actuator_reduction[i]);
-    if (reduction_status != SUCCESS) {return false;}
+    if (reduction_status != ParseStatus::SUCCESS) {return false;}
   }
 
   return true;
@@ -182,7 +182,7 @@ bool DifferentialTransmissionLoader::getJointConfig(const TransmissionInfo& tran
                                                      transmission_info.name_,
                                                      true, // Required
                                                      jnt_role);
-    if (jnt_role_status != SUCCESS) {return false;}
+    if (jnt_role_status != ParseStatus::SUCCESS) {return false;}
 
     // Validate role string
     if (JOINT1_ROLE != jnt_role && JOINT2_ROLE != jnt_role)
@@ -231,7 +231,7 @@ bool DifferentialTransmissionLoader::getJointConfig(const TransmissionInfo& tran
                                                            transmission_info.name_,
                                                            false, // Optional
                                                            joint_reduction[i]);
-    if (reduction_status == BAD_TYPE) {return false;}
+    if (reduction_status == ParseStatus::BAD_TYPE) {return false;}
 
     // Parse optional joint offset. Even though it's optional --and to avoid surprises-- we fail if the element is
     // specified but is of the wrong type
@@ -240,7 +240,7 @@ bool DifferentialTransmissionLoader::getJointConfig(const TransmissionInfo& tran
                                                      transmission_info.name_,
                                                      false, // Optional
                                                      joint_offset[i]);
-    if (offset_status == BAD_TYPE) {return false;}
+    if (offset_status == ParseStatus::BAD_TYPE) {return false;}
   }
 
   // Parse if transmision has to be ignored for absolute encoders

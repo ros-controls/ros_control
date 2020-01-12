@@ -154,7 +154,7 @@ void ControllerManager::stopControllers(const ros::Time& time)
 void ControllerManager::startControllers(const ros::Time& time)
 {
   // start controllers
-  if (robot_hw_->switchResult() == hardware_interface::RobotHW::DONE)
+  if (robot_hw_->switchResult() == hardware_interface::RobotHW::SwitchState::DONE)
   {
     for (const auto& request : start_request_)
     {
@@ -164,7 +164,7 @@ void ControllerManager::startControllers(const ros::Time& time)
     switch_params_.do_switch = false;
   }
   // abort controllers in case of error or timeout (if set)
-  else if ((robot_hw_->switchResult() == hardware_interface::RobotHW::ERROR) ||
+  else if ((robot_hw_->switchResult() == hardware_interface::RobotHW::SwitchState::ERROR) ||
            (switch_params_.timeout > 0.0 &&
             (time - switch_params_.init_time).toSec() > switch_params_.timeout))
   {
@@ -198,12 +198,12 @@ void ControllerManager::startControllersAsap(const ros::Time& time)
         if (request == controller.c.get())
         {
           // ready to start
-          if (robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::DONE)
+          if (robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::SwitchState::DONE)
           {
             request->startRequest(time);
           }
           // abort on error or timeout (if set)
-          else if ((robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::ERROR) ||
+          else if ((robot_hw_->switchResult(controller.info) == hardware_interface::RobotHW::SwitchState::ERROR) ||
                    (switch_params_.timeout > 0.0 &&
                     (time - switch_params_.init_time).toSec() > switch_params_.timeout))
           {

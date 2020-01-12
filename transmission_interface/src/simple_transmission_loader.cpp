@@ -56,7 +56,7 @@ TransmissionSharedPtr SimpleTransmissionLoader::load(const TransmissionInfo& tra
                                                             transmission_info.name_,
                                                             true, // Required
                                                             reduction);
-  if (reduction_status != SUCCESS) {return TransmissionSharedPtr();}
+  if (reduction_status != ParseStatus::SUCCESS) {return TransmissionSharedPtr();}
 
   // Parse optional joint offset. Even though it's optional --and to avoid surprises-- we fail if the element is
   // specified but is of the wrong type
@@ -66,7 +66,7 @@ TransmissionSharedPtr SimpleTransmissionLoader::load(const TransmissionInfo& tra
                                                          transmission_info.name_,
                                                          false, // Optional
                                                          joint_offset);
-  if (joint_offset_status == BAD_TYPE) {return TransmissionSharedPtr();}
+  if (joint_offset_status == ParseStatus::BAD_TYPE) {return TransmissionSharedPtr();}
 
   // Transmission instance
   try

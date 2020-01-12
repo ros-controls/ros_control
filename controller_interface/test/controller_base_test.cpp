@@ -53,7 +53,7 @@ public:
 
   void initializeState()
   {
-    state_ = INITIALIZED;
+    state_ = ControllerState::INITIALIZED;
   }
 
   MOCK_METHOD1(starting, void(const ros::Time&));
