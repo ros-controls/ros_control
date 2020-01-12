@@ -80,9 +80,9 @@ public:
   {
     std::vector<std::string> out;
     out.reserve(resource_map_.size());
-    for(typename ResourceMap::const_iterator it = resource_map_.begin(); it != resource_map_.end(); ++it)
+    for (const auto& pair : resource_map_)
     {
-      out.push_back(it->first);
+      out.push_back(pair.first);
     }
     return out;
   }
@@ -136,12 +136,9 @@ public:
   static void concatManagers(std::vector<resource_manager_type*>& managers,
                              resource_manager_type* result)
   {
-    for(typename std::vector<resource_manager_type*>::iterator it_man = managers.begin();
-        it_man != managers.end(); ++it_man) {
-      std::vector<std::string> handle_names = (*it_man)->getNames();
-      for(std::vector<std::string>::iterator it_nms = handle_names.begin();
-          it_nms != handle_names.end(); ++it_nms) {
-        result->registerHandle((*it_man)->getHandle(*it_nms));
+    for (const auto& manager : managers) {
+      for (const auto& handle_name : manager->getNames()) {
+        result->registerHandle(manager->getHandle(handle_name));
       }
     }
   }

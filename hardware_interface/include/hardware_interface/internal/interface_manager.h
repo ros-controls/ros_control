@@ -54,10 +54,8 @@ struct CheckIsResourceManager {
   template <typename C>
   static void callCM(typename std::vector<C*>& managers, C* result, typename C::resource_manager_type*)
   {
-    std::vector<typename C::resource_manager_type*> managers_in;
-    // we have to typecase back to base class
-    for(typename std::vector<C*>::iterator it = managers.begin(); it != managers.end(); ++it)
-      managers_in.push_back(static_cast<typename C::resource_manager_type*>(*it));
+    // We have to typecase back to base class
+    std::vector<typename C::resource_manager_type*> managers_in(managers.begin(), managers.end());
     C::concatManagers(managers_in, result);
   }
 
@@ -171,9 +169,8 @@ public:
     }
 
     // look for interfaces registered in the registered hardware
-    for(InterfaceManagerVector::iterator it = interface_managers_.begin();
-        it != interface_managers_.end(); ++it) {
-      T* iface = (*it)->get<T>();
+    for (const auto& interface_manager : interface_managers_) {
+      T* iface = interface_manager->get<T>();
       if (iface)
         iface_list.push_back(iface);
     }
@@ -219,9 +216,9 @@ public:
   {
     std::vector<std::string> out;
     out.reserve(interfaces_.size());
-    for(InterfaceMap::const_iterator it = interfaces_.begin(); it != interfaces_.end(); ++it)
+    for (const auto& interface : interfaces_)
     {
-      out.push_back(it->first);
+      out.push_back(interface.first);
     }
     return out;
   }
