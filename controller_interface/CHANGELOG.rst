@@ -2,8 +2,8 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.4 (2020-01-12)
+-------------------
 * add minimum required pluginlib version
 * remove forward declaration of InterfaceResources
 * Contributors: Mathias Lüdtke, Mikael Arguedas

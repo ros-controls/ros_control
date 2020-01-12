@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.4 (2020-01-12)
+-------------------
 * Touch up remaining Python2 prints and PEP8
 * Initialize controller_manager node using init_node. Fixes `#349 <https://github.com/ros-controls/ros_control/issues/349>`_
 * Updated for compatibility with Python2 or Python3

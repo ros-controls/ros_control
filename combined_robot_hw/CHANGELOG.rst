@@ -2,8 +2,8 @@
 Changelog for package combined_robot_hw
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.4 (2020-01-12)
+-------------------
 * add minimum required pluginlib version
 * Contributors: Mikael Arguedas
 
