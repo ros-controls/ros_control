@@ -2,6 +2,14 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Touch up remaining Python2 prints and PEP8
+* Initialize controller_manager node using init_node. Fixes `#349 <https://github.com/ros-controls/ros_control/issues/349>`_
+* Updated for compatibility with Python2 or Python3
+* add minimum required pluginlib version
+* Contributors: Bence Magyar, Daniel Ingram, Mikael Arguedas, Stefan Profanter
+
 0.13.3 (2018-04-26)
 -------------------
 * Introduce shared_ptr typedefs

@@ -2,6 +2,12 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add minimum required pluginlib version
+* remove forward declaration of InterfaceResources
+* Contributors: Mathias Lüdtke, Mikael Arguedas
+
 0.13.3 (2018-04-26)
 -------------------
 * Introduce shared_ptr typedefs
