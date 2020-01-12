@@ -39,8 +39,8 @@
  * \author Dave Coleman
  */
 
-#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_PARSER_H
-#define TRANSMISSION_INTERFACE_TRANSMISSION_PARSER_H
+#pragma once
+
 
 // ros_control
 #include <transmission_interface/transmission_info.h>
@@ -87,5 +87,3 @@ protected:
 }; // class
 
 } // namespace
-
-#endif

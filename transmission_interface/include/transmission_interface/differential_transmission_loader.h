@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_LOADER_H
-#define TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_LOADER_H
+#pragma once
+
 
 // TinyXML
 #include <tinyxml.h>
@@ -53,9 +53,8 @@ private:
 
   static bool getJointConfig(const TransmissionInfo& transmission_info,
                              std::vector<double>&    joint_reduction,
-                             std::vector<double>&    joint_offset);
+                             std::vector<double>&    joint_offset,
+                             bool&                   ignore_transmission_for_absolute_encoders);
 };
 
 } // namespace
-
-#endif // header guard

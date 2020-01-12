@@ -29,8 +29,8 @@
  * Author: Wim Meeussen
  */
 
-#ifndef CONTROLLER_INTERFACE_CONTROLLER_H
-#define CONTROLLER_INTERFACE_CONTROLLER_H
+#pragma once
+
 
 #include <controller_interface/controller_base.h>
 #include <hardware_interface/internal/demangle_symbol.h>
@@ -145,5 +145,3 @@ private:
 };
 
 }
-
-#endif

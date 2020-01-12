@@ -38,8 +38,8 @@
  * \author Dave Coleman
  */
 
-#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_INFO_H
-#define TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_INFO_H
+#pragma once
+
 
 // C++ standard
 #include <vector>
@@ -84,5 +84,3 @@ struct TransmissionInfo
 };
 
 } // namespace
-
-#endif

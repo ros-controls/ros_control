@@ -46,17 +46,17 @@ TEST(SimpleTransmissionLoaderTest, FullSpec)
   // Transmission loader
   TransmissionPluginLoader loader;
   TransmissionLoaderSharedPtr transmission_loader = loader.create(infos.front().type_);
-  ASSERT_TRUE(0 != transmission_loader);
+  ASSERT_TRUE(nullptr != transmission_loader);
 
   TransmissionSharedPtr transmission;
   const TransmissionInfo& info = infos.front();
   transmission = transmission_loader->load(info);
-  ASSERT_TRUE(0 != transmission);
+  ASSERT_TRUE(nullptr != transmission);
   ASSERT_STREQ(infos.front().joints_.front().role_.c_str(),"");
 
   // Validate transmission
   SimpleTransmission* simple_transmission = dynamic_cast<SimpleTransmission*>(transmission.get());
-  ASSERT_TRUE(0 != simple_transmission);
+  ASSERT_TRUE(nullptr != simple_transmission);
   EXPECT_EQ(50.0, simple_transmission->getActuatorReduction());
   EXPECT_EQ( 0.5, simple_transmission->getJointOffset());
 }
@@ -70,16 +70,16 @@ TEST(SimpleTransmissionLoaderTest, MinimalSpec)
   // Transmission loader
   TransmissionPluginLoader loader;
   TransmissionLoaderSharedPtr transmission_loader = loader.create(infos.front().type_);
-  ASSERT_TRUE(0 != transmission_loader);
+  ASSERT_TRUE(nullptr != transmission_loader);
 
   TransmissionSharedPtr transmission;
   const TransmissionInfo& info = infos.front();
   transmission = transmission_loader->load(info);
-  ASSERT_TRUE(0 != transmission);
+  ASSERT_TRUE(nullptr != transmission);
 
   // Validate transmission
   SimpleTransmission* simple_transmission = dynamic_cast<SimpleTransmission*>(transmission.get());
-  ASSERT_TRUE(0 != simple_transmission);
+  ASSERT_TRUE(nullptr != simple_transmission);
   EXPECT_EQ(50.0, simple_transmission->getActuatorReduction());
   EXPECT_EQ( 0.0, simple_transmission->getJointOffset());
 }
@@ -93,13 +93,13 @@ TEST(SimpleTransmissionLoaderTest, InvalidSpec)
   // Transmission loader
   TransmissionPluginLoader loader;
   TransmissionLoaderSharedPtr transmission_loader = loader.create(infos.front().type_);
-  ASSERT_TRUE(0 != transmission_loader);
+  ASSERT_TRUE(nullptr != transmission_loader);
 
   for (const TransmissionInfo& info : infos)
   {
     TransmissionSharedPtr transmission;
     transmission = transmission_loader->load(info);
-    ASSERT_TRUE(0 == transmission);
+    ASSERT_TRUE(nullptr == transmission);
   }
 }
 

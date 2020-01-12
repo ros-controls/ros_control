@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_ROBOT_TRANSMISSIONS_H
-#define TRANSMISSION_INTERFACE_ROBOT_TRANSMISSIONS_H
+#pragma once
+
 
 #include <hardware_interface/internal/interface_manager.h>
 #include <hardware_interface/robot_hw.h>
@@ -48,5 +48,3 @@ namespace transmission_interface
 class RobotTransmissions : public hardware_interface::InterfaceManager {};
 
 } // namespace
-
-#endif // header guard

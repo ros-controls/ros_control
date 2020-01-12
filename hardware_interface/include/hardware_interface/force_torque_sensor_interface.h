@@ -27,8 +27,8 @@
 
 /// \author: Adolfo Rodriguez Tsouroukdissian
 
-#ifndef HARDWARE_INTERFACE_FORCE_CONTROL_SENSOR_INTERFACE_H
-#define HARDWARE_INTERFACE_FORCE_CONTROL_SENSOR_INTERFACE_H
+#pragma once
+
 
 #include <hardware_interface/internal/hardware_resource_manager.h>
 #include <string>
@@ -40,7 +40,7 @@ namespace hardware_interface
 class ForceTorqueSensorHandle
 {
 public:
-  ForceTorqueSensorHandle() : name_(""), frame_id_(""), force_(0), torque_(0) {}
+  ForceTorqueSensorHandle() : name_(""), frame_id_(""), force_(nullptr), torque_(nullptr) {}
 
   /**
    * \param name The name of the sensor
@@ -86,5 +86,3 @@ private:
 class ForceTorqueSensorInterface : public HardwareResourceManager<ForceTorqueSensorHandle> {};
 
 }
-
-#endif // HARDWARE_INTERFACE_FORCE_CONTROL_SENSOR_INTERFACE_H

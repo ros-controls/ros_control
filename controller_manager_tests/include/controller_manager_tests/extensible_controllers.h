@@ -25,8 +25,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef CONTROLLER_MANAGER_TESTS_EXTENSIBLE_CONTROLLERS_H
-#define CONTROLLER_MANAGER_TESTS_EXTENSIBLE_CONTROLLERS_H
+#pragma once
+
 
 #include <controller_interface/multi_interface_controller.h>
 #include <hardware_interface/joint_command_interface.h>
@@ -65,5 +65,3 @@ public:
 };
 
 }  // namespace controller_manager_tests
-
-#endif  // CONTROLLER_MANAGER_TESTS_EXTENSIBLE_CONTROLLERS_H

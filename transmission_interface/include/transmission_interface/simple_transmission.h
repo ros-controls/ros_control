@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_SIMPLE_TRANSMISSION_H
-#define TRANSMISSION_INTERFACE_SIMPLE_TRANSMISSION_H
+#pragma once
+
 
 #include <cassert>
 #include <string>
@@ -133,6 +133,12 @@ public:
   void actuatorToJointPosition(const ActuatorData& act_data,
                                      JointData&    jnt_data);
 
+  void actuatorToJointAbsolutePosition(const ActuatorData& act_data,
+                                             JointData&    jnt_data);
+
+  void actuatorToJointTorqueSensor(const ActuatorData& act_data,
+                                         JointData&    jnt_data);
+
   /**
    * \brief Transform \e effort variables from joint to actuator space.
    * \param[in]  jnt_data Joint-space variables.
@@ -165,9 +171,12 @@ public:
 
   std::size_t numActuators() const {return 1;}
   std::size_t numJoints()    const {return 1;}
+  bool hasActuatorToJointAbsolutePosition() const {return true;}
+  bool hasActuatorToJointTorqueSensor()     const {return true;}
 
   double getActuatorReduction() const {return reduction_;}
   double getJointOffset()       const {return jnt_offset_;}
+
 
 private:
   double reduction_;
@@ -213,6 +222,27 @@ inline void SimpleTransmission::actuatorToJointPosition(const ActuatorData& act_
   *jnt_data.position[0] = *act_data.position[0] / reduction_ + jnt_offset_;
 }
 
+inline void SimpleTransmission::actuatorToJointAbsolutePosition(const ActuatorData& act_data,
+                                                                      JointData&    jnt_data)
+{
+
+  assert(numActuators() == act_data.absolute_position.size() && numJoints() == jnt_data.absolute_position.size());
+  assert(act_data.absolute_position[0] && jnt_data.absolute_position[0]);
+
+  *jnt_data.absolute_position[0] = *act_data.absolute_position[0] / reduction_ + jnt_offset_;
+}
+
+inline void SimpleTransmission::actuatorToJointTorqueSensor(const ActuatorData& act_data,
+                                                                  JointData&    jnt_data)
+{
+
+  assert(numActuators() == act_data.torque_sensor.size() && numJoints() == jnt_data.torque_sensor.size());
+  assert(act_data.torque_sensor[0] && jnt_data.torque_sensor[0]);
+
+  *jnt_data.torque_sensor[0] = *act_data.torque_sensor[0] * reduction_;
+}
+
+
 inline void SimpleTransmission::jointToActuatorEffort(const JointData&    jnt_data,
                                                             ActuatorData& act_data)
 {
@@ -241,5 +271,3 @@ inline void SimpleTransmission::jointToActuatorPosition(const JointData&    jnt_
 }
 
 } // transmission_interface
-
-#endif // TRANSMISSION_INTERFACE_SIMPLE_TRANSMISSION_H

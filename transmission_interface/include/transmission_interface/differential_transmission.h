@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_H
-#define TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_H
+#pragma once
+
 
 #include <cassert>
 #include <string>
@@ -125,6 +125,18 @@ public:
    */
   DifferentialTransmission(const std::vector<double>& actuator_reduction,
                            const std::vector<double>& joint_reduction,
+                           const std::vector<double>& joint_offset);
+
+  /**
+   * \param actuator_reduction Reduction ratio of actuators.
+   * \param joint_reduction    Reduction ratio of joints.
+   * \param ignore_transmission_for_absolute_encoders Whether to take the data directly from absolute encoders instead of calculating through transmission. 
+   * \param joint_offset       Joint position offset used in the position mappings.
+   * \pre Nonzero actuator and joint reduction values.
+   */
+  DifferentialTransmission(const std::vector<double>& actuator_reduction,
+                           const std::vector<double>& joint_reduction,
+                           bool ignore_transmission_for_absolute_encoders = false,
                            const std::vector<double>& joint_offset = std::vector<double>(2, 0.0));
 
   /**
@@ -158,6 +170,26 @@ public:
                                      JointData&    jnt_data);
 
   /**
+   * \brief Transform \e absolute encoder values from actuator to joint space.
+   * \param[in]  act_data Actuator-space variables.
+   * \param[out] jnt_data Joint-space variables.
+   * \pre Actuator, joint position and absolute encoder position vectors must have the same size.
+   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
+   */
+  void actuatorToJointAbsolutePosition(const ActuatorData& act_data,
+                                             JointData&    jnt_data);
+
+  /**
+   * \brief Transform \e torque sensor values from actuator to joint space.
+   * \param[in]  act_data Actuator-space variables.
+   * \param[out] jnt_data Joint-space variables.
+   * \pre Actuator, joint position and torque sensor vectors must have the same size.
+   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
+   */
+  void actuatorToJointTorqueSensor(const ActuatorData& act_data,
+                                         JointData&    jnt_data);
+
+  /**
    * \brief Transform \e effort variables from joint to actuator space.
    * \param[in]  jnt_data Joint-space variables.
    * \param[out] act_data Actuator-space variables.
@@ -189,6 +221,8 @@ public:
 
   std::size_t numActuators() const {return 2;}
   std::size_t numJoints()    const {return 2;}
+  bool hasActuatorToJointAbsolutePosition()  const {return true;}
+  bool hasActuatorToJointTorqueSensor()      const {return true;}
 
   const std::vector<double>& getActuatorReduction() const {return act_reduction_;}
   const std::vector<double>& getJointReduction()    const {return jnt_reduction_;}
@@ -198,15 +232,24 @@ protected:
   std::vector<double>  act_reduction_;
   std::vector<double>  jnt_reduction_;
   std::vector<double>  jnt_offset_;
+  bool ignore_transmission_for_absolute_encoders_;
 };
 
 inline DifferentialTransmission::DifferentialTransmission(const std::vector<double>& actuator_reduction,
                                                           const std::vector<double>& joint_reduction,
                                                           const std::vector<double>& joint_offset)
+  : DifferentialTransmission(actuator_reduction, joint_reduction, false, joint_offset)
+{}
+
+inline DifferentialTransmission::DifferentialTransmission(const std::vector<double>& actuator_reduction,
+                                                          const std::vector<double>& joint_reduction,
+                                                          const bool ignore_transmission_for_absolute_encoders,
+                                                          const std::vector<double>& joint_offset)
   : Transmission(),
     act_reduction_(actuator_reduction),
     jnt_reduction_(joint_reduction),
-    jnt_offset_(joint_offset)
+    jnt_offset_(joint_offset),
+    ignore_transmission_for_absolute_encoders_(ignore_transmission_for_absolute_encoders)
 {
   if (numActuators() != act_reduction_.size() ||
       numJoints()    != jnt_reduction_.size() ||
@@ -218,8 +261,7 @@ inline DifferentialTransmission::DifferentialTransmission(const std::vector<doub
   if (0.0 == act_reduction_[0] ||
       0.0 == act_reduction_[1] ||
       0.0 == jnt_reduction_[0] ||
-      0.0 == jnt_reduction_[1]
-  )
+      0.0 == jnt_reduction_[1])
   {
     throw TransmissionInterfaceException("Transmission reduction ratios cannot be zero.");
   }
@@ -231,8 +273,8 @@ inline void DifferentialTransmission::actuatorToJointEffort(const ActuatorData& 
   assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
   assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+  const std::vector<double>& ar = act_reduction_;
+  const std::vector<double>& jr = jnt_reduction_;
 
   *jnt_data.effort[0] = jr[0] * (*act_data.effort[0] * ar[0] + *act_data.effort[1] * ar[1]);
   *jnt_data.effort[1] = jr[1] * (*act_data.effort[0] * ar[0] - *act_data.effort[1] * ar[1]);
@@ -244,8 +286,8 @@ inline void DifferentialTransmission::actuatorToJointVelocity(const ActuatorData
   assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
   assert(act_data.velocity[0] && act_data.velocity[1] && jnt_data.velocity[0] && jnt_data.velocity[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+  const std::vector<double>& ar = act_reduction_;
+  const std::vector<double>& jr = jnt_reduction_;
 
   *jnt_data.velocity[0] = (*act_data.velocity[0] / ar[0] + *act_data.velocity[1] / ar[1]) / (2.0 * jr[0]);
   *jnt_data.velocity[1] = (*act_data.velocity[0] / ar[0] - *act_data.velocity[1] / ar[1]) / (2.0 * jr[1]);
@@ -257,11 +299,45 @@ inline void DifferentialTransmission::actuatorToJointPosition(const ActuatorData
   assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
   assert(act_data.position[0] && act_data.position[1] && jnt_data.position[0] && jnt_data.position[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+  const std::vector<double>& ar = act_reduction_;
+  const std::vector<double>& jr = jnt_reduction_;
 
   *jnt_data.position[0] = (*act_data.position[0] / ar[0] + *act_data.position[1] / ar[1]) / (2.0 * jr[0]) + jnt_offset_[0];
   *jnt_data.position[1] = (*act_data.position[0] / ar[0] - *act_data.position[1] / ar[1]) / (2.0 * jr[1]) + jnt_offset_[1];
+}
+
+inline void DifferentialTransmission::actuatorToJointAbsolutePosition(const ActuatorData& act_data,
+                                                                            JointData&    jnt_data)
+{
+  assert(numActuators() == act_data.absolute_position.size() && numJoints() == jnt_data.absolute_position.size());
+  assert(act_data.position[0] && act_data.absolute_position[1] && jnt_data.absolute_position[0] && jnt_data.absolute_position[1]);
+
+  const std::vector<double>& ar = act_reduction_;
+  const std::vector<double>& jr = jnt_reduction_;
+
+  if(!ignore_transmission_for_absolute_encoders_)
+  {
+    *jnt_data.absolute_position[0] = (*act_data.absolute_position[0] / ar[0] + *act_data.absolute_position[1] / ar[1]) / (2.0 * jr[0]) + jnt_offset_[0];
+    *jnt_data.absolute_position[1] = (*act_data.absolute_position[0] / ar[0] - *act_data.absolute_position[1] / ar[1]) / (2.0 * jr[1]) + jnt_offset_[1];
+  }
+  else
+  {
+    *jnt_data.absolute_position[0] = *act_data.absolute_position[1];
+    *jnt_data.absolute_position[1] = *act_data.absolute_position[0];
+  }
+}
+
+inline void DifferentialTransmission::actuatorToJointTorqueSensor(const ActuatorData& act_data,
+                                                                        JointData&    jnt_data)
+{
+  assert(numActuators() == act_data.torque_sensor.size() && numJoints() == jnt_data.torque_sensor.size());
+  assert(act_data.torque_sensor[0] && act_data.torque_sensor[1] && jnt_data.torque_sensor[0] && jnt_data.torque_sensor[1]);
+
+  const std::vector<double>& ar = act_reduction_;
+  const std::vector<double>& jr = jnt_reduction_;
+
+  *jnt_data.torque_sensor[0] = jr[0] * (*act_data.torque_sensor[0] * ar[0] + *act_data.torque_sensor[1] * ar[1]);
+  *jnt_data.torque_sensor[1] = jr[1] * (*act_data.torque_sensor[0] * ar[0] - *act_data.torque_sensor[1] * ar[1]);
 }
 
 inline void DifferentialTransmission::jointToActuatorEffort(const JointData&    jnt_data,
@@ -270,8 +346,8 @@ inline void DifferentialTransmission::jointToActuatorEffort(const JointData&    
   assert(numActuators() == act_data.effort.size() && numJoints() == jnt_data.effort.size());
   assert(act_data.effort[0] && act_data.effort[1] && jnt_data.effort[0] && jnt_data.effort[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+  const std::vector<double>& ar = act_reduction_;
+  const std::vector<double>& jr = jnt_reduction_;
 
   *act_data.effort[0] = (*jnt_data.effort[0] / jr[0] + *jnt_data.effort[1] / jr[1]) / (2.0 * ar[0]);
   *act_data.effort[1] = (*jnt_data.effort[0] / jr[0] - *jnt_data.effort[1] / jr[1]) / (2.0 * ar[1]);
@@ -283,8 +359,8 @@ inline void DifferentialTransmission::jointToActuatorVelocity(const JointData&  
   assert(numActuators() == act_data.velocity.size() && numJoints() == jnt_data.velocity.size());
   assert(act_data.velocity[0] && act_data.velocity[1] && jnt_data.velocity[0] && jnt_data.velocity[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+  const std::vector<double>& ar = act_reduction_;
+  const std::vector<double>& jr = jnt_reduction_;
 
   *act_data.velocity[0] = (*jnt_data.velocity[0] * jr[0] + *jnt_data.velocity[1] * jr[1]) * ar[0];
   *act_data.velocity[1] = (*jnt_data.velocity[0] * jr[0] - *jnt_data.velocity[1] * jr[1]) * ar[1];
@@ -296,8 +372,8 @@ inline void DifferentialTransmission::jointToActuatorPosition(const JointData&  
   assert(numActuators() == act_data.position.size() && numJoints() == jnt_data.position.size());
   assert(act_data.position[0] && act_data.position[1] && jnt_data.position[0] && jnt_data.position[1]);
 
-  std::vector<double>& ar = act_reduction_;
-  std::vector<double>& jr = jnt_reduction_;
+  const std::vector<double>& ar = act_reduction_;
+  const std::vector<double>& jr = jnt_reduction_;
 
   double jnt_pos_off[2] = {*jnt_data.position[0] - jnt_offset_[0], *jnt_data.position[1] - jnt_offset_[1]};
 
@@ -306,5 +382,3 @@ inline void DifferentialTransmission::jointToActuatorPosition(const JointData&  
 }
 
 } // transmission_interface
-
-#endif // TRANSMISSION_INTERFACE_DIFFERENTIAL_TRANSMISSION_H

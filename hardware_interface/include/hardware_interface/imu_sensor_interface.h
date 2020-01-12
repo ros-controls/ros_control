@@ -27,8 +27,8 @@
 
 /// \author: Adolfo Rodriguez Tsouroukdissian
 
-#ifndef HARDWARE_INTERFACE_IMU_SENSOR_INTERFACE_H
-#define HARDWARE_INTERFACE_IMU_SENSOR_INTERFACE_H
+#pragma once
+
 
 #include <hardware_interface/internal/hardware_resource_manager.h>
 #include <string>
@@ -49,12 +49,12 @@ public:
     Data()
       : name(),
         frame_id(),
-        orientation(0),
-        orientation_covariance(0),
-        angular_velocity(0),
-        angular_velocity_covariance(0),
-        linear_acceleration(0),
-        linear_acceleration_covariance(0) {}
+        orientation(nullptr),
+        orientation_covariance(nullptr),
+        angular_velocity(nullptr),
+        angular_velocity_covariance(nullptr),
+        linear_acceleration(nullptr),
+        linear_acceleration_covariance(nullptr) {}
 
     std::string name;                       ///< The name of the sensor
     std::string frame_id;                   ///< The reference frame to which this sensor is associated
@@ -122,5 +122,3 @@ private:
 class ImuSensorInterface : public HardwareResourceManager<ImuSensorHandle> {};
 
 }
-
-#endif // HARDWARE_INTERFACE_IMU_SENSOR_INTERFACE_H

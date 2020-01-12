@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef HARDWARE_INTERFACE_INTERNAL_DEMANGLE_SYMBOL_H
-#define HARDWARE_INTERFACE_INTERNAL_DEMANGLE_SYMBOL_H
+#pragma once
+
 
 #include <cstdlib>
 #include <string>
@@ -51,7 +51,7 @@ inline std::string demangleSymbol(const char* name)
 {
   #if (__GNUC__ && __cplusplus && __GNUC__ >= 3)
     int         status;
-    char* res = abi::__cxa_demangle(name, 0, 0, &status);
+    char* res = abi::__cxa_demangle(name, nullptr, nullptr, &status);
     if (res)
     {
       const std::string demangled_name(res);
@@ -88,5 +88,3 @@ inline std::string demangledTypeName(const T& val)
 }
 
 }
-
-#endif // HARDWARE_INTERFACE_INTERNAL_DEMANGLE_SYMBOL_H

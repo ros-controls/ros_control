@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef RANDOM_GENERATOR_UTILS_H
-#define RANDOM_GENERATOR_UTILS_H
+#pragma once
+
 
 #include <cstdlib>
 #include <ctime>
@@ -44,7 +44,7 @@ struct RandomDoubleGenerator
 public:
   RandomDoubleGenerator(double min_val, double max_val)
     : min_val_(min_val),
-      max_val_(max_val) {srand(time(NULL));}
+      max_val_(max_val) {srand(time(nullptr));}
   double operator()()
   {
     const double range = max_val_ - min_val_;
@@ -63,5 +63,3 @@ vector<double> randomVector(const vector<double>::size_type size, RandomDoubleGe
   for (vector<double>::size_type i = 0; i < size; ++i) {out.push_back(generator());}
   return out;
 }
-
-#endif // RANDOM_GENERATOR_UTILS_H

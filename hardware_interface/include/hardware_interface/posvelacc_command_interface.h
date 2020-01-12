@@ -27,8 +27,8 @@
 
 /// \author Igor Kalevatykh
 
-#ifndef HARDWARE_INTERFACE_POSVELACC_COMMAND_INTERFACE_H
-#define HARDWARE_INTERFACE_POSVELACC_COMMAND_INTERFACE_H
+#pragma once
+
 
 #include <cassert>
 #include <string>
@@ -42,7 +42,7 @@ namespace hardware_interface
 class PosVelAccJointHandle : public PosVelJointHandle
 {
 public:
-  PosVelAccJointHandle() : PosVelJointHandle(), cmd_acc_(0) {}
+  PosVelAccJointHandle() : PosVelJointHandle(), cmd_acc_(nullptr) {}
 
   /**
    * \param js This joint's state handle
@@ -85,5 +85,3 @@ private:
 class PosVelAccJointInterface : public HardwareResourceManager<PosVelAccJointHandle, ClaimResources> {};
 
 }
-
-#endif /*HARDWARE_INTERFACE_POSVELACC_COMMAND_INTERFACE_H*/

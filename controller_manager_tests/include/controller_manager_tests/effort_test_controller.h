@@ -25,8 +25,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef CONTROLLER_MANAGER_TESTS_EFFORT_TEST_CONTROLLER_H
-#define CONTROLLER_MANAGER_TESTS_EFFORT_TEST_CONTROLLER_H
+#pragma once
 
 
 #include <controller_interface/controller.h>
@@ -55,5 +54,3 @@ private:
 };
 
 }
-
-#endif

@@ -28,8 +28,8 @@
 
 /// \author Wim Meussen, Adolfo Rodriguez Tsouroukdissian, Kelsey P. Hawkins, Toni Oliver
 
-#ifndef HARDWARE_INTERFACE_INTERFACE_MANAGER_H
-#define HARDWARE_INTERFACE_INTERFACE_MANAGER_H
+#pragma once
+
 
 #include <map>
 #include <string>
@@ -67,7 +67,7 @@ struct CheckIsResourceManager {
 
   // calls ResourceManager::concatManagers if C is a ResourceManager
   static void callConcatManagers(typename std::vector<T*>& managers, T* result)
-  { callCM<T>(managers, result, 0); }
+  { callCM<T>(managers, result, nullptr); }
 
 
   // method called if C is a ResourceManager
@@ -83,7 +83,7 @@ struct CheckIsResourceManager {
 
   // calls ResourceManager::concatManagers if C is a ResourceManager
   static void callGetResources(std::vector<std::string> &resources, T* iface)
-  { return callGR<T>(resources, iface, 0); }
+  { return callGR<T>(resources, iface, nullptr); }
 
   template <typename C>
   static T* newCI(boost::ptr_vector<ResourceManagerBase> &guards, typename C::resource_manager_type*)
@@ -101,12 +101,12 @@ struct CheckIsResourceManager {
     ROS_ERROR("You cannot register multiple interfaces of the same type which are "
               "not of type ResourceManager. There is no established protocol "
               "for combining them.");
-    return NULL;
+    return nullptr;
   }
 
   static T* newCombinedInterface(boost::ptr_vector<ResourceManagerBase> &guards)
   {
-    return newCI<T>(guards, 0);
+    return newCI<T>(guards, nullptr);
   }
 
 };
@@ -165,7 +165,7 @@ public:
       if (!iface) {
         ROS_ERROR_STREAM("Failed reconstructing type T = '" << type_name.c_str() <<
                          "'. This should never happen");
-        return NULL;
+        return nullptr;
       }
       iface_list.push_back(iface);
     }
@@ -179,7 +179,7 @@ public:
     }
 
     if(iface_list.size() == 0)
-      return NULL;
+      return nullptr;
 
     if(iface_list.size() == 1)
       return iface_list.front();
@@ -208,7 +208,7 @@ public:
         ROS_ERROR("You cannot register multiple interfaces of the same type which are "
                   "not of type ResourceManager. There is no established protocol "
                   "for combining them.");
-        iface_combo = NULL;
+        iface_combo = nullptr;
       }
     }
     return iface_combo;
@@ -260,5 +260,3 @@ protected:
 };
 
 } // namespace
-
-#endif // header guard

@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef HARDWARE_INTERFACE_HARDWARE_RESOURCE_MANAGER_H
-#define HARDWARE_INTERFACE_HARDWARE_RESOURCE_MANAGER_H
+#pragma once
+
 
 #include <string>
 
@@ -126,5 +126,3 @@ struct DontClaimResources
 /** \endcond */
 
 }
-
-#endif // HARDWARE_INTERFACE_HARDWARE_RESOURCE_MANAGER_H

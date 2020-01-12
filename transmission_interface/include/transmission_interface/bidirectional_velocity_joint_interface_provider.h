@@ -25,8 +25,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef TRANSMISSION_INTERFACE_BIDIRECTIONAL_VELOCITY_JOINT_INTERFACE_PROVIDER_H
-#define TRANSMISSION_INTERFACE_BIDIRECTIONAL_VELOCITY_JOINT_INTERFACE_PROVIDER_H
+#pragma once
+
 
 // ros_control
 #include <transmission_interface/transmission_info.h>
@@ -39,10 +39,8 @@ class BiDirectionalVelocityJointInterfaceProvider : public VelocityJointInterfac
 {
 protected:
 
-  bool registerTransmission(TransmissionLoaderData& loader_data, 
+  bool registerTransmission(TransmissionLoaderData& loader_data,
                             TransmissionHandleData& handle_data);
 };
 
 } // namespace
-
-#endif // header guard

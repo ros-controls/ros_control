@@ -167,7 +167,7 @@ TEST(HandlePreconditionsTest, BadTransmissionPointer)
   a_data.position = good_vec;
   j_data.position = good_vec;
 
-  EXPECT_THROW(DummyHandle("trans", 0, a_data, j_data), TransmissionInterfaceException);
+  EXPECT_THROW(DummyHandle("trans", nullptr, a_data, j_data), TransmissionInterfaceException);
 }
 
 TEST(HandlePreconditionsTest, BadDataPointer)

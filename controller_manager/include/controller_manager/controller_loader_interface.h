@@ -25,8 +25,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef CONRTOLLER_MANAGER_CONTROLLER_LOADER_INTERFACE_H
-#define CONRTOLLER_MANAGER_CONTROLLER_LOADER_INTERFACE_H
+#pragma once
+
 
 #include <vector>
 #include <string>
@@ -59,5 +59,3 @@ private:
 typedef std::shared_ptr<ControllerLoaderInterface> ControllerLoaderInterfaceSharedPtr;
 
 }
-
-#endif

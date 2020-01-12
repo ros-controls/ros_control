@@ -28,8 +28,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_FOUR_BAR_LINKAGE_TRANSMISSION_H
-#define TRANSMISSION_INTERFACE_FOUR_BAR_LINKAGE_TRANSMISSION_H
+#pragma once
+
 
 #include <cassert>
 #include <string>
@@ -156,6 +156,25 @@ public:
    */
   void actuatorToJointPosition(const ActuatorData& act_data,
                                      JointData&    jnt_data);
+  
+  /**
+   * \brief Transform \e absolute encoder values from actuator to joint space.
+   * \param[in]  act_data Actuator-space variables.
+   * \param[out] jnt_data Joint-space variables.
+   * \pre Actuator, joint position and absolute encoder position vectors must have the same size.
+   *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
+   */
+  void actuatorToJointAbsolutePosition(const ActuatorData& act_data,
+                                             JointData&    jnt_data);
+
+  /**
+   * \brief Transform \e torque sensor values from actuator to joint space.
+   * \param[in]  act_data Actuator-space variables.
+   * \param[out] jnt_data Joint-space variables.
+   * \pre Actuator, joint position and torque sensor vectors must have the same size.
+   */
+  void actuatorToJointTorqueSensor(const ActuatorData& act_data,
+                                         JointData&    jnt_data);
 
   /**
    * \brief Transform \e effort variables from joint to actuator space.
@@ -189,6 +208,8 @@ public:
 
   std::size_t numActuators() const {return 2;}
   std::size_t numJoints()    const {return 2;}
+  bool hasActuatorToJointAbsolutePosition()  const {return true;}
+  bool hasActuatorToJointTorqueSensor()      const {return true;}
 
   const std::vector<double>& getActuatorReduction() const {return act_reduction_;}
   const std::vector<double>& getJointReduction()    const {return jnt_reduction_;}
@@ -263,6 +284,36 @@ inline void FourBarLinkageTransmission::actuatorToJointPosition(const ActuatorDa
                           + jnt_offset_[1];
 }
 
+void FourBarLinkageTransmission::actuatorToJointAbsolutePosition(const ActuatorData& act_data,
+                                                                       JointData&    jnt_data)
+{
+
+  assert(numActuators() == act_data.absolute_position.size() && numJoints() == jnt_data.absolute_position.size());
+  assert(act_data.absolute_position[0] && act_data.absolute_position[1] && jnt_data.absolute_position[0] && jnt_data.absolute_position[1]);
+
+  const std::vector<double>& ar = act_reduction_;
+  const std::vector<double>& jr = jnt_reduction_;
+
+  *jnt_data.absolute_position[0] = *act_data.absolute_position[0] /(jr[0] * ar[0]) + jnt_offset_[0];
+  *jnt_data.absolute_position[1] = (*act_data.absolute_position[1] / ar[1] - *act_data.absolute_position[0] / (jr[0] * ar[0])) / 
+                                    jr[1] + jnt_offset_[1];
+}
+
+void FourBarLinkageTransmission::actuatorToJointTorqueSensor(const ActuatorData& act_data,
+                                                                   JointData&    jnt_data)
+{
+
+  assert(numActuators() == act_data.torque_sensor.size() && numJoints() == jnt_data.torque_sensor.size());
+  assert(act_data.torque_sensor[0] && act_data.torque_sensor[1] && jnt_data.torque_sensor[0] && jnt_data.torque_sensor[1]);
+
+  const std::vector<double>& ar = act_reduction_;
+  const std::vector<double>& jr = jnt_reduction_;
+
+  *jnt_data.torque_sensor[0] = jr[0] * (*act_data.torque_sensor[0] * ar[0]);
+  *jnt_data.torque_sensor[1] = jr[1] * (*act_data.torque_sensor[1] * ar[1] - *act_data.torque_sensor[0] * ar[0] * jr[0]);
+}
+
+
 inline void FourBarLinkageTransmission::jointToActuatorEffort(const JointData&    jnt_data,
                                                                     ActuatorData& act_data)
 {
@@ -305,5 +356,3 @@ inline void FourBarLinkageTransmission::jointToActuatorPosition(const JointData&
 }
 
 } // transmission_interface
-
-#endif // TRANSMISSION_INTERFACE_FOUR_BAR_LINKAGE_TRANSMISSION_H

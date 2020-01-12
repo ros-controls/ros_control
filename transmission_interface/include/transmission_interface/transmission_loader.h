@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_LOADER_H
-#define TRANSMISSION_INTERFACE_TRANSMISSION_LOADER_H
+#pragma once
+
 
 // C++ standard
 #include <algorithm>
@@ -143,5 +143,3 @@ protected:
 typedef std::shared_ptr<TransmissionLoader> TransmissionLoaderSharedPtr;
 
 } // namespace
-
-#endif // header guard

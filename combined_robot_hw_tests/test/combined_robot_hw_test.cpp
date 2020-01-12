@@ -50,14 +50,14 @@ TEST(CombinedRobotHWTests, combinationOk)
   hardware_interface::HardwareInterface*              plain_hw_interface = robot_hw.get<hardware_interface::HardwareInterface>();
   hardware_interface::PositionJointInterface*         pj_interface = robot_hw.get<hardware_interface::PositionJointInterface>();
 
-  ASSERT_TRUE(js_interface != NULL);
-  ASSERT_TRUE(ej_interface != NULL);
-  ASSERT_TRUE(vj_interface != NULL);
-  ASSERT_TRUE(ft_interface != NULL);
-  ASSERT_TRUE(plain_hw_interface != NULL);
+  ASSERT_TRUE(js_interface != nullptr);
+  ASSERT_TRUE(ej_interface != nullptr);
+  ASSERT_TRUE(vj_interface != nullptr);
+  ASSERT_TRUE(ft_interface != nullptr);
+  ASSERT_TRUE(plain_hw_interface != nullptr);
 
   // Test that no PositionJointInterface was found
-  ASSERT_EQ(NULL, pj_interface);
+  ASSERT_EQ(nullptr, pj_interface);
 
   // Test some handles from my_robot_hw_1
   hardware_interface::JointStateHandle js_handle = js_interface->getHandle("test_joint1");

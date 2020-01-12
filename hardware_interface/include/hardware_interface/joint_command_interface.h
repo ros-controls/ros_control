@@ -27,8 +27,8 @@
 
 /// \author Wim Meeussen
 
-#ifndef HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
-#define HARDWARE_INTERFACE_JOINT_COMMAND_INTERFACE_H
+#pragma once
+
 
 #include <cassert>
 #include <string>
@@ -42,7 +42,7 @@ namespace hardware_interface
 class JointHandle : public JointStateHandle
 {
 public:
-  JointHandle() : JointStateHandle(), cmd_(0) {}
+  JointHandle() : JointStateHandle(), cmd_(nullptr) {}
 
   /**
    * \param js This joint's state handle
@@ -59,6 +59,7 @@ public:
 
   void setCommand(double command) {assert(cmd_); *cmd_ = command;}
   double getCommand() const {assert(cmd_); return *cmd_;}
+  const double* getCommandPtr() const {assert(cmd_); return cmd_;}
 
 private:
   double* cmd_;
@@ -87,5 +88,3 @@ class VelocityJointInterface : public JointCommandInterface {};
 class PositionJointInterface : public JointCommandInterface {};
 
 }
-
-#endif

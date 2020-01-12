@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_LOADER_H
-#define TRANSMISSION_INTERFACE_TRANSMISSION_INTERFACE_LOADER_H
+#pragma once
+
 
 // C++ standard
 #include <algorithm>
@@ -110,7 +110,11 @@ struct RawJointData
       effort(std::numeric_limits<double>::quiet_NaN()),
       position_cmd(std::numeric_limits<double>::quiet_NaN()),
       velocity_cmd(std::numeric_limits<double>::quiet_NaN()),
-      effort_cmd(std::numeric_limits<double>::quiet_NaN())
+      effort_cmd(std::numeric_limits<double>::quiet_NaN()),
+      absolute_position(std::numeric_limits<double>::quiet_NaN()),
+      torque_sensor(std::numeric_limits<double>::quiet_NaN()),
+      hasAbsolutePosition(true),
+      hasTorqueSensor(true)
   {}
 
   double position;
@@ -119,6 +123,11 @@ struct RawJointData
   double position_cmd;
   double velocity_cmd;
   double effort_cmd;
+  double absolute_position;
+  double torque_sensor;
+
+  bool hasAbsolutePosition;
+  bool hasTorqueSensor;
 };
 
 typedef std::map<std::string, RawJointData> RawJointDataMap;
@@ -153,8 +162,8 @@ struct InverseTransmissionInterfaces
 struct TransmissionLoaderData
 {
   TransmissionLoaderData()
-    : robot_hw(0),
-      robot_transmissions(0)
+    : robot_hw(nullptr),
+      robot_transmissions(nullptr)
   {}
 
   hardware_interface::RobotHW*  robot_hw;            ///< Lifecycle is externally controlled (ie. hardware abstraction)
@@ -417,5 +426,3 @@ private:
 };
 
 } // namespace
-
-#endif // header guard

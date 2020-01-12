@@ -27,8 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
-#ifndef TRANSMISSION_INTERFACE_FOUR_BAR_LINKAGE_TRANSMISSION_LOADER_H
-#define TRANSMISSION_INTERFACE_FOUR_BAR_LINKAGE_TRANSMISSION_LOADER_H
+#pragma once
+
 
 // TinyXML
 #include <tinyxml.h>
@@ -57,5 +57,3 @@ private:
 };
 
 } // namespace
-
-#endif // header guard

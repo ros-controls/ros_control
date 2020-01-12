@@ -29,9 +29,8 @@
  * Author: Wim Meeussen
  */
 
+#pragma once
 
-#ifndef CONTROLLER_INTERFACE_CONTROLLER_BASE_H
-#define CONTROLLER_INTERFACE_CONTROLLER_BASE_H
 
 #include <ros/node_handle.h>
 #include <hardware_interface/robot_hw.h>
@@ -250,6 +249,3 @@ private:
 typedef std::shared_ptr<ControllerBase> ControllerBaseSharedPtr;
 
 }
-
-
-#endif
