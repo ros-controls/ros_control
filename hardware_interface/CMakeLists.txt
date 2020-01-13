@@ -16,7 +16,7 @@ catkin_package(
   CATKIN_DEPENDS
     roscpp
   DEPENDS
-    Boost # TODO: Should header-only dependencies be DEPENDS or INCLUDE_DIRS?
+    Boost
 )
 
 

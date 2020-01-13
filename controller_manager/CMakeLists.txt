@@ -37,7 +37,7 @@ catkin_package(
 ###########
 
 # Specify header include paths
-include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
+include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
   include/controller_manager/controller_loader.h

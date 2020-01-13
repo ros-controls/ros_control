@@ -28,7 +28,7 @@ catkin_package(
     pluginlib
     roscpp
   DEPENDS
-    Boost # TODO: Should header-only dependencies be DEPENDS or INCLUDE_DIRS?
+    Boost
     TinyXML
 )
 
