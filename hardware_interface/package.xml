@@ -18,6 +18,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>boost</depend>
   <depend>roscpp</depend>
+
+  <build_depend>boost</build_depend>
+
+  <build_export_depend>boost</build_export_depend>
 </package>

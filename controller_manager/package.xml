@@ -19,11 +19,17 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>boost</depend>
-  <depend>controller_interface</depend>
-  <depend>controller_manager_msgs</depend>
-  <depend>hardware_interface</depend>
-  <depend>pluginlib</depend>
   <depend>roscpp</depend>
+
+  <build_depend>controller_interface</build_depend>
+  <build_depend>controller_manager_msgs</build_depend>
+  <build_depend>hardware_interface</build_depend>
+  <build_depend>pluginlib</build_depend>
+
+  <build_export_depend>controller_interface</build_export_depend>
+  <build_export_depend>controller_manager_msgs</build_export_depend>
+  <build_export_depend>hardware_interface</build_export_depend>
+  <build_export_depend>pluginlib</build_export_depend>
 
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>rosparam</exec_depend>

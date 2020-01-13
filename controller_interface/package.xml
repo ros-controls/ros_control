@@ -17,6 +17,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>hardware_interface</depend>
   <depend>roscpp</depend>
+
+  <build_depend>hardware_interface</build_depend>
+
+  <build_export_depend>hardware_interface</build_export_depend>
 </package>

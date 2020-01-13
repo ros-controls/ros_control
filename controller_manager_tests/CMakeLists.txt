@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   controller_interface
   controller_manager
   hardware_interface
+  pluginlib
   roscpp
 )
 

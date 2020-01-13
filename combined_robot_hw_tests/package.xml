@@ -18,12 +18,14 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>hardware_interface</depend>
-  <depend>pluginlib</depend>
+  <depend>combined_robot_hw</depend>
+  <depend>controller_manager</depend>
+  <depend>hardware_interface</depend> <!-- exec_depend required for plugin -->
+  <depend>roscpp</depend>
 
-  <build_depend>combined_robot_hw</build_depend>
-  <build_depend>controller_manager</build_depend>
-  <build_depend>roscpp</build_depend>
+  <build_depend>pluginlib</build_depend>
+
+  <build_export_depend>pluginlib</build_export_depend>
 
   <test_depend>controller_manager_msgs</test_depend>
   <test_depend>controller_manager_tests</test_depend>
