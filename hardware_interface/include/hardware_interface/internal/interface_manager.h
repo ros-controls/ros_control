@@ -54,7 +54,7 @@ struct CheckIsResourceManager {
   template <typename C>
   static void callCM(typename std::vector<C*>& managers, C* result, typename C::resource_manager_type*)
   {
-    // We have to typecase back to base class
+    // We have to typecast back to base class
     std::vector<typename C::resource_manager_type*> managers_in(managers.begin(), managers.end());
     C::concatManagers(managers_in, result);
   }
