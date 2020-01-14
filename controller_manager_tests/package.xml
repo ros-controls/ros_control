@@ -1,7 +1,8 @@
-<package>
+<package format="2">
   <name>controller_manager_tests</name>
   <version>0.15.1</version>
-  <description>controller_manager_tests</description>
+  <description>Tests for the controller manager.</description>
+
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
   <maintainer email="mathias.luedtke@ipa.fraunhofer.de">Mathias Lüdtke</maintainer>
@@ -17,14 +18,22 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>controller_manager</build_depend>
-  <build_depend>controller_interface</build_depend>
-  <run_depend>controller_manager</run_depend>
-  <run_depend>controller_interface</run_depend>
-  <test_depend>rostest</test_depend>
-  <test_depend>rosservice</test_depend>
+  <depend>controller_interface</depend> <!-- exec_depend required for plugin -->
+  <depend>controller_manager</depend>
+  <depend>roscpp</depend>
+
+  <build_depend>hardware_interface</build_depend>
+  <build_depend>pluginlib</build_depend>
+
+  <build_export_depend>hardware_interface</build_export_depend>
+  <build_export_depend>pluginlib</build_export_depend>
+
+  <exec_depend>controller_manager_msgs</exec_depend>
+  <exec_depend>rospy</exec_depend>
+
   <test_depend>rosbash</test_depend>
   <test_depend>rosnode</test_depend>
+  <test_depend>rostest</test_depend>
 
   <export>
     <controller_interface plugin="${prefix}/test_controllers_plugin.xml"/>

@@ -2,23 +2,27 @@
   <name>joint_limits_interface</name>
   <version>0.15.1</version>
   <description>Interface for enforcing joint limits.</description>
+
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
   <maintainer email="mathias.luedtke@ipa.fraunhofer.de">Mathias Lüdtke</maintainer>
+
   <license>BSD</license>
 
   <url type="website">https://github.com/ros-controls/ros_control/wiki</url>
   <url type="bugtracker">https://github.com/ros-controls/ros_control/issues</url>
   <url type="repository">https://github.com/ros-controls/ros_control</url>
+
   <author>Adolfo Rodriguez Tsouroukdissian</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>roscpp</depend>
-  <depend>hardware_interface</depend>
   <depend>urdf</depend>
-  <depend>liburdfdom-dev</depend>
 
-  <test_depend>rosunit</test_depend>
+  <build_depend>hardware_interface</build_depend>
+
+  <build_export_depend>hardware_interface</build_export_depend>
+
   <test_depend>rostest</test_depend>
 </package>

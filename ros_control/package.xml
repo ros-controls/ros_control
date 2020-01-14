@@ -17,14 +17,14 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <exec_depend>joint_limits_interface</exec_depend>
-  <exec_depend>transmission_interface</exec_depend>
-  <exec_depend>realtime_tools</exec_depend>
-  <exec_depend>controller_manager</exec_depend>
-  <exec_depend>controller_interface</exec_depend>
-  <exec_depend>hardware_interface</exec_depend>
-  <exec_depend>controller_manager_msgs</exec_depend>
   <exec_depend>combined_robot_hw</exec_depend>
+  <exec_depend>controller_interface</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>controller_manager_msgs</exec_depend>
+  <exec_depend>hardware_interface</exec_depend>
+  <exec_depend>joint_limits_interface</exec_depend>
+  <exec_depend>realtime_tools</exec_depend>
+  <exec_depend>transmission_interface</exec_depend>
 
   <export>
     <metapackage/>

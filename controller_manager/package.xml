@@ -2,6 +2,7 @@
   <name>controller_manager</name>
   <version>0.15.1</version>
   <description>The controller manager.</description>
+
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <maintainer email="enrique.fernandez.perdomo@gmail.com">Enrique Fernandez</maintainer>
   <maintainer email="mathias.luedtke@ipa.fraunhofer.de">Mathias Lüdtke</maintainer>
@@ -17,9 +18,22 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>controller_interface</depend>
-  <depend>controller_manager_msgs</depend>
-  <depend>hardware_interface</depend>
-  <depend>pluginlib</depend>
+  <depend>boost</depend>
+  <depend>roscpp</depend>
+
+  <build_depend>controller_interface</build_depend>
+  <build_depend>controller_manager_msgs</build_depend>
+  <build_depend>hardware_interface</build_depend>
+  <build_depend>pluginlib</build_depend>
+
+  <build_export_depend>controller_interface</build_export_depend>
+  <build_export_depend>controller_manager_msgs</build_export_depend>
+  <build_export_depend>hardware_interface</build_export_depend>
+  <build_export_depend>pluginlib</build_export_depend>
+
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>rosparam</exec_depend>
+  <exec_depend>rospy</exec_depend>
+
   <test_depend>rostest</test_depend>
 </package>

@@ -1,19 +1,30 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(rqt_controller_manager)
 
-find_package(catkin REQUIRED COMPONENTS)
+# Load catkin and all dependencies required for this package
+find_package(catkin REQUIRED)
+
 catkin_python_setup()
+
+# Declare a catkin package
 catkin_package()
 
-install(FILES plugin.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
 
+#############
+## Install ##
+#############
+
+# Install resources
 install(DIRECTORY resource
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
-install(PROGRAMS
-  scripts/rqt_controller_manager
+# Install python scripts
+catkin_install_python(PROGRAMS scripts/rqt_controller_manager
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+# Install plugins
+install(FILES plugin.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
