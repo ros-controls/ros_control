@@ -243,10 +243,16 @@ namespace combined_robot_hw
             filtered_resources.insert(*ctrl_res);
           }
         }
-        filtered_iface_resources.resources = filtered_resources;
-        filtered_controller.claimed_resources.push_back(filtered_iface_resources);
+        if (!filtered_resources.empty())
+        {
+          filtered_iface_resources.resources = filtered_resources;
+          filtered_controller.claimed_resources.push_back(filtered_iface_resources);
+        }
       }
-      filtered_list.push_back(filtered_controller);
+      if (!filtered_controller.claimed_resources.empty())
+      {
+        filtered_list.push_back(filtered_controller);
+      }
     }
   }
 }
