@@ -72,9 +72,9 @@ bool MyRobotHW4::prepareSwitch(const std::list<hardware_interface::ControllerInf
   // To easily test a failure case, any controller that claims resources on MyRobotHW4 will fail
   if (!start_list.empty() || !stop_list.empty())
   {
-    for (std::list<hardware_interface::ControllerInfo>::const_iterator it = start_list.begin(); it != start_list.end(); ++it)
+    for (auto const& it : start_list)
     {
-      if (it->claimed_resources.empty())
+      if (it.claimed_resources.empty())
       {
         continue;
       }
@@ -93,9 +93,9 @@ void MyRobotHW4::doSwitch(const std::list<hardware_interface::ControllerInfo>& s
   // To easily test a failure case, any controller that claims resources on MyRobotHW4 will fail
   if (!start_list.empty() || !stop_list.empty())
   {
-    for (std::list<hardware_interface::ControllerInfo>::const_iterator it = start_list.begin(); it != start_list.end(); ++it)
+    for (auto const& it : start_list)
     {
-      if (it->claimed_resources.empty())
+      if (it.claimed_resources.empty())
       {
         continue;
       }

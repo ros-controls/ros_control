@@ -76,7 +76,7 @@ ControllerManager::~ControllerManager()
 void ControllerManager::update(const ros::Time& time, const ros::Duration& period, bool reset_controllers)
 {
   used_by_realtime_ = current_controllers_list_;
-  std::vector<ControllerSpec> &controllers = controllers_lists_[used_by_realtime_];
+  auto &controllers = controllers_lists_[used_by_realtime_];
 
   // Restart all running controllers if motors are re-enabled
   if (reset_controllers){
@@ -105,7 +105,7 @@ controller_interface::ControllerBase* ControllerManager::getControllerByName(con
   // Lock recursive mutex in this context
   boost::recursive_mutex::scoped_lock guard(controllers_lock_);
 
-  std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
+  auto &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
     if (controllers[i].info.name == name)
@@ -118,7 +118,7 @@ void ControllerManager::getControllerNames(std::vector<std::string> &names)
 {
   boost::recursive_mutex::scoped_lock guard(controllers_lock_);
   names.clear();
-  std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
+  auto &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
     names.push_back(controllers[i].info.name);
@@ -297,16 +297,16 @@ bool ControllerManager::loadController(const std::string& name)
     try
     {
       // Trying loading the controller using all of our controller loaders. Exit once we've found the first valid loaded controller
-      std::list<ControllerLoaderInterfaceSharedPtr>::iterator it = controller_loaders_.begin();
-      while (!c && it != controller_loaders_.end())
+      for (auto const& it : controller_loaders_)
       {
-        std::vector<std::string> cur_types = (*it)->getDeclaredClasses();
+        if(c)
+          break;
+        auto cur_types = it->getDeclaredClasses();
         for(size_t i=0; i < cur_types.size(); i++){
           if (type == cur_types[i]){
-            c = (*it)->createInstance(type);
+            c = it->createInstance(type);
           }
         }
-        ++it;
       }
     }
     catch (const std::runtime_error &ex)
@@ -395,7 +395,7 @@ bool ControllerManager::unloadController(const std::string &name)
     }
     std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
-  std::vector<ControllerSpec>
+  auto
     &from = controllers_lists_[current_controllers_list_],
     &to = controllers_lists_[free_controllers_list];
   to.clear();
@@ -527,7 +527,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   switch_start_list_.clear();
   switch_stop_list_.clear();
 
-  std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
+  auto &controllers = controllers_lists_[current_controllers_list_];
   for (size_t i = 0; i < controllers.size(); ++i)
   {
     bool in_stop_list  = false;
@@ -674,10 +674,10 @@ bool ControllerManager::reloadControllerLibrariesSrv(
   assert(controllers.empty());
 
   // Force a reload on all the PluginLoaders (internally, this recreates the plugin loaders)
-  for(std::list<ControllerLoaderInterfaceSharedPtr>::iterator it = controller_loaders_.begin(); it != controller_loaders_.end(); ++it)
+  for(auto const& it : controller_loaders_)
   {
-    (*it)->reload();
-    ROS_INFO("Controller manager: reloaded controller libraries for '%s'", (*it)->getName().c_str());
+    it->reload();
+    ROS_INFO("Controller manager: reloaded controller libraries for '%s'", it->getName().c_str());
   }
 
   resp.ok = true;
@@ -699,13 +699,13 @@ bool ControllerManager::listControllerTypesSrv(
   boost::mutex::scoped_lock guard(services_lock_);
   ROS_DEBUG("list types service locked");
 
-  for(std::list<ControllerLoaderInterfaceSharedPtr>::iterator it = controller_loaders_.begin(); it != controller_loaders_.end(); ++it)
+  for(auto const& it : controller_loaders_)
   {
-    std::vector<std::string> cur_types = (*it)->getDeclaredClasses();
+    std::vector<std::string> cur_types = it->getDeclaredClasses();
     for(size_t i=0; i < cur_types.size(); i++)
     {
       resp.types.push_back(cur_types[i]);
-      resp.base_classes.push_back((*it)->getName());
+      resp.base_classes.push_back(it->getName());
     }
   }
 
