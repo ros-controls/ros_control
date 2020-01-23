@@ -561,9 +561,9 @@ public:
   /** \brief Enforce limits for all managed handles. */
   void enforceLimits(const ros::Duration& period)
   {
-    for (auto&& pair : this->resource_map_)
+    for (auto&& resource_name_and_handle : this->resource_map_)
     {
-      pair.second.enforceLimits(period);
+      resource_name_and_handle.second.enforceLimits(period);
     }
   }
   /*\}*/
@@ -577,9 +577,9 @@ public:
   /** \brief Reset all managed handles. */
   void reset()
   {
-    for (auto&& pair : this->resource_map_)
+    for (auto&& resource_name_and_handle : this->resource_map_)
     {
-      pair.second.reset();
+      resource_name_and_handle.second.reset();
     }
   }
   /*\}*/
@@ -593,9 +593,9 @@ public:
   /** \brief Reset all managed handles. */
   void reset()
   {
-    for (auto&& pair : this->resource_map_)
+    for (auto&& resource_name_and_handle : this->resource_map_)
     {
-      pair.second.reset();
+      resource_name_and_handle.second.reset();
     }
   }
   /*\}*/

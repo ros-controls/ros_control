@@ -80,9 +80,9 @@ public:
   {
     std::vector<std::string> out;
     out.reserve(resource_map_.size());
-    for (const auto& pair : resource_map_)
+    for (const auto& resource_name_and_handle : resource_map_)
     {
-      out.push_back(pair.first);
+      out.push_back(resource_name_and_handle.first);
     }
     return out;
   }

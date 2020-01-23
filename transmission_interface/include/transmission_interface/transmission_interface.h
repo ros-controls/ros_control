@@ -403,9 +403,9 @@ public:
   /** \brief Propagate the transmission maps of all managed handles. */
   void propagate()
   {
-    for (auto&& pair : this->resource_map_)
+    for (auto&& resource_name_and_handle : this->resource_map_)
     {
-      pair.second.propagate();
+      resource_name_and_handle.second.propagate();
     }
   }
   /*\}*/

@@ -109,14 +109,14 @@ public:
 
     // Enforce resource exclusivity policy: No resource can be claimed by more than one controller
     bool in_conflict = false;
-    for (const auto& pair : resource_map)
+    for (const auto& resource_name_and_claiming_controllers : resource_map)
     {
-      if (pair.second.size() > 1)
+      if (resource_name_and_claiming_controllers.second.size() > 1)
       {
         std::string controller_list;
-        for (const auto& controller : pair.second)
+        for (const auto& controller : resource_name_and_claiming_controllers.second)
           controller_list += controller.name + ", ";
-        ROS_WARN("Resource conflict on [%s].  Controllers = [%s]", pair.first.c_str(), controller_list.c_str());
+        ROS_WARN("Resource conflict on [%s].  Controllers = [%s]", resource_name_and_claiming_controllers.first.c_str(), controller_list.c_str());
         in_conflict = true;
       }
     }
