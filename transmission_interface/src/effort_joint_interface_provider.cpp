@@ -55,7 +55,7 @@ bool EffortJointInterfaceProvider::updateJointInterfaces(const TransmissionInfo&
   EffortJointInterface& interface = *(robot_hw->get<EffortJointInterface>());
 
   // Register joints on the hardware interface
-  for (const JointInfo& joint_info : transmission_info.joints_)
+  for (const auto& joint_info : transmission_info.joints_)
   {
     const std::string& name = joint_info.name_;
 

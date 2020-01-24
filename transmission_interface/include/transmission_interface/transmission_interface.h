@@ -180,9 +180,9 @@ protected:
 private:
   static bool hasValidPointers(const std::vector<double*>& data)
   {
-    for (std::vector<double*>::const_iterator it = data.begin(); it != data.end(); ++it)
+    for (const auto& ptr : data)
     {
-      if (!(*it)) {return false;}
+      if (!ptr) {return false;}
     }
     return true;
   }
@@ -403,10 +403,9 @@ public:
   /** \brief Propagate the transmission maps of all managed handles. */
   void propagate()
   {
-    typedef typename hardware_interface::ResourceManager<HandleType>::ResourceMap::iterator ItratorType;
-    for (ItratorType it = this->resource_map_.begin(); it != this->resource_map_.end(); ++it)
+    for (auto&& resource_name_and_handle : this->resource_map_)
     {
-      it->second.propagate();
+      resource_name_and_handle.second.propagate();
     }
   }
   /*\}*/

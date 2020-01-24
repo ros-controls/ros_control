@@ -312,7 +312,7 @@ TEST_F(BlackBoxTest, IdentityMap)
   TransList trans_list = createTestInstances(100);                                  // NOTE: Magic value
 
   // Test different transmission configurations...
-  for (TransList::iterator it = trans_list.begin(); it != trans_list.end(); ++it)
+  for (auto&& transmission : trans_list)
   {
     // ...and for each transmission, different input values
     RandomDoubleGenerator rand_gen(-1000.0, 1000.0);                                // NOTE: Magic value
@@ -320,7 +320,7 @@ TEST_F(BlackBoxTest, IdentityMap)
     for (unsigned int i = 0; i < input_value_trials; ++i)
     {
       vector<double> input_value = randomVector(2, rand_gen);
-      testIdentityMap(*it, input_value);
+      testIdentityMap(transmission, input_value);
     }
   }
 }

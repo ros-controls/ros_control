@@ -561,10 +561,9 @@ public:
   /** \brief Enforce limits for all managed handles. */
   void enforceLimits(const ros::Duration& period)
   {
-    typedef typename hardware_interface::ResourceManager<HandleType>::ResourceMap::iterator ItratorType;
-    for (ItratorType it = this->resource_map_.begin(); it != this->resource_map_.end(); ++it)
+    for (auto&& resource_name_and_handle : this->resource_map_)
     {
-      it->second.enforceLimits(period);
+      resource_name_and_handle.second.enforceLimits(period);
     }
   }
   /*\}*/
@@ -578,10 +577,9 @@ public:
   /** \brief Reset all managed handles. */
   void reset()
   {
-    typedef hardware_interface::ResourceManager<PositionJointSaturationHandle>::ResourceMap::iterator ItratorType;
-    for (ItratorType it = this->resource_map_.begin(); it != this->resource_map_.end(); ++it)
+    for (auto&& resource_name_and_handle : this->resource_map_)
     {
-      it->second.reset();
+      resource_name_and_handle.second.reset();
     }
   }
   /*\}*/
@@ -595,10 +593,9 @@ public:
   /** \brief Reset all managed handles. */
   void reset()
   {
-    typedef hardware_interface::ResourceManager<PositionJointSoftLimitsHandle>::ResourceMap::iterator ItratorType;
-    for (ItratorType it = this->resource_map_.begin(); it != this->resource_map_.end(); ++it)
+    for (auto&& resource_name_and_handle : this->resource_map_)
     {
-      it->second.reset();
+      resource_name_and_handle.second.reset();
     }
   }
   /*\}*/
