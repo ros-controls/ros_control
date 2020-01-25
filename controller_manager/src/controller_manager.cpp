@@ -297,11 +297,16 @@ bool ControllerManager::loadController(const std::string& name)
       // Trying loading the controller using all of our controller loaders. Exit once we've found the first valid loaded controller
       for (auto const& it : controller_loaders_)
       {
-        for (const auto& cur_type : (it)->getDeclaredClasses()){
+        bool flag = false;
+        for (const auto& cur_type : it->getDeclaredClasses()){
           if (type == cur_type){
-            c = (it)->createInstance(type);
+            c = it->createInstance(type);
+            flag = true;
+            break;
           }
         }
+        if(flag)
+          break;
       }
     }
     catch (const std::runtime_error &ex)
