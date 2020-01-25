@@ -55,7 +55,7 @@ bool VelocityJointInterfaceProvider::updateJointInterfaces(const TransmissionInf
   VelocityJointInterface& interface = *(robot_hw->get<VelocityJointInterface>());
 
   // Register joints on the hardware interface
-  for (const JointInfo& joint_info : transmission_info.joints_)
+  for (const auto& joint_info : transmission_info.joints_)
   {
     const std::string& name = joint_info.name_;
 

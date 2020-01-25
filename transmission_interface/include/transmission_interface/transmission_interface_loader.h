@@ -274,7 +274,7 @@ protected:
     }
 
     // Get handles to all required resource
-    for (const ActuatorInfo& info : actuators_info)
+    for (const auto& info : actuators_info)
     {
       try
       {

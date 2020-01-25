@@ -92,38 +92,31 @@ public:
   virtual bool checkForConflict(const std::list<ControllerInfo>& info) const
   {
     // Map from resource name to all controllers claiming it
-    typedef std::map<std::string, std::list<ControllerInfo> > CtrlInfoMap;
-
-    typedef std::list<ControllerInfo>::const_iterator CtrlInfoIt;
-    typedef std::vector<InterfaceResources>::const_iterator ClaimedResIt;
-    typedef std::set<std::string>::const_iterator ResourceIt;
+    std::map<std::string, std::list<ControllerInfo>> resource_map;
 
     // Populate a map of all controllers claiming individual resources.
     // We do this by iterating over every claimed resource of every hardware interface used by every controller
-    CtrlInfoMap resource_map;
-    for (CtrlInfoIt info_it = info.begin(); info_it != info.end(); ++info_it)
+    for (const auto& controller_info : info)
     {
-      const std::vector<InterfaceResources>& c_res = info_it->claimed_resources;
-      for (ClaimedResIt c_res_it = c_res.begin(); c_res_it != c_res.end(); ++c_res_it)
+      for (const auto& claimed_resource : controller_info.claimed_resources)
       {
-        const std::set<std::string>& iface_resources = c_res_it->resources;
-        for (ResourceIt resource_it = iface_resources.begin(); resource_it != iface_resources.end(); ++resource_it)
+        for (const auto& iface_resource : claimed_resource.resources)
         {
-          resource_map[*resource_it].push_back(*info_it);
+          resource_map[iface_resource].push_back(controller_info);
         }
       }
     }
 
     // Enforce resource exclusivity policy: No resource can be claimed by more than one controller
     bool in_conflict = false;
-    for (CtrlInfoMap::iterator it = resource_map.begin(); it != resource_map.end(); ++it)
+    for (const auto& resource_name_and_claiming_controllers : resource_map)
     {
-      if (it->second.size() > 1)
+      if (resource_name_and_claiming_controllers.second.size() > 1)
       {
         std::string controller_list;
-        for (CtrlInfoIt controller_it = it->second.begin(); controller_it != it->second.end(); ++controller_it)
-          controller_list += controller_it->name + ", ";
-        ROS_WARN("Resource conflict on [%s].  Controllers = [%s]", it->first.c_str(), controller_list.c_str());
+        for (const auto& controller : resource_name_and_claiming_controllers.second)
+          controller_list += controller.name + ", ";
+        ROS_WARN("Resource conflict on [%s].  Controllers = [%s]", resource_name_and_claiming_controllers.first.c_str(), controller_list.c_str());
         in_conflict = true;
       }
     }

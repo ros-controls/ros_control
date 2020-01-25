@@ -95,7 +95,7 @@ TEST(SimpleTransmissionLoaderTest, InvalidSpec)
   TransmissionLoaderSharedPtr transmission_loader = loader.create(infos.front().type_);
   ASSERT_TRUE(nullptr != transmission_loader);
 
-  for (const TransmissionInfo& info : infos)
+  for (const auto& info : infos)
   {
     TransmissionSharedPtr transmission;
     transmission = transmission_loader->load(info);
