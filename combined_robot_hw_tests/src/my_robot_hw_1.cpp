@@ -104,17 +104,17 @@ void MyRobotHW1::write(const ros::Time& /*time*/, const ros::Duration& /*period*
 bool MyRobotHW1::prepareSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
                                const std::list<hardware_interface::ControllerInfo>& /*stop_list*/)
 {
-  for (auto const& it : start_list)
+  for (const auto& controller : start_list)
   {
-    if (it.claimed_resources.empty())
+    if (controller.claimed_resources.empty())
     {
       continue;
     }
-    for (auto const& res_it : it.claimed_resources)
+    for (const auto& res_it : controller.claimed_resources)
     {
       std::vector<std::string> r_hw_ifaces = this->getNames();
 
-      auto const& if_name = std::find(r_hw_ifaces.begin(), r_hw_ifaces.end(), res_it.hardware_interface);
+      std::vector<std::string>::iterator if_name = std::find(r_hw_ifaces.begin(), r_hw_ifaces.end(), res_it.hardware_interface);
       if (if_name == r_hw_ifaces.end()) // this hardware_interface is not registered on this RobotHW
       {
         ROS_ERROR_STREAM("Bad interface: " << res_it.hardware_interface);
@@ -123,13 +123,13 @@ bool MyRobotHW1::prepareSwitch(const std::list<hardware_interface::ControllerInf
       }
 
       std::vector<std::string> r_hw_iface_resources = this->getInterfaceResources(res_it.hardware_interface);
-      for (auto const& ctrl_res : res_it.resources)
+      for (const auto& resource : res_it.resources)
       {
-        auto const& res_name = std::find(r_hw_iface_resources.begin(), r_hw_iface_resources.end(), ctrl_res);
+        std::vector<std::string>::iterator res_name = std::find(r_hw_iface_resources.begin(), r_hw_iface_resources.end(), resource);
         if (res_name == r_hw_iface_resources.end()) // this resource is not registered on this RobotHW
         {
-          ROS_ERROR_STREAM("Bad resource: " << (ctrl_res));
-          std::cout << (ctrl_res);
+          ROS_ERROR_STREAM("Bad resource: " << resource);
+          std::cout << resource;
           return false;
         }
       }
@@ -141,29 +141,29 @@ bool MyRobotHW1::prepareSwitch(const std::list<hardware_interface::ControllerInf
 void MyRobotHW1::doSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
                           const std::list<hardware_interface::ControllerInfo>& /*stop_list*/)
 {
-  for (auto const& it : start_list)
+  for (const auto& controller : start_list)
   {
-    if (it.claimed_resources.empty())
+    if (controller.claimed_resources.empty())
     {
       continue;
     }
-    for (auto const& res_it : it.claimed_resources)
+    for (const auto& claimed_resource : controller.claimed_resources)
     {
       std::vector<std::string> r_hw_ifaces = this->getNames();
 
-      auto const& if_name = std::find(r_hw_ifaces.begin(), r_hw_ifaces.end(), res_it.hardware_interface);
+      std::vector<std::string>::iterator if_name = std::find(r_hw_ifaces.begin(), r_hw_ifaces.end(), claimed_resource.hardware_interface);
       if (if_name == r_hw_ifaces.end()) // this hardware_interface is not registered on this RobotHW
       {
-        throw hardware_interface::HardwareInterfaceException("Hardware_interface " + res_it.hardware_interface + " is not registered");
+        throw hardware_interface::HardwareInterfaceException("Hardware_interface " + claimed_resource.hardware_interface + " is not registered");
       }
 
-      std::vector<std::string> r_hw_iface_resources = this->getInterfaceResources(res_it.hardware_interface);
-      for (auto const& ctrl_res : res_it.resources)
+      std::vector<std::string> r_hw_iface_resources = this->getInterfaceResources(claimed_resource.hardware_interface);
+      for (const auto& resource : claimed_resource.resources)
       {
-        auto const& res_name = std::find(r_hw_iface_resources.begin(), r_hw_iface_resources.end(), ctrl_res);
+        std::vector<std::string>::iterator res_name = std::find(r_hw_iface_resources.begin(), r_hw_iface_resources.end(), resource);
         if (res_name == r_hw_iface_resources.end()) // this resource is not registered on this RobotHW
         {
-          throw hardware_interface::HardwareInterfaceException("Resource " + ctrl_res + " is not registered");
+          throw hardware_interface::HardwareInterfaceException("Resource " + resource + " is not registered");
         }
       }
     }

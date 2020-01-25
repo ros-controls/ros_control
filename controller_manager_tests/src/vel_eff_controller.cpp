@@ -37,7 +37,6 @@ bool VelEffController::init(hardware_interface::RobotHW* robot_hw, ros::NodeHand
   std::vector<std::string> eff_joints;
   if (!n.getParam("effort_joints", eff_joints)) {return false;}
 
-  typedef std::vector<std::string>::const_iterator NamesIterator;
   typedef hardware_interface::VelocityJointInterface VelIface;
   typedef hardware_interface::EffortJointInterface EffIface;
 
@@ -46,13 +45,13 @@ bool VelEffController::init(hardware_interface::RobotHW* robot_hw, ros::NodeHand
   EffIface* eff_iface = robot_hw->get<EffIface>();
 
   // populate command handles (claimed resources)
-  for (NamesIterator it = vel_joints.begin(); it != vel_joints.end(); it++)
+  for (const auto& vel_joint : vel_joints)
   {
-    vel_cmd_.push_back(vel_iface->getHandle(*it));
+    vel_cmd_.push_back(vel_iface->getHandle(vel_joint));
   }
-  for (NamesIterator it = eff_joints.begin(); it != eff_joints.end(); it++)
+  for (const auto& eff_joint : eff_joints)
   {
-    eff_cmd_.push_back(eff_iface->getHandle(*it));
+    eff_cmd_.push_back(eff_iface->getHandle(eff_joint));
   }
 
 

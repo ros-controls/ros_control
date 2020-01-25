@@ -46,9 +46,11 @@ namespace combined_robot_hw
       ROS_ERROR_STREAM("Could not find '" << param_name << "' parameter (namespace: " << robot_hw_nh.getNamespace() << ").");
       return false;
     }
-    std::vector<std::string>::iterator it;
-    for(it = robots.begin();it != robots.end();it++){
-      if (!loadRobotHW(*it)){
+
+    for (const auto& robot : robots)
+    {
+      if (!loadRobotHW(robot))
+      {
         return false;
       }
     }
@@ -59,7 +61,7 @@ namespace combined_robot_hw
                              const std::list<hardware_interface::ControllerInfo>& stop_list)
   {
     // Call the prepareSwitch method of the single RobotHW objects.
-    for (auto const & robot_hw : robot_hw_list_)
+    for (const auto& robot_hw : robot_hw_list_)
     {
       std::list<hardware_interface::ControllerInfo> filtered_start_list;
       std::list<hardware_interface::ControllerInfo> filtered_stop_list;
@@ -68,7 +70,7 @@ namespace combined_robot_hw
       filterControllerList(start_list, filtered_start_list, robot_hw);
       filterControllerList(stop_list, filtered_stop_list, robot_hw);
 
-      if (!(robot_hw)->prepareSwitch(filtered_start_list, filtered_stop_list))
+      if (!robot_hw->prepareSwitch(filtered_start_list, filtered_stop_list))
         return false;
     }
     return true;
@@ -78,7 +80,7 @@ namespace combined_robot_hw
                         const std::list<hardware_interface::ControllerInfo>& stop_list)
   {
     // Call the doSwitch method of the single RobotHW objects.
-    for (auto const & robot_hw : robot_hw_list_)
+    for (const auto& robot_hw : robot_hw_list_)
     {
       std::list<hardware_interface::ControllerInfo> filtered_start_list;
       std::list<hardware_interface::ControllerInfo> filtered_stop_list;
@@ -87,7 +89,7 @@ namespace combined_robot_hw
       filterControllerList(start_list, filtered_start_list, robot_hw);
       filterControllerList(stop_list, filtered_stop_list, robot_hw);
 
-      (robot_hw)->doSwitch(filtered_start_list, filtered_stop_list);
+      robot_hw->doSwitch(filtered_start_list, filtered_stop_list);
     }
   }
 
@@ -119,10 +121,9 @@ namespace combined_robot_hw
       ROS_DEBUG("Constructing robot HW '%s' of type '%s'", name.c_str(), type.c_str());
       try
       {
-        std::vector<std::string> cur_types = robot_hw_loader_.getDeclaredClasses();
-        for(size_t i=0; i < cur_types.size(); i++)
+        for (const auto& cur_type : robot_hw_loader_.getDeclaredClasses())
         {
-          if (type == cur_types[i])
+          if (type == cur_type)
           {
             robot_hw = robot_hw_loader_.createUniqueInstance(type);
           }
@@ -182,9 +183,9 @@ namespace combined_robot_hw
   void CombinedRobotHW::read(const ros::Time& time, const ros::Duration& period)
   {
     // Call the read method of the single RobotHW objects.
-    for (auto const & robot_hw : robot_hw_list_)
+    for (const auto& robot_hw : robot_hw_list_)
     {
-      (robot_hw)->read(time, period);
+      robot_hw->read(time, period);
     }
   }
 
@@ -192,9 +193,9 @@ namespace combined_robot_hw
   void CombinedRobotHW::write(const ros::Time& time, const ros::Duration& period)
   {
     // Call the write method of the single RobotHW objects.
-    for (auto const & robot_hw : robot_hw_list_)
+    for (const auto& robot_hw : robot_hw_list_)
     {
-      (robot_hw)->write(time, period);
+      robot_hw->write(time, period);
     }
   }
 
@@ -203,21 +204,21 @@ namespace combined_robot_hw
                                              hardware_interface::RobotHWSharedPtr robot_hw)
   {
     filtered_list.clear();
-    for (auto const & it : list)
+    for (const auto& controller : list)
     {
       hardware_interface::ControllerInfo filtered_controller;
-      filtered_controller.name = it.name;
-      filtered_controller.type = it.type;
+      filtered_controller.name = controller.name;
+      filtered_controller.type = controller.type;
 
-      if (it.claimed_resources.empty())
+      if (controller.claimed_resources.empty())
       {
         filtered_list.push_back(filtered_controller);
         continue;
       }
-      for (auto const& res_it : it.claimed_resources)
+      for (const auto& claimed_resource : controller.claimed_resources)
       {
         hardware_interface::InterfaceResources filtered_iface_resources;
-        filtered_iface_resources.hardware_interface = res_it.hardware_interface;
+        filtered_iface_resources.hardware_interface = claimed_resource.hardware_interface;
         std::vector<std::string> r_hw_ifaces = robot_hw->getNames();
 
         auto const if_name = std::find(r_hw_ifaces.begin(), r_hw_ifaces.end(), filtered_iface_resources.hardware_interface);
@@ -228,12 +229,12 @@ namespace combined_robot_hw
 
         std::vector<std::string> r_hw_iface_resources = robot_hw->getInterfaceResources(filtered_iface_resources.hardware_interface);
         std::set<std::string> filtered_resources;
-        for (auto const& ctrl_res : res_it.resources)
+        for (const auto& resource : claimed_resource.resources)
         {
-          std::vector<std::string>::iterator res_name = std::find(r_hw_iface_resources.begin(), r_hw_iface_resources.end(), ctrl_res);
+          std::vector<std::string>::iterator res_name = std::find(r_hw_iface_resources.begin(), r_hw_iface_resources.end(), resource);
           if (res_name != r_hw_iface_resources.end())
           {
-            filtered_resources.insert(ctrl_res);
+            filtered_resources.insert(resource);
           }
         }
         filtered_iface_resources.resources = filtered_resources;
