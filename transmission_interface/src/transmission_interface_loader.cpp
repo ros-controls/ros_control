@@ -26,6 +26,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // C++ standard
+#include <algorithm>
 #include <cassert>
 #include <stdexcept>
 
@@ -154,7 +155,7 @@ bool TransmissionInterfaceLoader::load(const TransmissionInfo& transmission_info
   {
     // Error out if at least one joint has a different set of hardware interfaces
     if (hw_ifaces_ref.size() != jnt_info.hardware_interfaces_.size() ||
-        !internal::is_permutation(hw_ifaces_ref.begin(), hw_ifaces_ref.end(),
+        !std::is_permutation(hw_ifaces_ref.begin(), hw_ifaces_ref.end(),
                                   jnt_info.hardware_interfaces_.begin()))
     {
       ROS_ERROR_STREAM_NAMED("parser",
