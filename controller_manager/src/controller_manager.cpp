@@ -76,8 +76,7 @@ ControllerManager::~ControllerManager()
 void ControllerManager::update(const ros::Time& time, const ros::Duration& period, bool reset_controllers)
 {
   used_by_realtime_ = current_controllers_list_;
-  auto &controllers = controllers_lists_[used_by_realtime_];
-
+  
   // Restart all running controllers if motors are re-enabled
   if (reset_controllers){
     for (const auto& controller : controllers_lists_[used_by_realtime_]){
@@ -390,7 +389,7 @@ bool ControllerManager::unloadController(const std::string &name)
     }
     std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
-  auto
+  std::vector<ControllerSpec>::iterator
     &from = controllers_lists_[current_controllers_list_],
     &to = controllers_lists_[free_controllers_list];
   to.clear();
@@ -522,7 +521,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   switch_start_list_.clear();
   switch_stop_list_.clear();
 
-  auto &controllers = controllers_lists_[current_controllers_list_];
+  const auto &controllers = controllers_lists_[current_controllers_list_];
   for (const auto& controller : controllers)
   {
     bool in_stop_list  = false;
