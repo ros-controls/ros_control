@@ -389,7 +389,7 @@ bool ControllerManager::unloadController(const std::string &name)
     }
     std::this_thread::sleep_for(std::chrono::microseconds(200));
   }
-  std::vector<ControllerSpec>::iterator
+  std::vector<ControllerSpec>
     &from = controllers_lists_[current_controllers_list_],
     &to = controllers_lists_[free_controllers_list];
   to.clear();
