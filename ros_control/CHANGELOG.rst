@@ -2,6 +2,12 @@
 Changelog for package ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove _tests packages from metapackage
+* Apply consistent style to package.xml files
+* Contributors: Bence Magyar, Matt Reynolds
+
 0.15.1 (2018-09-30)
 -------------------
 

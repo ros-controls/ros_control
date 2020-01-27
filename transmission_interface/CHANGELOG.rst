@@ -2,6 +2,47 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use more meaningful pair iterator names
+* Use range-based for loops in transmission_interface
+* Resolve Boost dependency issues
+* Update dependencies
+  - Dependencies needed to compile are <build_depend>
+  - Dependencies used in public headers are <build_export_depend>
+  - Dependencies needed to link or run are <exec_depend>
+* Merge branch 'melodic-devel' into catkin-lint
+* Update package dependencies
+* Remove rosunit test_depend from package.xml
+* Prefer nullptr for null pointers
+* Merge pull request `#406 <https://github.com/ros-controls/ros_control/issues/406>`_ from matthew-reynolds/pragma-once
+  Use #pragma once
+* Add missing header guard to loader_utils.h
+* Replace header guard with #pragma once
+* Merge pull request `#395 <https://github.com/ros-controls/ros_control/issues/395>`_ from pal-robotics-forks/extend-interfaces-melodic
+  Extend interfaces
+* Add torque sensor and absolute encoder support to transmissions and adjust tests
+  Add pointer accessors for torque sensor and absoute position encoders
+* Modified structures to have absolute encoder and torque sensor parameters
+* Fix transmission_interface dependencies
+* Apply consistent style to CMakeLists.txt files
+* Apply consistent style to package.xml files
+* Merge pull request `#399 <https://github.com/ros-controls/ros_control/issues/399>`_ from mvieth/melodic-devel
+  Fix compiler warnings
+* Fix compiler warnings
+  - Comment out unused parameters
+  - Make some integer literals unsigned to avoid comparison between signed and unsigned
+  - Remove unnecessary semicolons
+  - Make const void return type to void
+* Fix build error in clang
+  error: non-aggregate type 'std::vector' (aka 'vector >') cannot be initialized with an initializer list
+* Merge pull request `#379 <https://github.com/ros-controls/ros_control/issues/379>`_ from bmagyar/transmission-parser-touchup
+  TransmissionParser touchup
+* Fix typo in docs
+* TransmissionParser private -> protected
+* fix install destination (`#377 <https://github.com/ros-controls/ros_control/issues/377>`_)
+* Contributors: Bence Magyar, Gennaro Raiola, Hilario Tome, James Xu, Markus Vieth, Matt Reynolds, Victor Lopez
+
 0.15.1 (2018-09-30)
 -------------------
 

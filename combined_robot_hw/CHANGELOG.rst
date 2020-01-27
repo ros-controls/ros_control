@@ -2,6 +2,23 @@
 Changelog for package combined_robot_hw
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use range-based for loop
+* Update dependencies
+  - Dependencies needed to compile are <build_depend>
+  - Dependencies used in public headers are <build_export_depend>
+  - Dependencies needed to link or run are <exec_depend>
+* Use #pragma once
+* Replace header guard with #pragma once
+* Remove unused Boost dependencies
+* Apply consistent style to CMakeLists.txt files
+* Apply consistent style to package.xml files
+* Fix build error in clang error: non-aggregate type 'std::vector' (aka 'vector >') cannot be initialized with an initializer list
+* fix install destination
+* specify RUNTIME DESTINATION for libraries needed for exporting DLLs on Windows
+* Contributors: Bence Magyar, James Xu, Matt Reynolds, Victor Lopez
+
 0.15.1 (2018-09-30)
 -------------------
 

@@ -2,6 +2,47 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#413 <https://github.com/ros-controls/ros_control/issues/413>`_ from matthew-reynolds/range-for
+  Use range-based for loop
+* Use more meaningful pair iterator names
+* Merge pull request `#404 <https://github.com/ros-controls/ros_control/issues/404>`_ from matthew-reynolds/catkin-lint
+  Update CMakeLists.txt and package.xml
+* Use range-based for loops in joint_limits_interface
+* Update dependencies
+  - Dependencies needed to compile are <build_depend>
+  - Dependencies used in public headers are <build_export_depend>
+  - Dependencies needed to link or run are <exec_depend>
+* Merge branch 'melodic-devel' into catkin-lint
+* Update package dependencies
+* Remove liburdfdom-dev
+* Add missing roscpp & rospy dependencies
+* Remove rosunit test_depend from package.xml
+* Merge pull request `#405 <https://github.com/ros-controls/ros_control/issues/405>`_ from matthew-reynolds/use-nullptr
+  Use nullptr
+* Prefer 0.0 for floating point literals
+* Merge pull request `#406 <https://github.com/ros-controls/ros_control/issues/406>`_ from matthew-reynolds/pragma-once
+  Use #pragma once
+* Replace header guard with #pragma once
+* Merge pull request `#395 <https://github.com/ros-controls/ros_control/issues/395>`_ from pal-robotics-forks/extend-interfaces-melodic
+  Extend interfaces
+* joint_limits: use an open-loop policy for velocity staturation
+  The feedback from the controller is way too slow to be used on an
+  actual robot. A robot that had 15 rad.s^-2 on each wheel as
+  an acceleration limit could not even reach 2 rad.s^-2
+  This is in line with ros_controllers`#23 <https://github.com/ros-controls/ros_control/issues/23>`_
+* Apply consistent style to CMakeLists.txt files
+* Apply consistent style to package.xml files
+* Merge pull request `#398 <https://github.com/ros-controls/ros_control/issues/398>`_ from matthew-reynolds/revert-cmake
+  Revert CMake include_directories as SYSTEM
+* Revert CMake include_directories as SYSTEM
+* Merge pull request `#396 <https://github.com/ros-controls/ros_control/issues/396>`_ from pal-robotics-forks/small-fixes
+  Small fixes
+* Fix shadowed variables
+* -Werror=overloaded-virtual and initialization of fields in constructor
+* Contributors: Bence Magyar, Daniel Pinyol, Matt Reynolds, Paul Mathieu, Victor Lopez
+
 0.15.1 (2018-09-30)
 -------------------
 
