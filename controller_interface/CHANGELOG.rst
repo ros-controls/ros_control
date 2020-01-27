@@ -2,8 +2,8 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.16.0 (2020-01-27)
+-------------------
 * Update dependencies
   - Dependencies needed to compile are <build_depend>
   - Dependencies used in public headers are <build_export_depend>

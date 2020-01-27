@@ -2,8 +2,8 @@
 Changelog for package rqt_controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.16.0 (2020-01-27)
+-------------------
 * Update package dependencies
 * Add missing roscpp & rospy dependencies
 * Update package.xml descriptions

@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.16.0 (2020-01-27)
+-------------------
 * Merge pull request `#413 <https://github.com/ros-controls/ros_control/issues/413>`_ from matthew-reynolds/range-for
   Use range-based for loop
 * Use more meaningful pair iterator names

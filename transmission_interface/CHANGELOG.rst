@@ -2,8 +2,8 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.16.0 (2020-01-27)
+-------------------
 * Use more meaningful pair iterator names
 * Use range-based for loops in transmission_interface
 * Resolve Boost dependency issues

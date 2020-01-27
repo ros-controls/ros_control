@@ -2,8 +2,8 @@
 Changelog for package combined_robot_hw
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.16.0 (2020-01-27)
+-------------------
 * Use range-based for loop
 * Update dependencies
   - Dependencies needed to compile are <build_depend>
