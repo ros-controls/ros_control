@@ -30,10 +30,6 @@
 
 namespace combined_robot_hw
 {
-  CombinedRobotHW::CombinedRobotHW() :
-    robot_hw_loader_("hardware_interface", "hardware_interface::RobotHW")
-  {}
-
   bool CombinedRobotHW::init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh)
   {
     root_nh_ = root_nh;

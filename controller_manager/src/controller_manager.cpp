@@ -46,12 +46,7 @@ namespace controller_manager
 ControllerManager::ControllerManager(hardware_interface::RobotHW *robot_hw, const ros::NodeHandle& nh) :
   robot_hw_(robot_hw),
   root_nh_(nh),
-  cm_node_(nh, "controller_manager"),
-  start_request_(0),
-  stop_request_(0),
-  switch_params_(),
-  current_controllers_list_(0),
-  used_by_realtime_(-1)
+  cm_node_(nh, "controller_manager")
 {
   // create controller loader
   controller_loaders_.push_back(

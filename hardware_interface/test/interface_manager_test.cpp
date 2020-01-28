@@ -34,7 +34,7 @@ using namespace hardware_interface;
 
 struct FooInterface
 {
-  FooInterface(int foo): foo(foo) {}
+  FooInterface(int foo) : foo(foo) {}
   int foo;
 };
 

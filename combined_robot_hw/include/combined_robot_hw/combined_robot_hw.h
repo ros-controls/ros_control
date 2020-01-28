@@ -52,8 +52,6 @@ namespace combined_robot_hw
 class CombinedRobotHW : public hardware_interface::RobotHW
 {
 public:
-  CombinedRobotHW();
-
   virtual ~CombinedRobotHW(){}
 
   /** \brief The init function is called to initialize the RobotHW from a
@@ -103,7 +101,7 @@ public:
 protected:
   ros::NodeHandle root_nh_;
   ros::NodeHandle robot_hw_nh_;
-  pluginlib::ClassLoader<hardware_interface::RobotHW> robot_hw_loader_;
+  pluginlib::ClassLoader<hardware_interface::RobotHW> robot_hw_loader_ = {"hardware_interface", "hardware_interface::RobotHW"};
   std::vector<hardware_interface::RobotHWSharedPtr> robot_hw_list_;
 
   virtual bool loadRobotHW(const std::string& name);

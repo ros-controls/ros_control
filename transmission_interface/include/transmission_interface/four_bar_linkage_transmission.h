@@ -156,7 +156,7 @@ public:
    */
   void actuatorToJointPosition(const ActuatorData& act_data,
                                      JointData&    jnt_data);
-  
+
   /**
    * \brief Transform \e absolute encoder values from actuator to joint space.
    * \param[in]  act_data Actuator-space variables.
@@ -224,8 +224,7 @@ protected:
 inline FourBarLinkageTransmission::FourBarLinkageTransmission(const std::vector<double>& actuator_reduction,
                                                               const std::vector<double>& joint_reduction,
                                                               const std::vector<double>& joint_offset)
-  : Transmission(),
-    act_reduction_(actuator_reduction),
+  : act_reduction_(actuator_reduction),
     jnt_reduction_(joint_reduction),
     jnt_offset_(joint_offset)
 {
@@ -295,7 +294,7 @@ void FourBarLinkageTransmission::actuatorToJointAbsolutePosition(const ActuatorD
   const std::vector<double>& jr = jnt_reduction_;
 
   *jnt_data.absolute_position[0] = *act_data.absolute_position[0] /(jr[0] * ar[0]) + jnt_offset_[0];
-  *jnt_data.absolute_position[1] = (*act_data.absolute_position[1] / ar[1] - *act_data.absolute_position[0] / (jr[0] * ar[0])) / 
+  *jnt_data.absolute_position[1] = (*act_data.absolute_position[1] / ar[1] - *act_data.absolute_position[0] / (jr[0] * ar[0])) /
                                     jr[1] + jnt_offset_[1];
 }
 

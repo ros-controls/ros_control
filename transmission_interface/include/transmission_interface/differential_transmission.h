@@ -130,7 +130,7 @@ public:
   /**
    * \param actuator_reduction Reduction ratio of actuators.
    * \param joint_reduction    Reduction ratio of joints.
-   * \param ignore_transmission_for_absolute_encoders Whether to take the data directly from absolute encoders instead of calculating through transmission. 
+   * \param ignore_transmission_for_absolute_encoders Whether to take the data directly from absolute encoders instead of calculating through transmission.
    * \param joint_offset       Joint position offset used in the position mappings.
    * \pre Nonzero actuator and joint reduction values.
    */
@@ -245,8 +245,7 @@ inline DifferentialTransmission::DifferentialTransmission(const std::vector<doub
                                                           const std::vector<double>& joint_reduction,
                                                           const bool ignore_transmission_for_absolute_encoders,
                                                           const std::vector<double>& joint_offset)
-  : Transmission(),
-    act_reduction_(actuator_reduction),
+  : act_reduction_(actuator_reduction),
     jnt_reduction_(joint_reduction),
     jnt_offset_(joint_offset),
     ignore_transmission_for_absolute_encoders_(ignore_transmission_for_absolute_encoders)
