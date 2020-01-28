@@ -88,6 +88,21 @@ bool MyRobotHW2::prepareSwitch(const std::list<hardware_interface::ControllerInf
 {
   for (const auto& controller : start_list)
   {
+    if (controller.name == "ctrl_without_my_robot_hw_2_resources")
+    {
+      ROS_ERROR_STREAM("Controller should have been filtered out: " << controller.name);
+      return false;
+    }
+
+    if (controller.name == "ctrl_without_my_robot_hw_2_resources_in_one_of_two_ifaces")
+    {
+      if (controller.claimed_resources.size() > 1)
+      {
+        ROS_ERROR_STREAM("One of the interfaces should have been filtered out");
+        return false;
+      }
+    }
+
     if (controller.claimed_resources.empty())
     {
       continue;
@@ -123,6 +138,19 @@ void MyRobotHW2::doSwitch(const std::list<hardware_interface::ControllerInfo>& s
 {
   for (const auto& controller : start_list)
   {
+    if (controller.name == "ctrl_without_my_robot_hw_2_resources")
+    {
+      throw hardware_interface::HardwareInterfaceException("Controller " + controller.name + " should have been filtered out");
+    }
+
+    if (controller.name == "ctrl_without_my_robot_hw_2_resources_in_one_of_two_ifaces")
+    {
+      if (controller.claimed_resources.size() > 1)
+      {
+        throw hardware_interface::HardwareInterfaceException("One of the interfaces should have been filtered out");
+      }
+    }
+
     if (controller.claimed_resources.empty())
     {
       continue;
