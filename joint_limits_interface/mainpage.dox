@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 {
   // Init node handle and URDF model
   ros::NodeHandle nh;
-  boost::shared_ptr<urdf::ModelInterface> urdf;
+  std::shared_ptr<urdf::ModelInterface> urdf;
   // ...initialize contents of urdf
 
   // Data structures
