@@ -314,7 +314,7 @@ TEST(SwitchInterfacesTest, SwitchInterfaces)
 
     cm.registerControllerLoader(std::make_shared<DummyControllerLoader>());
 
-    ros::Timer timer = nh.createTimer(ros::Duration(0.01), boost::bind(update, boost::ref(cm), _1));
+    ros::Timer timer = nh.createTimer(ros::Duration(0.01), std::bind(&update, std::ref(cm), std::placeholders::_1));
 
     ASSERT_TRUE(cm.loadController("group_pos"));
     ASSERT_TRUE(cm.loadController("another_group_pos"));
