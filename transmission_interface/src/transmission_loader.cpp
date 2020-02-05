@@ -25,9 +25,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////
 
-// Boost
-#include <boost/lexical_cast.hpp>
-
 // ros_control
 #include <transmission_interface/transmission_loader.h>
 
@@ -60,11 +57,11 @@ TransmissionLoader::getActuatorReduction(const TiXmlElement& parent_el,
   }
 
   // Cast to number
-  try {reduction = boost::lexical_cast<double>(reduction_el->GetText());}
-  catch (const boost::bad_lexical_cast&)
+  try {reduction = std::stod(reduction_el->GetText());}
+  catch (const std::logic_error&) // Captures both std::invalid_argument and std::out_of_range
   {
     ROS_ERROR_STREAM_NAMED("parser", "Actuator '" << actuator_name << "' of transmission '" << transmission_name <<
-                           "' specifies the <mechanicalReduction> element, but is not a number.");
+                           "' specifies the <mechanicalReduction> element, but is not a valid number.");
     return BAD_TYPE;
   }
   return SUCCESS;
@@ -95,11 +92,11 @@ TransmissionLoader::getJointReduction(const TiXmlElement& parent_el,
   }
 
   // Cast to number
-  try {reduction = boost::lexical_cast<double>(reduction_el->GetText());}
-  catch (const boost::bad_lexical_cast&)
+  try {reduction = std::stod(reduction_el->GetText());}
+  catch (const std::logic_error&) // Captures both std::invalid_argument and std::out_of_range
   {
     ROS_ERROR_STREAM_NAMED("parser", "Joint '" << joint_name << "' of transmission '" << transmission_name <<
-                           "' specifies the <mechanicalReduction> element, but is not a number.");
+                           "' specifies the <mechanicalReduction> element, but is not a valid number.");
     return BAD_TYPE;
   }
   return SUCCESS;
@@ -130,11 +127,11 @@ TransmissionLoader::getJointOffset(const TiXmlElement& parent_el,
   }
 
   // Cast to number
-  try {offset = boost::lexical_cast<double>(offset_el->GetText());}
-  catch (const boost::bad_lexical_cast&)
+  try {offset = std::stod(offset_el->GetText());}
+  catch (const std::logic_error&) // Captures both std::invalid_argument and std::out_of_range
   {
     ROS_ERROR_STREAM_NAMED("parser", "Joint '" << joint_name << "' of transmission '" << transmission_name <<
-                           "' specifies the <offset> element, but is not a number.");
+                           "' specifies the <offset> element, but is not a valid number.");
     return BAD_TYPE;
   }
   return SUCCESS;
