@@ -34,7 +34,6 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <boost/ptr_container/ptr_vector.hpp>
 
 #include <ros/console.h>
 
@@ -84,7 +83,7 @@ struct CheckIsResourceManager {
   { return callGR<T>(resources, iface, nullptr); }
 
   template <typename C>
-  static T* newCI(boost::ptr_vector<ResourceManagerBase> &guards, typename C::resource_manager_type*)
+  static T* newCI(std::vector<ResourceManagerBase*> &guards, typename C::resource_manager_type*)
   {
     T* iface_combo = new T;
     // save the new interface pointer to allow for its correct destruction
@@ -94,7 +93,7 @@ struct CheckIsResourceManager {
 
   // method called if C is not a ResourceManager
   template <typename C>
-  static T* newCI(boost::ptr_vector<ResourceManagerBase> &/*guards*/, ...) {
+  static T* newCI(std::vector<ResourceManagerBase*> &/*guards*/, ...) {
     // it is not a ResourceManager
     ROS_ERROR("You cannot register multiple interfaces of the same type which are "
               "not of type ResourceManager. There is no established protocol "
@@ -102,7 +101,7 @@ struct CheckIsResourceManager {
     return nullptr;
   }
 
-  static T* newCombinedInterface(boost::ptr_vector<ResourceManagerBase> &guards)
+  static T* newCombinedInterface(std::vector<ResourceManagerBase*> &guards)
   {
     return newCI<T>(guards, nullptr);
   }
@@ -251,7 +250,7 @@ protected:
   InterfaceMap interfaces_combo_;
   InterfaceManagerVector interface_managers_;
   SizeMap num_ifaces_registered_;
-  boost::ptr_vector<ResourceManagerBase> interface_destruction_list_;
+  std::vector<ResourceManagerBase*> interface_destruction_list_;
   /// This will allow us to check the resources based on the demangled type name of the interface
   ResourceMap resources_;
 };
