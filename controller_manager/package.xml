@@ -18,7 +18,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>boost</depend>
   <depend>roscpp</depend>
 
   <build_depend>controller_interface</build_depend>

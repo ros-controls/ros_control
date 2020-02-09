@@ -9,9 +9,6 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
 )
 
-# Include header-only Boost libraries
-find_package(Boost REQUIRED)
-
 # Include a custom cmake file for TinyXML
 find_package(TinyXML REQUIRED)
 
@@ -28,7 +25,6 @@ catkin_package(
     pluginlib
     roscpp
   DEPENDS
-    Boost
     TinyXML
 )
 
@@ -38,7 +34,7 @@ catkin_package(
 ###########
 
 # Specify header include paths
-include_directories(include ${catkin_INCLUDE_DIRS} ${TinyXML_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS} ${TinyXML_INCLUDE_DIRS})
 
 # Transmission parser library
 add_library(${PROJECT_NAME}_parser

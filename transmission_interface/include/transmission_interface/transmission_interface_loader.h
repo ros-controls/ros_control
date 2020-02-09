@@ -360,7 +360,7 @@ protected:
  *
  * private:
  *   RobotTransmissions robot_transmissions_;
- *   boost::scoped_ptr<TransmissionInterfaceLoader> transmission_loader_;
+ *   std::unique_ptr<TransmissionInterfaceLoader> transmission_loader_;
  *
  * };
  * \endcode

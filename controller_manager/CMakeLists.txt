@@ -10,9 +10,6 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
 )
 
-# Include Boost.Thread
-find_package(Boost REQUIRED COMPONENTS thread)
-
 catkin_python_setup()
 
 # Declare a catkin package
@@ -27,8 +24,6 @@ catkin_package(
     hardware_interface
     pluginlib
     roscpp
-  DEPENDS
-    Boost
 )
 
 
@@ -37,7 +32,7 @@ catkin_package(
 ###########
 
 # Specify header include paths
-include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
   include/controller_manager/controller_loader.h
@@ -46,7 +41,7 @@ add_library(${PROJECT_NAME}
   src/controller_manager.cpp
 )
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 
 #############

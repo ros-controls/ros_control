@@ -35,6 +35,7 @@
 #include "controller_manager/controller_spec.h"
 #include <cstdio>
 #include <map>
+#include <mutex>
 #include <string>
 #include <vector>
 #include <ros/ros.h>
@@ -47,8 +48,6 @@
 #include <controller_manager_msgs/LoadController.h>
 #include <controller_manager_msgs/UnloadController.h>
 #include <controller_manager_msgs/SwitchController.h>
-#include <boost/thread/condition.hpp>
-#include <boost/thread/recursive_mutex.hpp>
 #include <controller_manager/controller_loader_interface.h>
 
 
@@ -220,7 +219,7 @@ private:
    * real-time thread when switching controllers in the non-real-time thread.
    *\{*/
   /// Mutex protecting the current controllers list
-  boost::recursive_mutex controllers_lock_;
+  std::recursive_mutex controllers_lock_;
   /// Double-buffered controllers list
   std::vector<ControllerSpec> controllers_lists_[2];
   /// The index of the current controllers list
@@ -244,7 +243,7 @@ private:
                          controller_manager_msgs::UnloadController::Response &resp);
   bool reloadControllerLibrariesSrv(controller_manager_msgs::ReloadControllerLibraries::Request &req,
                                     controller_manager_msgs::ReloadControllerLibraries::Response &resp);
-  boost::mutex services_lock_;
+  std::mutex services_lock_;
   ros::ServiceServer srv_list_controllers_, srv_list_controller_types_, srv_load_controller_;
   ros::ServiceServer srv_unload_controller_, srv_switch_controller_, srv_reload_libraries_;
   /*\}*/
