@@ -2,8 +2,8 @@
 Changelog for package combined_robot_hw_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.5 (2020-02-09)
+-------------------
 * Improve controller and resource filtering for CombinedRobotHW
 * Contributors: Toni Oliver, Bence Magyar
 
