@@ -193,6 +193,42 @@ TEST(CombinedRobotHWTests, switchOk)
     ASSERT_NO_THROW(robot_hw.doSwitch(start_list, stop_list));
   }
 
+  // Test resource and controller filtering
+  {
+    std::list<hardware_interface::ControllerInfo> start_list;
+    std::list<hardware_interface::ControllerInfo> stop_list;
+    hardware_interface::ControllerInfo controller_1;
+    controller_1.name = "ctrl_without_my_robot_hw_2_resources_in_one_of_two_ifaces";
+    controller_1.type = "some_type";
+    hardware_interface::InterfaceResources iface_res_1;
+    // iface_res_1 should be filtered out when controller_1 is passed to my_robot_hw_2
+    // as none of its resources belongs to my_robot_hw_2
+    iface_res_1.hardware_interface = "hardware_interface::EffortJointInterface";
+    iface_res_1.resources.insert("test_joint1");
+    iface_res_1.resources.insert("test_joint2");
+    iface_res_1.resources.insert("test_joint3");
+    controller_1.claimed_resources.push_back(iface_res_1);
+    hardware_interface::InterfaceResources iface_res_2;
+    iface_res_2.hardware_interface = "hardware_interface::VelocityJointInterface";
+    iface_res_2.resources.insert("test_joint1");
+    iface_res_2.resources.insert("test_joint4");
+    controller_1.claimed_resources.push_back(iface_res_1);
+    start_list.push_back(controller_1);
+
+    hardware_interface::ControllerInfo controller_2;
+    // controller_2 should be filtered out when controller_1 is passed to my_robot_hw_2
+    // as none of its resources belongs to my_robot_hw_2
+    controller_2.name = "ctrl_without_my_robot_hw_2_resources";
+    controller_2.type = "some_type";
+    hardware_interface::InterfaceResources iface_res_3;
+    iface_res_3.hardware_interface = "hardware_interface::VelocityJointInterface";
+    iface_res_3.resources.insert("test_joint1");
+    iface_res_3.resources.insert("test_joint2");
+    controller_2.claimed_resources.push_back(iface_res_3);
+    start_list.push_back(controller_2);
+    ASSERT_TRUE(robot_hw.prepareSwitch(start_list, stop_list));
+    ASSERT_NO_THROW(robot_hw.doSwitch(start_list, stop_list));
+  }
 }
 
 int main(int argc, char** argv)
