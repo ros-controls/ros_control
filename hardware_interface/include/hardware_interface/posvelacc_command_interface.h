@@ -70,7 +70,7 @@ public:
   double getCommandAcceleration() const {assert(cmd_acc_); return *cmd_acc_;}
 
 private:
-  double* cmd_acc_ = nullptr;
+  double* cmd_acc_ = {nullptr};
 };
 
 

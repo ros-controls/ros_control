@@ -237,7 +237,7 @@ public:
   /*\}*/
 
   /// The current execution state of the controller
-  enum {CONSTRUCTED, INITIALIZED, RUNNING, STOPPED, WAITING, ABORTED} state_ = CONSTRUCTED;
+  enum {CONSTRUCTED, INITIALIZED, RUNNING, STOPPED, WAITING, ABORTED} state_ = {CONSTRUCTED};
 
 
 private:

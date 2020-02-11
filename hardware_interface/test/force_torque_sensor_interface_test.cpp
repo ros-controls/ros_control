@@ -63,10 +63,10 @@ protected:
   double force2[3] = {4.0, 5.0, 6.0};
   double torque1[3] = {-force1[0], -force1[1], -force1[2]};
   double torque2[3] = {-force2[0], -force2[1], -force2[2]};
-  string name1 = "name_1", name2 = "name_2";
-  string frame_id1 = "frame_1", frame_id2 = "frame_2";
-  ForceTorqueSensorHandle h1 = ForceTorqueSensorHandle(name1, frame_id1, force1, torque1);
-  ForceTorqueSensorHandle h2 = ForceTorqueSensorHandle(name2, frame_id2, nullptr, torque2); // Torque-only sensor
+  string name1 = {"name_1"}, name2 = {"name_2"};
+  string frame_id1 = {"frame_1"}, frame_id2 = {"frame_2"};
+  ForceTorqueSensorHandle h1 = {name1, frame_id1, force1, torque1};
+  ForceTorqueSensorHandle h2 = {name2, frame_id2, nullptr, torque2}; // Torque-only sensor
 };
 
 TEST_F(ForceTorqueSensorInterfaceTest, ExcerciseApi)

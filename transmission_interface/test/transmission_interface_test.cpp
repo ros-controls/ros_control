@@ -223,8 +223,8 @@ protected:
   double a_cmd_pos[2], a_cmd_vel[2], a_cmd_eff[2];
   double j_cmd_pos[2], j_cmd_vel[2], j_cmd_eff[2];
 
-  SimpleTransmission trans1 = SimpleTransmission( 10.0, 1.0);
-  SimpleTransmission trans2 = SimpleTransmission(-10.0, 1.0);
+  SimpleTransmission trans1 = { 10.0, 1.0};
+  SimpleTransmission trans2 = {-10.0, 1.0};
 };
 
 class HandleWhiteBoxTest : public TransmissionInterfaceSetup {};

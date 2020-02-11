@@ -104,17 +104,17 @@ bool is_permutation(ForwardIt1 first, ForwardIt1 last,
 // TODO: Don't assume interfaces?
 struct RawJointData
 {
-  double position          = std::numeric_limits<double>::quiet_NaN();
-  double velocity          = std::numeric_limits<double>::quiet_NaN();
-  double effort            = std::numeric_limits<double>::quiet_NaN();
-  double position_cmd      = std::numeric_limits<double>::quiet_NaN();
-  double velocity_cmd      = std::numeric_limits<double>::quiet_NaN();
-  double effort_cmd        = std::numeric_limits<double>::quiet_NaN();
-  double absolute_position = std::numeric_limits<double>::quiet_NaN();
-  double torque_sensor     = std::numeric_limits<double>::quiet_NaN();
+  double position          = {std::numeric_limits<double>::quiet_NaN()};
+  double velocity          = {std::numeric_limits<double>::quiet_NaN()};
+  double effort            = {std::numeric_limits<double>::quiet_NaN()};
+  double position_cmd      = {std::numeric_limits<double>::quiet_NaN()};
+  double velocity_cmd      = {std::numeric_limits<double>::quiet_NaN()};
+  double effort_cmd        = {std::numeric_limits<double>::quiet_NaN()};
+  double absolute_position = {std::numeric_limits<double>::quiet_NaN()};
+  double torque_sensor     = {std::numeric_limits<double>::quiet_NaN()};
 
-  bool hasAbsolutePosition = true;
-  bool hasTorqueSensor     = true;
+  bool hasAbsolutePosition = {true};
+  bool hasTorqueSensor     = {true};
 };
 
 typedef std::map<std::string, RawJointData> RawJointDataMap;
@@ -148,8 +148,8 @@ struct InverseTransmissionInterfaces
 
 struct TransmissionLoaderData
 {
-  hardware_interface::RobotHW*  robot_hw            = nullptr; ///< Lifecycle is externally controlled (ie. hardware abstraction)
-  RobotTransmissions*           robot_transmissions = nullptr; ///< Lifecycle is externally controlled (ie. hardware abstraction)
+  hardware_interface::RobotHW*  robot_hw            = {nullptr}; ///< Lifecycle is externally controlled (ie. hardware abstraction)
+  RobotTransmissions*           robot_transmissions = {nullptr}; ///< Lifecycle is externally controlled (ie. hardware abstraction)
   JointInterfaces               joint_interfaces;
   RawJointDataMap               raw_joint_data_map;
   ForwardTransmissionInterfaces transmission_interfaces;

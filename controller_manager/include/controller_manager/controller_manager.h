@@ -191,14 +191,14 @@ private:
 
   struct SwitchParams
   {
-    bool do_switch      = false;
-    bool started        = false;
-    ros::Time init_time = ros::TIME_MAX;
+    bool do_switch      = {false};
+    bool started        = {false};
+    ros::Time init_time = {ros::TIME_MAX};
 
     // Switch options
-    int strictness  = 0;
-    bool start_asap = false;
-    double timeout  = 0.0;
+    int strictness  = {0};
+    bool start_asap = {false};
+    double timeout  = {0.0};
   };
 
   SwitchParams switch_params_;
@@ -214,9 +214,9 @@ private:
   /// Double-buffered controllers list
   std::vector<ControllerSpec> controllers_lists_[2];
   /// The index of the current controllers list
-  int current_controllers_list_ = 0;
+  int current_controllers_list_ = {0};
   /// The index of the controllers list being used in the real-time thread.
-  int used_by_realtime_ = -1;
+  int used_by_realtime_ = {-1};
   /*\}*/
 
 

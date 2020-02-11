@@ -71,12 +71,12 @@ TEST(ActuatorStateHandleTest, AssertionTriggering)
 class ActuatorStateInterfaceTest : public ::testing::Test
 {
 protected:
-  double pos1 = 1.0, vel1 = 2.0, eff1 = 3.0;
-  double pos2 = 4.0, vel2 = 5.0, eff2 = 6.0;
-  string name1 = "name_1";
-  string name2 = "name_2";
-  ActuatorStateHandle h1 = ActuatorStateHandle(name1, &pos1, &vel1, &eff1);
-  ActuatorStateHandle h2 = ActuatorStateHandle(name2, &pos2, &vel2, &eff2);
+  double pos1 = {1.0}, vel1 = {2.0}, eff1 = {3.0};
+  double pos2 = {4.0}, vel2 = {5.0}, eff2 = {6.0};
+  string name1 = {"name_1"};
+  string name2 = {"name_2"};
+  ActuatorStateHandle h1 = {name1, &pos1, &vel1, &eff1};
+  ActuatorStateHandle h2 = {name2, &pos2, &vel2, &eff2};
 };
 
 TEST_F(ActuatorStateInterfaceTest, ExcerciseApi)

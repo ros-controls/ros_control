@@ -78,8 +78,8 @@ public:
 private:
   std::string name_;
   std::string frame_id_;
-  const double* force_  = nullptr;
-  const double* torque_ = nullptr;
+  const double* force_  = {nullptr};
+  const double* torque_ = {nullptr};
 };
 
 /** \brief Hardware interface to support reading the state of a force-torque sensor. */

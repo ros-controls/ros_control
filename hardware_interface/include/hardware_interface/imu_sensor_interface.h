@@ -48,17 +48,17 @@ public:
   {
     Data() {};
 
-    std::string name;                                 ///< The name of the sensor
-    std::string frame_id;                             ///< The reference frame to which this sensor is associated
-    double* orientation                    = nullptr; ///< A pointer to the storage of the orientation value: a quaternion (x,y,z,w)
-    double* orientation_covariance         = nullptr; ///< A pointer to the storage of the orientation covariance value: a row major 3x3 matrix about (x,y,z)
-    double* angular_velocity               = nullptr; ///< A pointer to the storage of the angular velocity value: a triplet (x,y,z)
-    double* angular_velocity_covariance    = nullptr; ///< A pointer to the storage of the angular velocity covariance value: a row major 3x3 matrix about (x,y,z)
-    double* linear_acceleration            = nullptr; ///< A pointer to the storage of the linear acceleration value: a triplet (x,y,z)
-    double* linear_acceleration_covariance = nullptr; ///< A pointer to the storage of the linear acceleration covariance value: a row major 3x3 matrix about (x,y,z)
+    std::string name;                                   ///< The name of the sensor
+    std::string frame_id;                               ///< The reference frame to which this sensor is associated
+    double* orientation                    = {nullptr}; ///< A pointer to the storage of the orientation value: a quaternion (x,y,z,w)
+    double* orientation_covariance         = {nullptr}; ///< A pointer to the storage of the orientation covariance value: a row major 3x3 matrix about (x,y,z)
+    double* angular_velocity               = {nullptr}; ///< A pointer to the storage of the angular velocity value: a triplet (x,y,z)
+    double* angular_velocity_covariance    = {nullptr}; ///< A pointer to the storage of the angular velocity covariance value: a row major 3x3 matrix about (x,y,z)
+    double* linear_acceleration            = {nullptr}; ///< A pointer to the storage of the linear acceleration value: a triplet (x,y,z)
+    double* linear_acceleration_covariance = {nullptr}; ///< A pointer to the storage of the linear acceleration covariance value: a row major 3x3 matrix about (x,y,z)
   };
 
-  ImuSensorHandle(const Data& data = Data())
+  ImuSensorHandle(const Data& data = {})
     : name_(data.name),
       frame_id_(data.frame_id),
       orientation_(data.orientation),

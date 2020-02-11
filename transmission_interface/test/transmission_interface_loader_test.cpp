@@ -70,10 +70,6 @@ class TransmissionInterfaceLoaderTest : public ::testing::Test
 public:
   TransmissionInterfaceLoaderTest()
   {
-    act_names[0] = "foo_actuator";
-    act_names[1] = "bar_actuator";
-    act_names[2] = "baz_actuator";
-
     // Populate actuators interface
     for (unsigned int i = 0; i < dim; ++i)
     {
@@ -96,14 +92,14 @@ public:
   }
 
 protected:
-  const unsigned int       dim         = 3;
-  std::vector<std::string> act_names   = std::vector<std::string>(dim);
-  std::vector<double>      act_pos     = std::vector<double>(dim, 0.0);
-  std::vector<double>      act_vel     = std::vector<double>(dim, 0.0);
-  std::vector<double>      act_eff     = std::vector<double>(dim, 0.0);
-  std::vector<double>      act_pos_cmd = std::vector<double>(dim, 0.0);
-  std::vector<double>      act_vel_cmd = std::vector<double>(dim, 0.0);
-  std::vector<double>      act_eff_cmd = std::vector<double>(dim, 0.0);
+  const unsigned int       dim         = {3};
+  std::vector<std::string> act_names   = {"foo_actuator", "bar_actuator", "baz_actuator"};
+  std::vector<double>      act_pos     = {0.0, 0.0, 0.0};
+  std::vector<double>      act_vel     = {0.0, 0.0, 0.0};
+  std::vector<double>      act_eff     = {0.0, 0.0, 0.0};
+  std::vector<double>      act_pos_cmd = {0.0, 0.0, 0.0};
+  std::vector<double>      act_vel_cmd = {0.0, 0.0, 0.0};
+  std::vector<double>      act_eff_cmd = {0.0, 0.0, 0.0};
 
   hardware_interface::ActuatorStateInterface    act_state_iface;
   hardware_interface::PositionActuatorInterface pos_act_iface;

@@ -61,7 +61,7 @@ public:
   double* getCommandPtr() {return cmd_;}
 
 private:
-  double* cmd_ = nullptr;
+  double* cmd_ = {nullptr};
 };
 
 /** \brief Hardware interface to support commanding an array of actuators.

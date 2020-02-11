@@ -108,7 +108,7 @@ namespace hardware_interface
     }
 
   private:
-    JointCommandModes* mode_ = nullptr;
+    JointCommandModes* mode_ = {nullptr};
     std::string name_;
   };
 

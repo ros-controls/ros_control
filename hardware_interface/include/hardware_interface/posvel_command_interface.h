@@ -75,8 +75,8 @@ public:
   double getCommandVelocity()     const {assert(cmd_vel_); return *cmd_vel_;}
 
 private:
-  double* cmd_pos_ = nullptr;
-  double* cmd_vel_ = nullptr;
+  double* cmd_pos_ = {nullptr};
+  double* cmd_vel_ = {nullptr};
 };
 
 /** \brief Hardware interface to support commanding an array of joints.

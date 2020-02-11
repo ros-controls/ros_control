@@ -153,8 +153,8 @@ class TransmissionSetup
 {
 protected:
   // Input/output transmission data
-  double a_val = 0.0;
-  double j_val = 0.0;
+  double a_val = {0.0};
+  double j_val = {0.0};
   vector<double*> a_vec = {&a_val};
   vector<double*> j_vec = {&j_val};
 };

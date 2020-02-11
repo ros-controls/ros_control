@@ -123,7 +123,7 @@ private:
   JointLimits limits_;
   double min_pos_limit_, max_pos_limit_;
 
-  double prev_cmd_ = std::numeric_limits<double>::quiet_NaN();
+  double prev_cmd_ = {std::numeric_limits<double>::quiet_NaN()};
 };
 
 /**
@@ -252,7 +252,7 @@ private:
   JointLimits limits_;
   SoftJointLimits soft_limits_;
 
-  double prev_cmd_ = std::numeric_limits<double>::quiet_NaN();
+  double prev_cmd_ = {std::numeric_limits<double>::quiet_NaN()};
 };
 
 /** \brief A handle used to enforce position, velocity, and effort limits of an effort-controlled joint that does not
@@ -458,7 +458,7 @@ private:
   hardware_interface::JointHandle jh_;
   JointLimits limits_;
 
-  double prev_cmd_ = 0.0;
+  double prev_cmd_ = {0.0};
 };
 
 /** \brief A handle used to enforce position, velocity, and acceleration limits of a velocity-controlled joint. */
@@ -467,10 +467,10 @@ class VelocityJointSoftLimitsHandle
 public:
   VelocityJointSoftLimitsHandle(const hardware_interface::JointHandle& jh, const JointLimits& limits,
                                 const SoftJointLimits& soft_limits)
+      : jh_(jh)
+      , limits_(limits)
+      , soft_limits_(soft_limits)
   {
-    jh_ = jh;
-    limits_ = limits;
-    soft_limits_ = soft_limits;
     if (limits.has_velocity_limits)
       max_vel_limit_ = limits.max_velocity;
     else

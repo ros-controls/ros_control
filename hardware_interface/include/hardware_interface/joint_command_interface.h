@@ -62,7 +62,7 @@ public:
   const double* getCommandPtr() const {assert(cmd_); return cmd_;}
 
 private:
-  double* cmd_ = nullptr;
+  double* cmd_ = {nullptr};
 };
 
 /** \brief Hardware interface to support commanding an array of joints.

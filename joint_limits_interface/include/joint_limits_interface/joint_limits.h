@@ -35,27 +35,27 @@ namespace joint_limits_interface
 
 struct JointLimits
 {
-  double min_position     = 0.0;
-  double max_position     = 0.0;
-  double max_velocity     = 0.0;
-  double max_acceleration = 0.0;
-  double max_jerk         = 0.0;
-  double max_effort       = 0.0;
+  double min_position     = {0.0};
+  double max_position     = {0.0};
+  double max_velocity     = {0.0};
+  double max_acceleration = {0.0};
+  double max_jerk         = {0.0};
+  double max_effort       = {0.0};
 
-  bool   has_position_limits     = false;
-  bool   has_velocity_limits     = false;
-  bool   has_acceleration_limits = false;
-  bool   has_jerk_limits         = false;
-  bool   has_effort_limits       = false;
-  bool   angle_wraparound        = false;
+  bool   has_position_limits     = {false};
+  bool   has_velocity_limits     = {false};
+  bool   has_acceleration_limits = {false};
+  bool   has_jerk_limits         = {false};
+  bool   has_effort_limits       = {false};
+  bool   angle_wraparound        = {false};
 };
 
 struct SoftJointLimits
 {
-  double min_position = 0.0;
-  double max_position = 0.0;
-  double k_position   = 0.0;
-  double k_velocity   = 0.0;
+  double min_position = {0.0};
+  double max_position = {0.0};
+  double k_position   = {0.0};
+  double k_velocity   = {0.0};
 };
 
 }

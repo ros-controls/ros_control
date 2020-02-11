@@ -213,11 +213,11 @@ public:
 
 private:
   std::string name_;
-  const double* pos_           = nullptr;
-  const double* vel_           = nullptr;
-  const double* eff_           = nullptr;
-  const double* absolute_pos_  = nullptr;
-  const double* torque_sensor_ = nullptr;
+  const double* pos_           = {nullptr};
+  const double* vel_           = {nullptr};
+  const double* eff_           = {nullptr};
+  const double* absolute_pos_  = {nullptr};
+  const double* torque_sensor_ = {nullptr};
 };
 
 /** \brief Hardware interface to support reading the state of an array of joints
