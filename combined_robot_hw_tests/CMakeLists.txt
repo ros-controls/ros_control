@@ -48,7 +48,7 @@ if(CATKIN_ENABLE_TESTING)
     test/cm_test.test
     test/cm_test.cpp
   )
-  add_dependencies(combined_robot_hw_cm_test combined_robot_hw_dummy_app ${catkin_EXPORTED_TARGETS})
+  add_dependencies(combined_robot_hw_cm_test ${catkin_EXPORTED_TARGETS})
   target_link_libraries(combined_robot_hw_cm_test ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()
 

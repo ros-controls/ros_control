@@ -49,11 +49,11 @@ if(CATKIN_ENABLE_TESTING)
 
   catkin_add_nosetests(test)
 
-  add_rostest(test/cm_test.test DEPENDENCIES dummy_app cm_test)
+  add_rostest(test/cm_test.test)
 
   add_rostest(test/cm_msgs_utils_rostest.test)
 
-  add_rostest(test/controller_manager_scripts.test DEPENDENCIES dummy_app)
+  add_rostest(test/controller_manager_scripts.test)
 endif()
 
 
