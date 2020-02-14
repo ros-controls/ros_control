@@ -70,7 +70,7 @@ ControllerManager::~ControllerManager()
 void ControllerManager::update(const ros::Time& time, const ros::Duration& period, bool reset_controllers)
 {
   used_by_realtime_ = current_controllers_list_;
-
+  
   // Restart all running controllers if motors are re-enabled
   if (reset_controllers){
     for (const auto& controller : controllers_lists_[used_by_realtime_]){
@@ -288,7 +288,7 @@ bool ControllerManager::loadController(const std::string& name)
     try
     {
       // Trying loading the controller using all of our controller loaders. Exit once we've found the first valid loaded controller
-      std::list<ControllerLoaderInterfaceSharedPtr>::iterator it = controller_loaders_.begin();
+      auto it = controller_loaders_.begin();
       while (!c && it != controller_loaders_.end())
       {
         for (const auto& cur_type : (*it)->getDeclaredClasses()){
@@ -517,7 +517,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   switch_start_list_.clear();
   switch_stop_list_.clear();
 
-  std::vector<ControllerSpec> &controllers = controllers_lists_[current_controllers_list_];
+  const auto &controllers = controllers_lists_[current_controllers_list_];
   for (const auto& controller : controllers)
   {
     bool in_stop_list  = false;
