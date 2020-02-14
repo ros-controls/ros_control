@@ -185,8 +185,7 @@ private:
 
 inline SimpleTransmission::SimpleTransmission(const double reduction,
                                               const double joint_offset)
-  : Transmission(),
-    reduction_(reduction),
+  : reduction_(reduction),
     jnt_offset_(joint_offset)
 {
   if (0.0 == reduction_)

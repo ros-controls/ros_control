@@ -77,8 +77,6 @@ class ImuSensorInterfaceTest : public ::testing::Test
 {
 public:
   ImuSensorInterfaceTest()
-    : name1("name_1"), name2("name_2"),
-      frame_id1("frame_1"), frame_id2("frame_2")
   {
     srand(time(nullptr)); // Seed random number generator
 
@@ -127,8 +125,8 @@ protected:
   double angular_velocity_covariance1[9];
   double linear_acceleration1[3];
   double linear_acceleration_covariance1[9];
-  string name1, name2;
-  string frame_id1, frame_id2;
+  string name1 = {"name_1"}, name2 = {"name_2"};
+  string frame_id1 = {"frame_1"}, frame_id2 = {"frame_2"};
   ImuSensorHandle h1;
   ImuSensorHandle h2;
 

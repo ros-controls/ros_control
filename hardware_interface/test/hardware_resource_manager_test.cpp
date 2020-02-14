@@ -56,12 +56,9 @@ private:
 
 class HardwareResourceManagerTest : public ::testing::Test
 {
-public:
-  HardwareResourceManagerTest()
-    : h1("resource1", 1),
-      h2("resource2", 2) {}
 protected:
-  HandleType h1, h2;
+  HandleType h1 = {"resource1", 1};
+  HandleType h2 = {"resource2", 2};
 };
 
 TEST_F(HardwareResourceManagerTest, ExcerciseApi)

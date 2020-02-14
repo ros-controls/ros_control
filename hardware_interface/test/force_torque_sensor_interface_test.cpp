@@ -58,39 +58,15 @@ TEST(ForceTorqueSensorHandleTest, HandleConstruction)
 
 class ForceTorqueSensorInterfaceTest : public ::testing::Test
 {
-public:
-  ForceTorqueSensorInterfaceTest()
-    : force1(), force2(),
-      torque1(), torque2(),
-      name1("name_1"), name2("name_2"),
-      frame_id1("frame_1"), frame_id2("frame_2"),
-      h1(name1, frame_id1, force1, torque1),
-      h2(name2, frame_id2, nullptr, torque2) // Torque-only sensor
-  {
-    force1[0] = 1.0;
-    force1[1] = 2.0;
-    force1[2] = 3.0;
-
-    torque1[0] = -force1[0];
-    torque1[1] = -force1[1];
-    torque1[2] = -force1[2];
-
-    force2[0] = 4.0;
-    force2[1] = 5.0;
-    force2[2] = 6.0;
-
-    torque2[0] = -force2[0];
-    torque2[1] = -force2[1];
-    torque2[2] = -force2[2];
-  }
-
 protected:
-  double force1[3], force2[3];
-  double torque1[3], torque2[3];
-  string name1, name2;
-  string frame_id1, frame_id2;
-  ForceTorqueSensorHandle h1;
-  ForceTorqueSensorHandle h2;
+  double force1[3] = {1.0, 2.0, 3.0};
+  double force2[3] = {4.0, 5.0, 6.0};
+  double torque1[3] = {-force1[0], -force1[1], -force1[2]};
+  double torque2[3] = {-force2[0], -force2[1], -force2[2]};
+  string name1 = {"name_1"}, name2 = {"name_2"};
+  string frame_id1 = {"frame_1"}, frame_id2 = {"frame_2"};
+  ForceTorqueSensorHandle h1 = {name1, frame_id1, force1, torque1};
+  ForceTorqueSensorHandle h2 = {name2, frame_id2, nullptr, torque2}; // Torque-only sensor
 };
 
 TEST_F(ForceTorqueSensorInterfaceTest, ExcerciseApi)

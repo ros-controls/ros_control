@@ -42,7 +42,7 @@ namespace hardware_interface
 class PosVelAccJointHandle : public PosVelJointHandle
 {
 public:
-  PosVelAccJointHandle() : PosVelJointHandle(), cmd_acc_(nullptr) {}
+  PosVelAccJointHandle() {}
 
   /**
    * \param js This joint's state handle
@@ -70,7 +70,7 @@ public:
   double getCommandAcceleration() const {assert(cmd_acc_); return *cmd_acc_;}
 
 private:
-  double* cmd_acc_;
+  double* cmd_acc_ = {nullptr};
 };
 
 

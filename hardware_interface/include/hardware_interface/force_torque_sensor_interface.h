@@ -40,7 +40,7 @@ namespace hardware_interface
 class ForceTorqueSensorHandle
 {
 public:
-  ForceTorqueSensorHandle() : name_(""), frame_id_(""), force_(nullptr), torque_(nullptr) {}
+  ForceTorqueSensorHandle() {}
 
   /**
    * \param name The name of the sensor
@@ -78,8 +78,8 @@ public:
 private:
   std::string name_;
   std::string frame_id_;
-  const double* force_;
-  const double* torque_;
+  const double* force_  = {nullptr};
+  const double* torque_ = {nullptr};
 };
 
 /** \brief Hardware interface to support reading the state of a force-torque sensor. */

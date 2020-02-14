@@ -199,25 +199,12 @@ TEST(PreconditionsTest, AccessorValidation)
 
 class TransmissionSetup : public ::testing::Test
 {
-public:
-  TransmissionSetup()
-    : a_val(),
-      j_val(),
-      a_vec(vector<double*>(2)),
-      j_vec(vector<double*>(2))
-   {
-     a_vec[0] = &a_val[0];
-     a_vec[1] = &a_val[1];
-     j_vec[0] = &j_val[0];
-     j_vec[1] = &j_val[1];
-   }
-
 protected:
   // Input/output transmission data
   double a_val[2];
   double j_val[2];
-  vector<double*> a_vec;
-  vector<double*> j_vec;
+  vector<double*> a_vec = {&a_val[0], &a_val[1]};
+  vector<double*> j_vec = {&j_val[0], &j_val[1]};
 };
 
 /// \brief Exercises the actuator->joint->actuator roundtrip, which should yield the identity map.

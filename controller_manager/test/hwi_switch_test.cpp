@@ -76,7 +76,7 @@ class SwitchBot : public hardware_interface::RobotHW
         std::string current_;
         hardware_interface::JointStateHandle jsh_;
     public:
-        Joint(const std::string &n, hardware_interface::JointStateInterface &iface): jsh_(n, &dummy_, &dummy_, &dummy_)
+        Joint(const std::string &n, hardware_interface::JointStateInterface &iface) : jsh_(n, &dummy_, &dummy_, &dummy_)
         {
             iface.registerHandle(jsh_);
         }

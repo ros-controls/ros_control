@@ -69,19 +69,7 @@ class TransmissionInterfaceLoaderTest : public ::testing::Test
 {
 public:
   TransmissionInterfaceLoaderTest()
-    : dim(3),
-      act_names(3),
-      act_pos(3, 0.0),
-      act_vel(3, 0.0),
-      act_eff(3, 0.0),
-      act_pos_cmd(3, 0.0),
-      act_vel_cmd(3, 0.0),
-      act_eff_cmd(3, 0.0)
   {
-    act_names[0] = "foo_actuator";
-    act_names[1] = "bar_actuator";
-    act_names[2] = "baz_actuator";
-
     // Populate actuators interface
     for (unsigned int i = 0; i < dim; ++i)
     {
@@ -104,9 +92,15 @@ public:
   }
 
 protected:
-  unsigned int dim;
-  std::vector<std::string> act_names;
-  std::vector<double> act_pos, act_vel, act_eff, act_pos_cmd, act_vel_cmd, act_eff_cmd;
+  const unsigned int       dim         = {3};
+  std::vector<std::string> act_names   = {"foo_actuator", "bar_actuator", "baz_actuator"};
+  std::vector<double>      act_pos     = {0.0, 0.0, 0.0};
+  std::vector<double>      act_vel     = {0.0, 0.0, 0.0};
+  std::vector<double>      act_eff     = {0.0, 0.0, 0.0};
+  std::vector<double>      act_pos_cmd = {0.0, 0.0, 0.0};
+  std::vector<double>      act_vel_cmd = {0.0, 0.0, 0.0};
+  std::vector<double>      act_eff_cmd = {0.0, 0.0, 0.0};
+
   hardware_interface::ActuatorStateInterface    act_state_iface;
   hardware_interface::PositionActuatorInterface pos_act_iface;
   hardware_interface::VelocityActuatorInterface vel_act_iface;

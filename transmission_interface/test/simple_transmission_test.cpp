@@ -151,19 +151,12 @@ TEST(PreconditionsTest, AccessorValidation)
 
 class TransmissionSetup
 {
-public:
-  TransmissionSetup()
-    : a_val(),
-      j_val(),
-      a_vec(vector<double*>(1, &a_val)),
-      j_vec(vector<double*>(1, &j_val)) {}
-
 protected:
   // Input/output transmission data
-  double a_val;
-  double j_val;
-  vector<double*> a_vec;
-  vector<double*> j_vec;
+  double a_val = {0.0};
+  double j_val = {0.0};
+  vector<double*> a_vec = {&a_val};
+  vector<double*> j_vec = {&j_val};
 };
 
 // NOTE: I tried to make the above a proper gtest fixture and below inherit from

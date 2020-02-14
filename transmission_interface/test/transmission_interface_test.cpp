@@ -215,15 +215,6 @@ TEST(HandlePreconditionsTest, BadDataPointer)
 
 class TransmissionInterfaceSetup : public ::testing::Test
 {
-public:
-  TransmissionInterfaceSetup()
-    : a_curr_pos(), a_curr_vel(), a_curr_eff(),
-      j_curr_pos(), j_curr_vel(), j_curr_eff(),
-      a_cmd_pos(), a_cmd_vel(), a_cmd_eff(),
-      j_cmd_pos(), j_cmd_vel(), j_cmd_eff(),
-      trans1( 10.0, 1.0),
-      trans2(-10.0, 1.0) {}
-
 protected:
   // Input/output transmission data
   double a_curr_pos[2], a_curr_vel[2], a_curr_eff[2];
@@ -232,8 +223,8 @@ protected:
   double a_cmd_pos[2], a_cmd_vel[2], a_cmd_eff[2];
   double j_cmd_pos[2], j_cmd_vel[2], j_cmd_eff[2];
 
-  SimpleTransmission trans1;
-  SimpleTransmission trans2;
+  SimpleTransmission trans1 = { 10.0, 1.0};
+  SimpleTransmission trans2 = {-10.0, 1.0};
 };
 
 class HandleWhiteBoxTest : public TransmissionInterfaceSetup {};

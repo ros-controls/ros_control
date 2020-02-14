@@ -72,27 +72,15 @@ TEST(JointStateHandleTest, AssertionTriggering)
 
 class PosVelAccCommandInterfaceTest : public ::testing::Test
 {
-public:
-  PosVelAccCommandInterfaceTest()
-    : pos1(1.0), vel1(2.0), eff1(3.0),
-      cmd_pos1(0.0), cmd_vel1(0.0), cmd_acc1(0.0),
-      pos2(4.0), vel2(5.0), eff2(6.0),
-      cmd_pos2(0.0), cmd_vel2(0.0), cmd_acc2(0.0),
-      name1("name_1"),
-      name2("name_2"),
-      hs1(name1, &pos1, &vel1, &eff1),
-      hs2(name2, &pos2, &vel2, &eff2),
-      hc1(hs1, &cmd_pos1, &cmd_vel1, &cmd_acc1),
-      hc2(hs2, &cmd_pos2, &cmd_vel2, &cmd_acc2)
-  {}
-
 protected:
-  double pos1, vel1, eff1, cmd_pos1, cmd_vel1, cmd_acc1;
-  double pos2, vel2, eff2, cmd_pos2, cmd_vel2, cmd_acc2;
-  string name1;
-  string name2;
-  JointStateHandle hs1, hs2;
-  PosVelAccJointHandle hc1, hc2;
+  double pos1 = {1.0}, vel1 = {2.0}, eff1 = {3.0}, cmd_pos1 = {0.0}, cmd_vel1 = {0.0}, cmd_acc1 = {0.0};
+  double pos2 = {4.0}, vel2 = {5.0}, eff2 = {6.0}, cmd_pos2 = {0.0}, cmd_vel2 = {0.0}, cmd_acc2 = {0.0};
+  string name1 = {"name_1"};
+  string name2 = {"name_2"};
+  JointStateHandle hs1 = {name1, &pos1, &vel1, &eff1};
+  JointStateHandle hs2 = {name2, &pos2, &vel2, &eff2};
+  PosVelAccJointHandle hc1 = {hs1, &cmd_pos1, &cmd_vel1, &cmd_acc1};
+  PosVelAccJointHandle hc2 = {hs2, &cmd_pos2, &cmd_vel2, &cmd_acc2};
 };
 
 TEST_F(PosVelAccCommandInterfaceTest, ExcerciseApi)

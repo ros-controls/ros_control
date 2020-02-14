@@ -39,14 +39,8 @@ using namespace transmission_interface;
 
 struct TransmissionPluginLoader
 {
-  TransmissionPluginLoader()
-    :class_loader_("transmission_interface", "transmission_interface::TransmissionLoader")
-  {
-  }
-
   TransmissionLoaderSharedPtr create(const std::string& type)
   {
-
     try
     {
       return class_loader_.createUniqueInstance(type);
@@ -56,5 +50,5 @@ struct TransmissionPluginLoader
 
 private:
   //must keep it alive because instance destroyers need it
-  pluginlib::ClassLoader<TransmissionLoader> class_loader_;
+  pluginlib::ClassLoader<TransmissionLoader> class_loader_ = {"transmission_interface", "transmission_interface::TransmissionLoader"};
 };

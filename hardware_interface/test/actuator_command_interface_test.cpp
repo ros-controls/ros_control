@@ -65,25 +65,15 @@ TEST(ActuatorStateHandleTest, AssertionTriggering)
 
 class ActuatorCommandInterfaceTest : public ::testing::Test
 {
-public:
-  ActuatorCommandInterfaceTest()
-    : pos1(1.0), vel1(2.0), eff1(3.0), cmd1(0.0),
-      pos2(4.0), vel2(5.0), eff2(6.0), cmd2(0.0),
-      name1("name_1"),
-      name2("name_2"),
-      hs1(name1, &pos1, &vel1, &eff1),
-      hs2(name2, &pos2, &vel2, &eff2),
-      hc1(hs1, &cmd1),
-      hc2(hs2, &cmd2)
-  {}
-
 protected:
-  double pos1, vel1, eff1, cmd1;
-  double pos2, vel2, eff2, cmd2;
-  string name1;
-  string name2;
-  ActuatorStateHandle hs1, hs2;
-  ActuatorHandle hc1, hc2;
+  double pos1 = {1.0}, vel1 = {2.0}, eff1 = {3.0}, cmd1 = {0.0};
+  double pos2 = {4.0}, vel2 = {5.0}, eff2 = {6.0}, cmd2 = {0.0};
+  string name1 = {"name_1"};
+  string name2 = {"name_2"};
+  ActuatorStateHandle hs1 = {name1, &pos1, &vel1, &eff1};
+  ActuatorStateHandle hs2 = {name2, &pos2, &vel2, &eff2};
+  ActuatorHandle hc1 = {hs1, &cmd1};
+  ActuatorHandle hc2 = {hs2, &cmd2};
 };
 
 TEST_F(ActuatorCommandInterfaceTest, ExcerciseApi)

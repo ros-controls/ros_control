@@ -156,7 +156,7 @@ public:
    */
   MultiInterfaceController(bool allow_optional_interfaces = false)
     : allow_optional_interfaces_(allow_optional_interfaces)
-  {state_ = CONSTRUCTED;}
+  {}
 
   virtual ~MultiInterfaceController() {}
 

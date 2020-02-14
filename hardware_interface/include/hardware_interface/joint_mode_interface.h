@@ -63,8 +63,7 @@ namespace hardware_interface
   {
   public:
 
-    JointModeHandle():
-      name_(), mode_(nullptr){}
+    JointModeHandle() {}
 
     /** \param mode Which mode to start in */
     JointModeHandle(std::string name, JointCommandModes* mode)
@@ -109,7 +108,7 @@ namespace hardware_interface
     }
 
   private:
-    JointCommandModes* mode_;
+    JointCommandModes* mode_ = {nullptr};
     std::string name_;
   };
 

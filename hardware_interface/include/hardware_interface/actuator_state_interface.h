@@ -45,7 +45,7 @@ namespace hardware_interface
 class ActuatorStateHandle
 {
 public:
-  ActuatorStateHandle() : name_(), pos_(nullptr), vel_(nullptr), eff_(nullptr), absolute_pos_(nullptr), torque_sensor_(nullptr) {}
+  ActuatorStateHandle() {}
 
   /**
    * \param name The name of the actuator
@@ -54,7 +54,7 @@ public:
    * \param eff A pointer to the storage for this actuator's effort (force or torque)
    */
   ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(nullptr), torque_sensor_(nullptr)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff)
   {
     if (!pos)
     {
@@ -114,7 +114,7 @@ public:
    */
   ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff,
                       const double* absolute_pos)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(absolute_pos), torque_sensor_(nullptr)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(absolute_pos)
   {
     if (!pos)
     {
@@ -144,7 +144,7 @@ public:
    */
   ActuatorStateHandle(const std::string& name, const double* pos, const double* vel, const double* eff,
                       const double* torque_sensor, bool)
-    : name_(name), pos_(pos), vel_(vel), eff_(eff), absolute_pos_(nullptr), torque_sensor_(torque_sensor)
+    : name_(name), pos_(pos), vel_(vel), eff_(eff), torque_sensor_(torque_sensor)
   {
     if (!pos)
     {
@@ -214,11 +214,11 @@ public:
 
 private:
   std::string name_;
-  const double* pos_;
-  const double* vel_;
-  const double* eff_;
-  const double* absolute_pos_;
-  const double* torque_sensor_;
+  const double* pos_           = {nullptr};
+  const double* vel_           = {nullptr};
+  const double* eff_           = {nullptr};
+  const double* absolute_pos_  = {nullptr};
+  const double* torque_sensor_ = {nullptr};
 };
 
 /** \brief Hardware interface to support reading the state of an array of actuators

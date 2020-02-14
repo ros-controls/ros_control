@@ -42,7 +42,7 @@ namespace hardware_interface
 class PosVelJointHandle : public JointStateHandle
 {
 public:
-  PosVelJointHandle() : JointStateHandle(), cmd_pos_(nullptr), cmd_vel_(nullptr) {}
+  PosVelJointHandle() {}
 
   /**
    * \param js This joint's state handle
@@ -75,8 +75,8 @@ public:
   double getCommandVelocity()     const {assert(cmd_vel_); return *cmd_vel_;}
 
 private:
-  double* cmd_pos_;
-  double* cmd_vel_;
+  double* cmd_pos_ = {nullptr};
+  double* cmd_vel_ = {nullptr};
 };
 
 /** \brief Hardware interface to support commanding an array of joints.

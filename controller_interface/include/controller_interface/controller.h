@@ -52,7 +52,7 @@ template <class T>
 class Controller: public virtual ControllerBase
 {
 public:
-  Controller()  {state_ = CONSTRUCTED;}
+  Controller() {}
   virtual ~Controller<T>(){}
 
   /** \brief The init function is called to initialize the controller from a

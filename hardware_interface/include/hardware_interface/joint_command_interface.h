@@ -42,7 +42,7 @@ namespace hardware_interface
 class JointHandle : public JointStateHandle
 {
 public:
-  JointHandle() : JointStateHandle(), cmd_(nullptr) {}
+  JointHandle() {}
 
   /**
    * \param js This joint's state handle
@@ -62,7 +62,7 @@ public:
   const double* getCommandPtr() const {assert(cmd_); return cmd_;}
 
 private:
-  double* cmd_;
+  double* cmd_ = {nullptr};
 };
 
 /** \brief Hardware interface to support commanding an array of joints.

@@ -48,7 +48,7 @@ namespace controller_interface
 class ControllerBase
 {
 public:
-  ControllerBase(): state_(CONSTRUCTED){}
+  ControllerBase() {}
   virtual ~ControllerBase(){}
 
   /** \name Real-Time Safe Functions
@@ -237,7 +237,7 @@ public:
   /*\}*/
 
   /// The current execution state of the controller
-  enum {CONSTRUCTED, INITIALIZED, RUNNING, STOPPED, WAITING, ABORTED} state_;
+  enum {CONSTRUCTED, INITIALIZED, RUNNING, STOPPED, WAITING, ABORTED} state_ = {CONSTRUCTED};
 
 
 private:

@@ -40,7 +40,7 @@ namespace hardware_interface
 class ActuatorHandle : public ActuatorStateHandle
 {
 public:
-  ActuatorHandle() : ActuatorStateHandle(), cmd_(nullptr) {}
+  ActuatorHandle() {}
 
   /**
    * \param as This actuator's state handle
@@ -61,7 +61,7 @@ public:
   double* getCommandPtr() {return cmd_;}
 
 private:
-  double* cmd_;
+  double* cmd_ = {nullptr};
 };
 
 /** \brief Hardware interface to support commanding an array of actuators.
