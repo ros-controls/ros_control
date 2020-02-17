@@ -383,7 +383,11 @@ class ControllerTable(QAbstractTableModel):
 
         if role == Qt.DecorationRole:
             if index.column() == 0:
-                return self._icons[ctrl.state]
+                
+                try:                                
+                    return self._icons[ctrl.state]  #KeyError: 'initialized'
+                except:
+                    pass
 
         if role == Qt.FontRole:
             if index.column() == 0:
