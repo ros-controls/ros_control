@@ -103,8 +103,7 @@ class ControllerManager(Plugin):
         self._icons = {'running': QIcon(path + '/resource/led_green.png'),
                        'stopped': QIcon(path + '/resource/led_red.png'),
                        'uninitialized': QIcon(path + '/resource/led_off.png'),
-                       'initialized': QIcon(path + '/resource/led_off.png') # missing controller statte
-                       }
+                       'initialized': QIcon(path + '/resource/led_off.png')}
 
         # Controllers display
         table_view = self._widget.table_view
@@ -385,7 +384,7 @@ class ControllerTable(QAbstractTableModel):
 
         if role == Qt.DecorationRole:
             if index.column() == 0:
-                return self._icons[ctrl.state]  #KeyError: 'initialized'
+                return self._icons[ctrl.state]
 
         if role == Qt.FontRole:
             if index.column() == 0:
