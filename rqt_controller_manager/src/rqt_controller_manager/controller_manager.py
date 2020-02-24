@@ -102,7 +102,8 @@ class ControllerManager(Plugin):
         path = rospack.get_path('rqt_controller_manager')
         self._icons = {'running': QIcon(path + '/resource/led_green.png'),
                        'stopped': QIcon(path + '/resource/led_red.png'),
-                       'uninitialized': QIcon(path + '/resource/led_off.png')}
+                       'uninitialized': QIcon(path + '/resource/led_off.png'),
+                       'initialized': QIcon(path + '/resource/led_off.png')}
 
         # Controllers display
         table_view = self._widget.table_view
