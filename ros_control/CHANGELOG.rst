@@ -2,6 +2,9 @@
 Changelog for package ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.16.0 (2020-01-27)
 -------------------
 * Remove _tests packages from metapackage

@@ -2,6 +2,14 @@
 Changelog for package combined_robot_hw
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use auto keyword
+* Use default member initializers
+* Improve controller and resource filtering for CombinedRobotHW
+* Prefer default member initializers
+* Contributors: AbhinavSingh, Bence Magyar, Matt Reynolds, Toni Oliver
+
 0.16.0 (2020-01-27)
 -------------------
 * Use range-based for loop

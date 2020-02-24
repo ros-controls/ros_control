@@ -2,6 +2,17 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use default member initializers
+* Use braces for member initializers
+* Replace boost with std
+* Replace boost ptrs with std ptrs in documentation
+* Replace boost::lexical_cast<double> with std::stod
+* Prefer default member initializers
+* Use auto
+* Contributors: AbhinavSingh, Bence Magyar, Matt Reynolds
+
 0.16.0 (2020-01-27)
 -------------------
 * Use more meaningful pair iterator names

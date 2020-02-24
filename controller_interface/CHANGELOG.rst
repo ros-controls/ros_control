@@ -2,6 +2,12 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use default member initializers
+* Prefer default member initializers
+* Contributors: Bence Magyar, Matt Reynolds
+
 0.16.0 (2020-01-27)
 -------------------
 * Update dependencies

@@ -2,6 +2,14 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use default member initializers
+* Use braces for member initializers
+* Replace boost with std
+* Replace boost::ptr_vector<T> with std::vector<T*>
+* Contributors: AbhinavSingh, Bence Magyar, Matt Reynolds
+
 0.16.0 (2020-01-27)
 -------------------
 * Merge pull request `#413 <https://github.com/ros-controls/ros_control/issues/413>`_ from matthew-reynolds/range-for

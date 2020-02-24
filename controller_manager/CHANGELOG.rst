@@ -2,6 +2,15 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use auto keyword
+* Use default member initializers
+* Replace boost with std
+* Replace boost mutexes & locks with std
+* Replace boost::bind with std::bind
+* Contributors: AbhinavSingh, Bence Magyar, Matt Reynolds, suab321321
+
 0.16.0 (2020-01-27)
 -------------------
 * Use range-based for loops in controller_manager

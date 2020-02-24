@@ -2,6 +2,11 @@
 Changelog for package rqt_controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* added missing controller state: 'initialised'
+* Contributors: ThibaultRouillard
+
 0.16.0 (2020-01-27)
 -------------------
 * Update package dependencies
