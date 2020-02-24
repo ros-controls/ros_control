@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.17.0 (2020-02-24)
+-------------------
 * Use default member initializers
 * Use braces for member initializers
 * Replace boost with std

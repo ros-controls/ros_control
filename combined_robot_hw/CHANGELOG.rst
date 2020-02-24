@@ -2,8 +2,8 @@
 Changelog for package combined_robot_hw
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.17.0 (2020-02-24)
+-------------------
 * Use auto keyword
 * Use default member initializers
 * Improve controller and resource filtering for CombinedRobotHW

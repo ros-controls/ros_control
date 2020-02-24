@@ -1,6 +1,6 @@
 <package format="2">
   <name>rqt_controller_manager</name>
-  <version>0.16.0</version>
+  <version>0.17.0</version>
   <description>Graphical frontend for interacting with the controller manager.</description>
 
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
