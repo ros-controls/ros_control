@@ -80,7 +80,9 @@ def parse_args(args=None):
     parser.add_argument('--namespace', metavar='ns',
                         help='namespace of the controller_manager services')
     parser.add_argument('--timeout', metavar='T', type=float, default=30,
-                        help='how long to wait for controller_manager services when starting up [s] (default: 30)')
+                        help='how long to wait for controller_manager services when starting up [s] (default: 30). <=0 waits indefinitely.')
+    parser.add_argument('--no-timeout', action='store_true',
+                        help='wait for controller_manager services indefinitely (same as `--timeout 0`)')
     parser.add_argument('--shutdown-timeout',
                         help='DEPRECATED: this argument has no effect.')
     parser.add_argument('controllers', metavar='controller', nargs='+',
@@ -95,7 +97,10 @@ def main():
     wait_for_topic = args.wait_for
     autostart = 1 if not args.stopped else 0
     robot_namespace = args.namespace or ""
-    timeout = args.timeout
+    if args.no_timeout or args.timeout <= 0:
+        timeout = None
+    else:
+        timeout = args.timeout
 
     rospy.init_node('spawner', anonymous=True)
 
