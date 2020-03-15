@@ -52,7 +52,6 @@ template <class T>
 class Controller: public virtual ControllerBase
 {
 public:
-  virtual ~Controller<T>() override = default;
 
   /** \brief The init function is called to initialize the controller from a
    * non-realtime thread with a pointer to the hardware interface, itself,

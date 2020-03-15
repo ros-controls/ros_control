@@ -71,17 +71,8 @@ private:
 class HardwareInterfaceException: public std::exception
 {
 public:
-  HardwareInterfaceException(const std::string& message)
-    : msg(message) {}
-
-  ~HardwareInterfaceException() noexcept override = default;
-
-  const char* what() const noexcept override
-  {
-    return msg.c_str();
-  }
-
-
+  HardwareInterfaceException(const std::string& message) : msg(message) {}
+  const char* what() const noexcept override {return msg.c_str();}
 private:
   std::string msg;
 };

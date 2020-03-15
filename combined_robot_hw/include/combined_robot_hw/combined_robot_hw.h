@@ -52,7 +52,6 @@ namespace combined_robot_hw
 class CombinedRobotHW : public hardware_interface::RobotHW
 {
 public:
-  ~CombinedRobotHW() override = default;
 
   /** \brief The init function is called to initialize the RobotHW from a
    * non-realtime thread.

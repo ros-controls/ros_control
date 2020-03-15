@@ -29,6 +29,7 @@
 
 
 #include <exception>
+#include <string>
 
 namespace transmission_interface
 {
@@ -37,7 +38,6 @@ class TransmissionInterfaceException: public std::exception
 {
 public:
   TransmissionInterfaceException(const std::string& message) : msg(message) {}
-  ~TransmissionInterfaceException() noexcept override = default;
   const char* what() const noexcept override {return msg.c_str();}
 private:
   std::string msg;
