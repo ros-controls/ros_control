@@ -27,6 +27,8 @@
 
 /// \author Adolfo Rodriguez Tsouroukdissian
 
+#include <algorithm>
+
 #include <gtest/gtest.h>
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/actuator_state_interface.h>
@@ -58,11 +60,11 @@ TEST(IsPermutationTest, IsPermutation)
 
   std::vector<int> d(3, 1);
 
-  EXPECT_TRUE(internal::is_permutation(a.begin(),  a.end(), a.begin()));
-  EXPECT_TRUE(internal::is_permutation(a.begin(),  a.end(), b.begin()));
-  EXPECT_FALSE(internal::is_permutation(a.begin(), a.end(), c.begin()));
-  EXPECT_FALSE(internal::is_permutation(a.begin(), a.end(), d.begin()));
-  EXPECT_FALSE(internal::is_permutation(d.begin(), d.end(), a.begin()));
+  EXPECT_TRUE(std::is_permutation(a.begin(),  a.end(), a.begin()));
+  EXPECT_TRUE(std::is_permutation(a.begin(),  a.end(), b.begin()));
+  EXPECT_FALSE(std::is_permutation(a.begin(), a.end(), c.begin()));
+  EXPECT_FALSE(std::is_permutation(a.begin(), a.end(), d.begin()));
+  EXPECT_FALSE(std::is_permutation(d.begin(), d.end(), a.begin()));
 }
 
 class TransmissionInterfaceLoaderTest : public ::testing::Test

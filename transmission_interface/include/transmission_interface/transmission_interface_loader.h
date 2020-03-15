@@ -63,38 +63,6 @@
 namespace transmission_interface
 {
 
-namespace internal
-{
-// NOTE: Adapted to C++03 from http://www.cplusplus.com/reference/algorithm/is_permutation
-// TODO: Use Boost's or C++11's implementation, once they become widespread
-template<class ForwardIt1, class ForwardIt2>
-bool is_permutation(ForwardIt1 first, ForwardIt1 last,
-                    ForwardIt2 d_first)
-{
-  // skip common prefix
-  std::pair<ForwardIt1, ForwardIt2> pair = std::mismatch(first, last, d_first);
-  first = pair.first; d_first = pair.second;
-
-  // iterate over the rest, counting how many times each element
-  // from [first, last) appears in [d_first, d_last)
-  if (first != last) {
-    ForwardIt2 d_last = d_first;
-    std::advance(d_last, std::distance(first, last));
-    for (ForwardIt1 i = first; i != last; ++i) {
-      if (i != std::find(first, i, *i)) continue; // already counted this *i
-
-      int m = std::count(d_first, d_last, *i);
-      if (m==0 || std::count(i, last, *i) != m) {
-          return false;
-      }
-    }
-  }
-  return true;
-}
-
-} // namespace
-
-
 /**
  * \brief Raw data for a set of joints.
  *
