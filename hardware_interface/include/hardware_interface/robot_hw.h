@@ -51,9 +51,9 @@ namespace hardware_interface
  * hardware.
  *
  * The hardware interface map (\ref interfaces_) is a 1-to-1 map between
- * the names of interface types derived from \ref HardwareInterface  and
+ * the names of interface types derived from \ref HardwareInterface and
  * instances of those interface types.
- *
+ * 
  */
 class RobotHW : public InterfaceManager
 {
@@ -70,7 +70,7 @@ public:
 
   /** \brief The init function is called to initialize the RobotHW from a
    * non-realtime thread.
-   *
+   * 
    * \param root_nh A NodeHandle in the root of the caller namespace.
    *
    * \param robot_hw_nh A NodeHandle in the namespace from which the RobotHW
@@ -79,6 +79,7 @@ public:
    * \returns True if initialization was successful
    */
   virtual bool init(ros::NodeHandle& /*root_nh*/, ros::NodeHandle &/*robot_hw_nh*/) {return true;}
+
 
   /** \name Resource Management
    *\{*/
@@ -123,7 +124,9 @@ public:
 
     return in_conflict;
   }
-/** \name Hardware Interface Switching
+  /**\}*/
+
+  /** \name Hardware Interface Switching
    *\{*/
 
   /**
@@ -148,33 +151,59 @@ public:
     ERROR
   };
 
-  // Return (in realtime) the state of the last doSwitch()
+  /** \brief Return (in realtime) the state of the last doSwitch() */
   virtual SwitchState switchResult() const
   {
     return DONE;
   }
 
-  // Return (in realtime) the state of the last doSwitch() for a given controller
+  /** \brief Return (in realtime) the state of the last doSwitch() for a given controller */
   virtual SwitchState switchResult(const ControllerInfo& /*controller*/) const
   {
     return DONE;
   }
+  /**\}*/
 
-  /**
-   * Reads data from the robot HW
+  /** \name Control Loop
+   *\{*/
+
+  /** \brief Read data from the robot hardware.
+   *
+   * The read method is part of the control loop cycle (\ref read, update, \ref write) 
+   * and is used to populate the robot state from the robot's hardware resources
+   * (joints, sensors, actuators). This method should be called before 
+   * controller_manager::ControllerManager::update() and \ref write.
+   * 
+   * \note The name \ref read refers to reading state from the hardware.
+   * This complements \ref write, which refers to writing commands to the hardware.
+   *
+   * Querying WallTime inside \ref read is not realtime safe. The parameters
+   * \ref time and \ref period make it possible to inject time from a realtime source.
    *
    * \param time The current time
    * \param period The time passed since the last call to \ref read
    */
   virtual void read(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
 
-  /**
-   * Writes data to the robot HW
+  /** \brief Write commands to the robot hardware.
+   * 
+   * The write method is part of the control loop cycle (\ref read, update, \ref write) 
+   * and used to send out commands to the robot's hardware 
+   * resources (joints, actuators). This method should be called after 
+   * \ref read and controller_manager::ControllerManager::update.
+   * 
+   * \note The name \ref write refers to writing commands to the hardware.
+   * This complements \ref read, which refers to reading state from the hardware.
+   *
+   * Querying WallTime inside \ref write is not realtime safe. The parameters
+   * \ref time and \ref period make it possible to inject time from a realtime source.
    *
    * \param time The current time
    * \param period The time passed since the last call to \ref write
    */
   virtual void write(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
+
+  /**\}*/
 };
 
 typedef std::shared_ptr<RobotHW> RobotHWSharedPtr;
