@@ -160,8 +160,24 @@ public:
     return DONE;
   }
 
-  /**
-   * Reads data from the robot HW
+  
+/** \name Control Loop Interface
+   *\{*/
+
+  /** \brief Used to read data from the robot hardware, represented by its interfaces, and populate the raw data.
+   *
+   * The read method is used to populate the raw data with the states of your robot's resources (joints, sensors, actuators).
+   * 
+   * \note The raw data describes regions in memory of your custom robot hardware interface (subclassed from hardware_interface::RobotHW),
+   * which is usually represented by member arrays with names that give semantic meaning (pos, vel, eff) to the registered resources.
+   * The registration of memory regions (assigning pointers) is done via JointStateInterface, for read-only joints,
+   * or JointCommandInterface, for joints that accept commands and provide feedback (read and write), and its subclasses
+   * that all make use of JointHandle or JointStateHandle through the HardwareResourceManager.
+   * 
+   * \note The name read, of this method, depends on one's directional perspective. 
+   * In the context of the robot hardware_interface::RobotHW it means reading states from the robot hardware into the raw data.
+   * This is opposite to the directional perspective where write() is used to fill (write to) the raw data with the robot's resource states.
+   * 
    *
    * \param time The current time
    * \param period The time passed since the last call to \ref read
