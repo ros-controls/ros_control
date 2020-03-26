@@ -185,8 +185,8 @@ public:
    * 
    * \note The name read, of this method, depends on one's directional perspective. 
    * In the context of the robot hardware_interface::RobotHW it refers to reading state from the robot hardware into the raw data.
-   * This is opposite to the directional perspective where hardware_interface::RobotHW::write is used to fill (write to) 
-   * the raw data with the robot's resource state, which is not the intended operation.
+   * This is opposite to the directional perspective where write() is used to fill (write to) 
+   * the raw data with the robot's resource state. Note that this is not the intended approach.
    * 
    *
    * \param time The current time
@@ -202,9 +202,9 @@ public:
    * read() and controller_manager::ControllerManager::update.
    * 
    * The raw data commands describe regions in memory of your custom robot hardware interface (subclassed from hardware_interface::RobotHW),
-   * which is usually represented by a member array (cmd) and populated by controllers update method (controller_interface::ControllerBase::update()).
-   * The registration of memory regions (assigning pointers) is done via JointCommandInterface and its subclasses
-   * (eg. VelocityJointInterface) that make use of JointHandle through the HardwareResourceManager.
+   * which is usually represented by a member array (cmd) and populated by controller's update method (controller_interface::ControllerBase::update()).
+   * The registration of memory regions (assigning pointers) is done via the subclasses
+   * (eg. VelocityJointInterface) of JointCommandInterface that make use of JointHandle through the HardwareResourceManager.
    * 
    * \note The name write, of this method, can depend on one's directional perspective.
    * In the context of the robot hardware_interface::RobotHW it refers to writing (sending out) raw data commands,
