@@ -80,6 +80,7 @@ public:
    */
   virtual bool init(ros::NodeHandle& /*root_nh*/, ros::NodeHandle &/*robot_hw_nh*/) {return true;}
 
+
   /** \name Resource Management
    *\{*/
 
@@ -123,19 +124,22 @@ public:
 
     return in_conflict;
   }
-/** \name Hardware Interface Switching
+  /**\}*/
+
+  /** \name Hardware Interface Switching
    *\{*/
 
-  /**
-   * Check (in non-realtime) if given controllers could be started and stopped from the current state of the RobotHW
-   * with regard to necessary hardware interface switches and prepare the switching. Start and stop list are disjoint.
+  /** \brief Check (in non-realtime) if given controllers could be started and stopped from the current state of the RobotHW
+   * with regard to necessary hardware interface switches and prepare the switching.
+   * 
+   * Start and stop list are disjoint.
    * This handles the check and preparation, the actual switch is commited in doSwitch()
    */
   virtual bool prepareSwitch(const std::list<ControllerInfo>& /*start_list*/,
                              const std::list<ControllerInfo>& /*stop_list*/) { return true; }
 
-  /**
-   * Perform (in realtime) all necessary hardware interface switches in order to start and stop the given controllers.
+  /** \brief Perform (in realtime) all necessary hardware interface switches in order to start and stop the given controllers.
+   * 
    * Start and stop list are disjoint. The feasability was checked in prepareSwitch() beforehand.
    */
   virtual void doSwitch(const std::list<ControllerInfo>& /*start_list*/,
@@ -148,35 +152,41 @@ public:
     ERROR
   };
 
-  // Return (in realtime) the state of the last doSwitch()
+  /** \brief Return (in realtime) the state of the last doSwitch() */
   virtual SwitchState switchResult() const
   {
     return DONE;
   }
 
-  // Return (in realtime) the state of the last doSwitch() for a given controller
+  /** \brief Return (in realtime) the state of the last doSwitch() for a given controller */
   virtual SwitchState switchResult(const ControllerInfo& /*controller*/) const
   {
     return DONE;
   }
+  /**\}*/
 
   
-/** \name Control Loop Interface
-   *\{*/
-
-  /** \brief Used to read data from the robot hardware, represented by its interfaces, and populate the raw data.
-   *
-   * The read method is used to populate the raw data with the states of your robot's resources (joints, sensors, actuators).
+  /** \name Control Loop
    * 
-   * \note The raw data describes regions in memory of your custom robot hardware interface (subclassed from hardware_interface::RobotHW),
-   * which is usually represented by member arrays with names that give semantic meaning (pos, vel, eff) to the registered resources.
+   */
+   /**\{*/
+
+  /** \brief Used to read data from the robot hardware (represented by its interfaces) and populate the raw data.
+   *
+   * The read method is part of the control loop cycle (read, update, write) and used to populate the raw data with 
+   * the state of your robot's hardware resources (joints, sensors, actuators). In your node that handles the control loop,
+   * you should call this method before calling controller_manager::ControllerManager::update and write().
+   * 
+   * The raw data describes regions in memory of your custom robot hardware interface (subclassed from hardware_interface::RobotHW),
+   * which is usually represented by member arrays having names that give semantic meaning (pos, vel, eff) to the registered resources.
    * The registration of memory regions (assigning pointers) is done via JointStateInterface, for read-only joints,
    * or JointCommandInterface, for joints that accept commands and provide feedback (read and write), and its subclasses
-   * that all make use of JointHandle or JointStateHandle through the HardwareResourceManager.
+   * (eg. VelocityJointInterface) that make use of JointHandle or JointStateHandle through the HardwareResourceManager.
    * 
    * \note The name read, of this method, depends on one's directional perspective. 
-   * In the context of the robot hardware_interface::RobotHW it means reading states from the robot hardware into the raw data.
-   * This is opposite to the directional perspective where write() is used to fill (write to) the raw data with the robot's resource states.
+   * In the context of the robot hardware_interface::RobotHW it refers to reading state from the robot hardware into the raw data.
+   * This is opposite to the directional perspective where hardware_interface::RobotHW::write is used to fill (write to) 
+   * the raw data with the robot's resource state, which is not the intended operation.
    * 
    *
    * \param time The current time
@@ -184,13 +194,30 @@ public:
    */
   virtual void read(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
 
-  /**
-   * Writes data to the robot HW
+  /** \brief Writes raw data (commands) from controllers to the robot hardware via its interface representation.
+   * 
+   * The write method is part of the control loop cycle (read, update, write) and used to send out raw data commands,
+   * via the hardware interfaces (eg. JointCommandInterface and its subclasses), to your robot's hardware resources (joints, actuators).
+   * In your node that handles the control loop, you should call this method after calling 
+   * read() and controller_manager::ControllerManager::update.
+   * 
+   * The raw data commands describe regions in memory of your custom robot hardware interface (subclassed from hardware_interface::RobotHW),
+   * which is usually represented by a member array (cmd) and populated by controllers update method (controller_interface::ControllerBase::update()).
+   * The registration of memory regions (assigning pointers) is done via JointCommandInterface and its subclasses
+   * (eg. VelocityJointInterface) that make use of JointHandle through the HardwareResourceManager.
+   * 
+   * \note The name write, of this method, can depend on one's directional perspective.
+   * In the context of the robot hardware_interface::RobotHW it refers to writing (sending out) raw data commands,
+   * which were obtained from controllers, to the robot hardware resources.
+   * It could be also understood as writing (filling) member arrays with states obtained from the robot's hardware resources.
+   * For this, you are encouraged to use read().
    *
    * \param time The current time
    * \param period The time passed since the last call to \ref write
    */
   virtual void write(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
+
+  /**\}*/
 };
 
 typedef std::shared_ptr<RobotHW> RobotHWSharedPtr;
