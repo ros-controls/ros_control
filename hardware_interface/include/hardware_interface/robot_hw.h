@@ -173,9 +173,8 @@ public:
 
   /** \brief Used to read data from the robot hardware (represented by its interfaces) and populate the raw data.
    *
-   * The read method is part of the control loop cycle (read, update, write) and used to populate the raw data with 
-   * the state of your robot's hardware resources (joints, sensors, actuators). In your node that handles the control loop,
-   * you should call this method before calling controller_manager::ControllerManager::update and write().
+   * The read method is part of the control loop cycle (read, update, write) and is used to populate the robot state from
+   * the robot's hardware resources (joints, sensors, actuators). This method should be called before controller_manager::ControllerManager::update() and write().
    * 
    * The raw data describes regions in memory of your custom robot hardware interface (subclassed from hardware_interface::RobotHW),
    * which is usually represented by member arrays having names that give semantic meaning (pos, vel, eff) to the registered resources.
@@ -183,10 +182,8 @@ public:
    * or JointCommandInterface, for joints that accept commands and provide feedback (read and write), and its subclasses
    * (eg. VelocityJointInterface) that make use of JointHandle or JointStateHandle through the HardwareResourceManager.
    * 
-   * \note The name read, of this method, depends on one's directional perspective. 
-   * In the context of the robot hardware_interface::RobotHW it refers to reading state from the robot hardware into the raw data.
-   * This is opposite to the directional perspective where write() is used to fill (write to) 
-   * the raw data with the robot's resource state. Note that this is not the intended approach.
+   * \note The name 'read()' refers to reading state from the hardware.
+   * This complements 'write()', which refers to writing commands to the hardware.
    * 
    *
    * \param time The current time
