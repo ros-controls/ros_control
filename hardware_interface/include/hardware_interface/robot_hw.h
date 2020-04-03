@@ -51,8 +51,18 @@ namespace hardware_interface
  * hardware.
  *
  * The hardware interface map (\ref interfaces_) is a 1-to-1 map between
- * the names of interface types derived from \ref HardwareInterface  and
+ * the names of interface types derived from \ref HardwareInterface and
  * instances of those interface types.
+ * 
+ * The registration (\ref registerInterface) of interfaces can be done in the 
+ * constructor or init() of a custom robot hardware class.
+ * 
+ * The robot state is described by data members of a class derived from this 
+ * base interface. The names of these data members should give semantic meaning 
+ * (pos, vel, eff) to the registered resources (joints, sensors, actuators). 
+ * Commands from controllers are represented by a member array (e.g. cmd)
+ * and populated by the controller's update method, 
+ * (controller_interface::ControllerBase::update()).
  *
  */
 class RobotHW : public InterfaceManager
@@ -70,6 +80,13 @@ public:
 
   /** \brief The init function is called to initialize the RobotHW from a
    * non-realtime thread.
+   * 
+   * The registration of data members to interfaces is done via 
+   * \ref JointStateInterface, for read-only joints, or \ref JointCommandInterface, 
+   * for joints that accept commands and provide feedback (read and write), 
+   * including its derived classes (e.g. \ref VelocityJointInterface).
+   * These interfaces make use of \ref JointHandle or \ref JointStateHandle through 
+   * the \ref HardwareResourceManager.
    *
    * \param root_nh A NodeHandle in the root of the caller namespace.
    *
@@ -129,17 +146,16 @@ public:
   /** \name Hardware Interface Switching
    *\{*/
 
-  /** \brief Check (in non-realtime) if given controllers could be started and stopped from the current state of the RobotHW
-   * with regard to necessary hardware interface switches and prepare the switching.
-   * 
-   * Start and stop list are disjoint.
+  /**
+   * Check (in non-realtime) if given controllers could be started and stopped from the current state of the RobotHW
+   * with regard to necessary hardware interface switches and prepare the switching. Start and stop list are disjoint.
    * This handles the check and preparation, the actual switch is commited in doSwitch()
    */
   virtual bool prepareSwitch(const std::list<ControllerInfo>& /*start_list*/,
                              const std::list<ControllerInfo>& /*stop_list*/) { return true; }
 
-  /** \brief Perform (in realtime) all necessary hardware interface switches in order to start and stop the given controllers.
-   * 
+  /**
+   * Perform (in realtime) all necessary hardware interface switches in order to start and stop the given controllers.
    * Start and stop list are disjoint. The feasability was checked in prepareSwitch() beforehand.
    */
   virtual void doSwitch(const std::list<ControllerInfo>& /*start_list*/,
@@ -171,43 +187,40 @@ public:
    */
    /**\{*/
 
-  /** \brief Used to read data from the robot hardware (represented by its interfaces) and populate the raw data.
+  /** \brief Read data from the robot hardware.
    *
-   * The read method is part of the control loop cycle (read, update, write) and is used to populate the robot state from
-   * the robot's hardware resources (joints, sensors, actuators). This method should be called before controller_manager::ControllerManager::update() and write().
+   * The read method is part of the control loop cycle (\ref read, update, \ref write) 
+   * and is used to populate the robot state from the robot's hardware resources
+   * (joints, sensors, actuators). This method should be called before 
+   * controller_manager::ControllerManager::update() and \ref write.
    * 
-   * The raw data describes regions in memory of your custom robot hardware interface (subclassed from hardware_interface::RobotHW),
-   * which is usually represented by member arrays having names that give semantic meaning (pos, vel, eff) to the registered resources.
-   * The registration of memory regions (assigning pointers) is done via JointStateInterface, for read-only joints,
-   * or JointCommandInterface, for joints that accept commands and provide feedback (read and write), and its subclasses
-   * (eg. VelocityJointInterface) that make use of JointHandle or JointStateHandle through the HardwareResourceManager.
-   * 
-   * \note The name 'read()' refers to reading state from the hardware.
-   * This complements 'write()', which refers to writing commands to the hardware.
-   * 
+   * \note The name \ref read refers to reading state from the hardware.
+   * This complements \ref write, which refers to writing commands to the hardware.
+   *
+   * Querying WallTime inside \ref read is not realtime safe. The input parameters
+   * \ref time and \ref period make it possible to inject time from any 
+   * realtime backend framework.
    *
    * \param time The current time
    * \param period The time passed since the last call to \ref read
    */
   virtual void read(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
 
-  /** \brief Writes raw data (commands) from controllers to the robot hardware via its interface representation.
+  /** \brief Writes commands from controllers to the robot hardware.
    * 
-   * The write method is part of the control loop cycle (read, update, write) and used to send out raw data commands,
-   * via the hardware interfaces (eg. JointCommandInterface and its subclasses), to your robot's hardware resources (joints, actuators).
-   * In your node that handles the control loop, you should call this method after calling 
-   * read() and controller_manager::ControllerManager::update.
+   * The write method is part of the control loop cycle (read, update, write) 
+   * and used to send out commands, via the hardware interfaces 
+   * (eg. JointCommandInterface and its subclasses), to your robot's hardware 
+   * esources (joints, actuators). Inside a node that handles the control loop, 
+   * this method should be called after \ref read and controller_manager::ControllerManager::update.
    * 
-   * The raw data commands describe regions in memory of your custom robot hardware interface (subclassed from hardware_interface::RobotHW),
-   * which is usually represented by a member array (cmd) and populated by controller's update method (controller_interface::ControllerBase::update()).
-   * The registration of memory regions (assigning pointers) is done via the subclasses
-   * (eg. VelocityJointInterface) of JointCommandInterface that make use of JointHandle through the HardwareResourceManager.
-   * 
-   * \note The name write, of this method, can depend on one's directional perspective.
-   * In the context of the robot hardware_interface::RobotHW it refers to writing (sending out) raw data commands,
-   * which were obtained from controllers, to the robot hardware resources.
-   * It could be also understood as writing (filling) member arrays with states obtained from the robot's hardware resources.
-   * For this, you are encouraged to use read().
+   * \note The name \ref write refers to writing (sending out) data commands,
+   * obtained from controllers, to the robot hardware resources.
+   * Use \ref read to write the state of the robot's hardware resources to data members.
+   *
+   * Querying WallTime inside \ref write is not realtime safe. The input parameters
+   * \ref time and \ref period make it possible to inject time from any 
+   * realtime backend framework.
    *
    * \param time The current time
    * \param period The time passed since the last call to \ref write
