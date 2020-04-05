@@ -87,6 +87,7 @@ target_link_libraries(${PROJECT_NAME}_loader_plugins ${PROJECT_NAME}_loader)
 
 if(CATKIN_ENABLE_TESTING)
   find_package(resource_retriever REQUIRED)
+  include_directories(${resource_retriever_INCLUDE_DIRS})
 
   catkin_add_gtest(simple_transmission_test                       test/simple_transmission_test.cpp)
 
