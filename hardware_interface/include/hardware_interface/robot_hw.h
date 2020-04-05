@@ -206,7 +206,7 @@ public:
    */
   virtual void read(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
 
-  /** \brief Writes commands from controllers to the robot hardware.
+  /** \brief Write commands to the robot hardware.
    * 
    * The write method is part of the control loop cycle (\ref read, update, \ref write) 
    * and used to send out commands, via the hardware interfaces 
