@@ -214,9 +214,8 @@ public:
    * resources (joints, actuators). Inside a node that handles the control loop, 
    * this method should be called after \ref read and controller_manager::ControllerManager::update.
    * 
-   * \note The name \ref write refers to writing (sending out) data commands,
-   * obtained from controllers, to the robot hardware resources.
-   * Use \ref read to write the state of the robot's hardware resources to data members.
+   * \note The name \ref write refers to writing commands to the hardware.
+   * This complements \ref read, which refers to reading state from the hardware.
    *
    * Querying WallTime inside \ref write is not realtime safe. The input parameters
    * \ref time and \ref period make it possible to inject time from any 
