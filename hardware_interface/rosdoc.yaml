@@ -1,5 +1,5 @@
 - builder: doxygen
   name: C++ API
   output_dir: c++
-  file_patterns: '*.c *.cpp *.h *.cc *.hh *.dox'
+  file_patterns: '*.c *.cpp *.h *.cc *.hh *.dox *.md'
   exclude_patterns: 'test'
