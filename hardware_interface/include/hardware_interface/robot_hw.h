@@ -54,15 +54,23 @@ namespace hardware_interface
  * the names of interface types derived from \ref HardwareInterface and
  * instances of those interface types.
  * 
- * The registration (\ref registerInterface) of interfaces can be done in the 
- * constructor or init() of a custom robot hardware class.
- * 
- * The robot state is described by data members of a class derived from this 
- * base interface. The names of these data members should give semantic meaning 
- * (pos, vel, eff) to the registered resources (joints, sensors, actuators). 
- * Commands from controllers are represented by a member array (e.g. cmd)
- * and populated by the controller's update method, 
+ * A class derived from this base interface represents a robot and stores the 
+ * state of the robot's hardware resources (joints, sensors, actuators) and 
+ * outgoing commands in its data member arrays. The names of these members 
+ * should provide semantic meaning (e.g. pos, vel, eff, cmd). 
+ * Commands from controllers are populated by the controller's update method, 
  * (controller_interface::ControllerBase::update()).
+ * For each resource a \ref JointStateHandle (for read only joints), 
+ * \ref JointHandle (for read and write joints) or custom handle can be used 
+ * which is registered (\ref hardware_interface::ResourceManager::registerHandle) 
+ * with one of the robot's interface types. For read-only joints it is possible 
+ * to use \ref JointStateInterface and for joints that accept commands and 
+ * provide feedback (read and write) \ref JointCommandInterface can be used or 
+ * one of its derived interfaces (e.g. \ref PositionJointInterface). Another 
+ * option is to define and use custom ones. The interfaces themselfes are then 
+ * registered (\ref registerInterface) with the derived robot class. 
+ * The registration (\ref registerInterface) of interfaces can be done either in
+ * the constructor or \ref init of a custom robot hardware class.
  *
  */
 class RobotHW : public InterfaceManager
@@ -81,12 +89,14 @@ public:
   /** \brief The init function is called to initialize the RobotHW from a
    * non-realtime thread.
    * 
-   * The registration of data members to interfaces is done via 
-   * \ref JointStateInterface, for read-only joints, or \ref JointCommandInterface, 
-   * for joints that accept commands and provide feedback (read and write), 
-   * including its derived classes (e.g. \ref VelocityJointInterface).
-   * These interfaces make use of \ref JointHandle or \ref JointStateHandle through 
-   * the \ref HardwareResourceManager.
+   * Initialising a custom robot is done by registering joint handles
+   * (\ref hardware_interface::ResourceManager::registerHandle) to hardware 
+   * interfaces that group similar joints and registering those individual 
+   * hardware interfaces with the class that represents the custom robot 
+   * (derived from this hardware_interface::RobotHW)
+   * 
+   * \note Registering of joint handles and interfaces can either be done in the
+   * constructor or this \ref init method.
    *
    * \param root_nh A NodeHandle in the root of the caller namespace.
    *
@@ -181,11 +191,8 @@ public:
   }
   /**\}*/
 
-  
   /** \name Control Loop
-   * 
-   */
-   /**\{*/
+   *\{*/
 
   /** \brief Read data from the robot hardware.
    *
@@ -197,9 +204,8 @@ public:
    * \note The name \ref read refers to reading state from the hardware.
    * This complements \ref write, which refers to writing commands to the hardware.
    *
-   * Querying WallTime inside \ref read is not realtime safe. The input parameters
-   * \ref time and \ref period make it possible to inject time from any 
-   * realtime backend framework.
+   * Querying WallTime inside \ref read is not realtime safe. The parameters
+   * \ref time and \ref period make it possible to inject time from a realtime source.
    *
    * \param time The current time
    * \param period The time passed since the last call to \ref read
@@ -209,17 +215,15 @@ public:
   /** \brief Write commands to the robot hardware.
    * 
    * The write method is part of the control loop cycle (\ref read, update, \ref write) 
-   * and used to send out commands, via the hardware interfaces 
-   * (eg. JointCommandInterface and its subclasses), to the robot's hardware 
-   * resources (joints, actuators). Inside a node that handles the control loop, 
-   * this method should be called after \ref read and controller_manager::ControllerManager::update.
+   * and used to send out commands to the robot's hardware 
+   * resources (joints, actuators). This method should be called after 
+   * \ref read and controller_manager::ControllerManager::update.
    * 
    * \note The name \ref write refers to writing commands to the hardware.
    * This complements \ref read, which refers to reading state from the hardware.
    *
-   * Querying WallTime inside \ref write is not realtime safe. The input parameters
-   * \ref time and \ref period make it possible to inject time from any 
-   * realtime backend framework.
+   * Querying WallTime inside \ref write is not realtime safe. The parameters
+   * \ref time and \ref period make it possible to inject time from a realtime source.
    *
    * \param time The current time
    * \param period The time passed since the last call to \ref write
