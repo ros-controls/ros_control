@@ -59,17 +59,6 @@ public:
       torque_(torque)
   {}
 
-  // keep non-const version for binary compatibility
-  ForceTorqueSensorHandle(const std::string& name,
-                          const std::string& frame_id,
-                          double* force,
-                          double* torque)
-    : name_(name),
-      frame_id_(frame_id),
-      force_(force),
-      torque_(torque)
-  {}
-
   std::string getName()     const {return name_;}
   std::string getFrameId()  const {return frame_id_;}
   const double* getForce()  const {return force_;}
