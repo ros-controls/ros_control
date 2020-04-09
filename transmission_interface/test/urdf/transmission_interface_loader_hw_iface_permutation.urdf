@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="robot" xmlns="http://www.ros.org">
 
   <transmission name="differential_trans">
     <type>transmission_interface/DifferentialTransmission</type>
