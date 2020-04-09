@@ -51,10 +51,10 @@ template <typename T>
 struct CheckIsResourceManager {
   // method called if C is a ResourceManager
   template <typename C>
-  static void callCM(typename std::vector<C*>& managers, C* result, typename C::resource_manager_type*)
+  static void callCM(typename std::vector<C*>& managers, C* result, typename C::ResourceManagerType*)
   {
     // We have to typecast back to base class
-    std::vector<typename C::resource_manager_type*> managers_in(managers.begin(), managers.end());
+    std::vector<typename C::ResourceManagerType*> managers_in(managers.begin(), managers.end());
     C::concatManagers(managers_in, result);
   }
 
@@ -69,7 +69,7 @@ struct CheckIsResourceManager {
 
   // method called if C is a ResourceManager
   template <typename C>
-  static void callGR(std::vector<std::string> &resources, C* iface, typename C::resource_manager_type*)
+  static void callGR(std::vector<std::string> &resources, C* iface, typename C::ResourceManagerType*)
   {
     resources = iface->getNames();
   }
@@ -83,7 +83,7 @@ struct CheckIsResourceManager {
   { return callGR<T>(resources, iface, nullptr); }
 
   template <typename C>
-  static T* newCI(std::vector<ResourceManagerBase*> &guards, typename C::resource_manager_type*)
+  static T* newCI(std::vector<ResourceManagerBase*> &guards, typename C::ResourceManagerType*)
   {
     T* iface_combo = new T;
     // save the new interface pointer to allow for its correct destruction
