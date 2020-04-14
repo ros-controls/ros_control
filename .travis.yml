@@ -7,9 +7,7 @@ services:
 notifications:
   email:
     recipients:
-      - enrique.fernandez.perdomo@gmail.com
       - bence.magyar.robotics@gmail.com
-      - gennaro.raiola@gmail.com
     on_success: change #[always|never|change] # default: change
     on_failure: change #[always|never|change] # default: always
 
@@ -17,8 +15,8 @@ env:
   global:
     - UPSTREAM_WORKSPACE=ros_control.rosinstall
   matrix:
-    - ROS_DISTRO=melodic ROS_REPO=ros
-    - ROS_DISTRO=melodic ROS_REPO=ros-testing
+    - ROS_DISTRO=noetic ROS_REPO=ros
+    - ROS_DISTRO=noetic ROS_REPO=ros-testing
 
 install:
   - git clone --quiet --depth 1 https://github.com/ros-industrial/industrial_ci.git .industrial_ci -b master
