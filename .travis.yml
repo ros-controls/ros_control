@@ -15,8 +15,7 @@ notifications:
 
 env:
   global:
-    - UPSTREAM_WORKSPACE=file
-    - ROSINSTALL_FILENAME=ros_control.rosinstall
+    - UPSTREAM_WORKSPACE=ros_control.rosinstall
   matrix:
     - ROS_DISTRO=melodic ROS_REPO=ros
     - ROS_DISTRO=melodic ROS_REPO=ros-testing
