@@ -1,8 +1,8 @@
 # Travis Continuous Integration Configuration File For ROS Control Projects
 # Author: Dave Coleman
-sudo: required
-dist: trusty
 language: generic
+services:
+  - docker
 
 notifications:
   email:
@@ -15,14 +15,12 @@ notifications:
 
 env:
   global:
-    - UPSTREAM_WORKSPACE=file
-    - ROSINSTALL_FILENAME=ros_control.rosinstall
-    - ROS_PARALLEL_TEST_JOBS=-j1
+    - UPSTREAM_WORKSPACE=ros_control.rosinstall
   matrix:
     - ROS_DISTRO=melodic ROS_REPO=ros
     - ROS_DISTRO=melodic ROS_REPO=ros-testing
 
 install:
-  - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
+  - git clone --quiet --depth 1 https://github.com/ros-industrial/industrial_ci.git .industrial_ci -b master
 script:
-  - .ci_config/travis.sh
+  - .industrial_ci/travis.sh
