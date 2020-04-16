@@ -2,8 +2,8 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.18.0 (2020-04-16)
+-------------------
 * Add xmlns for URDF, remove xmlns:xacro (`#436 <https://github.com/ros-controls/ros_control/issues/436>`_)
 * Fixed compile tests (`#434 <https://github.com/ros-controls/ros_control/issues/434>`_)
 * Replace internal::is_permutation with std (`#419 <https://github.com/ros-controls/ros_control/issues/419>`_)

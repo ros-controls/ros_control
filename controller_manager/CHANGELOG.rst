@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.18.0 (2020-04-16)
+-------------------
 * enable spawner to wait indefinitely if requested (`#428 <https://github.com/ros-controls/ros_control/issues/428>`_)
   `rospy.wait_for_service` does not allow for `0` to wait indefinitely.
   Instead, `None` has to be passed explicitly.
