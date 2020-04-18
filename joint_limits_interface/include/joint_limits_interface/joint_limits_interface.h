@@ -431,8 +431,16 @@ public:
     using internal::saturate;
 
     // Velocity bounds
-    double vel_low;
-    double vel_high;
+    double vel_low = -limits_.max_velocity;
+    double vel_high = limits_.max_velocity;
+
+    if (limits_.has_position_limits)
+    {
+      // Velocity bounds depend on the velocity limit and the proximity to the position limit.
+      const double pos = jh_.getPosition();
+      vel_low = saturate(limits_.min_position - pos, -limits_.max_velocity, limits_.max_velocity);
+      vel_high = saturate(limits_.max_position - pos, -limits_.max_velocity, limits_.max_velocity);
+    }
 
     if (limits_.has_acceleration_limits)
     {
@@ -440,13 +448,8 @@ public:
       const double vel = jh_.getVelocity();
       const double dt  = period.toSec();
 
-      vel_low  = std::max(vel - limits_.max_acceleration * dt, -limits_.max_velocity);
-      vel_high = std::min(vel + limits_.max_acceleration * dt,  limits_.max_velocity);
-    }
-    else
-    {
-      vel_low  = -limits_.max_velocity;
-      vel_high =  limits_.max_velocity;
+      vel_low  = std::max(vel - limits_.max_acceleration * dt, vel_low);
+      vel_high = std::min(vel + limits_.max_acceleration * dt, vel_high);
     }
 
     // Saturate velocity command according to limits
