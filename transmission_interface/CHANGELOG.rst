@@ -2,6 +2,14 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.18.0 (2020-04-16)
+-------------------
+* Add xmlns for URDF, remove xmlns:xacro (`#436 <https://github.com/ros-controls/ros_control/issues/436>`_)
+* Fixed compile tests (`#434 <https://github.com/ros-controls/ros_control/issues/434>`_)
+* Replace internal::is_permutation with std (`#419 <https://github.com/ros-controls/ros_control/issues/419>`_)
+* Bump CMake version to avoid CMP0048 (`#427 <https://github.com/ros-controls/ros_control/issues/427>`_)
+* Contributors: Alejandro Hernández Cordero, Matt Reynolds, Shane Loretz
+
 0.17.0 (2020-02-24)
 -------------------
 * Use default member initializers

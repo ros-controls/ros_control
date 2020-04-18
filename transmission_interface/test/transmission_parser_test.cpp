@@ -49,7 +49,7 @@ TEST(TransmissionParserTest, InvalidFile)
 TEST(TransmissionParserTest, EmptyFile)
 {
   TransmissionParser parser;
-  std::string urdf = "<?xml version=\"1.0\"?><robot name=\"robot\" xmlns:xacro=\"http://www.ros.org/wiki/xacro\"></robot>";
+  std::string urdf = "<?xml version=\"1.0\"?><robot name=\"robot\" xmlns=\"http://www.ros.org\"></robot>";
   std::vector<TransmissionInfo> infos;
 
   ASSERT_TRUE(parser.parse(urdf, infos));
