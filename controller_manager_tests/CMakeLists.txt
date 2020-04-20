@@ -37,11 +37,11 @@ if(CATKIN_ENABLE_TESTING)
   )
   target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
-  add_executable(dummy_app EXCLUDE_FROM_ALL src/dummy_app.cpp)
+  add_executable(dummy_app src/dummy_app.cpp)
   add_dependencies(dummy_app ${catkin_EXPORTED_TARGETS})
   target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
 
-  add_executable(cm_test EXCLUDE_FROM_ALL test/cm_test.cpp)
+  add_executable(cm_test test/cm_test.cpp)
   add_dependencies(cm_test ${catkin_EXPORTED_TARGETS})
   target_link_libraries(cm_test ${catkin_LIBRARIES} ${GTEST_LIBRARIES})
 
@@ -65,14 +65,21 @@ endif()
 if(CATKIN_ENABLE_TESTING)
 
   # Install targets
-  install(TARGETS ${PROJECT_NAME}
+  install(TARGETS ${PROJECT_NAME} 
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
   )
 
+  install(TARGETS dummy_app cm_test 
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
   # Install plugins
   install(FILES test_controllers_plugin.xml
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   )
+
+  catkin_install_python(PROGRAMS test/controller_manager_scripts.py
+	                         test/controller_manager_interface_test.py
+                      DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 endif()
