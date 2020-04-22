@@ -52,7 +52,7 @@ template <class T>
 class Controller: public virtual ControllerBase
 {
 public:
-  Controller() {}
+  Controller()  {state_ = ControllerState::CONSTRUCTED;}
   virtual ~Controller<T>(){}
 
   /** \brief The init function is called to initialize the controller from a
@@ -101,7 +101,7 @@ protected:
                            ClaimedResources&            claimed_resources)
   {
     // check if construction finished cleanly
-    if (state_ != CONSTRUCTED){
+    if (state_ != ControllerState::CONSTRUCTED){
       ROS_ERROR("Cannot initialize this controller because it failed to be constructed");
       return false;
     }
@@ -128,7 +128,7 @@ protected:
     hw->clearClaims();
 
     // success
-    state_ = INITIALIZED;
+    state_ = ControllerState::INITIALIZED;
     return true;
   }
 
