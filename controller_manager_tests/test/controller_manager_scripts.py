@@ -4,22 +4,22 @@ import rospy
 import subprocess
 
 # output of controller_manager list, will by combined dynamically
-myc1_initialized='\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( initialized )\n'
-myc1_running='\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( running )\n'
-myc1_stopped='\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( stopped )\n'
-myc2_initialized='\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( initialized )\n'
-myc2_running='\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( running )\n'
-myc2_stopped='\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( stopped )\n'
+myc1_initialized=b'\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( initialized )\n'
+myc1_running=b'\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( running )\n'
+myc1_stopped=b'\'my_controller1\' - \'hardware_interface::EffortJointInterface\' ( stopped )\n'
+myc2_initialized=b'\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( initialized )\n'
+myc2_running=b'\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( running )\n'
+myc2_stopped=b'\'my_controller2\' - \'hardware_interface::EffortJointInterface\' ( stopped )\n'
 
 
 # output of other commands
-loaded_fmt = 'Loaded \'%s\'\n'
-unloaded_fmt = 'Unloaded \'%s\' successfully\n'
-stopped_fmt = "Stopped [\'%s\'] successfully\n"
-started_fmt = "Started [\'%s\'] successfully\n"
+loaded_fmt = 'Loaded \'{}\'\n'
+unloaded_fmt = 'Unloaded \'{}\' successfully\n'
+stopped_fmt = 'Stopped [\'{}\'] successfully\n'
+started_fmt = 'Started [\'{}\'] successfully\n'
 
-no_controllers = 'No controllers are loaded in mechanism control\n'
-reload_response = 'Restore: False\nSuccessfully reloaded libraries\n'
+no_controllers = b'No controllers are loaded in mechanism control\n'
+reload_response = b'Restore: False\nSuccessfully reloaded libraries\n'
 
 # run controller_manager in process
 def run_cm(*args):
@@ -31,22 +31,22 @@ def run_cg(*args):
 
 # helper function that return the actual and expected response
 def load_c(name):
-    return run_cm('load', name), loaded_fmt % name
+    return run_cm('load', name), loaded_fmt.format(name).encode("utf-8")
 
 def unload_c(name):
-    return run_cm('unload', name), unloaded_fmt % name
+    return run_cm('unload', name), unloaded_fmt.format(name).encode("utf-8")
 
 def stop_c(name):
-    return run_cm('stop', name), stopped_fmt % name
+    return run_cm('stop', name), stopped_fmt.format(name).encode("utf-8")
 
 def start_c(name):
-    return run_cm('start', name), started_fmt % name
+    return run_cm('start', name), started_fmt.format(name).encode("utf-8")
 
 def spawn_c(name):
-    return run_cm('spawn', name), loaded_fmt % name + started_fmt % name
+    return run_cm('spawn', name), (loaded_fmt.format(name) + started_fmt.format(name)).encode("utf-8")
 
 def kill_c(name):
-    return run_cm('kill', name), stopped_fmt % name + unloaded_fmt % name
+    return run_cm('kill', name), (stopped_fmt.format(name) + unloaded_fmt.format(name)).encode("utf-8")
 
 
 class TestUtils(unittest.TestCase):
@@ -55,7 +55,7 @@ class TestUtils(unittest.TestCase):
 
         # ensure that test controller is available
         listed_types = run_cm('list-types').split()
-        self.assertIn('controller_manager_tests/EffortTestController', listed_types)
+        self.assertIn(b'controller_manager_tests/EffortTestController', listed_types)
 
         # ensure that no controllers are loaded
         self.assertEqual(run_cm('list'), no_controllers)
@@ -118,30 +118,30 @@ class TestUtils(unittest.TestCase):
         # list
         self.assertEqual(
             run_cg('list'),
-            'Number of groups: 3\n'
-            '  group1\n      my_controller1\n      my_controller3\n'
-            '  group2\n      my_controller2\n      my_controller3\n'
-            '  group3\n      my_controller1\n      my_controller2\n')
+            ('Number of groups: 3\n' +
+             '  group1\n      my_controller1\n      my_controller3\n' +
+             '  group2\n      my_controller2\n      my_controller3\n' +
+             '  group3\n      my_controller1\n      my_controller2\n').encode("utf-8"))
 
         # spawn
         self.assertEqual(
             run_cg('spawn group1'),
-            'Loaded \'my_controller1\'\n'
-            'Loaded \'my_controller3\'\n'
-            'Started [\'my_controller1\'] successfully\n'
-            'Started [\'my_controller3\'] successfully\n')
+            ('Loaded \'my_controller1\'\n' +
+             'Loaded \'my_controller3\'\n' +
+             'Started [\'my_controller1\'] successfully\n' +
+             'Started [\'my_controller3\'] successfully\n').encode("utf-8"))
 
         # switch
         self.assertEqual(
             run_cg('switch group2'),
-            'Loaded \'my_controller2\'\n'
-            'Started [\'my_controller2\'] successfully\n'
-            'Stopped [\'my_controller1\'] successfully\n')
+            ('Loaded \'my_controller2\'\n' +
+             'Started [\'my_controller2\'] successfully\n' +
+             'Stopped [\'my_controller1\'] successfully\n').encode("utf-8"))
 
         # switch to faulty group because my_controller1 conflicts with my_controller2
         self.assertEqual(
             run_cg('switch group3'),
-            'Error when starting [\'my_controller1\'] and stopping [\'my_controller3\']\n')
+            b'Error when starting [\'my_controller1\'] and stopping [\'my_controller3\']\n')
 
 
 if __name__ == '__main__':
