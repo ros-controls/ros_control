@@ -2,6 +2,12 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Disable flaky CLI spawn test (`#446 <https://github.com/ros-controls/ros_control/issues/446>`_)
+* Update travis config and rosinstall for noetic (`#439 <https://github.com/ros-controls/ros_control/issues/439>`_)
+* Contributors: Bence Magyar
+
 0.18.0 (2020-04-16)
 -------------------
 * Bump CMake version to avoid CMP0048 (`#427 <https://github.com/ros-controls/ros_control/issues/427>`_)

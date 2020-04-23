@@ -2,6 +2,11 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Replace enums with enum classes (`#412 <https://github.com/ros-controls/ros_control/issues/412>`_)
+* Contributors: Matt Reynolds
+
 0.18.0 (2020-04-16)
 -------------------
 * Add xmlns for URDF, remove xmlns:xacro (`#436 <https://github.com/ros-controls/ros_control/issues/436>`_)

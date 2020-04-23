@@ -2,6 +2,11 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Replace enums with enum classes (`#412 <https://github.com/ros-controls/ros_control/issues/412>`_)
+* Contributors: Matt Reynolds
+
 0.18.0 (2020-04-16)
 -------------------
 * Bump CMake version to avoid CMP0048 (`#427 <https://github.com/ros-controls/ros_control/issues/427>`_)

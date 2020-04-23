@@ -2,6 +2,11 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Replace enums with enum classes (`#412 <https://github.com/ros-controls/ros_control/issues/412>`_)
+* Contributors: Matt Reynolds
+
 0.18.0 (2020-04-16)
 -------------------
 * enable spawner to wait indefinitely if requested (`#428 <https://github.com/ros-controls/ros_control/issues/428>`_)
