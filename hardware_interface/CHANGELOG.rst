@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.19.0 (2020-04-23)
+-------------------
 * Remove deprecated ForceTorqueHandle ctor (`#437 <https://github.com/ros-controls/ros_control/issues/437>`_)
 * Replace enums with enum classes (`#412 <https://github.com/ros-controls/ros_control/issues/412>`_)
 * Use CamelCase for ResourceManagerType typedef (`#438 <https://github.com/ros-controls/ros_control/issues/438>`_)

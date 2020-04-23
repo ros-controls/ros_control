@@ -2,8 +2,8 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.19.0 (2020-04-23)
+-------------------
 * Replace enums with enum classes (`#412 <https://github.com/ros-controls/ros_control/issues/412>`_)
 * Contributors: Matt Reynolds
 

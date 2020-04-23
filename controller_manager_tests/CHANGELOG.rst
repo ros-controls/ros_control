@@ -2,8 +2,8 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.19.0 (2020-04-23)
+-------------------
 * Disable flaky CLI spawn test (`#446 <https://github.com/ros-controls/ros_control/issues/446>`_)
 * Update travis config and rosinstall for noetic (`#439 <https://github.com/ros-controls/ros_control/issues/439>`_)
 * Contributors: Bence Magyar
