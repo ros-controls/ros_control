@@ -103,7 +103,7 @@ class ControllerManager(Plugin):
         self._icons = {'running': QIcon(path + '/resource/led_green.png'),
                        'stopped': QIcon(path + '/resource/led_red.png'),
                        'uninitialized': QIcon(path + '/resource/led_off.png'),
-                       'initialized': QIcon(path + '/resource/led_off.png')}
+                       'initialized': QIcon(path + '/resource/led_red.png')}
 
         # Controllers display
         table_view = self._widget.table_view
@@ -255,6 +255,11 @@ class ControllerManager(Plugin):
             action_kill = menu.addAction(self._icons['uninitialized'],
                                          'Stop and Unload')
         elif ctrl.state == 'stopped':
+            action_start = menu.addAction(self._icons['running'],
+                                          'Start again')
+            action_unload = menu.addAction(self._icons['uninitialized'],
+                                           'Unload')
+        elif ctrl.state == 'initialized':
             action_start = menu.addAction(self._icons['running'], 'Start')
             action_unload = menu.addAction(self._icons['uninitialized'],
                                            'Unload')
@@ -272,7 +277,7 @@ class ControllerManager(Plugin):
             elif action is action_kill:
                 self._stop_controller(ctrl.name)
                 self._unload_controller(ctrl.name)
-        elif ctrl.state == 'stopped':
+        elif ctrl.state == 'stopped' or ctrl.state == 'initialized':
             if action is action_start:
                 self._start_controller(ctrl.name)
             elif action is action_unload:
