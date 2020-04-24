@@ -43,8 +43,11 @@ public:
   MyRobotHW1();
   virtual ~MyRobotHW1(){};
   virtual bool init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh);
+  void setInitValues();
   virtual void read(const ros::Time& time, const ros::Duration& period);
   virtual void write(const ros::Time& time, const ros::Duration& period);
+  virtual bool recover();
+  virtual bool stop();
   virtual bool prepareSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
                              const std::list<hardware_interface::ControllerInfo>& stop_list);
   virtual void doSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,

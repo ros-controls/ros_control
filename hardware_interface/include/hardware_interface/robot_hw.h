@@ -78,6 +78,21 @@ public:
    * \returns True if initialization was successful
    */
   virtual bool init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh) {return true;}
+  
+  /** \brief The stop function is called to stop the RobotHW from a
+   * non-realtime thread. Usually on controller manager shutdown.
+   *
+   * \returns True if stopping was successful
+   */
+  virtual bool stop() {return true;}
+  
+  /** \brief The recover function is called to recover/reinitialize the RobotHW after and
+   * error state (e.g. emergency stop, safety stop, hardware limits) from a non-realtime 
+   * thread.
+   *
+   * \returns True if recovering was successful
+   */
+  virtual bool recover() {return true;}
 
   /** \name Resource Management
    *\{*/

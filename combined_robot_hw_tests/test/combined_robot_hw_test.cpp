@@ -94,6 +94,28 @@ TEST(CombinedRobotHWTests, combinationOk)
   robot_hw.write(ros::Time::now(), period);
   ej_handle = ej_interface->getHandle("test_joint2");
   ASSERT_FLOAT_EQ(3.5, ej_handle.getCommand());
+
+  // Test recover function
+  ej_handle = ej_interface->getHandle("test_joint1");
+  ej_handle.setCommand(3.5);
+  bool recover_success = robot_hw.recover();
+  ASSERT_TRUE(recover_success);
+  ASSERT_FLOAT_EQ(3.0, ej_handle.getCommand());
+  ej_handle.setCommand(10.0);
+  recover_success = robot_hw.recover();
+  ASSERT_FALSE(recover_success);
+  ASSERT_FLOAT_EQ(10.0, ej_handle.getCommand());
+
+  // Test stop function
+  ej_handle = ej_interface->getHandle("test_joint1");
+  ej_handle.setCommand(3.5);
+  bool stop_success = robot_hw.stop();
+  ASSERT_TRUE(stop_success);
+  ASSERT_FLOAT_EQ(0.0, ej_handle.getCommand());
+  ej_handle.setCommand(10.0);
+  stop_success = robot_hw.stop();
+  ASSERT_FALSE(stop_success);
+  ASSERT_FLOAT_EQ(10.0, ej_handle.getCommand());
 }
 
 TEST(CombinedRobotHWTests, switchOk)

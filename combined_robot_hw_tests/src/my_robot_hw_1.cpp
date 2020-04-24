@@ -49,25 +49,10 @@ bool MyRobotHW1::init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh)
   joint_name_.resize(3);
 
   joint_name_[0] = "test_joint1";
-  joint_position_[0] = 1.0;
-  joint_velocity_[0] = 0.0;
-  joint_effort_[0] = 0.1;
-  joint_effort_command_[0] = 3.0;
-  joint_velocity_command_[0] = 0.0;
-
   joint_name_[1] = "test_joint2";
-  joint_position_[1] = 1.0;
-  joint_velocity_[1] = 0.0;
-  joint_effort_[1] = 0.1;
-  joint_effort_command_[1] = 0.0;
-  joint_velocity_command_[1] = 0.0;
-
   joint_name_[2] = "test_joint3";
-  joint_position_[2] = 1.0;
-  joint_velocity_[2] = 0.0;
-  joint_effort_[2] = 0.1;
-  joint_effort_command_[2] = 0.0;
-  joint_velocity_command_[2] = 0.0;
+
+  setInitValues();
 
   // Populate hardware interfaces
   js_interface_.registerHandle(JointStateHandle(joint_name_[0], &joint_position_[0], &joint_velocity_[0], &joint_effort_[0]));
@@ -99,6 +84,47 @@ void MyRobotHW1::write(const ros::Time& time, const ros::Duration& period)
 {
   // Just to test that write() is called
   joint_effort_command_[1] = joint_effort_command_[0];
+}
+
+void MyRobotHW1::setInitValues()
+{
+  joint_position_[0] = 1.0;
+  joint_velocity_[0] = 0.0;
+  joint_effort_[0] = 0.1;
+  joint_effort_command_[0] = 3.0;
+  joint_velocity_command_[0] = 0.0;
+
+  joint_position_[1] = 1.0;
+  joint_velocity_[1] = 0.0;
+  joint_effort_[1] = 0.1;
+  joint_effort_command_[1] = 0.0;
+  joint_velocity_command_[1] = 0.0;
+
+  joint_position_[2] = 1.0;
+  joint_velocity_[2] = 0.0;
+  joint_effort_[2] = 0.1;
+  joint_effort_command_[2] = 0.0;
+  joint_velocity_command_[2] = 0.0;
+}
+
+bool MyRobotHW1::recover()
+{
+  if (joint_effort_command_[0] == 10.0)
+  {
+    return false;
+  }
+  setInitValues();
+  return true;
+}
+
+bool MyRobotHW1::stop()
+{
+  if (joint_effort_command_[0] == 10.0)
+  {
+    return false;
+  }
+  joint_effort_command_[0] = 0.0;
+  return true;
 }
 
 bool MyRobotHW1::prepareSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
