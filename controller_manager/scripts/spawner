@@ -48,23 +48,38 @@ loaded = []
 load_controller_service = ""
 switch_controller_service = ""
 unload_controller_service = ""
+list_controllers_service = ""
 
 def shutdown():
-    global loaded,unload_controller_service,load_controller_service,switch_controller_service
+    global loaded,unload_controller_service,load_controller_service,switch_controller_service,list_controllers_service
 
     rospy.loginfo("Shutting down spawner. Stopping and unloading controllers...")
 
     try:
+        # lister
+        list_controllers = rospy.ServiceProxy(list_controllers_service, ListControllers)
+
         # unloader
         unload_controller = rospy.ServiceProxy(unload_controller_service, UnloadController)
-
+        
         # switcher
         switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
+        
+        # get list of running controllers
+        rospy.loginfo("Getting list of controllers...");
+        _controller_list = list_controllers()
+        _running_controllers = []
+        for c in _controller_list.controller:
+            if c.state == "running":
+                _running_controllers.append(c.name)
 
-        rospy.loginfo("Stopping all controllers...");
-        switch_controller([], loaded, SwitchControllerRequest.STRICT)
+        # determine if the loaded controllers are still running
+        _running_loaded_controllers = [value for value in _running_controllers if value in loaded] 
+
+        rospy.loginfo("Stopping controllers...");
+        switch_controller([], _running_loaded_controllers, SwitchControllerRequest.STRICT)
         rospy.loginfo("Unloading all loaded controllers...");
-        for name in reversed(loaded):
+        for name in reversed(_running_loaded_controllers):
             rospy.logout("Trying to unload %s" % name)
             unload_controller(name)
             rospy.logout("Succeeded in unloading %s" % name)
@@ -88,7 +103,7 @@ def parse_args(args=None):
     return parser.parse_args(args=args)
 
 def main():
-    global unload_controller_service,load_controller_service,switch_controller_service
+    global unload_controller_service,load_controller_service,switch_controller_service,list_controllers_service
 
     args = parse_args(rospy.myargv()[1:])
 
@@ -110,6 +125,7 @@ def main():
     load_controller_service = robot_namespace+"controller_manager/load_controller"
     unload_controller_service = robot_namespace+"controller_manager/unload_controller"
     switch_controller_service = robot_namespace+"controller_manager/switch_controller"
+    list_controllers_service = robot_namespace+"controller_manager/list_controllers"
 
     try:
         # loader
@@ -128,6 +144,10 @@ def main():
         # early on
         rospy.loginfo("Controller Spawner: Waiting for service "+unload_controller_service)
         rospy.wait_for_service(unload_controller_service, timeout=timeout)
+
+        # lister
+        rospy.loginfo("Controller Spawner: Waiting for service "+list_controllers_service)
+        rospy.wait_for_service(list_controllers_service, timeout=timeout)
 
     except rospy.exceptions.ROSException:
         rospy.logwarn("Controller Spawner couldn't find the expected controller_manager ROS interface.")
@@ -190,9 +210,6 @@ def main():
             rospy.logerr("Failed to load %s" % name)
 
     rospy.loginfo("Controller Spawner: Loaded controllers: %s" % ', '.join(loaded))
-
-    if rospy.is_shutdown():
-        return
 
     # start controllers is requested
     if autostart:
