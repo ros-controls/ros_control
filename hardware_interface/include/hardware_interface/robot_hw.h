@@ -188,7 +188,7 @@ public:
   /** \brief Write commands to the robot hardware.
    * 
    * The write method is part of the control loop cycle (\ref read, update, \ref write) 
-   * and used to send out commands to the robot's hardware 
+   * and is used to send out commands to the robot's hardware 
    * resources (joints, actuators). This method should be called after 
    * \ref read and controller_manager::ControllerManager::update.
    * 
