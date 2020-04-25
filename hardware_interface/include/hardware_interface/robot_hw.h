@@ -53,7 +53,7 @@ namespace hardware_interface
  * The hardware interface map (\ref interfaces_) is a 1-to-1 map between
  * the names of interface types derived from \ref HardwareInterface and
  * instances of those interface types.
- * 
+ *
  */
 class RobotHW : public InterfaceManager
 {
@@ -79,7 +79,6 @@ public:
    * \returns True if initialization was successful
    */
   virtual bool init(ros::NodeHandle& /*root_nh*/, ros::NodeHandle &/*robot_hw_nh*/) {return true;}
-
 
   /** \name Resource Management
    *\{*/
@@ -151,13 +150,13 @@ public:
     ERROR
   };
 
-  /** \brief Return (in realtime) the state of the last doSwitch() */
+  /** \brief Return (in realtime) the state of the last doSwitch(). */
   virtual SwitchState switchResult() const
   {
     return DONE;
   }
 
-  /** \brief Return (in realtime) the state of the last doSwitch() for a given controller */
+  /** \brief Return (in realtime) the state of the last doSwitch() for a given controller. */
   virtual SwitchState switchResult(const ControllerInfo& /*controller*/) const
   {
     return DONE;
@@ -188,7 +187,7 @@ public:
   /** \brief Write commands to the robot hardware.
    * 
    * The write method is part of the control loop cycle (\ref read, update, \ref write) 
-   * and used to send out commands to the robot's hardware 
+   * and is used to send out commands to the robot's hardware 
    * resources (joints, actuators). This method should be called after 
    * \ref read and controller_manager::ControllerManager::update.
    * 
