@@ -2,8 +2,8 @@
 Changelog for package joint_limits_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.18.1 (2020-05-09)
+-------------------
 * Add function specifiers and modernize constructors (`#430 <https://github.com/ros-controls/ros_control/issues/430>`_)
   * Add override specifiers & default constructors
   * Delete ControllerBase copy & move ctors
