@@ -52,7 +52,6 @@ namespace combined_robot_hw
 class CombinedRobotHW : public hardware_interface::RobotHW
 {
 public:
-  virtual ~CombinedRobotHW(){}
 
   /** \brief The init function is called to initialize the RobotHW from a
    * non-realtime thread.
@@ -64,7 +63,7 @@ public:
    *
    * \returns True if initialization was successful
    */
-  virtual bool init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh);
+  bool init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh) override;
 
 
   /**
@@ -72,15 +71,15 @@ public:
    * with regard to necessary hardware interface switches and prepare the switching. Start and stop list are disjoint.
    * This handles the check and preparation, the actual switch is commited in doSwitch()
    */
-  virtual bool prepareSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
-                             const std::list<hardware_interface::ControllerInfo>& stop_list);
+  bool prepareSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
+                     const std::list<hardware_interface::ControllerInfo>& stop_list) override;
 
   /**
    * Perform (in realtime) all necessary hardware interface switches in order to start and stop the given controllers.
    * Start and stop list are disjoint. The feasability was checked in prepareSwitch() beforehand.
    */
-  virtual void doSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
-                        const std::list<hardware_interface::ControllerInfo>& stop_list);
+  void doSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
+                const std::list<hardware_interface::ControllerInfo>& stop_list) override;
 
   /**
    * Reads data from the robot HW
@@ -88,7 +87,7 @@ public:
    * \param time The current time
    * \param period The time passed since the last call to \ref read
    */
-  virtual void read(const ros::Time& time, const ros::Duration& period);
+  void read(const ros::Time& time, const ros::Duration& period) override;
 
   /**
    * Writes data to the robot HW
@@ -96,7 +95,7 @@ public:
    * \param time The current time
    * \param period The time passed since the last call to \ref write
    */
-  virtual void write(const ros::Time& time, const ros::Duration& period);
+  void write(const ros::Time& time, const ros::Duration& period) override;
 
 protected:
   ros::NodeHandle root_nh_;

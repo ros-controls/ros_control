@@ -45,15 +45,16 @@ namespace controller_manager
 class ControllerLoaderInterface
 {
 public:
-  ControllerLoaderInterface(const std::string& name) : name_(name) { }
+  ControllerLoaderInterface(const std::string& name) : name_(name) {}
+  virtual ~ControllerLoaderInterface() = default;
+
   virtual controller_interface::ControllerBaseSharedPtr createInstance(const std::string& lookup_name) = 0;
   virtual std::vector<std::string> getDeclaredClasses() = 0;
   virtual void reload() = 0;
   const std::string& getName() { return name_; }
-  virtual ~ControllerLoaderInterface() { }
+
 private:
   const std::string name_;
-
 };
 
 typedef std::shared_ptr<ControllerLoaderInterface> ControllerLoaderInterfaceSharedPtr;

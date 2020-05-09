@@ -91,7 +91,7 @@ struct JointData
 class Transmission
 {
 public:
-  virtual ~Transmission() {}
+  virtual ~Transmission() = default;
 
   /**
    * \brief Transform \e effort variables from actuator to joint space.

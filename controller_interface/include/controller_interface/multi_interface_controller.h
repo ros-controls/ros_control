@@ -155,10 +155,7 @@ public:
    * If set to false (the default), all requested interfaces are required.
    */
   MultiInterfaceController(bool allow_optional_interfaces = false)
-    : allow_optional_interfaces_(allow_optional_interfaces)
-  {}
-
-  virtual ~MultiInterfaceController() {}
+    : allow_optional_interfaces_(allow_optional_interfaces) {}
 
   /** \name Non Real-Time Safe Functions
    *\{*/
@@ -245,10 +242,10 @@ protected:
    * \returns True if initialization was successful and the controller
    * is ready to be started.
    */
-  virtual bool initRequest(hardware_interface::RobotHW* robot_hw,
-                           ros::NodeHandle&             root_nh,
-                           ros::NodeHandle&             controller_nh,
-                           ClaimedResources&            claimed_resources)
+  bool initRequest(hardware_interface::RobotHW* robot_hw,
+                   ros::NodeHandle&             root_nh,
+                   ros::NodeHandle&             controller_nh,
+                   ClaimedResources&            claimed_resources) override
   {
     // check if construction finished cleanly
     if (state_ != CONSTRUCTED){
@@ -340,10 +337,6 @@ protected:
 
   /** Flag to indicate if hardware interfaces are considered optional (i.e. non-required). */
   bool allow_optional_interfaces_;
-
-private:
-  MultiInterfaceController(const MultiInterfaceController& c);
-  MultiInterfaceController& operator =(const MultiInterfaceController& c);
 };
 
 } // namespace

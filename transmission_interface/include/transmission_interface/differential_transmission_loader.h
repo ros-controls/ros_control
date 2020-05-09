@@ -45,7 +45,7 @@ namespace transmission_interface
 class DifferentialTransmissionLoader : public TransmissionLoader
 {
 public:
-  TransmissionSharedPtr load(const TransmissionInfo& transmission_info);
+  TransmissionSharedPtr load(const TransmissionInfo& transmission_info) override;
 
 private:
   static bool getActuatorConfig(const TransmissionInfo& transmission_info,

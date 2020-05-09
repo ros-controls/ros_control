@@ -58,15 +58,7 @@ namespace hardware_interface
 class RobotHW : public InterfaceManager
 {
 public:
-  RobotHW()
-  {
-
-  }
-
-  virtual ~RobotHW()
-  {
-
-  }
+  virtual ~RobotHW() = default;
 
   /** \brief The init function is called to initialize the RobotHW from a
    * non-realtime thread.

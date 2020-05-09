@@ -62,8 +62,7 @@ namespace hardware_interface
   class JointModeHandle
   {
   public:
-
-    JointModeHandle() {}
+    JointModeHandle() = default;
 
     /** \param mode Which mode to start in */
     JointModeHandle(std::string name, JointCommandModes* mode)

@@ -42,7 +42,7 @@ namespace hardware_interface
 class PosVelJointHandle : public JointStateHandle
 {
 public:
-  PosVelJointHandle() {}
+  PosVelJointHandle() = default;
 
   /**
    * \param js This joint's state handle

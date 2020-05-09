@@ -45,7 +45,7 @@ namespace hardware_interface
 class ActuatorStateHandle
 {
 public:
-  ActuatorStateHandle() {}
+  ActuatorStateHandle() = default;
 
   /**
    * \param name The name of the actuator
