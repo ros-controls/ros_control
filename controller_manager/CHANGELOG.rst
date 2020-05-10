@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.19.1 (2020-05-10)
+-------------------
 * Function specifiers noetic (`#453 <https://github.com/ros-controls/ros_control/issues/453>`_)
   * Add override specifiers & default constructors
   * Delete ControllerBase copy & move ctors

@@ -2,8 +2,8 @@
 Changelog for package controller_manager_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.19.1 (2020-05-10)
+-------------------
 * Use setuptools instead of distutils (`#429 <https://github.com/ros-controls/ros_control/issues/429>`_)
 * Contributors: Matt Reynolds
 
