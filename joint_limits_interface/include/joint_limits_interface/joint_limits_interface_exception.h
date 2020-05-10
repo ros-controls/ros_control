@@ -28,6 +28,9 @@
 #pragma once
 
 
+#include <exception>
+#include <string>
+
 namespace joint_limits_interface
 {
 
@@ -35,16 +38,8 @@ namespace joint_limits_interface
 class JointLimitsInterfaceException: public std::exception
 {
 public:
-  JointLimitsInterfaceException(const std::string& message)
-    : msg(message) {}
-
-  virtual ~JointLimitsInterfaceException() throw() {}
-
-  virtual const char* what() const throw()
-  {
-    return msg.c_str();
-  }
-
+  JointLimitsInterfaceException(const std::string& message) : msg(message) {}
+  const char* what() const noexcept override {return msg.c_str();}
 private:
   std::string msg;
 };

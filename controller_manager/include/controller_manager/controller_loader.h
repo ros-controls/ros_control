@@ -56,17 +56,17 @@ public:
     reload();
   }
 
-  controller_interface::ControllerBaseSharedPtr createInstance(const std::string& lookup_name)
+  controller_interface::ControllerBaseSharedPtr createInstance(const std::string& lookup_name) override
   {
     return controller_loader_->createUniqueInstance(lookup_name);
   }
 
-  std::vector<std::string> getDeclaredClasses()
+  std::vector<std::string> getDeclaredClasses() override
   {
     return controller_loader_->getDeclaredClasses();
   }
 
-  void reload()
+  void reload() override
   {
     controller_loader_.reset(new pluginlib::ClassLoader<T>(package_, base_class_) );
   }

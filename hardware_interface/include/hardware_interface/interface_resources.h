@@ -41,7 +41,7 @@ namespace hardware_interface
  */
 struct InterfaceResources
 {
-  InterfaceResources() {}
+  InterfaceResources() = default;
 
   InterfaceResources(const std::string& hw_iface, const std::set<std::string>& res)
     : hardware_interface(hw_iface),

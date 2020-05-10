@@ -45,7 +45,7 @@ namespace hardware_interface
 class JointStateHandle
 {
 public:
-  JointStateHandle() {}
+  JointStateHandle() = default;
 
   /**
    * \param name The name of the joint

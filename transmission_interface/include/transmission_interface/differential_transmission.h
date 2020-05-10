@@ -147,7 +147,7 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void actuatorToJointEffort(const ActuatorData& act_data,
-                                   JointData&    jnt_data);
+                                   JointData&    jnt_data) override;
 
   /**
    * \brief Transform \e velocity variables from actuator to joint space.
@@ -157,7 +157,7 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void actuatorToJointVelocity(const ActuatorData& act_data,
-                                     JointData&    jnt_data);
+                                     JointData&    jnt_data) override;
 
   /**
    * \brief Transform \e position variables from actuator to joint space.
@@ -167,7 +167,7 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void actuatorToJointPosition(const ActuatorData& act_data,
-                                     JointData&    jnt_data);
+                                     JointData&    jnt_data) override;
 
   /**
    * \brief Transform \e absolute encoder values from actuator to joint space.
@@ -177,7 +177,7 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void actuatorToJointAbsolutePosition(const ActuatorData& act_data,
-                                             JointData&    jnt_data);
+                                             JointData&    jnt_data) override;
 
   /**
    * \brief Transform \e torque sensor values from actuator to joint space.
@@ -187,7 +187,7 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void actuatorToJointTorqueSensor(const ActuatorData& act_data,
-                                         JointData&    jnt_data);
+                                         JointData&    jnt_data) override;
 
   /**
    * \brief Transform \e effort variables from joint to actuator space.
@@ -197,7 +197,7 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void jointToActuatorEffort(const JointData&    jnt_data,
-                                   ActuatorData& act_data);
+                                   ActuatorData& act_data) override;
 
   /**
    * \brief Transform \e velocity variables from joint to actuator space.
@@ -207,7 +207,7 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void jointToActuatorVelocity(const JointData&    jnt_data,
-                                     ActuatorData& act_data);
+                                     ActuatorData& act_data) override;
 
   /**
    * \brief Transform \e position variables from joint to actuator space.
@@ -217,12 +217,12 @@ public:
    *  To call this method it is not required that all other data vectors contain valid data, and can even remain empty.
    */
   void jointToActuatorPosition(const JointData&    jnt_data,
-                                     ActuatorData& act_data);
+                                     ActuatorData& act_data) override;
 
-  std::size_t numActuators() const {return 2;}
-  std::size_t numJoints()    const {return 2;}
-  bool hasActuatorToJointAbsolutePosition()  const {return true;}
-  bool hasActuatorToJointTorqueSensor()      const {return true;}
+  std::size_t numActuators() const override {return 2;}
+  std::size_t numJoints()    const override {return 2;}
+  bool hasActuatorToJointAbsolutePosition()  const override {return true;}
+  bool hasActuatorToJointTorqueSensor()      const override {return true;}
 
   const std::vector<double>& getActuatorReduction() const {return act_reduction_;}
   const std::vector<double>& getJointReduction()    const {return jnt_reduction_;}

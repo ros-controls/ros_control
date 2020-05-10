@@ -51,13 +51,6 @@ using ::testing::Return;
 class RobotHWMock : public hardware_interface::RobotHW
 {
 public:
-  RobotHWMock()
-  {
-  }
-
-  ~RobotHWMock()
-  {
-  }
 
   MOCK_METHOD2(init, bool(ros::NodeHandle &, ros::NodeHandle &));
   MOCK_CONST_METHOD1(checkForConflict,
@@ -75,13 +68,7 @@ public:
 class ControllerLoaderMock : public controller_manager::ControllerLoaderInterface
 {
 public:
-  ControllerLoaderMock() : ControllerLoaderInterface("ControllerLoaderMock")
-  {
-  }
-
-  ~ControllerLoaderMock()
-  {
-  }
+  ControllerLoaderMock() : ControllerLoaderInterface("ControllerLoaderMock") {}
 
   MOCK_METHOD1(createInstance,
                controller_interface::ControllerBaseSharedPtr(const std::string &));
@@ -92,13 +79,6 @@ public:
 class ControllerMock : public controller_interface::ControllerBase
 {
 public:
-  ControllerMock()
-  {
-  }
-
-  ~ControllerMock()
-  {
-  }
 
   void initializeState()
   {
@@ -117,7 +97,7 @@ public:
 class ControllerManagerTest : public ::testing::Test
 {
 public:
-  void SetUp()
+  void SetUp() override
   {
     prepareMocks();
     loadControllers();

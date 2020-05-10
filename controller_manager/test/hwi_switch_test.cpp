@@ -137,8 +137,8 @@ public:
 
     }
 
-    virtual bool prepareSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
-                               const std::list<hardware_interface::ControllerInfo>& stop_list)
+    bool prepareSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
+                       const std::list<hardware_interface::ControllerInfo>& stop_list) override
     {
 
         if(!RobotHW::prepareSwitch(start_list, stop_list))
@@ -188,7 +188,7 @@ public:
         }
         return !(j_pe_e && j_ve_v); // check inter-joint hardware interface conflict
     }
-    virtual void doSwitch(const std::list<hardware_interface::ControllerInfo> &start_list, const std::list<hardware_interface::ControllerInfo> &stop_list)
+    void doSwitch(const std::list<hardware_interface::ControllerInfo> &start_list, const std::list<hardware_interface::ControllerInfo> &stop_list) override
     {
         RobotHW::doSwitch(start_list, stop_list); // check if member is defined
 
@@ -236,11 +236,11 @@ class DummyControllerLoader: public controller_manager::ControllerLoaderInterfac
         const std::string type_name;
     public:
         DummyController(const std::string &name) : type_name(name) {}
-        virtual void update(const ros::Time& /*time*/, const ros::Duration& /*period*/) {}
-        virtual bool initRequest(hardware_interface::RobotHW* /*hw*/,
-                                 ros::NodeHandle&             /*root_nh*/,
-                                 ros::NodeHandle&             controller_nh,
-                                 ClaimedResources&            claimed_resources)
+        void update(const ros::Time& /*time*/, const ros::Duration& /*period*/) override {}
+        bool initRequest(hardware_interface::RobotHW* /*hw*/,
+                         ros::NodeHandle&             /*root_nh*/,
+                         ros::NodeHandle&             controller_nh,
+                         ClaimedResources&            claimed_resources) override
         {
             std::vector<std::string> joints;
             if(!controller_nh.getParam("joints", joints))
@@ -272,11 +272,11 @@ public:
         add("PositionJointInterface");
         add("VelocityJointInterface");
     }
-    virtual controller_interface::ControllerBaseSharedPtr createInstance(const std::string& lookup_name)
+    controller_interface::ControllerBaseSharedPtr createInstance(const std::string& lookup_name) override
     {
         return controller_interface::ControllerBaseSharedPtr(new DummyController(classes.at(lookup_name)));
     }
-    virtual std::vector<std::string> getDeclaredClasses()
+    std::vector<std::string> getDeclaredClasses() override
     {
         std::vector<std::string> v;
         for (const auto& declared_class : classes)
@@ -285,7 +285,7 @@ public:
         }
         return v;
     }
-    virtual void reload() {}
+    void reload() override {}
 };
 
 void update(controller_manager::ControllerManager &cm, const ros::TimerEvent& e)

@@ -48,8 +48,12 @@ namespace controller_interface
 class ControllerBase
 {
 public:
-  ControllerBase(){}
-  virtual ~ControllerBase(){}
+  ControllerBase() = default;
+  virtual ~ControllerBase() = default;
+  ControllerBase(const ControllerBase&) = delete;
+  ControllerBase& operator=(const ControllerBase&) = delete;
+  ControllerBase(ControllerBase&&) = delete;
+  ControllerBase& operator=(ControllerBase&&) = delete;
 
   /** \name Real-Time Safe Functions
    *\{*/
@@ -248,10 +252,6 @@ public:
 
   /// The current execution state of the controller
   ControllerState state_ = ControllerState::CONSTRUCTED;
-
-private:
-  ControllerBase(const ControllerBase &c);
-  ControllerBase& operator =(const ControllerBase &c);
 
 };
 
