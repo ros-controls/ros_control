@@ -2,6 +2,20 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Function specifiers noetic (`#453 <https://github.com/ros-controls/ros_control/issues/453>`_)
+  * Add override specifiers & default constructors
+  * Delete ControllerBase copy & move ctors
+  * Remove unnecessary default constructors
+  * Modernize additional constructors
+  * Revert ImuSensorHandle::Data::Data() = default
+  * Remove unnecessary default overridden constructors
+  * Remove semicolon after function body
+  Co-authored-by: Matt Reynolds <mtreynolds@uwaterloo.ca>
+* Use setuptools instead of distutils (`#429 <https://github.com/ros-controls/ros_control/issues/429>`_)
+* Contributors: Bence Magyar, Matt Reynolds
+
 0.19.0 (2020-04-23)
 -------------------
 * Replace enums with enum classes (`#412 <https://github.com/ros-controls/ros_control/issues/412>`_)

@@ -2,6 +2,21 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Function specifiers noetic (`#453 <https://github.com/ros-controls/ros_control/issues/453>`_)
+  * Add override specifiers & default constructors
+  * Delete ControllerBase copy & move ctors
+  * Remove unnecessary default constructors
+  * Modernize additional constructors
+  * Revert ImuSensorHandle::Data::Data() = default
+  * Remove unnecessary default overridden constructors
+  * Remove semicolon after function body
+  Co-authored-by: Matt Reynolds <mtreynolds@uwaterloo.ca>
+* [hardware_interface::RobotHW] doc: update read and write, fix: group names (`#444 <https://github.com/ros-controls/ros_control/issues/444>`_) (`#454 <https://github.com/ros-controls/ros_control/issues/454>`_)
+* Use setuptools instead of distutils (`#429 <https://github.com/ros-controls/ros_control/issues/429>`_)
+* Contributors: Bence Magyar, Matt Reynolds
+
 0.19.0 (2020-04-23)
 -------------------
 * Remove deprecated ForceTorqueHandle ctor (`#437 <https://github.com/ros-controls/ros_control/issues/437>`_)
