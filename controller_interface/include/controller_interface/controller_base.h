@@ -253,10 +253,6 @@ public:
   /// The current execution state of the controller
   ControllerState state_ = ControllerState::CONSTRUCTED;
 
-private:
-  ControllerBase(const ControllerBase &c);
-  ControllerBase& operator =(const ControllerBase &c);
-
 };
 
 typedef std::shared_ptr<ControllerBase> ControllerBaseSharedPtr;
