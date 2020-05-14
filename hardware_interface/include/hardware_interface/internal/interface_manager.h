@@ -219,6 +219,19 @@ public:
     {
       out.push_back(interface.first);
     }
+
+    for (const auto& interface_manager : interface_managers_)
+    {
+      // Make sure interfaces appear only once, as they may have been combined
+      for (const auto& interface_name : interface_manager->getNames())
+      {
+        if (std::find(out.begin(), out.end(), interface_name) == out.end())
+        {
+          out.push_back(interface_name);
+        }
+      }
+    }
+
     return out;
   }
 
@@ -237,6 +250,13 @@ public:
     {
       out = it->second;
     }
+
+    for (const auto& interface_manager : interface_managers_)
+    {
+      std::vector<std::string> resources = interface_manager->getInterfaceResources(iface_type);
+      out.insert(out.end(), resources.begin(), resources.end());
+    }
+
     return out;
   }
 
