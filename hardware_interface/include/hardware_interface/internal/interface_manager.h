@@ -200,10 +200,8 @@ public:
         interfaces_combo_[type_name] = iface_combo;
         num_ifaces_registered_[type_name] = iface_list.size();
       } else {
-        // it is not a ResourceManager
-        ROS_ERROR("You cannot register multiple interfaces of the same type which are "
-                  "not of type ResourceManager. There is no established protocol "
-                  "for combining them.");
+        // Multiple interfaces of the same type which are not ResourceManager cannot be combined, so return
+        // nullptr
         iface_combo = nullptr;
       }
     }
