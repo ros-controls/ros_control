@@ -54,6 +54,24 @@ namespace hardware_interface
  * the names of interface types derived from \ref HardwareInterface and
  * instances of those interface types.
  *
+ * A class derived from this base interface represents a robot and stores the
+ * state of the robot's hardware resources (joints, sensors, actuators) and
+ * outgoing commands in its data member arrays. The names of these members
+ * should provide semantic meaning (e.g. pos, vel, eff, cmd).
+ * Commands from controllers are populated by the controller's update method,
+ * (controller_interface::ControllerBase::update()).
+ * For each resource a \ref JointStateHandle (for read only joints),
+ * \ref JointHandle (for read and write joints) or custom handle can be used
+ * which is registered (\ref hardware_interface::ResourceManager::registerHandle)
+ * with one of the robot's interface types. For read-only joints it is possible
+ * to use \ref JointStateInterface and for joints that accept commands and
+ * provide feedback (read and write) \ref JointCommandInterface can be used or
+ * one of its derived interfaces (e.g. \ref PositionJointInterface). Another
+ * option is to define and use custom ones. The interfaces themselfes are then
+ * registered (\ref registerInterface) with the derived robot class.
+ * The registration (\ref registerInterface) of interfaces can be done either in
+ * the constructor or \ref init of a custom robot hardware class.
+ *
  */
 class RobotHW : public InterfaceManager
 {
@@ -62,6 +80,15 @@ public:
 
   /** \brief The init function is called to initialize the RobotHW from a
    * non-realtime thread.
+   *
+   * Initialising a custom robot is done by registering joint handles
+   * (\ref hardware_interface::ResourceManager::registerHandle) to hardware
+   * interfaces that group similar joints and registering those individual
+   * hardware interfaces with the class that represents the custom robot
+   * (derived from this hardware_interface::RobotHW)
+   *
+   * \note Registering of joint handles and interfaces can either be done in the
+   * constructor or this \ref init method.
    *
    * \param root_nh A NodeHandle in the root of the caller namespace.
    *
