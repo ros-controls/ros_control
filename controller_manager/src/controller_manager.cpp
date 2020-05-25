@@ -615,12 +615,11 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     std::chrono::duration<double> diff = std::chrono::system_clock::now() - start_time;
     if (diff.count() < timeout || timeout == 0){
         std::this_thread::sleep_for(std::chrono::microseconds(100));
-    } else{
+    } else {
         ROS_DEBUG("Time Out while Switching the controllers. Exiting cleanly");
         timed_out = true;
         break;
     }
-
   }
   start_request_.clear();
   stop_request_.clear();
