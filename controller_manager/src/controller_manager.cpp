@@ -612,20 +612,21 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     {
       return false;
     }
-    std::chrono::duration<double> diff = std::chrono::system_clock::now() - start_time;
-    if (diff.count() < timeout){
-        std::this_thread::sleep_for(std::chrono::microseconds(100));
-    } else {
-        ROS_DEBUG("Time Out while Switching the controllers. Exiting cleanly");
-        timed_out = true;
-        break;
-    }
+    std::this_thread::sleep_for(std::chrono::microseconds(100));
+//    std::chrono::duration<double> diff = std::chrono::system_clock::now() - start_time;
+//    if (diff.count() < timeout || timeout == 0){
+//        std::this_thread::sleep_for(std::chrono::microseconds(100));
+//    } else {
+//        ROS_DEBUG("Time Out while Switching the controllers. Exiting cleanly");
+//        timed_out = true;
+//        break;
+//    }
   }
   start_request_.clear();
   stop_request_.clear();
-  if(timed_out){
-      return false;
-  }
+//  if(timed_out){
+//      return false;
+//  }
   ROS_DEBUG("Successfully switched controllers");
   return true;
 }
