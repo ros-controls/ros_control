@@ -40,6 +40,9 @@ if(CATKIN_ENABLE_TESTING)
   catkin_add_gtest(joint_state_interface_test               test/joint_state_interface_test.cpp)
   target_link_libraries(joint_state_interface_test          ${catkin_LIBRARIES})
 
+  catkin_add_gtest(joint_dynamic_state_interface_test       test/joint_dynamic_state_interface_test.cpp)
+  target_link_libraries(joint_dynamic_state_interface_test  ${catkin_LIBRARIES})
+
   catkin_add_gtest(joint_command_interface_test             test/joint_command_interface_test.cpp)
   target_link_libraries(joint_command_interface_test        ${catkin_LIBRARIES})
 
