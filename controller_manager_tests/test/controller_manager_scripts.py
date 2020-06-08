@@ -135,12 +135,17 @@ class TestUtils(unittest.TestCase):
              '  group3\n      my_controller1\n      my_controller2\n').encode("utf-8"))
 
         # spawn
-        self.assertEqual(
-             run_cg('spawn group1'),
-             ('Loaded \'my_controller1\'\n' +
+        result_spawn_group1 = run_cg('spawn group1')
+        first_sgp1_solution = ('Loaded \'my_controller1\'\n' +
               'Loaded \'my_controller3\'\n' +
               'Started [\'my_controller1\'] successfully\n' +
-              'Started [\'my_controller3\'] successfully\n').encode("utf-8"))
+              'Started [\'my_controller3\'] successfully\n').encode("utf-8")
+        second_sgp1_solution = ('Loaded \'my_controller3\'\n' +
+              'Loaded \'my_controller1\'\n' +
+              'Started [\'my_controller3\'] successfully\n' +
+              'Started [\'my_controller1\'] successfully\n').encode("utf-8")
+        self.assertTrue( (result_spawn_group1==first_sgp1_solution) or
+                         ( result_spawn_group1 == second_sgp1_solution))
 
         # switch
         self.assertEqual(
