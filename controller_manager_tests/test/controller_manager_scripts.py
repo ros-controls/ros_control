@@ -135,24 +135,24 @@ class TestUtils(unittest.TestCase):
              '  group3\n      my_controller1\n      my_controller2\n').encode("utf-8"))
 
         # spawn
-        # self.assertEqual(
-        #     run_cg('spawn group1'),
-        #     ('Loaded \'my_controller1\'\n' +
-        #      'Loaded \'my_controller3\'\n' +
-        #      'Started [\'my_controller1\'] successfully\n' +
-        #      'Started [\'my_controller3\'] successfully\n').encode("utf-8"))
+        self.assertEqual(
+             run_cg('spawn group1'),
+             ('Loaded \'my_controller1\'\n' +
+              'Loaded \'my_controller3\'\n' +
+              'Started [\'my_controller1\'] successfully\n' +
+              'Started [\'my_controller3\'] successfully\n').encode("utf-8"))
 
         # switch
-        # self.assertEqual(
-        #     run_cg('switch group2'),
-        #     ('Loaded \'my_controller2\'\n' +
-        #      'Started [\'my_controller2\'] successfully\n' +
-        #      'Stopped [\'my_controller1\'] successfully\n').encode("utf-8"))
+        self.assertEqual(
+             run_cg('switch group2'),
+             ('Loaded \'my_controller2\'\n' +
+              'Started [\'my_controller2\'] successfully\n' +
+              'Stopped [\'my_controller1\'] successfully\n').encode("utf-8"))
 
         # switch to faulty group because my_controller1 conflicts with my_controller2
-        # self.assertEqual(
-        #     run_cg('switch group3'),
-        #     b'Error when starting [\'my_controller1\'] and stopping [\'my_controller3\']\n')
+        self.assertEqual(
+             run_cg('switch group3'),
+             b'Error when starting [\'my_controller1\'] and stopping [\'my_controller3\']\n')
 
 
 if __name__ == '__main__':

@@ -52,6 +52,8 @@ if(CATKIN_ENABLE_TESTING)
   add_rostest(test/cm_msgs_utils_rostest.test)
 
   add_rostest(test/controller_manager_scripts.test DEPENDENCIES dummy_app)
+
+  add_rostest(test/controller_manager_interface_test.test DEPENDENCIES dummy_app)
 endif()
 
 
