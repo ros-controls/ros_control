@@ -624,6 +624,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   start_request_.clear();
   stop_request_.clear();
   if(timed_out){
+      ROS_DEBUG("Exited while loop forcibly without ROS handling timeout");
       return false;
   }
   ROS_DEBUG("Successfully switched controllers");
