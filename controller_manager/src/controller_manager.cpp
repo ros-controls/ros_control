@@ -623,9 +623,9 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   }
   start_request_.clear();
   stop_request_.clear();
-  if(timed_out){
-      return false;
-  }
+//  if(timed_out){
+//      return false;
+//  }
   ROS_DEBUG("Successfully switched controllers");
   return true;
 }
