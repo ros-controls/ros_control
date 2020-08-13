@@ -51,22 +51,22 @@ TransmissionSharedPtr SimpleTransmissionLoader::load(const TransmissionInfo& tra
 
   // Parse required mechanical reduction
   double reduction = 0.0;
-  const ParseStatus reduction_status = getActuatorReduction(actuator_el,
-                                                            transmission_info.actuators_.front().name_,
-                                                            transmission_info.name_,
-                                                            true, // Required
-                                                            reduction);
-  if (reduction_status != ParseStatus::SUCCESS) {return TransmissionSharedPtr();}
+  if(!getActuatorReduction(actuator_el,
+                           transmission_info.actuators_.front().name_,
+                           transmission_info.name_,
+                           true, // Required
+                           reduction))
+    {return TransmissionSharedPtr();}
 
   // Parse optional joint offset. Even though it's optional --and to avoid surprises-- we fail if the element is
   // specified but is of the wrong type
   double joint_offset = 0.0;
-  const ParseStatus joint_offset_status = getJointOffset(joint_el,
-                                                         transmission_info.joints_.front().name_,
-                                                         transmission_info.name_,
-                                                         false, // Optional
-                                                         joint_offset);
-  if (joint_offset_status == ParseStatus::BAD_TYPE) {return TransmissionSharedPtr();}
+  if(!getJointOffset(joint_el,
+                 transmission_info.joints_.front().name_,
+                 transmission_info.name_,
+                 false, // Optional
+                 joint_offset))
+    {return TransmissionSharedPtr();}
 
   // Transmission instance
   try
