@@ -2,6 +2,26 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixes part 2 of issue`#448 <https://github.com/ros-controls/ros_control/issues/448>`_ [Noetic] Rework and re-enable spawning and switching CLI tests (`#462 <https://github.com/ros-controls/ros_control/issues/462>`_)
+  * [tests] Split controller_manager_scripts.txt in two parts.
+  The second part is now called controller_manager_interface_test.
+  This fixes part 2 of issue `#448 <https://github.com/ros-controls/ros_control/issues/448>`_
+  * [test] Modification of the validation test.
+  When commenting the first test (cm_msg_utils_test.py) the output
+  is correct, while uncommented an inversion of the output happens.
+  As this test is a pure python with no interaction with the
+  controller_manager, it is very likely a race condition due either to
+  Python or to the operating system. As the output is not fundamentally
+  wrong, and as the tests are heavily relying on timing and subprocesses
+  which are making the reproducibility difficult, this PR accepts both
+  solution:
+  [my_controller1, my_controller3] order
+  or
+  [my_controller3, my_controller1] order
+* Contributors: Olivier Stasse
+
 0.19.1 (2020-05-10)
 -------------------
 * Function specifiers noetic (`#453 <https://github.com/ros-controls/ros_control/issues/453>`_)
