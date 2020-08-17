@@ -2,6 +2,9 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.18.1 (2020-05-09)
 -------------------
 * Add function specifiers and modernize constructors (`#430 <https://github.com/ros-controls/ros_control/issues/430>`_)
