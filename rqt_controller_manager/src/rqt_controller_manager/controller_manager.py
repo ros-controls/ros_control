@@ -44,7 +44,7 @@ from controller_manager_msgs.utils\
     import ControllerLister, ControllerManagerLister,\
     get_rosparam_controller_names
 
-from update_combo import update_combo
+from .update_combo import update_combo
 
 
 class ControllerManager(Plugin):
