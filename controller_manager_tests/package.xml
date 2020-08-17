@@ -4,7 +4,7 @@
   schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>controller_manager_tests</name>
-  <version>0.19.1</version>
+  <version>0.19.2</version>
   <description>Tests for the controller manager.</description>
 
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
