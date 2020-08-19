@@ -527,9 +527,9 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoadReversible)
 
   jnt_to_act_pos_cmd->propagate();
 
-  EXPECT_NEAR(50.0, act_pos_cmd_handle_red.getPosition(),   EPS);
-  EXPECT_NEAR(50.0, act_pos_cmd_handle_diff1.getPosition(), EPS);
-  EXPECT_NEAR(50.0, act_pos_cmd_handle_diff2.getPosition(), EPS);
+  EXPECT_NEAR(50.0, act_pos_cmd_handle_red.getCommand(),   EPS);
+  EXPECT_NEAR(50.0, act_pos_cmd_handle_diff1.getCommand(), EPS);
+  EXPECT_NEAR(50.0, act_pos_cmd_handle_diff2.getCommand(), EPS);
 
   // Propagate velocity commands forward
   vel_jnt_handle_red.setCommand(1.0);
@@ -538,9 +538,9 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoadReversible)
 
   jnt_to_act_vel_cmd->propagate();
 
-  EXPECT_NEAR(-50.0, act_vel_cmd_handle_red.getVelocity(),   EPS);
-  EXPECT_NEAR(-50.0, act_vel_cmd_handle_diff1.getVelocity(), EPS);
-  EXPECT_NEAR(-50.0, act_vel_cmd_handle_diff2.getVelocity(), EPS);
+  EXPECT_NEAR(50.0, act_vel_cmd_handle_red.getCommand(),   EPS);
+  EXPECT_NEAR(50.0, act_vel_cmd_handle_diff1.getCommand(), EPS);
+  EXPECT_NEAR(50.0, act_vel_cmd_handle_diff2.getCommand(), EPS);
 
   // Propagate effort commands forward
   eff_jnt_handle_red.setCommand(50.0);
@@ -549,9 +549,9 @@ TEST_F(TransmissionInterfaceLoaderTest, SuccessfulLoadReversible)
 
   jnt_to_act_eff_cmd->propagate();
 
-  EXPECT_NEAR(1.0, act_eff_cmd_handle_red.getEffort(),   EPS);
-  EXPECT_NEAR(1.0, act_eff_cmd_handle_diff1.getEffort(), EPS);
-  EXPECT_NEAR(1.0, act_eff_cmd_handle_diff2.getEffort(), EPS);
+  EXPECT_NEAR(1.0, act_eff_cmd_handle_red.getCommand(),   EPS);
+  EXPECT_NEAR(1.0, act_eff_cmd_handle_diff1.getCommand(), EPS);
+  EXPECT_NEAR(1.0, act_eff_cmd_handle_diff2.getCommand(), EPS);
 
   // Now propegate things in the reverse direction
   RawJointDataMap* joint_data_map = &trans_iface_loader.getData()->raw_joint_data_map;
