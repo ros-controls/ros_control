@@ -41,32 +41,6 @@ using namespace transmission_interface;
 // Floating-point value comparison threshold
 const double EPS = 1e-6;
 
-TEST(IsPermutationTest, IsPermutation)
-{
-  std::vector<int> a(3);
-  a[0] = 0;
-  a[1] = 1;
-  a[2] = 2;
-
-  std::vector<int> b(3);
-  b[0] = 0;
-  b[1] = 2;
-  b[2] = 1;
-
-  std::vector<int> c(3);
-  c[0] = 0;
-  c[1] = 1;
-  c[2] = 3;
-
-  std::vector<int> d(3, 1);
-
-  EXPECT_TRUE(std::is_permutation(a.begin(),  a.end(), a.begin()));
-  EXPECT_TRUE(std::is_permutation(a.begin(),  a.end(), b.begin()));
-  EXPECT_FALSE(std::is_permutation(a.begin(), a.end(), c.begin()));
-  EXPECT_FALSE(std::is_permutation(a.begin(), a.end(), d.begin()));
-  EXPECT_FALSE(std::is_permutation(d.begin(), d.end(), a.begin()));
-}
-
 class TransmissionInterfaceLoaderTest : public ::testing::Test
 {
 public:
