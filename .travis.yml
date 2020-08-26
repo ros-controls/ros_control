@@ -15,7 +15,7 @@ env:
   global:
     - UPSTREAM_WORKSPACE='ros_control.rosinstall -ros_control'
   matrix:
-#    - ROS_DISTRO=noetic ROS_REPO=ros
+    - ROS_DISTRO=noetic ROS_REPO=ros
     - ROS_DISTRO=noetic ROS_REPO=ros-testing
 
 install:
