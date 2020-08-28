@@ -96,12 +96,12 @@ bool FourBarLinkageTransmissionLoader::getActuatorConfig(const TransmissionInfo&
 
     // Populate role string
     std::string& act_role = act_roles[i];
-    const ParseStatus act_role_status = getActuatorRole(act_elements[i],
-                                                        act_names[i],
-                                                        transmission_info.name_,
-                                                        true, // Required
-                                                        act_role);
-    if (act_role_status != ParseStatus::SUCCESS) {return false;}
+    if(!getActuatorRole(act_elements[i],
+                        act_names[i],
+                        transmission_info.name_,
+                        true, // Required
+                        act_role))
+    {return false;}
 
     // Validate role string
     if (ACTUATOR1_ROLE != act_role && ACTUATOR2_ROLE != act_role)
@@ -141,12 +141,12 @@ bool FourBarLinkageTransmissionLoader::getActuatorConfig(const TransmissionInfo&
   for (unsigned int i = 0; i < 2; ++i)
   {
     const unsigned int id = id_map[i];
-    const ParseStatus reduction_status = getActuatorReduction(act_elements[id],
-                                                              act_names[id],
-                                                              transmission_info.name_,
-                                                              true, // Required
-                                                              actuator_reduction[i]);
-    if (reduction_status != ParseStatus::SUCCESS) {return false;}
+    if(!getActuatorReduction(act_elements[id],
+                             act_names[id],
+                             transmission_info.name_,
+                             true, // Required
+                             actuator_reduction[i]))
+    {return false;}
   }
 
   return true;
@@ -173,12 +173,12 @@ bool FourBarLinkageTransmissionLoader::getJointConfig(const TransmissionInfo& tr
 
     // Populate role string
     std::string& jnt_role = jnt_roles[i];
-    const ParseStatus jnt_role_status = getJointRole(jnt_elements[i],
-                                                     jnt_names[i],
-                                                     transmission_info.name_,
-                                                     true, // Required
-                                                     jnt_role);
-    if (jnt_role_status != ParseStatus::SUCCESS) {return false;}
+    if(!getJointRole(jnt_elements[i],
+                     jnt_names[i],
+                     transmission_info.name_,
+                     true, // Required
+                     jnt_role))
+    {return false;}
 
     // Validate role string
     if (JOINT1_ROLE != jnt_role && JOINT2_ROLE != jnt_role)
@@ -222,21 +222,21 @@ bool FourBarLinkageTransmissionLoader::getJointConfig(const TransmissionInfo& tr
 
     // Parse optional mechanical reductions. Even though it's optional --and to avoid surprises-- we fail if the element
     // is specified but is of the wrong type
-    const ParseStatus reduction_status = getJointReduction(jnt_elements[id],
-                                                           jnt_names[id],
-                                                           transmission_info.name_,
-                                                           false, // Optional
-                                                           joint_reduction[i]);
-    if (reduction_status == ParseStatus::BAD_TYPE) {return false;}
+    if(!getJointReduction(jnt_elements[id],
+                          jnt_names[id],
+                          transmission_info.name_,
+                          false, // Optional
+                          joint_reduction[i]))
+      {return false;}
 
     // Parse optional joint offset. Even though it's optional --and to avoid surprises-- we fail if the element is
     // specified but is of the wrong type
-    const ParseStatus offset_status = getJointOffset(jnt_elements[id],
-                                                     jnt_names[id],
-                                                     transmission_info.name_,
-                                                     false, // Optional
-                                                     joint_offset[i]);
-    if (offset_status == ParseStatus::BAD_TYPE) {return false;}
+    if(!getJointOffset(jnt_elements[id],
+                       jnt_names[id],
+                       transmission_info.name_,
+                       false, // Optional
+                       joint_offset[i]))
+      {return false;}
   }
 
   return true;
