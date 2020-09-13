@@ -163,19 +163,18 @@ public:
    * \brief Get an interface.
    *
    * If this class and its registered sub-managers only have one registered
-   * instance of the requested type, this will be returned. If multiple
-   * instances of the interface type were registered and the type is a
+   * instance of the requested interface type, this will be returned. If
+   * multiple instances of the interface type were registered and the type is a
    * \c ResourceManager, this call will try to combine them into a single
    * handle. In all other cases, \c nullptr will be returned.
    *
-   * \note As this instance will only store one instance of each manager type,
-   * the only way multiple interfaces are registered is the registration of
-   * other managers with interfaces of the same type.
+   * \note As this class can only store one instance of each interface type,
+   * the only way multiple instances of the same interface type can be
+   * registered  is through the registration of sub-managers.
    *
    * \note If there are multiple registered interfaces of the requested type
-   * (either directly or through registered interfaces) and they are not
-   * \c ResourceManager, this method will not be able to combine them and will
-   * return \c nullptr.
+   * and they are not \c ResourceManager, this method will not be able to
+   * combine them and will return \c nullptr.
    *
    * \tparam T The interface type
    * \return A handle for the stored interfaces of type \c T or \c nullptr
