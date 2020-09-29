@@ -110,7 +110,15 @@ public:
   }
 
 private:
+  // hardware_interface::JointStateInterface gives read access to all joint values 
+  // without conflicting with other controllers.
   hardware_interface::JointStateInterface jnt_state_interface;
+  // hardware_interface::PositionJointInterface inherits from 
+  // hardware_interface::JointCommandInterface and is used for reading and writing
+  // joint positions. Because this interface reserves the joints for write access,
+  // conflicts with other controllers writing to the same joints might occure.
+  // To only read joint positions, avoid conflicts using 
+  // hardware_interface::JointStateInterface.
   hardware_interface::PositionJointInterface jnt_pos_interface;
 
   // Data member array to store the controller commands which are sent to the 
@@ -170,7 +178,13 @@ int main(int argc, char **argv)
         
         // Execution of the actual control loop.
         robot.read();
+        // If needed, its possible to define transmissions in software by calling the 
+        // transmission_interface::ActuatorToJointPositionInterface::propagate()
+        // after reading the joint states.
         cm.update(time, period);
+        // In case of software transmissions, use 
+        // transmission_interface::JointToActuatorEffortHandle::propagate()
+        // to convert from the joint space to the actuator space.
         root.write();
         
         // All these steps keep getting repeated with the specified rate.
@@ -179,6 +193,10 @@ int main(int argc, char **argv)
     return 0;
 }
 \endcode
+
+To implement software transmissions, see 
+[transmission_interface](http://docs.ros.org/melodic/api/transmission_interface/html/c++/index.html) 
+for examples.
 
 \section resource-managment Resource Management
 
