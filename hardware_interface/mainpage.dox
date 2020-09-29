@@ -24,7 +24,7 @@ as of this writing are:
 - [JointStateInterfaces](\ref hardware_interface::JointStateInterface): 
   hardware interface to support reading the state of an array of named joints, 
   each of which has some position, velocity, and effort (force or torque).
-- [ActuatorStateInterfaces](\ref hardware_interface::ActuatorStateInterface): 
+- [ActuatorStateInterfaces](\ref hardware_interface::ActuatorStateInterface):
   hardware interface to support reading the state of an array of named actuators,
   each of which has some position, velocity, and effort (force or torque).
 - [ActuatorCommandInterfaces](\ref hardware_interface::ActuatorCommandInterface)
