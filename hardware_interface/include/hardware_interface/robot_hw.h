@@ -63,15 +63,17 @@ namespace hardware_interface
  * For each resource a \ref JointStateHandle (for read only joints),
  * \ref JointHandle (for read and write joints) or custom handle can be used
  * which is registered (\ref hardware_interface::ResourceManager::registerHandle)
- * with one of the robot's interface types. For read-only joints it is possible
- * to use \ref JointStateInterface and for joints that accept commands and
- * provide feedback (read and write) \ref JointCommandInterface can be used or
- * one of its derived interfaces (e.g. \ref PositionJointInterface). Another
- * option is to define and use custom ones. The interfaces themselfes are then
- * registered (\ref registerInterface) with the derived robot class.
- * The registration (\ref registerInterface) of interfaces can be done either in
- * the constructor or \ref init of a custom robot hardware class.
- *
+ * with one of the robot's interface types. Note that \ref JointStateHandle
+ * should be preferred in case only reading from the joint is required
+ * because it doesn't create conflicts between controllers.
+ * For read-only joints it is possible to use \ref JointStateInterface and for
+ * joints that accept commands and provide feedback (read and write)
+ * \ref JointCommandInterface can be used or one of its derived interfaces
+ * (e.g. \ref PositionJointInterface). Another option is to define and use custom
+ * ones. The interfaces themselfes are then registered (\ref registerInterface)
+ * with the derived robot class. The registration (\ref registerInterface) of
+ * interfaces can be done either in the constructor or \ref init of a custom
+ * robot hardware class.
  */
 class RobotHW : public InterfaceManager
 {
@@ -150,7 +152,7 @@ public:
   /**
    * Check (in non-realtime) if given controllers could be started and stopped from the current state of the RobotHW
    * with regard to necessary hardware interface switches and prepare the switching. Start and stop list are disjoint.
-   * This handles the check and preparation, the actual switch is commited in doSwitch()
+   * This handles the check and preparation, the actual switch is commited in doSwitch().
    */
   virtual bool prepareSwitch(const std::list<ControllerInfo>& /*start_list*/,
                              const std::list<ControllerInfo>& /*stop_list*/) { return true; }
