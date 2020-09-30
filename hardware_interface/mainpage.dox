@@ -1,0 +1,322 @@
+/**
+\mainpage
+\htmlinclude manifest.html
+
+Hardware interfaces are used by ROS control in conjunction with one of the
+available ROS controllers to send (\ref hardware_interface::RobotHW::write)
+commands to the hardware and receive (\ref hardware_interface::RobotHW::read)
+states from the robot's resources (joints, sensors, actuators).
+
+A list of available hardware interfaces (provided via the HardwareResourceManager) 
+as of this writing are:
+
+- [JointCommandInterface](\ref hardware_interface::JointCommandInterface): 
+  hardware interface to support commanding and reading the state of an array of
+  joints. Note that these commands can have any semantic meaning as long as each
+  can be represented by a single double, they are not necessarily effort commands. 
+  To specify a meaning to this command, see the derived classes:
+  - [EffortJointInterface](\ref hardware_interface::EffortJointInterface): 
+    for commanding and reading effort-based joints.
+  - [VelocityJointInterface](\ref hardware_interface::VelocityJointInterface): 
+    for commanding and reading velocity-based joints.
+  - [PositionJointInterface](\ref hardware_interface::PositionJointInterface): 
+    for commanding and reading position-based joints.
+- [JointStateInterfaces](\ref hardware_interface::JointStateInterface): 
+  hardware interface to support reading the state of an array of named joints, 
+  each of which has some position, velocity, and effort (force or torque).
+- [ActuatorStateInterfaces](\ref hardware_interface::ActuatorStateInterface):
+  hardware interface to support reading the state of an array of named actuators,
+  each of which has some position, velocity, and effort (force or torque).
+- [ActuatorCommandInterfaces](\ref hardware_interface::ActuatorCommandInterface)
+  - [EffortActuatorInterface](\ref hardware_interface::EffortActuatorInterface)
+  - [VelocityActuatorInterface](\ref hardware_interface::VelocityActuatorInterface)
+  - [PositionActuatorInterface](\ref hardware_interface::PositionActuatorInterface)
+- [PosVelJointInterface](\ref hardware_interface::PosVelJointInterface)
+- [PosVelAccJointInterface](\ref hardware_interface::PosVelAccJointInterface)
+- [Force-torque sensor Interface](\ref hardware_interface::ForceTorqueSensorInterface)
+- [IMU sensor Interface](\ref hardware_interface::ImuSensorInterface)
+
+Note that \ref hardware_interface::JointCommandInterface allows both reading
+joint state and commanding [effort|velocity|position]-based joints
+(see this [answer](https://answers.ros.org/question/209619/differences-between-hardware-interfaces/?answer=209636#post-id-209636)).
+
+\section new-robot-setup Setting up a new robot
+
+The following example explains how to set up a new robot to work with the
+[controller_manager](http://wiki.ros.org/controller_manager). When you make your
+robot support one or more of the standard interfaces, you will be able to take
+advantage of a large library of controllers (see
+[ros_controllers](https://github.com/ros-controls/ros_controllers))
+that work on the standard interfaces mentioned above.
+
+![hw_interface_2.png](https://raw.githubusercontent.com/wiki/ros-controls/ros_control/hw_interface_2.png)
+
+As the image above suggests, a custom robot hardware interface is not
+limited to be composed of only one single interface. The robot can provide as
+many interfaces as required. It could for example provide both the
+\ref hardware_interface::PositionJointInterface and the
+\ref hardware_interface::VelocityJointInterface, and many more.
+
+Assuming a robot with two joints: A & B where both joints are position controlled.
+Such a robot is defined with a class derived from \ref hardware_interface::RobotHW
+that should provide the standard [PositionJointInterface](\ref hardware_interface::PositionJointInterface) and the
+[JointStateInterface](\ref hardware_interface::JointStateInterface), so it can re-use all controllers that are already
+written to work with the [PositionJointInterface](\ref hardware_interface::PositionJointInterface) and the
+[JointStateInterface](\ref hardware_interface::JointStateInterface). The code would look like this:
+
+\code
+#include <hardware_interface/joint_command_interface.h>
+#include <hardware_interface/joint_state_interface.h>
+#include <hardware_interface/robot_hw.h>
+
+class MyRobot : public hardware_interface::RobotHW
+{
+public:
+  MyRobot() 
+  { 
+    // Initialization of the robot's resources (joints, sensors, actuators) and
+    // interfaces can be done here or inside init().
+    // E.g. parse the URDF for joint names & interfaces, then initialize them
+  }
+
+  bool init(ros::NodeHandle &root_nh, ros::NodeHandle &robot_hw_nh)
+  {
+    // Create a JointStateHandle for each joint and register them with the 
+    // JointStateInterface.
+    hardware_interface::JointStateHandle state_handle_a("A", &pos[0], &vel[0], &eff[0]);
+    jnt_state_interface.registerHandle(state_handle_a);
+
+    hardware_interface::JointStateHandle state_handle_b("B", &pos[1], &vel[1], &eff[1]);
+    jnt_state_interface.registerHandle(state_handle_b);
+
+    // Register the JointStateInterface containing the read only joints
+    // with this robot's hardware_interface::RobotHW.
+    registerInterface(&jnt_state_interface);
+
+    // Create a JointHandle (read and write) for each controllable joint
+    // using the read-only joint handles within the JointStateInterface and 
+    // register them with the JointPositionInterface.
+    hardware_interface::JointHandle pos_handle_a(jnt_state_interface.getHandle("A"), &cmd[0]);
+    jnt_pos_interface.registerHandle(pos_handle_a);
+
+    hardware_interface::JointHandle pos_handle_b(jnt_state_interface.getHandle("B"), &cmd[1]);
+    jnt_pos_interface.registerHandle(pos_handle_b);
+
+    // Register the JointPositionInterface containing the read/write joints
+    // with this robot's hardware_interface::RobotHW.
+    registerInterface(&jnt_pos_interface);
+
+    return true;
+  }
+
+private:
+  // hardware_interface::JointStateInterface gives read access to all joint values 
+  // without conflicting with other controllers.
+  hardware_interface::JointStateInterface jnt_state_interface;
+  // hardware_interface::PositionJointInterface inherits from 
+  // hardware_interface::JointCommandInterface and is used for reading and writing
+  // joint positions. Because this interface reserves the joints for write access,
+  // conflicts with other controllers writing to the same joints might occure.
+  // To only read joint positions, avoid conflicts using 
+  // hardware_interface::JointStateInterface.
+  hardware_interface::PositionJointInterface jnt_pos_interface;
+
+  // Data member array to store the controller commands which are sent to the 
+  // robot's resources (joints, actuators)
+  double cmd[2];
+
+  // Data member arrays to store the state of the robot's resources (joints, sensors)
+  double pos[2];
+  double vel[2];
+  double eff[2];
+};
+\endcode
+
+This code represents a custom robot and is required to control it.
+The functions above are designed to give the controller manager (and the
+controllers inside the controller manager) access to the joint state of 
+custom robot, and to command it. When the controller manager runs, the
+controllers will read from the pos, vel and eff variables of the custom robot
+hardware interface, and the controller will write the desired command into the
+cmd variable. It's mandatory to make sure the pos, vel and eff variables always
+have the latest joint state available, and to make sure that whatever is written
+into the cmd variable gets executed by the robot. This can be done by implementing
+\ref hardware_interface::RobotHW::read() and a \ref hardware_interface::RobotHW::write()
+methods. A node's `main()` function can be implemented like this:
+
+\code
+#include <ros/ros.h>
+#include <my_robot/my_robot.h>
+#include <controller_manager/controller_manager.h>
+
+int main(int argc, char **argv)
+{
+    // Initialize the ROS node
+    ros::init(argc, argv, "my_robot");
+    
+    // Create an instance of your robot so that this instance knows about all 
+    // the resources that are available.
+    MyRobot::MyRobot robot;
+
+    // Create an instance of the controller manager and pass it the robot, 
+    // so that it can handle its resources.
+    controller_manager::ControllerManager cm(&robot);
+    
+    // Setup a separate thread that will be used to service ROS callbacks.
+    ros:AsyncSpinner spinner(1);
+    spinner.start();
+    
+    // Setup for the control loop.
+    ros::Time prev_time = ros::Time::now();
+    ros::Rate rate(10.0); // 10 Hz rate
+    
+    while (ros::ok())
+    {
+        // Basic bookkeeping to get the system time in order to compute the control period.
+        const ros::Time     time   = ros:Time::now();
+        const ros::Duration period = time - prev_time;
+        
+        // Execution of the actual control loop.
+        robot.read();
+        // If needed, its possible to define transmissions in software by calling the 
+        // transmission_interface::ActuatorToJointPositionInterface::propagate()
+        // after reading the joint states.
+        cm.update(time, period);
+        // In case of software transmissions, use 
+        // transmission_interface::JointToActuatorEffortHandle::propagate()
+        // to convert from the joint space to the actuator space.
+        root.write();
+        
+        // All these steps keep getting repeated with the specified rate.
+        rate.sleep();
+    }
+    return 0;
+}
+\endcode
+
+To implement software transmissions, see 
+[transmission_interface](http://docs.ros.org/melodic/api/transmission_interface/html/c++/index.html) 
+for examples.
+
+\section resource-managment Resource Management
+
+The controller manager keeps track of which resources are in use by each of the
+controllers. A resource can be something like 'right_elbow_joint', 'base',
+'left_arm', 'wrist_joints'. Pretty much anything a specific robot can consist of.
+Put simply, resources are specified in the robot's hardware interface (derived from
+\ref hardware_interface::RobotHW). And a robot is represented by a bunch of
+hardware interfaces, where one is a set of similar resources. For example, the
+\ref hardware_interface::PositionJointInterface groups the position controlled
+joints as resources. It is also possible to implement a custom hardware interface,
+and define custom resources. When controllers are getting initialized, they
+request a number of resources from the hardware interface; these requests get
+recorded by the controller manager. So the controller manager knows exactly
+which controller has requested which resources.
+
+The RobotHW class has a simple default implementation for resource management:
+it simply prevents two controllers that are using the same resource to be
+running at the same time. Note that two controllers that are using the same
+resource can be loaded at the same time, but can't be running at the same time.
+If this simple resource management scheme fits to a robot, nothing else needs to
+be done, the controller manager will automatically apply this scheme. If a robot
+needs a different scheme, it is possible to create a custom one, by implementing
+one single function:
+
+\code
+class MyRobot : public hardware_interface::RobotHW
+{
+public:
+  MyRobot() 
+  {
+    // register hardware interfaces interfaces
+    ...
+    ... (see the code above)
+    ...
+
+
+    // Implement robot-specific resouce management
+    bool checkForConflict(const std::list<ControllerInfo>& info) const
+    {
+       // This list of controllers cannot be running at the same time
+       ... 
+       return true;
+
+       // This list of controller can be running at the same time
+       ...
+       return false;
+    }
+  }
+};
+\endcode
+
+The input to the \ref hardware_interface::RobotHW::checkForConflict method is a list of
+controller info objects. Each of these objects matches to one single controller,
+and contains all the info about that controller. This info includes the
+controller name, controller type, hardware interface type, and the list of
+resources that are claimed by the controller. Based on all this info, it is
+possible to come up with a custom scheme to decide if the given list of
+controllers is allowed to be running at the same time.
+
+
+\section robot-specific-interface Creating a robot-specific interface
+
+The standard interfaces are helpful to avoid writing a whole new set of
+controllers for a robot, and to take advantage of the libraries of existing
+controllers. But in case a robot has some features that are not supported by the
+standard interfaces it is possible to leverage the standard interfaces
+(and re-use the standard controllers) for the features of a robot that are standard.
+And at the same time expose robot-specific features in a robot-specific interface.
+The image shown above shows a robot with both standard and robot-specific interfaces.
+
+The code for such a robot looks like this:
+
+\code
+class MyRobot : public hardware_interface::RobotHW
+{
+public:
+  MyRobot() 
+  {
+    // Register the joint state and position interfaces.
+    ...
+    ... (see the code above)
+    ...
+
+    // Register some robot specific interfaces.
+    registerInterface(&cool_interface);
+  }
+
+  private:
+    MyCustomInterface cool_interface;
+};
+\endcode
+
+Anotehr way is to register the MyRobot class itself:
+
+\code
+class MyRobot : public hardware_interface::RobotHW, public hardware_interface::HardwareInterface
+{
+public:
+  MyRobot() 
+  {
+    // Register the joint state and position interfaces.
+    ...
+    ... (see the code above)
+    ...
+
+    // Register the MyRobot class itself to make the 'someCoolFunction' available.
+    // The MyRobot class inherits from HardwareInterface to make this possible.
+    registerInterface(this);
+  }
+
+  void someCoolFunction();
+ 
+};
+\endcode
+
+With this, the custom interfaces could be nothing more than adding any number of
+function calls to a custom robot class, and registering the robot class itself.
+These robot-specific functions will only be available to controllers that are
+specifically designed for the custom robot, but at the same time, the robot will
+still work with standard controllers using the standard interfaces of the robot.
+
+*/
