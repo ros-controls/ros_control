@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.19.3 (2020-10-11)
+-------------------
 * Update mainpage.dox
   - Explain JointStateInterface and PositionJointInterface
   - Explain how to use potential software transmissions

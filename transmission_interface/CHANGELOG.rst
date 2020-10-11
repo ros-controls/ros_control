@@ -2,8 +2,8 @@
 Changelog for package transmission_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.19.3 (2020-10-11)
+-------------------
 * Fix jnt-to-act command propagation check in transmission_interface_loader_test (`#473 <https://github.com/ros-controls/ros_control/issues/473>`_)
   * Fix jnt-to-act command propagation check
   * Fix jnt-to-act command propagation check of bidirectional transmissions
