@@ -2,6 +2,9 @@
 Changelog for package rqt_controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.19.2 (2020-08-17)
 -------------------
 * Use an explicit relative import path instead of implicit. (`#471 <https://github.com/ros-controls/ros_control/issues/471>`_)

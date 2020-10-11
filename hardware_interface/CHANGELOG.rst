@@ -2,6 +2,20 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update mainpage.dox
+  - Explain JointStateInterface and PositionJointInterface
+  - Explain how to use potential software transmissions
+  - Link to transmission_interface examples
+* Update doc of robot_hw.h
+  - Use JointStateHandle in case of read-only operations
+* doc: add README.md for hardware_interface
+* doc: add mainpage.dox including examples
+* doc: update robot_hw.h docstrings
+  update docstring of class and init method.
+* Contributors: Franz Pucher, Bence Magyar
+
 0.19.2 (2020-08-17)
 -------------------
 

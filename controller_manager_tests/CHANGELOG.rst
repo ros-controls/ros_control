@@ -2,6 +2,9 @@
 Changelog for package controller_manager_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.19.2 (2020-08-17)
 -------------------
 * Fixes part 2 of issue`#448 <https://github.com/ros-controls/ros_control/issues/448>`_ [Noetic] Rework and re-enable spawning and switching CLI tests (`#462 <https://github.com/ros-controls/ros_control/issues/462>`_)
