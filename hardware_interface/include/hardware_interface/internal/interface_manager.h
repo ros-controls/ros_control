@@ -110,6 +110,15 @@ struct CheckIsResourceManager {
 
 } // namespace internal
 
+/**
+ * \brief Manager for hardware interface registrations.
+ *
+ * This class enables the registration of interfaces based on their class type,
+ * handling all the required demangling and storage. The registration ensures
+ * the presence of at most one interface instance per type. Accessors for
+ * interface listing are provided. Additionally, combinations of interfaces as
+ * required in \c CombinedRobotHW are handled transparently.
+ */
 class InterfaceManager
 {
 public:
@@ -118,6 +127,9 @@ public:
    *
    * This associates the name of the type of interface to be registered with
    * the given pointer.
+   *
+   * \note The registration of an interface will replace previously registered
+   * instances of its type
    *
    * \tparam T The interface type
    * \param iface A pointer to the interface to store
@@ -134,6 +146,14 @@ public:
     internal::CheckIsResourceManager<T>::callGetResources(resources_[iface_name], iface);
   }
 
+  /**
+   * \brief Register another interface manager.
+   *
+   * This manager will be integrated transparently into all further access
+   * methods.
+   *
+   * \param iface_man A pointer to the interface manager to store
+   */
   void registerInterfaceManager(InterfaceManager* iface_man)
   {
     interface_managers_.push_back(iface_man);
@@ -142,12 +162,22 @@ public:
   /**
    * \brief Get an interface.
    *
-   * Since this class only stores one interface per type, this returns a
-   * pointer to the requested interface type. If the interface type is not
-   * registered, it will return \c NULL.
+   * If this class and its registered sub-managers only have one registered
+   * instance of the requested interface type, this will be returned. If
+   * multiple instances of the interface type were registered and the type is a
+   * \c ResourceManager, this call will try to combine them into a single
+   * handle. In all other cases, \c nullptr will be returned.
+   *
+   * \note As this class can only store one instance of each interface type,
+   * the only way multiple instances of the same interface type can be
+   * registered  is through the registration of sub-managers.
+   *
+   * \note If there are multiple registered interfaces of the requested type
+   * and they are not \c ResourceManager, this method will not be able to
+   * combine them and will return \c nullptr.
    *
    * \tparam T The interface type
-   * \return A pointer to the stored interface of type \c T or \c NULL
+   * \return A handle for the stored interfaces of type \c T or \c nullptr
    */
   template<class T>
   T* get()
@@ -200,17 +230,23 @@ public:
         interfaces_combo_[type_name] = iface_combo;
         num_ifaces_registered_[type_name] = iface_list.size();
       } else {
-        // it is not a ResourceManager
-        ROS_ERROR("You cannot register multiple interfaces of the same type which are "
-                  "not of type ResourceManager. There is no established protocol "
-                  "for combining them.");
+        // Multiple interfaces of the same type which are not ResourceManager cannot be combined, so return
+        // nullptr
         iface_combo = nullptr;
       }
     }
     return iface_combo;
   }
 
-  /** \return Vector of interface names registered to this instance. */
+  /**
+   * \brief Lists the demangled names of all registered interfaces.
+   *
+   * This includes the interfaces directly registered to this instance and
+   * the interfaces registered to registered managers. As multiple interfaces
+   * of the same type will get merged on access, duplicates are omitted.
+   *
+   * \return Vector of demangled interface names of registered interfaces.
+   **/
   std::vector<std::string> getNames() const
   {
     std::vector<std::string> out;
@@ -219,14 +255,29 @@ public:
     {
       out.push_back(interface.first);
     }
+
+    for (const auto& interface_manager : interface_managers_)
+    {
+      // Make sure interfaces appear only once, as they may have been combined
+      for (const auto& interface_name : interface_manager->getNames())
+      {
+        if (std::find(out.begin(), out.end(), interface_name) == out.end())
+        {
+          out.push_back(interface_name);
+        }
+      }
+    }
+
     return out;
   }
 
   /**
-   * \brief Get the resource names registered to an interface, specified by type
-   * (as this class only stores one interface per type)
+   * \brief Get the resource names registered to an interface, specified by type.
    *
-   * \param iface_type A string with the demangled type name of the interface
+   * This will return the list of all registered resources for
+   * \c ResourceManager interfaces and an empty list for all others.
+   *
+   * \param iface_type The demangled type name of an interface
    * \return A vector of resource names registered to this interface
    */
   std::vector<std::string> getInterfaceResources(std::string iface_type) const
@@ -237,6 +288,13 @@ public:
     {
       out = it->second;
     }
+
+    for (const auto& interface_manager : interface_managers_)
+    {
+      std::vector<std::string> resources = interface_manager->getInterfaceResources(iface_type);
+      out.insert(out.end(), resources.begin(), resources.end());
+    }
+
     return out;
   }
 
