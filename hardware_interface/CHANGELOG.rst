@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.19.4 (2020-12-05)
+-------------------
 * Clarified documentation for InterfaceManager sub-manager handling
 * Updated InterfaceManager documentation
 * Removed duplicate error message

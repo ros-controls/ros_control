@@ -4,7 +4,7 @@
   schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>combined_robot_hw_tests</name>
-  <version>0.19.3</version>
+  <version>0.19.4</version>
   <description>Tests for the combined Robot HW class.</description>
 
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
