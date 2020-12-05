@@ -2,6 +2,21 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Clarified documentation for InterfaceManager sub-manager handling
+* Updated InterfaceManager documentation
+* Removed duplicate error message
+  Previously, trying to combine two non-ResourceManager interfaces yielded
+  two identical error messages.
+* Remove inconsistent InterfaceManager manager registering behavior
+  All InterfaceManager now handle registered InterfaceManagers
+  transparently. This allows chains of multiple InterfaceManagers
+  registered to each other to work corectly, mostly relevant for
+  registering a manager from a combined_robot_hw RobotHW.
+  Resolves `#452 <https://github.com/ros-controls/ros_control/issues/452>`_
+* Contributors: Robert Wilbrandt
+
 0.19.3 (2020-10-11)
 -------------------
 * Update mainpage.dox
