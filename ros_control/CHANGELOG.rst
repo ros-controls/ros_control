@@ -2,6 +2,11 @@
 Changelog for package ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update docs in hardware_interface
+* Contributors: Franz Pucher
+
 0.18.2 (2020-08-17)
 -------------------
 

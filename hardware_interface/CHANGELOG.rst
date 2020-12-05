@@ -2,6 +2,41 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [hardware_interface] Update documentation (`#457 <https://github.com/ros-controls/ros_control/issues/457>`_)
+  * doc: update robot_hw.h docstrings
+  update docstring of class and init method.
+  * doc: add mainpage.dox including examples
+  * doc: add README.md for hardware_interface
+  * Update hardware_interface/mainpage.dox
+  - Use JointStateHandle in case of read-only operations
+  - Explain JointStateInterface and PositionJointInterface
+  - Explain how to use potential software transmissions
+  - Link to transmission_interface examples
+* remove whitespace
+* Update mainpage.dox with comments from @bmagyar
+  - Explain JointStateInterface and PositionJointInterface
+  - Explain how to use potential software transmissions
+  - Link to transmission_interface examples
+* Update doc of robot_hw.h with comments of @bmagyar
+  - Use JointStateHandle in case of read-only operations
+* Clarified documentation for InterfaceManager sub-manager handling
+* Updated InterfaceManager documentation
+* Removed duplicate error message
+  Previously, trying to combine two non-ResourceManager interfaces yielded
+  two identical error messages.
+* Remove inconsistent InterfaceManager manager registering behavior
+  All InterfaceManager now handle registered InterfaceManagers
+  transparently. This allows chains of multiple InterfaceManagers
+  registered to each other to work corectly, mostly relevant for
+  registering a manager from a combined_robot_hw RobotHW.
+* doc: add README.md for hardware_interface
+* doc: add mainpage.dox including examples
+* doc: update robot_hw.h docstrings
+  update docstring of class and init method.
+* Contributors: Bence Magyar, Franz Pucher, Robert Wilbrandt
+
 0.18.2 (2020-08-17)
 -------------------
 
