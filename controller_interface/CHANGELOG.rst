@@ -2,8 +2,8 @@
 Changelog for package controller_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.18.3 (2020-12-05)
+-------------------
 * Update docs in hardware_interface
 * Contributors: Franz Pucher
 

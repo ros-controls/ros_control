@@ -2,8 +2,8 @@
 Changelog for package combined_robot_hw
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.18.3 (2020-12-05)
+-------------------
 * Update docs in hardware_interface
 * Contributors: Franz Pucher
 
