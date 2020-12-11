@@ -29,10 +29,10 @@ as of this writing are:
   - [EffortActuatorInterface](https://github.com/ros-controls/ros_control/blob/c6ee2451cf919307b7c1dbc75b32bec7d1b52d23/hardware_interface/include/hardware_interface/actuator_command_interface.h#L79)
   - [VelocityActuatorInterface](https://github.com/ros-controls/ros_control/blob/c6ee2451cf919307b7c1dbc75b32bec7d1b52d23/hardware_interface/include/hardware_interface/actuator_command_interface.h#L82)
   - [PositionActuatorInterface](https://github.com/ros-controls/ros_control/blob/c6ee2451cf919307b7c1dbc75b32bec7d1b52d23/hardware_interface/include/hardware_interface/actuator_command_interface.h#L85)
-- [PosVelJointInterface](/include/hardware_interface/posvel_command_interface.h)
-- [PosVelAccJointInterface](/include/hardware_interface/posvelacc_command_interface.h)
+- [PosVelJointInterface](include/hardware_interface/posvel_command_interface.h)
+- [PosVelAccJointInterface](include/hardware_interface/posvelacc_command_interface.h)
 - [Force-torque sensor Interface](include/hardware_interface/force_torque_sensor_interface.h)
-- [IMU sensor Interface](/include/hardware_interface/imu_sensor_interface.h)
+- [IMU sensor Interface](include/hardware_interface/imu_sensor_interface.h)
 
 Note that \ref hardware_interface::JointCommandInterface allows both reading
 joint state and commanding [effort|velocity|position]-based joints
