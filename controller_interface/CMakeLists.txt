@@ -31,7 +31,9 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 if(CATKIN_ENABLE_TESTING)
   catkin_add_gmock(controller_base_test test/controller_base_test.cpp)
-  target_link_libraries(controller_base_test ${catkin_LIBRARIES})
+  if(TARGET controller_base_test)
+    target_link_libraries(controller_base_test ${catkin_LIBRARIES})
+  endif()
 endif()
 
 
