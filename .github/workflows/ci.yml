@@ -1,0 +1,26 @@
+name: Test ros_control
+on:
+  pull_request:
+  push:
+    branches:
+      - noetic-devel
+  schedule:
+    # Run every morning to detect flakiness and broken dependencies
+    - cron: '17 8 * * *'
+
+jobs:
+  industrial_ci:
+    runs-on: ubuntu-latest
+    strategy:
+      env:
+        global:
+          - UPSTREAM_WORKSPACE='ros_control.rosinstall -ros_control -ros_controllers'
+        matrix:
+          - {ROS_DISTRO: noetic, ROS_REPO: main}
+          - {ROS_DISTRO: noetic, ROS_REPO: testing}
+          - {ROS_DISTRO: noetic, DOWNSTREAM_WORKSPACE: 'ros_control.rosinstall -ros_control -realtime_tools -control_toolbox -control_msgs'}
+    steps:
+      - run: sudo apt-get update -qq && sudo apt-get upgrade
+      - uses: actions/checkout@v1
+      - uses: ros-industrial/industrial_ci@master
+        env: ${{matrix.env}}
