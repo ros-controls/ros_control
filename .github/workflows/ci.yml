@@ -12,13 +12,13 @@ jobs:
   industrial_ci:
     runs-on: ubuntu-latest
     strategy:
-      env:
-        global:
-          - UPSTREAM_WORKSPACE='ros_control.rosinstall -ros_control -ros_controllers'
-        matrix:
+      matrix:
+        env:
           - {ROS_DISTRO: noetic, ROS_REPO: main}
           - {ROS_DISTRO: noetic, ROS_REPO: testing}
-          - {ROS_DISTRO: noetic, DOWNSTREAM_WORKSPACE: 'ros_control.rosinstall -ros_control -realtime_tools -control_toolbox -control_msgs'}
+          - {ROS_DISTRO: noetic,
+             UPSTREAM_WORKSPACE: 'ros_control.rosinstall -ros_control -ros_controllers',
+             DOWNSTREAM_WORKSPACE: 'github:ros-controls/ros_controllers#noetic-devel'}
     steps:
       - run: sudo apt-get update -qq && sudo apt-get upgrade
       - uses: actions/checkout@v1
