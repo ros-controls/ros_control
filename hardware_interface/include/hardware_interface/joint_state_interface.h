@@ -194,7 +194,7 @@ public:
   {
     if(!hasAbsolutePosition())
     {
-      throw std::runtime_error("Joint state handle does not contain torque sensor information");
+      throw std::runtime_error("Joint state handle does not contain absolute position sensor information");
     }
     return absolute_pos_;
   }
