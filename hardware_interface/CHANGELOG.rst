@@ -2,6 +2,12 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Correct exception msg for missing abs pos ptr
+* fix broken links by making them relative
+* Contributors: G.A. vd. Hoorn, Mikael Arguedas
+
 0.19.4 (2020-12-05)
 -------------------
 * Clarified documentation for InterfaceManager sub-manager handling
