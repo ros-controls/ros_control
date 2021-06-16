@@ -2,8 +2,8 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.18.4 (2021-06-16)
+-------------------
 * Add wall clock timeout to avoid some deadlock situation when switching mode
 * Contributors: krishnachaitanya7
 
