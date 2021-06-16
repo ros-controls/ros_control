@@ -616,7 +616,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
     if (diff.count() < timeout+1.0 || timeout == 0){
         std::this_thread::sleep_for(std::chrono::microseconds(100));
     } else {
-        ROS_DEBUG("Time Out while Switching the controllers. Exiting cleanly");
+        ROS_DEBUG("Timed out while switching controllers. Exiting...");
         timed_out = true;
         break;
     }
@@ -624,7 +624,7 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
   start_request_.clear();
   stop_request_.clear();
   if(timed_out){
-      ROS_DEBUG("Exited while loop forcibly without ROS handling timeout");
+      ROS_DEBUG("Exited wait until switch is finished loop using non-ROS-time timeout");
       return false;
   }
   ROS_DEBUG("Successfully switched controllers");
