@@ -58,7 +58,7 @@ joint_limits:
     soft_upper_limit: 0.9
 
   barbaz_joint:
-    has_soft_limits: false
+    has_soft_limits: true
     k_position: 10.0
     soft_lower_limit: 0.1
     soft_upper_limit: 0.9
