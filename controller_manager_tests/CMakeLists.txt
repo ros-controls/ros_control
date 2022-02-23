@@ -40,18 +40,20 @@ if(CATKIN_ENABLE_TESTING)
   add_executable(dummy_app EXCLUDE_FROM_ALL src/dummy_app.cpp)
   add_dependencies(dummy_app ${catkin_EXPORTED_TARGETS})
   target_link_libraries(dummy_app ${PROJECT_NAME} ${catkin_LIBRARIES})
+  add_dependencies(tests dummy_app)
 
   add_executable(cm_test EXCLUDE_FROM_ALL test/cm_test.cpp)
   add_dependencies(cm_test ${catkin_EXPORTED_TARGETS})
   target_link_libraries(cm_test ${catkin_LIBRARIES} ${GTEST_LIBRARIES})
+  add_dependencies(tests cm_test)
 
   catkin_add_nosetests(test)
 
-  add_rostest(test/cm_test.test DEPENDENCIES dummy_app cm_test)
+  add_rostest(test/cm_test.test)
 
   add_rostest(test/cm_msgs_utils_rostest.test)
 
-  add_rostest(test/controller_manager_scripts.test DEPENDENCIES dummy_app)
+  add_rostest(test/controller_manager_scripts.test)
 endif()
 
 
@@ -59,8 +61,7 @@ endif()
 ## Install ##
 #############
 
-# NOTE: Libraries and plugins required for tests are installed since CI
-# runs tests out of the install space rather than the devel space
+# NOTE: Plugins required for tests must be installed
 
 if(CATKIN_ENABLE_TESTING)
 
