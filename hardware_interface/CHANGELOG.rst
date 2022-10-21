@@ -2,8 +2,8 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.19.6 (2022-10-21)
+-------------------
 * Update mainpage.dox (`#496 <https://github.com/ros-controls/ros_control/issues/496>`_)
 * Contributors: PaddyCube
 
