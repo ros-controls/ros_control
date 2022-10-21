@@ -2,6 +2,11 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update mainpage.dox (`#496 <https://github.com/ros-controls/ros_control/issues/496>`_)
+* Contributors: PaddyCube
+
 0.19.5 (2021-06-16)
 -------------------
 * Correct exception msg for missing abs pos ptr

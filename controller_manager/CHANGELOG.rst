@@ -2,6 +2,15 @@
 Changelog for package controller_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* SPAWNER: Wait for the clock to be available before proceeding (`#432 <https://github.com/ros-controls/ros_control/issues/432>`_)
+  This patch is to resolve an issue when the simulated clock is not published right away (coming from a remote gazebo instance for example).
+  If the clock is not published right away, the rosservice wait_for_service times out prematurely and the controllers fail to be loaded since the system is not yet ready (no Gazebo clock).
+  With no, gazebo system, the clock will be ready immediately and the spawner will proceed.
+  Issue: `#431 <https://github.com/ros-controls/ros_control/issues/431>`_
+* Contributors: Guillaume Autran
+
 0.19.5 (2021-06-16)
 -------------------
 * Add wall clock timeout to avoid some deadlock situation when switching mode (`#491 <https://github.com/ros-controls/ros_control/issues/491>`_)
