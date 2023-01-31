@@ -116,34 +116,35 @@ def main():
     unload_controller_service = robot_namespace+"controller_manager/unload_controller"
     switch_controller_service = robot_namespace+"controller_manager/switch_controller"
 
-    # Wait for the clock to be published
-    if rospy.get_param('/use_sim_time', False):
-        while rospy.get_rostime() == rospy.Time(0):
-            rospy.loginfo_throttle(30, "Waiting for /clock to be available...")
-            rospy.sleep(0.2)
-        rospy.loginfo("/clock is published. Proceeding to load the controller(s).")
+    services_found = False
+    while not services_found:
+        try:
+            # loader
+            rospy.loginfo("Controller Spawner: Waiting for service "+load_controller_service)
+            rospy.wait_for_service(load_controller_service, timeout=timeout)
+            load_controller = rospy.ServiceProxy(load_controller_service, LoadController)
 
-    try:
-        # loader
-        rospy.loginfo("Controller Spawner: Waiting for service "+load_controller_service)
-        rospy.wait_for_service(load_controller_service, timeout=timeout)
-        load_controller = rospy.ServiceProxy(load_controller_service, LoadController)
+            # switcher
+            rospy.loginfo("Controller Spawner: Waiting for service "+switch_controller_service)
+            rospy.wait_for_service(switch_controller_service, timeout=timeout)
+            switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
 
-        # switcher
-        rospy.loginfo("Controller Spawner: Waiting for service "+switch_controller_service)
-        rospy.wait_for_service(switch_controller_service, timeout=timeout)
-        switch_controller = rospy.ServiceProxy(switch_controller_service, SwitchController)
+            # unloader
+            # NOTE: We check for the unloader's existence here, although its used on shutdown because shutdown
+            # should be fast. Further, we're interested in knowing if we have a compliant controller manager from
+            # early on
+            rospy.loginfo("Controller Spawner: Waiting for service "+unload_controller_service)
+            rospy.wait_for_service(unload_controller_service, timeout=timeout)
+        except rospy.exceptions.ROSException:
+            # If we use sim time, wait for the clock to be published
+            if rospy.get_param('/use_sim_time', False) and rospy.get_rostime() == rospy.Time(0):
+                rospy.loginfo("Waiting for /clock to be available...")
+            else:
+                rospy.logwarn("Controller Spawner couldn't find the expected controller_manager ROS interface.")
+                return
+        else:
+            services_found = True
 
-        # unloader
-        # NOTE: We check for the unloader's existence here, although its used on shutdown because shutdown
-        # should be fast. Further, we're interested in knowing if we have a compliant controller manager from
-        # early on
-        rospy.loginfo("Controller Spawner: Waiting for service "+unload_controller_service)
-        rospy.wait_for_service(unload_controller_service, timeout=timeout)
-
-    except rospy.exceptions.ROSException:
-        rospy.logwarn("Controller Spawner couldn't find the expected controller_manager ROS interface.")
-        return
 
     if wait_for_topic:
         # This has to be a list since Python has a peculiar mechanism to determine
