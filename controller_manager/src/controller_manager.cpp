@@ -561,6 +561,13 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
       }
     }
 
+    if(in_stop_list && in_start_list){ // duplicate start/stop
+        ROS_ERROR_STREAM("Could no start or stop controller '" << info.name << "' because of conflicting switching command");
+        stop_request_.clear();
+        start_request_.clear();
+        return false;
+    }
+
     if(is_running && in_stop_list && !in_start_list){ // running and real stop
       switch_stop_list_.push_back(info);
     }
