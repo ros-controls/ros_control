@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   pluginlib
   roscpp
+  std_msgs
 )
 
 catkin_python_setup()
@@ -24,6 +25,7 @@ catkin_package(
     hardware_interface
     pluginlib
     roscpp
+    std_msgs
 )
 
 
@@ -42,6 +44,15 @@ add_library(${PROJECT_NAME}
 )
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+
+add_executable(controller_stopper_node
+  src/controller_stopper.cpp
+  src/controller_stopper_node.cpp
+)
+add_dependencies(controller_stopper_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(controller_stopper_node
+  ${catkin_LIBRARIES}
+)
 
 
 #############
@@ -85,7 +96,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
 )
 
 # Install targets
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME} controller_stopper_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
