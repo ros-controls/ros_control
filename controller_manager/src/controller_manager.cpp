@@ -561,6 +561,13 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
       }
     }
 
+    if(in_stop_list && in_start_list){ // duplicate start/stop
+        ROS_ERROR_STREAM("Could no start or stop controller '" << info.name << "' because of conflicting switching command");
+        stop_request_.clear();
+        start_request_.clear();
+        return false;
+    }
+
     if(is_running && in_stop_list && !in_start_list){ // running and real stop
       switch_stop_list_.push_back(info);
     }
@@ -604,17 +611,29 @@ bool ControllerManager::switchController(const std::vector<std::string>& start_c
 
   // wait until switch is finished
   ROS_DEBUG("Request atomic controller switch from realtime loop");
+  auto start_time = std::chrono::system_clock::now();
+  bool timed_out = false;
   while (ros::ok() && switch_params_.do_switch)
   {
     if (!ros::ok())
     {
       return false;
     }
-    std::this_thread::sleep_for(std::chrono::microseconds(100));
+    std::chrono::duration<double> diff = std::chrono::system_clock::now() - start_time;
+    if (diff.count() < timeout+1.0 || timeout == 0){
+        std::this_thread::sleep_for(std::chrono::microseconds(100));
+    } else {
+        ROS_DEBUG("Timed out while switching controllers. Exiting...");
+        timed_out = true;
+        break;
+    }
   }
   start_request_.clear();
   stop_request_.clear();
-
+  if(timed_out){
+      ROS_DEBUG("Exited wait until switch is finished loop using non-ROS-time timeout");
+      return false;
+  }
   ROS_DEBUG("Successfully switched controllers");
   return true;
 }

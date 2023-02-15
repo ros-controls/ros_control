@@ -2,6 +2,20 @@
 Changelog for package hardware_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
+0.19.6 (2022-10-21)
+-------------------
+* Update mainpage.dox (`#496 <https://github.com/ros-controls/ros_control/issues/496>`_)
+* Contributors: PaddyCube
+
+0.19.5 (2021-06-16)
+-------------------
+* Correct exception msg for missing abs pos ptr
+* fix broken links by making them relative
+* Contributors: G.A. vd. Hoorn, Mikael Arguedas
+
 0.19.4 (2020-12-05)
 -------------------
 * Clarified documentation for InterfaceManager sub-manager handling
