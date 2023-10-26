@@ -120,15 +120,13 @@ class ControllerManager(Plugin):
         # Timer for controller manager updates
         self._list_cm = ControllerManagerLister()
         self._update_cm_list_timer = QTimer(self)
-        self._update_cm_list_timer.setInterval(1000.0 /
-                                               self._cm_update_freq)
+        self._update_cm_list_timer.setInterval(int(1000.0 / self._cm_update_freq))
         self._update_cm_list_timer.timeout.connect(self._update_cm_list)
         self._update_cm_list_timer.start()
 
         # Timer for running controller updates
         self._update_ctrl_list_timer = QTimer(self)
-        self._update_ctrl_list_timer.setInterval(1000.0 /
-                                                 self._cm_update_freq)
+        self._update_ctrl_list_timer.setInterval(int(1000.0 / self._cm_update_freq))
         self._update_ctrl_list_timer.timeout.connect(self._update_controllers)
         self._update_ctrl_list_timer.start()
 
