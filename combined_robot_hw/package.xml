@@ -4,7 +4,7 @@
   schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>combined_robot_hw</name>
-  <version>0.19.6</version>
+  <version>0.20.0</version>
   <description>Combined Robot HW class.</description>
 
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
