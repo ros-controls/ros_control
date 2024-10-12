@@ -24,6 +24,8 @@
 
   <depend>combined_robot_hw</depend>
   <depend>controller_manager</depend>
+  <depend>controller_manager_msgs</depend>
+  <depend>controller_manager_tests</depend>
   <depend>hardware_interface</depend> <!-- exec_depend required for plugin -->
   <depend>roscpp</depend>
 
@@ -31,8 +33,6 @@
 
   <build_export_depend>pluginlib</build_export_depend>
 
-  <test_depend>controller_manager_msgs</test_depend>
-  <test_depend>controller_manager_tests</test_depend>
   <test_depend>rostest</test_depend>
 
   <export>
