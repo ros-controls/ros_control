@@ -118,6 +118,8 @@ def main():
 
     services_found = False
     while not services_found:
+        if rospy.is_shutdown():
+            return
         try:
             # loader
             rospy.loginfo("Controller Spawner: Waiting for service "+load_controller_service)
